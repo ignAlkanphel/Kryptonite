@@ -51,7 +51,7 @@ public record DimensionWrapperCondition(Optional<DimensionCondition> dimensionCo
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, DimensionWrapperCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Dimension")
-                    .setDescription("Acts as a bridge between (normal) base Palladium conditions and dimension conditions.")
+                    .setDescription("Acts as a bridge between the (normal) base Palladium conditions and dimension conditions.")
                     .addOptional("dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension conditions to check. Returns true if none specified.");
         }
     }

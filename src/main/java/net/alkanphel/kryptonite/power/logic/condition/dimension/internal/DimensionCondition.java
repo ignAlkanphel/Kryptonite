@@ -6,13 +6,10 @@ import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.threetag.palladium.power.ability.AbilityInstance;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,23 +26,5 @@ public interface DimensionCondition {
     }
 
     DimensionConditionSerializer<?> getSerializer();
-
-    // leftovers/misc. below
-
-    default void init(LivingEntity entity, AbilityInstance<?> abilityInstance) {}
-
-    default List<String> getDependentAbilities() {
-        return Collections.emptyList();
-    }
-
-    static boolean checkConditions(Collection<DimensionCondition> conditions, DimensionConditionContext context) {
-        for (DimensionCondition condition : conditions) {
-            if (!condition.test(context)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
 }

@@ -1,0 +1,51 @@
+{
+  "name": "Infiniburn", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "infiniburn_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'infiniburn' is true (#minecraft:infiniburn_overworld)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:infiniburn",
+            "infiniburn": "#minecraft:infiniburn_overworld"
+          }
+        }
+      }
+    },
+    "infiniburn_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'infiniburn' is true (#minecraft:infiniburn_nether)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:infiniburn",
+            "infiniburn": "#minecraft:infiniburn_nether"
+          }
+        }
+      }
+    },
+    "infiniburn_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'infiniburn' is true (#minecraft:infiniburn_end)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:infiniburn",
+            "infiniburn": "#minecraft:infiniburn_end"
+          }
+        }
+      }
+    }
+  }
+}

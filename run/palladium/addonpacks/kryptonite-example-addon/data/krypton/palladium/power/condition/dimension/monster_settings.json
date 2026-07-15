@@ -1,0 +1,42 @@
+{
+  "name": "Monsters Settings", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "monster_settings_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'monster_settings' matches the overworld\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:monster_settings",
+            "monster_spawn_block_light_limit": 0,
+            "monster_spawn_light_level": {
+              "type": "minecraft:uniform",
+              "max_inclusive": 7,
+              "min_inclusive": 0
+            }
+          }
+        }
+      }
+    },
+    "monster_settings_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'monster_settings' matches the end\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:monster_settings",
+            "monster_spawn_block_light_limit": 0,
+            "monster_spawn_light_level": 15
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "addonpack": {
+    "description": "Kryptonite Test Pack",
+    "min_format": [2, 0],
+    "max_format": [2, 0]
+  },
+  "features": {
+    "enabled": [
+      "palladium:mechanic/tailoring",
+      "palladium:mechanic/multiversal_variants",
+      "palladium:customization/eye_selection",
+      "palladium:worldgen/meteorite_biome",
+      "palladium:material/circuits",
+      "palladium:material/lead",
+      "palladium:material/titanium",
+      "palladium:material/vibranium"
+    ]
+  }
+}

@@ -45,13 +45,4 @@ public class EntitySuperpowerHandlerMixin {
         }
     }
 
-//    @Inject(method = "canBeAdded", at = @At("HEAD"), cancellable = true)
-//    private void kryptonite$ignoreSuperpowerSetLimit(Holder<Power> powerHolder, CallbackInfoReturnable<Boolean> cir) {
-//        Power power = powerHolder.value();
-//
-//        if (power.getParentId() == null && powerHolder.is(KryptoniteTags.Powers.IGNORES_MAX_SUPERPOWER_SETS)) {
-//            cir.setReturnValue(!superpowers.contains(powerHolder));
-//        }
-//    }
-
 }

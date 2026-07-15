@@ -1,0 +1,20 @@
+{
+  "name": "Has Fixed Time", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "has_fixed_time": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'has_fixed_time' is true\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:has_fixed_time"
+          }
+        }
+      }
+    }
+  }
+}

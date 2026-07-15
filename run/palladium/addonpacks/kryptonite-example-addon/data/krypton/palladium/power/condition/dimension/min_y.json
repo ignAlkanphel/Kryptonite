@@ -1,0 +1,38 @@
+{
+  "name": "Min Y", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "min_y_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"''min_y' is EQUALS to the vanilla overworld with -64\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:min_y",
+            "comparator": "=",
+            "compare_to": -64
+          }
+        }
+      }
+    },
+    "min_y_mixed": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"''min_y' is EQUALS to the vanilla nether & end with 0\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:min_y",
+            "comparator": "=",
+            "compare_to": 0
+          }
+        }
+      }
+    }
+  }
+}

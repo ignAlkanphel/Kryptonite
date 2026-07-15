@@ -1,0 +1,54 @@
+{
+  "name": "Ambient Light", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "ambient_light_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'ambient_light' is EQUALS to the vanilla overworld with 0.0\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:ambient_light",
+            "comparator": "=",
+            "compare_to": 0.0
+          }
+        }
+      }
+    },
+    "ambient_light_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'ambient_light' is EQUALS to the vanilla nether with 0.1\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:ambient_light",
+            "comparator": "=",
+            "compare_to": 0.1
+          }
+        }
+      }
+    },
+    "ambient_light_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'ambient_light' is EQUALS to the vanilla end with 0.25\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:ambient_light",
+            "comparator": "=",
+            "compare_to": 0.25
+          }
+        }
+      }
+    }
+  }
+}

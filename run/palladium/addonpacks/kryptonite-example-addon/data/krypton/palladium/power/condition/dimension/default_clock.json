@@ -1,0 +1,36 @@
+{
+  "name": "Default Clock", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "default_clock_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'default_clock' is true (minecraft:overworld)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:default_clock",
+            "default_clock": "minecraft:overworld"
+          }
+        }
+      }
+    },
+    "default_clock_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'default_clock' is true (minecraft:the_end)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:default_clock",
+            "default_clock": "minecraft:the_end"
+          }
+        }
+      }
+    }
+  }
+}

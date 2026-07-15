@@ -1,0 +1,51 @@
+{
+  "name": "Skybox", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "skybox_none": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'skybox' is true (none)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:skybox",
+            "skybox": "none"
+          }
+        }
+      }
+    },
+    "skybox_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'skybox' is true (overworld)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:skybox",
+            "skybox": "overworld"
+          }
+        }
+      }
+    },
+    "skybox_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'skybox' is true (end)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:skybox",
+            "skybox": "end"
+          }
+        }
+      }
+    }
+  }
+}

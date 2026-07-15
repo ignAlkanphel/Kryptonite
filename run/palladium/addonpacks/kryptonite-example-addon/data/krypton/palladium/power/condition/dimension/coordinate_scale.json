@@ -1,0 +1,38 @@
+{
+  "name": "Coordinate Scale", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "coordinate_scale_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'coordinate_scale' is EQUALS to the vanilla nether with 8.0\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:coordinate_scale",
+            "comparator": "=",
+            "compare_to": 8.0
+          }
+        }
+      }
+    },
+    "coordinate_scale_mixed": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'coordinate_scale' is EQUALS to the vanilla overworld & end with 1.0\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:coordinate_scale",
+            "comparator": "=",
+            "compare_to": 1.0
+          }
+        }
+      }
+    }
+  }
+}

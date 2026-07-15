@@ -1,0 +1,20 @@
+{
+  "name": "Has Ender Dragon Fight", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "has_ender_dragon_fight": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'has_ender_dragon_fight' is true\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:has_ender_dragon_fight"
+          }
+        }
+      }
+    }
+  }
+}

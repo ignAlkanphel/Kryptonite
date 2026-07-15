@@ -1,0 +1,38 @@
+{
+  "name": "Height", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "height_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'height' is EQUALS to the vanilla overworld with 384\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:height",
+            "comparator": "=",
+            "compare_to": 384
+          }
+        }
+      }
+    },
+    "height_mixed": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'height' is EQUALS to the vanilla nether & end with 256\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:height",
+            "comparator": "=",
+            "compare_to": 256
+          }
+        }
+      }
+    }
+  }
+}

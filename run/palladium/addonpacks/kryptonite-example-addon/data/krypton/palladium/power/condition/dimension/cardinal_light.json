@@ -1,0 +1,36 @@
+{
+  "name": "Cardinal Light", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "cardinal_light_default": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'cardinal_light' is true (default)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:cardinal_light",
+            "cardinal_light": "default"
+          }
+        }
+      }
+    },
+    "cardinal_light_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'cardinal_light' is true (nether)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:cardinal_light",
+            "cardinal_light": "nether"
+          }
+        }
+      }
+    }
+  }
+}

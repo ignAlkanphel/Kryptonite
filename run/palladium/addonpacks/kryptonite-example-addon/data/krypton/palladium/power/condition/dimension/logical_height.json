@@ -1,0 +1,54 @@
+{
+  "name": "Logical Height", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "logical_height_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"''logical_height' is EQUALS to the vanilla overworld with 384\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:logical_height",
+            "comparator": "=",
+            "compare_to": 384
+          }
+        }
+      }
+    },
+    "logical_height_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"''logical_height' is EQUALS to the vanilla nether with 128\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:logical_height",
+            "comparator": "=",
+            "compare_to": 128
+          }
+        }
+      }
+    },
+    "logical_height_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"''logical_height' is EQUALS to the vanilla end with 256\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:logical_height",
+            "comparator": "=",
+            "compare_to": 256
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Attributes", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "attributes": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'attributes' is true\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:attributes",
+            "attributes": {
+              "minecraft:gameplay/fast_lava": true,
+              "minecraft:gameplay/bed_rule": {
+                "can_set_spawn": "never",
+                "can_sleep": "never",
+                "explodes": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

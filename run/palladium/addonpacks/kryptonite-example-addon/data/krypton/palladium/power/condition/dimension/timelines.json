@@ -1,0 +1,51 @@
+{
+  "name": "Timelines", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "timelines_overworld": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'timelines' matches (minecraft:#in_overworld)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:timelines",
+            "timelines": "#minecraft:in_overworld"
+          }
+        }
+      }
+    },
+    "timelines_nether": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'timelines' matches (minecraft:#in_nether)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:timelines",
+            "timelines": "#minecraft:in_nether"
+          }
+        }
+      }
+    },
+    "timelines_end": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"'timelines' matches (minecraft:#in_end)\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:dimension",
+          "dimension_conditions": {
+            "type": "kryptonite:timelines",
+            "timelines": "#minecraft:in_end"
+          }
+        }
+      }
+    }
+  }
+}
