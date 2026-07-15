@@ -1,0 +1,34 @@
+{
+  "name": "Prevent Gliding", "icon": "minecraft:elytra",
+
+  "abilities": {
+    "prevent_gliding_activation": {
+      "type": "kryptonite:prevent_gliding",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Activation",
+        "icon": "minecraft:elytra",
+        "list_index": 0
+      }
+    },
+    "prevent_gliding_toggle": {
+      "type": "kryptonite:prevent_gliding",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Toggle",
+        "icon": "minecraft:elytra",
+        "list_index": 1
+      }
+    }
+  }
+}

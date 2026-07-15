@@ -1,0 +1,15 @@
+{
+  "name": "Prevent Sprinting", "icon": "minecraft:cobweb",
+
+  "abilities": {
+    "prevent_sprinting": {
+      "type": "kryptonite:prevent_sprinting",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

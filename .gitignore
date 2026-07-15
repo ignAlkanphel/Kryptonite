@@ -24,6 +24,7 @@ eclipse
 /run/palladium/documentation/
 !/run/palladium/addonpacks/
 !/run/palladium/addonpacks/example_pack/
+/run/palladium/addonpacks/palladium-example-addon/
 repo
 /.vscode
 /.claude
