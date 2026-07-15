@@ -5,10 +5,12 @@ import net.alkanphel.kryptonite.network.KryptoniteNetwork;
 import net.alkanphel.kryptonite.power.*;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionConditionSerializers;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -30,8 +32,10 @@ public class Kryptonite {
         KryptoniteConditionSerializers.CONDITIONS_SERIALIZERS.register(modEventBus);
         BiActionSerializers.BI_ACTION_SERIALIZERS.register(modEventBus);
         BlockActionSerializers.BLOCK_ACTION_SERIALIZERS.register(modEventBus);
+        ItemActionSerializers.ITEM_ACTION_SERIALIZERS.register(modEventBus);
         BiConditionSerializers.BI_CONDITION_SERIALIZERS.register(modEventBus);
         BlockConditionSerializers.BLOCK_CONDITION_SERIALIZERS.register(modEventBus);
+        ItemConditionSerializers.ITEM_CONDITION_SERIALIZERS.register(modEventBus);
         DimensionConditionSerializers.DIMENSION_CONDITION_SERIALIZERS.register(modEventBus);
         DamageConditionSerializers.DAMAGE_CONDITION_SERIALIZERS.register(modEventBus);
 
