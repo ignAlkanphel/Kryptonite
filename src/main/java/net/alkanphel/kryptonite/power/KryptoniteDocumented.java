@@ -9,9 +9,11 @@ import net.threetag.palladium.documentation.SettingType;
 
 public interface KryptoniteDocumented<T, R extends T> {
 
+    SettingType TYPE_BI_CONDITION_LIST = SettingType.listOrPrimitive("Bi Condition");
     SettingType TYPE_BLOCK_CONDITION_LIST = SettingType.listOrPrimitive("Block Condition");
     SettingType TYPE_DIMENSION_CONDITION_LIST = SettingType.listOrPrimitive("Dimension Condition");
     SettingType TYPE_DAMAGE_CONDITION_LIST = SettingType.listOrPrimitive("Damage Condition");
+    SettingType TYPE_BI_ACTION_LIST = SettingType.listOrPrimitive("Bi Action");
     SettingType TYPE_BLOCK_ACTION_LIST = SettingType.listOrPrimitive("Block Action");
 
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");

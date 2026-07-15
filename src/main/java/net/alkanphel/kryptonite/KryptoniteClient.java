@@ -47,7 +47,9 @@ public class KryptoniteClient {
     static void onGenerateDocumentation(LevelEvent.Load e) {
         LevelAccessor clientLevel = e.getLevel();
         CodecDocumentationBuilder.startListening();
+        HTMLBuilder.documentedPage(KryptoniteRegistryKeys.BI_ACTION_SERIALIZER, KryptoniteRegistries.BI_ACTION_SERIALIZER, "Bi Actions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.BLOCK_ACTION_SERIALIZER, KryptoniteRegistries.BLOCK_ACTION_SERIALIZER, "Block Actions", clientLevel.registryAccess()).save();
+        HTMLBuilder.documentedPage(KryptoniteRegistryKeys.BI_CONDITION_SERIALIZER, KryptoniteRegistries.BI_CONDITION_SERIALIZER, "Bi Conditions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.BLOCK_CONDITION_SERIALIZER, KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER, "Block Conditions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.DIMENSION_CONDITION_SERIALIZER, KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER, "Dimension Conditions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.DAMAGE_CONDITION_SERIALIZER, KryptoniteRegistries.DAMAGE_CONDITION_SERIALIZER, "Damage Conditions", clientLevel.registryAccess()).save();
