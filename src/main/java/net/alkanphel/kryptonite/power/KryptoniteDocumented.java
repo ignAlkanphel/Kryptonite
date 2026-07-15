@@ -9,11 +9,13 @@ import net.threetag.palladium.documentation.SettingType;
 
 public interface KryptoniteDocumented<T, R extends T> {
 
+    SettingType TYPE_BLOCK_CONDITION_LIST = SettingType.listOrPrimitive("Block Condition");
     SettingType TYPE_DIMENSION_CONDITION_LIST = SettingType.listOrPrimitive("Dimension Condition");
     SettingType TYPE_DAMAGE_CONDITION_LIST = SettingType.listOrPrimitive("Damage Condition");
 
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 
+    SettingType TYPE_BLOCK_TYPE_HOLDER_SET = SettingType.simple("Block ID(s) / Tag(s)");
     SettingType TYPE_TIMELINE_HOLDER_SET = SettingType.simple("Timeline Type ID(s) / Tag(s)");
 
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());
