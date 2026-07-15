@@ -8,8 +8,6 @@ import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.Level;
-import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.context.DataContextKeys;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,15 +29,15 @@ public interface BlockCondition {
         return test(new BlockConditionContext(level, pos));
     }
 
-    default boolean test(DataContext context) {
-        var level = context.get(DataContextKeys.LEVEL);
-        var pos = context.get(DataContextKeys.BLOCK_POS);
-
-        if (level == null || pos == null) return false;
-        return test(new BlockConditionContext(level, pos));
+    static boolean checkConditions(Collection<BlockCondition> conditions, SavedBlockPosition savedBlock) {
+        return checkConditions(conditions, new BlockConditionContext(savedBlock));
     }
 
-    static boolean checkConditions(Collection<BlockCondition> conditions, DataContext context) {
+    static boolean checkConditions(Collection<BlockCondition> conditions, Level level, BlockPos pos) {
+        return checkConditions(conditions, new BlockConditionContext(level, pos));
+    }
+
+    static boolean checkConditions(Collection<BlockCondition> conditions, BlockConditionContext context) {
         for (BlockCondition condition : conditions) {
             if (!condition.test(context)) {
                 return false;

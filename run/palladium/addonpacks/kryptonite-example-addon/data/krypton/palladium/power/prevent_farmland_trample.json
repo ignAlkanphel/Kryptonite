@@ -1,0 +1,9 @@
+{
+  "name": "Prevent Farmland trample", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_farmland_trample": {
+      "type": "kryptonite:prevent_farmland_trample"
+    }
+  }
+}

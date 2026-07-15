@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "common.EntityAccessor",
+    "common.EntityMixin",
     "common.LivingEntityMixin",
     "common.PlayerMixin",
     "common.EntitySuperpowerHandlerMixin",

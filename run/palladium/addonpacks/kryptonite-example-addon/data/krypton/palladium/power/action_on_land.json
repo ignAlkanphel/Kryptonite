@@ -1,0 +1,13 @@
+{
+  "name": "Action On Land", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_land": {
+      "type": "kryptonite:action_on_land",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Land!"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Action On Farmland Trample", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_farmland_trample": {
+      "type": "kryptonite:action_on_farmland_trample",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Farmland Trample!"
+      }
+    }
+  }
+}
