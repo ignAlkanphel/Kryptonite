@@ -14,5 +14,8 @@ public class BiConditionSerializers {
     public static final DeferredHolder<BiConditionSerializer<?>, NotBiCondition.Serializer> NOT = BI_CONDITION_SERIALIZERS.register("not", NotBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, FalseBiCondition.Serializer> FALSE = BI_CONDITION_SERIALIZERS.register("false", FalseBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, TrueBiCondition.Serializer> TRUE = BI_CONDITION_SERIALIZERS.register("true", TrueBiCondition.Serializer::new);
+    public static final DeferredHolder<BiConditionSerializer<?>, ActorConditionBiCondition.Serializer> ACTOR_CONDITION = BI_CONDITION_SERIALIZERS.register("actor_condition", ActorConditionBiCondition.Serializer::new);
+    public static final DeferredHolder<BiConditionSerializer<?>, TargetConditionBiCondition.Serializer> TARGET_CONDITION = BI_CONDITION_SERIALIZERS.register("target_condition", TargetConditionBiCondition.Serializer::new);
+    public static final DeferredHolder<BiConditionSerializer<?>, InvertBiCondition.Serializer> INVERT = BI_CONDITION_SERIALIZERS.register("invert", InvertBiCondition.Serializer::new);
 
 }
