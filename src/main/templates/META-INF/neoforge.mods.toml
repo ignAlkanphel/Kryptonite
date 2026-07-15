@@ -8,7 +8,7 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
-credits = "apace100, eggohito, EdwinMindcraft"
+credits = "Lucraft, apace100, eggohito, EdwinMindcraft"
 
 [[mixins]]
 config = "${mod_id}.mixins.json"
