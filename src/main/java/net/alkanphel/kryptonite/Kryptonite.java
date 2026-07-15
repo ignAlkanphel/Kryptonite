@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite;
 import com.mojang.logging.LogUtils;
 import net.alkanphel.kryptonite.network.KryptoniteNetwork;
 import net.alkanphel.kryptonite.power.*;
+import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
 import net.minecraft.resources.Identifier;
@@ -24,6 +25,7 @@ public class Kryptonite {
         KryptoniteAbilitySerializers.ABILITIES_SERIALIZERS.register(modEventBus);
         KryptoniteConditionSerializers.CONDITIONS_SERIALIZERS.register(modEventBus);
         DimensionConditionSerializers.DIMENSION_CONDITION_SERIALIZERS.register(modEventBus);
+        DamageConditionSerializers.DAMAGE_CONDITION_SERIALIZERS.register(modEventBus);
 
         KryptoniteNetwork.init();
     }

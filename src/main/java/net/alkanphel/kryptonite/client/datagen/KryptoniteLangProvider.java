@@ -42,10 +42,13 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
         @Override
         protected void addTranslations() {
             // Abilities
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
             this.addAbility(KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN, "Immediate Respawn");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_DEATH, "Prevent Death");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GLIDING, "Prevent Gliding");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_TOTEM_USE, "Prevent Totem Use");
 
             // Datapack
         }

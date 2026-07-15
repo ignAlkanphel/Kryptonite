@@ -1,0 +1,27 @@
+{
+  "name": "Prevent Totem Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_totem_use": {
+      "type": "kryptonite:prevent_totem_use",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Totem use prevented!"
+      }
+    },
+    "prevent_totem_use2": {
+      "type": "kryptonite:prevent_totem_use",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Totem use prevented via death by Iron Golem!"
+      },
+      "damage_conditions": {
+        "type": "kryptonite:attacker",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:iron_golem"
+        }
+      }
+    }
+  }
+}

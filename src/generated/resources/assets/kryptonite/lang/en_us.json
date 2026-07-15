@@ -1,6 +1,9 @@
 {
+  "ability.kryptonite.action_on_totem_use": "Action On Totem Use",
   "ability.kryptonite.dynamic_lights": "Dynamic Lights",
   "ability.kryptonite.immediate_respawn": "Immediate Respawn",
+  "ability.kryptonite.prevent_death": "Prevent Death",
   "ability.kryptonite.prevent_gliding": "Prevent Gliding",
-  "ability.kryptonite.prevent_sprinting": "Prevent Sprinting"
+  "ability.kryptonite.prevent_sprinting": "Prevent Sprinting",
+  "ability.kryptonite.prevent_totem_use": "Prevent Totem Use"
 }

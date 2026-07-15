@@ -1,0 +1,27 @@
+{
+  "name": "Action On Totem Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_totem_use": {
+      "type": "kryptonite:action_on_totem_use",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Totem Use!"
+      }
+    },
+    "action_on_totem_use2": {
+      "type": "kryptonite:action_on_totem_use",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Totem Use if death via Iron Golem!"
+      },
+      "damage_conditions": {
+        "type": "kryptonite:attacker",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:iron_golem"
+        }
+      }
+    }
+  }
+}

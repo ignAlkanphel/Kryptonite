@@ -1,0 +1,13 @@
+{
+  "name": "Prevent Death", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_death": {
+      "type": "kryptonite:prevent_death",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say My death was greatly exaggerated!"
+      }
+    }
+  }
+}

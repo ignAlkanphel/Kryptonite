@@ -48,6 +48,7 @@ public class KryptoniteClient {
         LevelAccessor clientLevel = e.getLevel();
         CodecDocumentationBuilder.startListening();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.DIMENSION_CONDITION_SERIALIZER, KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER, "Dimension Conditions", clientLevel.registryAccess()).save();
+        HTMLBuilder.documentedPage(KryptoniteRegistryKeys.DAMAGE_CONDITION_SERIALIZER, KryptoniteRegistries.DAMAGE_CONDITION_SERIALIZER, "Damage Conditions", clientLevel.registryAccess()).save();
         CodecDocumentationBuilder.createDocFiles();
     }
 
