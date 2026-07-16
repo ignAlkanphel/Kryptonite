@@ -2,6 +2,7 @@ package net.alkanphel.kryptonite.mixin.common;
 
 import net.alkanphel.kryptonite.network.p2c.S2CSyncAttacker;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
@@ -44,6 +46,16 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (living.isFallFlying() && AbilityUtil.isTypeEnabled(living, KryptoniteAbilitySerializers.PREVENT_GLIDING.get())) {
             ((EntityAccessor) living).kryptonite$setSharedFlag(7, false);
+        }
+    }
+
+    // Prevent Damage ability (prevent freeze)
+    @Inject(method = "canFreeze", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventDamagePreventFreeze(CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity living = (LivingEntity) (Object) this;
+
+        if (PreventDamageAbility.preventsFreeze(living)) {
+            cir.setReturnValue(false);
         }
     }
 

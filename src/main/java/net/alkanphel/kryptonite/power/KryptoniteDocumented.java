@@ -16,9 +16,11 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_DAMAGE_CONDITION_LIST = SettingType.listOrPrimitive("Damage Condition");
     SettingType TYPE_BI_ACTION_LIST = SettingType.listOrPrimitive("Bi Action");
     SettingType TYPE_BLOCK_ACTION_LIST = SettingType.listOrPrimitive("Block Action");
+    SettingType TYPE_ITEM_ACTION_LIST = SettingType.listOrPrimitive("Item Action");
 
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 
+    SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");
     SettingType TYPE_BLOCK_TYPE_HOLDER_SET = SettingType.simple("Block ID(s) / Tag(s)");
     SettingType TYPE_TIMELINE_HOLDER_SET = SettingType.simple("Timeline Type ID(s) / Tag(s)");
 

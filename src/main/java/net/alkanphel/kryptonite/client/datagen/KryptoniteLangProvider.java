@@ -42,15 +42,19 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
         @Override
         protected void addTranslations() {
             // Abilities
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DEATH, "Action On Death");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE, "Action On Farmland Trample");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_JUMP, "Action On Jump");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_LAND, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
             this.addAbility(KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN, "Immediate Respawn");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_DAMAGE, "Prevent Damage");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_DEATH, "Prevent Death");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_FARMLAND_TRAMPLE, "Prevent Farmland Trample");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GLIDING, "Prevent Gliding");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_HEALING, "Prevent Healing");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_TOTEM_USE, "Prevent Totem Use");
 

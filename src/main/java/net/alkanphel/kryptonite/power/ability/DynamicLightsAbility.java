@@ -27,8 +27,7 @@ public class DynamicLightsAbility extends Ability {
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, DynamicLightsAbility::new));
 
-    public final Value luminance;
-    public final Value modelLight;
+    public final Value luminance, modelLight;
 
     public DynamicLightsAbility(Value luminance, Value modelLight, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);

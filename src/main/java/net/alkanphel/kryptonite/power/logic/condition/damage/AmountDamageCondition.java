@@ -1,6 +1,5 @@
 package net.alkanphel.kryptonite.power.logic.condition.damage;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
@@ -9,18 +8,20 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.context.DamageConditionContext;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.value.StaticValue;
+import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
 
-public record AmountDamageCondition(NumberComparator comparator, float compareTo) implements DamageCondition {
+public record AmountDamageCondition(NumberComparator comparator, Value compareTo) implements DamageCondition {
 
     public static final MapCodec<AmountDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(AmountDamageCondition::comparator),
-            Codec.FLOAT.fieldOf("compare_to").forGetter(AmountDamageCondition::compareTo)
+            Value.CODEC.fieldOf("compare_to").forGetter(AmountDamageCondition::compareTo)
     ).apply(instance, AmountDamageCondition::new));
 
     @Override
     public boolean test(DamageConditionContext context) {
-        return comparator.compare(context.amount(), compareTo);
+        return comparator.compare(context.amount(), compareTo.getAsFloat(null));
     }
 
     @Override
@@ -40,8 +41,8 @@ public record AmountDamageCondition(NumberComparator comparator, float compareTo
             builder.setName("Amount")
                     .setDescription("Checks whether the damage is of a specified amount.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_FLOAT, "Value that is being compared against")
-                    .addExampleObject(new AmountDamageCondition(NumberComparator.GREATER_OR_EQUAL, 5.0F));
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .addExampleObject(new AmountDamageCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(5)));
         }
     }
 

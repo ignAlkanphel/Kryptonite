@@ -1,0 +1,36 @@
+{
+  "name": "Prevent Healing", "icon": "minecraft:rotten_flesh",
+
+  "abilities": {
+    "prevent_healing": {
+      "type": "kryptonite:prevent_healing",
+      "full_prevention": false,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Natural",
+        "icon": "minecraft:apple",
+        "list_index": 0
+      }
+    },
+    "prevent_healing_full": {
+      "type": "kryptonite:prevent_healing",
+      "full_prevention": true,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Full",
+        "icon": "minecraft:golden_apple",
+        "list_index": 1
+      }
+    }
+  }
+}

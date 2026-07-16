@@ -80,7 +80,7 @@ public class PreventDeathAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDeathAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents entity from dying. Damage that kills will instead reduce health to 1/2 a heart.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Actions to run on the entity when death is prevented.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when death is prevented.")
                     .addOptional("damage_conditions", TYPE_CONDITION_LIST, "If specified, death is only prevented when these damage condition are fulfilled.")
                     .addExampleObject(new PreventDeathAbility(List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), List.of(new AttackerDamageCondition(Optional.of(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

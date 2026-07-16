@@ -1,6 +1,8 @@
 package net.alkanphel.kryptonite.mixin.common;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +22,14 @@ public abstract class EntityMixin {
         if ((Object) this instanceof LivingEntity living) {
             AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_LAND.get()).forEach(instance -> instance.getAbility().runActions(living));
         }
+    }
+
+    // Prevent Damage ability (prevent fire)
+    @ModifyReturnValue(method = "fireImmune", at = @At("RETURN"))
+    private boolean kryptonite$preventDamagePreventFire(boolean original) {
+        Entity self = (Entity) (Object) this;
+
+        return original || self instanceof LivingEntity living && PreventDamageAbility.preventsFire(living);
     }
 
 }

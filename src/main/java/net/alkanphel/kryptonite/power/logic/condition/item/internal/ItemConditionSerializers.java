@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.condition.item.internal;
 
 import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -13,5 +14,7 @@ public class ItemConditionSerializers {
     public static final DeferredHolder<ItemConditionSerializer<?>, AndItemCondition.Serializer> AND = ITEM_CONDITION_SERIALIZERS.register("and", AndItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, NotItemCondition.Serializer> NOT = ITEM_CONDITION_SERIALIZERS.register("not", NotItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, OrItemCondition.Serializer> OR = ITEM_CONDITION_SERIALIZERS.register("or", OrItemCondition.Serializer::new);
+
+    public static final DeferredHolder<ItemConditionSerializer<?>, ItemItemCondition.Serializer> ITEM = ITEM_CONDITION_SERIALIZERS.register("item", ItemItemCondition.Serializer::new);
 
 }

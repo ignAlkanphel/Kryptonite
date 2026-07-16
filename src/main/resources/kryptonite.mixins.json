@@ -8,6 +8,7 @@
     "common.EntityMixin",
     "common.LivingEntityMixin",
     "common.PlayerMixin",
+    "common.FoodDataMixin",
     "common.EntitySuperpowerHandlerMixin",
     "common.PowerInstanceMixin",
     "common.AbilityInstanceMixin"

@@ -1,0 +1,68 @@
+{
+  "name": "Prevent Damage", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_damage_all": {
+      "type": "kryptonite:prevent_damage",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Damage",
+        "icon": "minecraft:shield",
+        "list_index": 0
+      }
+    },
+    "prevent_damage_explosions": {
+      "type": "kryptonite:prevent_damage",
+      "damage_conditions": {
+        "type": "kryptonite:damage_type",
+        "damage_type": "#minecraft:is_explosion"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Explosion Damage",
+        "icon": "minecraft:tnt",
+        "list_index": 1
+      }
+    },
+    "prevent_set_on_fire": {
+      "type": "kryptonite:prevent_damage",
+      "prevent_fire": true,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Fire",
+        "icon": "minecraft:flint_and_steel",
+        "list_index": 2
+      }
+    },
+    "prevent_damage_freeze": {
+      "type": "kryptonite:prevent_damage",
+      "prevent_freeze": true,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Freeze",
+        "icon": "minecraft:ice",
+        "list_index": 3
+      }
+    }
+  }
+}

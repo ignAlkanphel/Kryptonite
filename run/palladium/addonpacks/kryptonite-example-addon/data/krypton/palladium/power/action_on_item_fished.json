@@ -1,0 +1,24 @@
+{
+  "name": "Action On Item Fished", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_item_fished": {
+      "type": "kryptonite:action_on_item_fished",
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:cod"
+      },
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say You fished up raw cod!"
+      }
+    },
+    "action_on_item_fished2": {
+      "type": "kryptonite:action_on_item_fished",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say You fished up something!"
+      }
+    }
+  }
+}

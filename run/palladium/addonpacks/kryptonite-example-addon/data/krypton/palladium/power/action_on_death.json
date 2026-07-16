@@ -1,0 +1,26 @@
+{
+  "name": "Action On Death", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_death": {
+      "type": "kryptonite:action_on_death",
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Action On Death (target_action)!"
+        }
+      }
+    },
+    "action_on_death2": {
+      "type": "kryptonite:action_on_death",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Action On Death (actor_action)!"
+        }
+      }
+    }
+  }
+}
