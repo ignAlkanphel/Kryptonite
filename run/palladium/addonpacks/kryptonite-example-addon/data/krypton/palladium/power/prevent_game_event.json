@@ -1,0 +1,14 @@
+{
+  "name": "Prevent Game Event", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_game_event": {
+      "type": "kryptonite:prevent_game_event",
+      "game_events": "minecraft:hit_ground",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say A game event was prevented!"
+      }
+    }
+  }
+}
