@@ -21,6 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -264,6 +265,30 @@ public class KryptoniteAbilityEventHandler {
 
         AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.ACTION_ON_JUMP.get())
                 .forEach(instance -> instance.getAbility().runActions(entity));
+    }
+
+    @SubscribeEvent // Action On Mount ability
+    public static void onEntityMount(EntityMountEvent e) {
+        if (!(e.getEntityMounting() instanceof LivingEntity rider)) return;
+
+        Entity vehicle = e.getEntityBeingMounted();
+        boolean dismounting = e.isDismounting();
+
+        AbilityUtil.getEnabledInstances(rider, KryptoniteAbilitySerializers.ACTION_ON_MOUNT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().switchToDismount == dismounting)
+                .filter(instance -> instance.getAbility().doesApply(rider, vehicle))
+                .forEach(instance -> instance.getAbility().runActions(rider, vehicle));
+    }
+
+    @SubscribeEvent // Action On Tame ability
+    public static void onAnimalTame(AnimalTameEvent e) {
+        Player tamer = e.getTamer();
+
+        AbilityUtil.getEnabledInstances(tamer, KryptoniteAbilitySerializers.ACTION_ON_TAME.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(tamer, e.getAnimal()))
+                .forEach(instance -> instance.getAbility().runActions(tamer, e.getAnimal()));
     }
 
     @SubscribeEvent

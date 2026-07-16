@@ -1,0 +1,35 @@
+{
+  "name": "Action On Mount", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_mount": {
+      "type": "kryptonite:action_on_mount",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Mount"
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:oak_boat"
+        }
+      }
+    },
+    "action_on_dismount": {
+      "type": "kryptonite:action_on_mount",
+      "switch_to_dismount": true,
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Dismount"
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:oak_boat"
+        }
+      }
+    }
+  }
+}

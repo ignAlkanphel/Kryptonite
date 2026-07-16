@@ -1,0 +1,30 @@
+{
+  "name": "Action On Entity Collision", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_entity_collision": {
+      "type": "kryptonite:action_on_entity_collision",
+      "bientity_actions_on_first_tick": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say first tick action on entity collision (actor_action)!"
+        }
+      },
+      "bientity_actions_on_tick": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say tick action on entity collision (actor_action)!"
+        }
+      },
+      "bientity_actions_on_last_tick": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say last tick action on entity collision (actor_action)!"
+        }
+      }
+    }
+  }
+}

@@ -37,12 +37,15 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
         protected void addTranslations() {
             // Abilities
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DEATH, "Action On Death");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_COLLISION, "Action On Entity Collision");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE, "Action On Farmland Trample");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_HIT, "Action On Hit");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP, "Action On Item Drop");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_JUMP, "Action On Jump");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_LAND, "Action On Land");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_MOUNT, "Action On Mount");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TAME, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN, "Action When Damage Taken");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_HIT, "Action When Hit");
