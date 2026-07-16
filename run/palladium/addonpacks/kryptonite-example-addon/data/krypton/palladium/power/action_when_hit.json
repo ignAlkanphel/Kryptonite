@@ -1,0 +1,26 @@
+{
+  "name": "Action When Hit", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_when_hit": {
+      "type": "kryptonite:action_when_hit",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Action when hit (actor_action)!"
+        }
+      }
+    },
+    "action_when_hit2": {
+      "type": "kryptonite:action_when_hit",
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Action when hit (target_action)!"
+        }
+      }
+    }
+  }
+}

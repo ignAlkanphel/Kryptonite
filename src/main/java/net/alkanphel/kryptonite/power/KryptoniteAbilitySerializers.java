@@ -13,12 +13,15 @@ public class KryptoniteAbilitySerializers {
 
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnDeathAbility.Serializer> ACTION_ON_DEATH = ABILITIES_SERIALIZERS.register("action_on_death", ActionOnDeathAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnFarmlandTrampleAbility.Serializer> ACTION_ON_FARMLAND_TRAMPLE = ABILITIES_SERIALIZERS.register("action_on_farmland_trample", ActionOnFarmlandTrampleAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnHitAbility.Serializer> ACTION_ON_HIT = ABILITIES_SERIALIZERS.register("action_on_hit", ActionOnHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemDropAbility.Serializer> ACTION_ON_ITEM_DROP = ABILITIES_SERIALIZERS.register("action_on_item_drop", ActionOnItemDropAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemFishedAbility.Serializer> ACTION_ON_ITEM_FISHED = ABILITIES_SERIALIZERS.register("action_on_item_fished", ActionOnItemFishedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemSwapAbility.Serializer> ACTION_ON_ITEM_SWAP = ABILITIES_SERIALIZERS.register("action_on_item_swap", ActionOnItemSwapAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnJumpAbility.Serializer> ACTION_ON_JUMP = ABILITIES_SERIALIZERS.register("action_on_jump", ActionOnJumpAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLandAbility.Serializer> ACTION_ON_LAND = ABILITIES_SERIALIZERS.register("action_on_land", ActionOnLandAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTotemUseAbility.Serializer> ACTION_ON_TOTEM_USE = ABILITIES_SERIALIZERS.register("action_on_totem_use", ActionOnTotemUseAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionWhenDamageTakenAbility.Serializer> ACTION_WHEN_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_when_damage_taken", ActionWhenDamageTakenAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionWhenHitAbility.Serializer> ACTION_WHEN_HIT = ABILITIES_SERIALIZERS.register("action_when_hit", ActionWhenHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, DynamicLightsAbility.Serializer> DYNAMIC_LIGHTS = ABILITIES_SERIALIZERS.register("dynamic_lights", DynamicLightsAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ImmediateRespawnAbility.Serializer> IMMEDIATE_RESPAWN = ABILITIES_SERIALIZERS.register("immediate_respawn", ImmediateRespawnAbility.Serializer::new);

@@ -1,0 +1,17 @@
+{
+  "name": "Action When Damage Taken", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_when_damage_taken": {
+      "type": "kryptonite:action_when_damage_taken",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say I'm feeling spicy!"
+      },
+      "damage_conditions": {
+        "type": "kryptonite:damage_type",
+        "damage_type": "#minecraft:is_fire"
+      }
+    }
+  }
+}

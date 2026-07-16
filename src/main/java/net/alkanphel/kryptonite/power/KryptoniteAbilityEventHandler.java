@@ -142,6 +142,35 @@ public class KryptoniteAbilityEventHandler {
     }
 
     @SubscribeEvent
+    public static void onLivingDamagePost(LivingDamageEvent.Post e) {
+        LivingEntity target = e.getEntity();
+        Entity attacker = e.getSource().getEntity();
+        float amount = e.getInflictedDamage();
+
+        // Action On Hit ability (attacker has the ability)
+        if (attacker instanceof LivingEntity livingAttacker) {
+            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.ACTION_ON_HIT.get())
+                    .stream()
+                    .filter(instance -> instance.getAbility().doesApply(livingAttacker, target, e.getSource(), amount))
+                    .forEach(instance -> instance.getAbility().onHit(livingAttacker, target));
+        }
+
+        // Action When Hit ability (target has the ability)
+        if (attacker != null) {
+            AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_HIT.get())
+                    .stream()
+                    .filter(instance -> instance.getAbility().doesApply(attacker, target, e.getSource(), amount))
+                    .forEach(instance -> instance.getAbility().whenHit(attacker, target));
+        }
+
+        // Action When Damage Taken ability (target has the ability, no specified attacker)
+        AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(e.getSource(), amount))
+                .forEach(instance -> instance.getAbility().whenHit(target));
+    }
+
+    @SubscribeEvent
     public static void onLivingUseTotem(LivingUseTotemEvent e) {
         LivingEntity entity = e.getEntity();
         DamageSource source = e.getSource();
