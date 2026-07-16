@@ -247,7 +247,7 @@ public class KryptoniteAbilityEventHandler {
         var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
                 .stream()
                 .map(AbilityInstance::getAbility)
-                .filter(ability -> ability.doesPrevent(e.getVanillaEvent()))
+                .filter(ability -> ability.doesPrevent(living, e.getVanillaEvent()))
                 .toList();
 
         if (instances.isEmpty()) return;

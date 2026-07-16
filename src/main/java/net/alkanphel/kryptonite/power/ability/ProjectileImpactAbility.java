@@ -38,9 +38,9 @@ public class ProjectileImpactAbility extends Ability {
     public static final MapCodec<ProjectileImpactAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.CODEC.listOf().optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
             BiAction.LIST_CODEC.optionalFieldOf("projectile_actions", List.of()).forGetter(a -> a.projectileActions),
-            BiCondition.CODEC.listOf().optionalFieldOf("projectile_conditions", List.of()).forGetter(a -> a.projectileConditions),
+            BiCondition.LIST_CODEC.optionalFieldOf("projectile_conditions", List.of()).forGetter(a -> a.projectileConditions),
             ImpactResult.CODEC.optionalFieldOf("impact_result", ImpactResult.DEFAULT).forGetter(a -> a.impactResult),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ProjectileImpactAbility::new));

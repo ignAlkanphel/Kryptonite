@@ -72,8 +72,7 @@ public class PreventBlockSelectionAbility extends Ability {
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents selection of blocks that fulfill these block conditions.")
                     .addOptional("visual_only", TYPE_BOOLEAN, "If true, the ability will be purely visual.")
                     .addExampleObject(new PreventBlockSelectionAbility(List.of(), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES))), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES))), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

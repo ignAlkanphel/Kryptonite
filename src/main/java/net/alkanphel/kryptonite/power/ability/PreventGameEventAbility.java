@@ -7,7 +7,6 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -17,6 +16,7 @@ import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
@@ -25,29 +25,21 @@ public class PreventGameEventAbility extends Ability {
 
     public static final MapCodec<PreventGameEventAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
-            RegistryCodecs.homogeneousList(Registries.GAME_EVENT).listOf().optionalFieldOf("game_events", List.of()).forGetter(ab -> ab.events),
+            PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.events),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventGameEventAbility::new));
 
     public final List<Action> entityActions;
-    public final List<HolderSet<GameEvent>> events;
+    public final PalladiumHolderSet<GameEvent> events;
 
-    public PreventGameEventAbility(List<Action> entityActions, List<HolderSet<GameEvent>> events, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventGameEventAbility(List<Action> entityActions, PalladiumHolderSet<GameEvent> events, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.events = events;
     }
 
-    public boolean doesPrevent(Holder<GameEvent> event) {
-        if (!events.isEmpty()) {
-            for (HolderSet<GameEvent> set : events) {
-                if (!set.contains(event)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+    public boolean doesPrevent(LivingEntity entity, Holder<GameEvent> event) {
+        return events.resolve(entity.registryAccess()).contains(event);
     }
 
     public void runActions(LivingEntity entity) {
@@ -71,8 +63,8 @@ public class PreventGameEventAbility extends Ability {
             builder.setDescription("Prevents the entity from emitting game events.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when the game events are prevented.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events to prevent.")
-                    .addExampleObject(new PreventGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say A game event was prevented!")))), List.of(HolderSet.direct(GameEvent.HIT_GROUND)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventGameEventAbility(List.of(), List.of(HolderSet.direct(GameEvent.TELEPORT, GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say A game event was prevented!")))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventGameEventAbility(List.of(), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.TELEPORT, GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

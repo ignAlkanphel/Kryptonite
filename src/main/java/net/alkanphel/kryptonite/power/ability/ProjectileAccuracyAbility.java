@@ -25,7 +25,7 @@ import java.util.List;
 public class ProjectileAccuracyAbility extends Ability {
 
     public static final MapCodec<ProjectileAccuracyAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BiCondition.CODEC.listOf().optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ProjectileAccuracyAbility::new));
 

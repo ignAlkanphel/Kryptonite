@@ -18,15 +18,9 @@ import java.util.function.Function;
 public interface BiCondition {
 
     Codec<BiCondition> DIRECT_CODEC = KryptoniteRegistries.BI_CONDITION_SERIALIZER.byNameCodec().dispatch(BiCondition::getSerializer, BiConditionSerializer::codec);
-
-    Codec<BiCondition> FALSE_TRUE_WRAPPED_CODEC = Codec.either(DIRECT_CODEC, Codec.BOOL).xmap(either -> either.map(
-                    Function.identity(),
-                    right -> right ? TrueBiCondition.INSTANCE : FalseBiCondition.INSTANCE),
-            biCondition -> biCondition instanceof TrueBiCondition ? Either.right(true) : (biCondition instanceof FalseBiCondition ? Either.right(false) : Either.left(biCondition)));
-
-    Codec<BiCondition> CODEC = ExtraCodecs.compactListCodec(FALSE_TRUE_WRAPPED_CODEC).xmap(AndBiCondition::new, biCondition -> biCondition instanceof AndBiCondition(
-            List<BiCondition> biConditions
-    ) ? biConditions : Collections.singletonList(biCondition));
+    Codec<BiCondition> FALSE_TRUE_WRAPPED_CODEC = Codec.either(DIRECT_CODEC, Codec.BOOL).xmap(either -> either.map(Function.identity(), right -> right ? TrueBiCondition.INSTANCE : FalseBiCondition.INSTANCE), biCondition -> biCondition instanceof TrueBiCondition ? Either.right(true) : (biCondition instanceof FalseBiCondition ? Either.right(false) : Either.left(biCondition)));
+    Codec<List<BiCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(FALSE_TRUE_WRAPPED_CODEC);
+    Codec<BiCondition> CODEC = ExtraCodecs.compactListCodec(FALSE_TRUE_WRAPPED_CODEC).xmap(AndBiCondition::new, biCondition -> biCondition instanceof AndBiCondition(List<BiCondition> biConditions) ? biConditions : Collections.singletonList(biCondition));
 
     boolean test(BiConditionContext context);
 
