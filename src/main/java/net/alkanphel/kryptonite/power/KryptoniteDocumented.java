@@ -22,6 +22,7 @@ public interface KryptoniteDocumented<T, R extends T> {
 
     SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");
     SettingType TYPE_BLOCK_TYPE_HOLDER_SET = SettingType.simple("Block ID(s) / Tag(s)");
+    SettingType TYPE_GAME_EVENT_HOLDER_SET = SettingType.simple("Game Event ID(s) / Tag(s)");
     SettingType TYPE_TIMELINE_HOLDER_SET = SettingType.simple("Timeline Type ID(s) / Tag(s)");
 
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());

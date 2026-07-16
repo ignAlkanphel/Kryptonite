@@ -4,7 +4,6 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.registry.PalladiumRegistries;
@@ -26,11 +25,6 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
     public void addAbilityTemplate(AbilitySerializer<?> key, String name) {
         var id = PalladiumRegistries.ABILITY_SERIALIZER.getKey(key);
         this.add("ability." + Objects.requireNonNull(id).getNamespace() + "." + id.getPath(), name);
-    }
-
-    public void addConfigEntry(ModConfigSpec.ConfigValue<?> configSpec, String name) {
-        var key = configSpec.getSpec().getTranslationKey();
-        if (key != null) this.add(key, name);
     }
 
     public static class English extends KryptoniteLangProvider {
@@ -55,6 +49,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_DAMAGE, "Prevent Damage");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_DEATH, "Prevent Death");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_FARMLAND_TRAMPLE, "Prevent Farmland Trample");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_GAME_EVENT, "Prevent Game Event");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GLIDING, "Prevent Gliding");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_HEALING, "Prevent Healing");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");

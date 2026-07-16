@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
@@ -236,6 +237,23 @@ public class KryptoniteAbilityEventHandler {
                 instance.getAbility().runActions(living, level, e.getPos());
             }
         }
+    }
+
+    @SubscribeEvent // Prevent Game Event ability
+    public static void onVanillaGameEvent(VanillaGameEvent e) {
+        Entity cause = e.getCause();
+        if (!(cause instanceof LivingEntity living)) return;
+
+        var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
+                .stream()
+                .map(AbilityInstance::getAbility)
+                .filter(ability -> ability.doesPrevent(e.getVanillaEvent()))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        instances.forEach(ability -> ability.runActions(living));
+        e.setCanceled(true);
     }
 
 }
