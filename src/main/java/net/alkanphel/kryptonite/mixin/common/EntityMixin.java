@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.mixin.common;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
+import net.alkanphel.kryptonite.power.ability.PreventEntityCollisionAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -30,6 +32,21 @@ public abstract class EntityMixin {
         Entity self = (Entity) (Object) this;
 
         return original || self instanceof LivingEntity living && PreventDamageAbility.preventsFire(living);
+    }
+
+    // Prevent Entity Collision ability
+    @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventEntityPushing(Entity entity, CallbackInfo ci) {
+        if (PreventEntityCollisionAbility.doesApply((Entity) (Object) this, entity)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "isPickable", at = @At("RETURN"), cancellable = true)
+    private void kryptonite$preventEntityCollision(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue() && PreventEntityCollisionAbility.doesApply((Entity) (Object) this, (Entity) (Object) this)) {
+            cir.setReturnValue(false);
+        }
     }
 
 }

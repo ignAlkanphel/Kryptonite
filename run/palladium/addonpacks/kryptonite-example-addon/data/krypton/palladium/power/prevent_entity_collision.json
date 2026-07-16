@@ -1,0 +1,9 @@
+{
+  "name": "Prevent Entity Collision", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_entity_collision": {
+      "type": "kryptonite:prevent_entity_collision"
+    }
+  }
+}

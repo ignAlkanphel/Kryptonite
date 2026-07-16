@@ -17,8 +17,9 @@
     "common.AbilityInstanceMixin"
   ],
   "client": [
-    "client.EntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.EntityRendererMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.KeyMappingAccessor"
   ],
   "injectors": {

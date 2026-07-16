@@ -1,0 +1,9 @@
+{
+  "name": "Prevent Entity Render", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_entity_render": {
+      "type": "kryptonite:prevent_entity_render"
+    }
+  }
+}

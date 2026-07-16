@@ -1,0 +1,9 @@
+{
+  "name": "Prevent Entity Selection", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_entity_selection_simple": {
+      "type": "kryptonite:prevent_entity_selection"
+    }
+  }
+}
