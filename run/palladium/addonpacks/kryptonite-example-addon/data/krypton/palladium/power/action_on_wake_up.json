@@ -1,0 +1,17 @@
+{
+  "name": "Action On Wake Up", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_wake_up": {
+      "type": "kryptonite:action_on_wake_up",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Wake Up!"
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:red_bed"
+      }
+    }
+  }
+}

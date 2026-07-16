@@ -1,0 +1,24 @@
+{
+  "name": "Action On Block Break", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_block_break": {
+      "type": "kryptonite:action_on_block_break",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Magma Block broken and converted to lava!"
+      },
+      "block_actions": {
+        "type": "kryptonite:set_block",
+        "block": {
+          "Name": "minecraft:lava"
+        }
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:magma_block"
+      },
+      "only_when_harvested": true
+    }
+  }
+}

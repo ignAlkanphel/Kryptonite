@@ -1,8 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.action.bi.internal;
 
 import net.alkanphel.kryptonite.Kryptonite;
-import net.alkanphel.kryptonite.power.logic.action.bi.SetInLoveBiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.TameBiAction;
+import net.alkanphel.kryptonite.power.logic.action.bi.*;
 import net.alkanphel.kryptonite.power.logic.action.bi.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.neoforged.neoforge.registries.DeferredHolder;

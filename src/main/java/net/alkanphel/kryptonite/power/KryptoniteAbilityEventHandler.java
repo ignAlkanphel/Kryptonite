@@ -2,6 +2,10 @@ package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
+import net.alkanphel.kryptonite.util.apoli.access.BlockBreakDirectionHolder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -26,83 +31,15 @@ import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
-
-    @SubscribeEvent // Projectile Impact ability
-    public static void onProjectileImpact(ProjectileImpactEvent e) {
-        if (!(e.getRayTraceResult() instanceof EntityHitResult result)) return;
-        if (!(result.getEntity() instanceof LivingEntity holder)) return;
-
-        Projectile projectile = e.getProjectile();
-
-        var instances = AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.PROJECTILE_IMPACT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(holder, projectile))
-                .toList();
-
-        if (instances.isEmpty()) return;
-
-        for (AbilityInstance<ProjectileImpactAbility> instance : instances) {
-            instance.getAbility().runActions(holder, projectile);
-
-            switch (instance.getAbility().impactResult) {
-                case IGNORE -> e.setCanceled(true);
-                case DISCARD -> {
-                    e.setCanceled(true);
-                    projectile.discard();
-                }
-                case DEFAULT -> {}
-            }
-        }
-    }
-
-    @SubscribeEvent // Projectile Accuracy ability
-    public static void onEntityJoinLevel(EntityJoinLevelEvent e) {
-        if (!(e.getEntity() instanceof Projectile projectile)) return;
-        if (!(projectile.getOwner() instanceof ServerPlayer player)) return;
-
-        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PROJECTILE_ACCURACY.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(player, projectile))
-                .toList();
-
-        if (instances.isEmpty()) return;
-
-        Vec3 delta = projectile.getDeltaMovement();
-        if (delta.lengthSqr() <= 0) return;
-
-        double speed = delta.length();
-        Vec3 look = player.getLookAngle().normalize().scale(speed);
-        projectile.setDeltaMovement(look);
-    }
-
-
-    @SubscribeEvent // Prevent Mob Aggro ability
-    public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
-        LivingEntity newTarget = e.getNewAboutToBeSetTarget();
-
-        if (newTarget == null) return;
-        if (!(e.getEntity() instanceof Mob mob)) return;
-
-        if (PreventMobAggroAbility.shouldIgnore(newTarget, mob)) {
-            e.setCanceled(true);
-        }
-
-        if (mob.getTarget() != null && PreventMobAggroAbility.shouldAggroReset(newTarget, mob)) {
-            mob.setTarget(null);
-            mob.setLastHurtByMob(null);
-        }
-    }
-
-
-    // ------------------------------------------------------------------------------------------------------------------------
-
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onLivingIncomingDamageTaken(LivingIncomingDamageEvent e) {
@@ -259,6 +196,139 @@ public class KryptoniteAbilityEventHandler {
     // ------------------------------------------------------------------------------------------------------------------------
 
 
+    @SubscribeEvent // Action On Block Break ability
+    public static void onBreak(BreakBlockEvent e) {
+        Player player = e.getPlayer();
+        if (!(e.getLevel() instanceof Level level)) return;
+
+        BlockPos pos = e.getPos();
+        BlockState state = e.getState();
+
+        SavedBlockPosition saved = new SavedBlockPosition(level, pos, state, level.getBlockEntity(pos));
+
+        boolean harvested = state.canHarvestBlock(level, pos, player);
+        Direction direction = Direction.UP; // fallback
+
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.gameMode instanceof BlockBreakDirectionHolder holder) {
+            Direction captured = holder.kryptonite$getDirection();
+            if (captured != null) direction = captured;
+        }
+
+        Direction finalDirection = direction;
+
+        AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(saved, harvested))
+                .forEach(instance -> instance.getAbility().runActions(player, pos, finalDirection));
+    }
+
+    @SubscribeEvent
+    public static void onBlockFarmlandTrample(BlockEvent.FarmlandTrampleEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity living)) return;
+        if (!(e.getLevel() instanceof Level level)) return;
+
+        // Prevent Farmland Trample ability
+        for (AbilityInstance<PreventFarmlandTrampleAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_FARMLAND_TRAMPLE.get())) {
+            if (instance.getAbility().doesPrevent(level, e.getPos())) {
+                e.setCanceled(true);
+                return; // stops actions running for 'Action On Farmland Trample'
+            }
+        }
+
+        // Action On Farmland Trample ability
+        for (AbilityInstance<ActionOnFarmlandTrampleAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE.get())) {
+            if (instance.getAbility().doesApply(level, e.getPos())) {
+                instance.getAbility().runActions(living, level, e.getPos());
+            }
+        }
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+    @SubscribeEvent // Projectile Impact ability
+    public static void onProjectileImpact(ProjectileImpactEvent e) {
+        if (!(e.getRayTraceResult() instanceof EntityHitResult result)) return;
+        if (!(result.getEntity() instanceof LivingEntity holder)) return;
+
+        Projectile projectile = e.getProjectile();
+
+        var instances = AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.PROJECTILE_IMPACT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(holder, projectile))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        for (AbilityInstance<ProjectileImpactAbility> instance : instances) {
+            instance.getAbility().runActions(holder, projectile);
+
+            switch (instance.getAbility().impactResult) {
+                case IGNORE -> e.setCanceled(true);
+                case DISCARD -> {
+                    e.setCanceled(true);
+                    projectile.discard();
+                }
+                case DEFAULT -> {}
+            }
+        }
+    }
+
+    @SubscribeEvent // Projectile Accuracy ability
+    public static void onEntityJoinLevel(EntityJoinLevelEvent e) {
+        if (!(e.getEntity() instanceof Projectile projectile)) return;
+        if (!(projectile.getOwner() instanceof ServerPlayer player)) return;
+
+        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PROJECTILE_ACCURACY.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(player, projectile))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        Vec3 delta = projectile.getDeltaMovement();
+        if (delta.lengthSqr() <= 0) return;
+
+        double speed = delta.length();
+        Vec3 look = player.getLookAngle().normalize().scale(speed);
+        projectile.setDeltaMovement(look);
+    }
+
+
+    @SubscribeEvent // Prevent Mob Aggro ability
+    public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
+        LivingEntity newTarget = e.getNewAboutToBeSetTarget();
+
+        if (newTarget == null) return;
+        if (!(e.getEntity() instanceof Mob mob)) return;
+
+        if (PreventMobAggroAbility.shouldIgnore(newTarget, mob)) {
+            e.setCanceled(true);
+        }
+
+        if (mob.getTarget() != null && PreventMobAggroAbility.shouldAggroReset(newTarget, mob)) {
+            mob.setTarget(null);
+            mob.setLastHurtByMob(null);
+        }
+    }
+
+    @SubscribeEvent // Prevent Game Event ability
+    public static void onVanillaGameEvent(VanillaGameEvent e) {
+        Entity cause = e.getCause();
+        if (!(cause instanceof LivingEntity living)) return;
+
+        var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
+                .stream()
+                .map(AbilityInstance::getAbility)
+                .filter(ability -> ability.doesPrevent(living, e.getVanillaEvent()))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        instances.forEach(ability -> ability.runActions(living));
+        e.setCanceled(true);
+    }
+
     @SubscribeEvent // Action On Jump
     public static void onLivingJump(LivingEvent.LivingJumpEvent e) {
         LivingEntity entity = e.getEntity();
@@ -291,42 +361,16 @@ public class KryptoniteAbilityEventHandler {
                 .forEach(instance -> instance.getAbility().runActions(tamer, e.getAnimal()));
     }
 
-    @SubscribeEvent
-    public static void onBlockFarmlandTrample(BlockEvent.FarmlandTrampleEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity living)) return;
-        if (!(e.getLevel() instanceof Level level)) return;
+    @SubscribeEvent // Action On Wake Up ability
+    public static void onPlayerWakeUp(PlayerWakeUpEvent e) {
+        if (!(e.getEntity() instanceof ServerPlayer player)) return;
+        if (e.wakeImmediately() || e.updateLevel()) return;
 
-        // Prevent Farmland Trample ability
-        for (AbilityInstance<PreventFarmlandTrampleAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_FARMLAND_TRAMPLE.get())) {
-            if (instance.getAbility().doesPrevent(level, e.getPos())) {
-                e.setCanceled(true);
-                return; // stops actions running for 'Action On Farmland Trample'
-            }
-        }
-
-        // Action On Farmland Trample ability
-        for (AbilityInstance<ActionOnFarmlandTrampleAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE.get())) {
-            if (instance.getAbility().doesApply(level, e.getPos())) {
-                instance.getAbility().runActions(living, level, e.getPos());
-            }
-        }
-    }
-
-    @SubscribeEvent // Prevent Game Event ability
-    public static void onVanillaGameEvent(VanillaGameEvent e) {
-        Entity cause = e.getCause();
-        if (!(cause instanceof LivingEntity living)) return;
-
-        var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
+        player.getSleepingPos().ifPresent(pos -> AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP.get())
                 .stream()
-                .map(AbilityInstance::getAbility)
-                .filter(ability -> ability.doesPrevent(living, e.getVanillaEvent()))
-                .toList();
-
-        if (instances.isEmpty()) return;
-
-        instances.forEach(ability -> ability.runActions(living));
-        e.setCanceled(true);
+                .filter(instance -> instance.getAbility().doesApply(pos, player))
+                .forEach(instance -> instance.getAbility().runActions(pos, Direction.DOWN, player))
+        );
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH) // Allow Enderman Stare ability

@@ -12,6 +12,7 @@
     "common.ItemStackMixin",
     "common.BlockItemMixin",
     "common.BlockStateBaseMixin",
+    "common.ServerPlayerGameModeMixin",
     "common.EntitySuperpowerHandlerMixin",
     "common.PowerInstanceMixin",
     "common.AbilityInstanceMixin"
