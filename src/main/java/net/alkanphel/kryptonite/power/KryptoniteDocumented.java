@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.FogType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 
@@ -28,6 +29,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());
     SettingType TYPE_CARDINAL_LIGHTING = SettingType.enumList(CardinalLighting.Type.values());
     SettingType TYPE_INTERACTION_HAND = SettingType.enumList(InteractionHand.values());
+    SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
 
     CodecDocumentationBuilder<T, R> getDocumentation(HolderLookup.Provider var1);
 }

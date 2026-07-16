@@ -20,6 +20,8 @@
     "client.LocalPlayerMixin",
     "client.EntityRendererMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.GameRendererMixin",
+    "client.CameraMixin",
     "client.KeyMappingAccessor"
   ],
   "injectors": {

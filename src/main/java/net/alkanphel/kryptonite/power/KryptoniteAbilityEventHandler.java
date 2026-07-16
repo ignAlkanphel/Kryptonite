@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -78,6 +79,24 @@ public class KryptoniteAbilityEventHandler {
         double speed = delta.length();
         Vec3 look = player.getLookAngle().normalize().scale(speed);
         projectile.setDeltaMovement(look);
+    }
+
+
+    @SubscribeEvent // Prevent Mob Aggro ability
+    public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
+        LivingEntity newTarget = e.getNewAboutToBeSetTarget();
+
+        if (newTarget == null) return;
+        if (!(e.getEntity() instanceof Mob mob)) return;
+
+        if (PreventMobAggroAbility.shouldIgnore(newTarget, mob)) {
+            e.setCanceled(true);
+        }
+
+        if (mob.getTarget() != null && PreventMobAggroAbility.shouldAggroReset(newTarget, mob)) {
+            mob.setTarget(null);
+            mob.setLastHurtByMob(null);
+        }
     }
 
 
@@ -254,6 +273,20 @@ public class KryptoniteAbilityEventHandler {
 
         instances.forEach(ability -> ability.runActions(living));
         e.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // Allow Enderman Stare ability
+    public static void onEnderManAnger(EnderManAngerEvent e) {
+        if (!(e.getPlayer() instanceof ServerPlayer player)) return;
+
+        var enderman = e.getEntity();
+
+        for (AbilityInstance<AllowEndermanStareAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE.get())) {
+            if (instance.getAbility().appliesTo(player, enderman)) {
+                e.setCanceled(true);
+                return;
+            }
+        }
     }
 
 }

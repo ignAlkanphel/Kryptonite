@@ -1,0 +1,27 @@
+{
+  "name": "Modify Fog Type", "icon": "minecraft:water_bucket",
+
+  "abilities": {
+    "from_water_to_lava": {
+      "type": "kryptonite:modify_fog_type",
+      "from": "water",
+      "to": "lava",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "to_lava": {
+      "type": "kryptonite:modify_fog_type",
+      "to": "lava",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

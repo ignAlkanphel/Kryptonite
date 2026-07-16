@@ -1,0 +1,66 @@
+{
+  "name": "Mobs Ignore", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_mob_aggro_skeletons": {
+      "type": "kryptonite:prevent_mob_aggro",
+      "mob_aggro_on_attack": true,
+      "mob_aggro_reset": false,
+      "mob_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "#minecraft:skeletons"
+      },
+      "properties": {
+        "icon": "minecraft:skeleton_skull",
+        "title": "Skeletons Ignore",
+        "list_index": 0
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "prevent_mob_aggro_zombies": {
+      "type": "kryptonite:prevent_mob_aggro",
+      "mob_aggro_on_attack": false,
+      "mob_aggro_reset": true,
+      "mob_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "#minecraft:zombies"
+      },
+      "properties": {
+        "icon": "minecraft:zombie_head",
+        "title": "Zombies Ignore",
+        "list_index": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "prevent_mob_aggro_bees": {
+      "type": "kryptonite:prevent_mob_aggro",
+      "mob_aggro_on_attack": false,
+      "mob_aggro_reset": true,
+      "mob_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:bee"
+      },
+      "properties": {
+        "icon": "minecraft:bee_spawn_egg",
+        "title": "Bees Ignore",
+        "list_index": 2
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}
