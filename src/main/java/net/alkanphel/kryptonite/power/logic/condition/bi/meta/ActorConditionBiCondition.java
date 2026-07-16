@@ -47,7 +47,7 @@ public record ActorConditionBiCondition(Condition condition) implements BiCondit
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, ActorConditionBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Actor Condition")
                     .setDescription("Checks if the actor entity fulfills the specified conditions.")
-                    .add("conditions", TYPE_CONDITION_LIST, "Conditions to check for on the actor entity.")
+                    .add("conditions", TYPE_CONDITION_LIST, "The conditions to check for on the actor entity.")
                     .addExampleObject(new ActorConditionBiCondition(new net.threetag.palladium.logic.condition.CrouchingCondition()));
         }
     }

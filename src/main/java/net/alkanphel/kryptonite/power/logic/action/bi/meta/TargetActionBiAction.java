@@ -61,7 +61,7 @@ public class TargetActionBiAction extends BiAction {
         public void addDocumentation(CodecDocumentationBuilder<BiAction, TargetActionBiAction> builder, HolderLookup.Provider provider) {
             builder.setName("Target Action")
                     .setDescription("Runs actions on the target entity.")
-                    .add("actions", TYPE_ACTION_LIST, "Actions to run on the target.")
+                    .add("actions", TYPE_ACTION_LIST, "The actions to run on the target entity.")
                     .addExampleObject(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say I am the target!"))))));
         }
     }

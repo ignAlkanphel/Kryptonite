@@ -74,8 +74,8 @@ public class ActionOnItemFishedAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemFishedAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Fished")
                     .setDescription("Runs actions when the player reels in an item with a fishing rod.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the player after they reeled an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the reeled item.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions that will be run on the player after they reeled an item.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "The item actions that will be run on the reeled item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only run if these item conditions are fulfilled by the reeled item.")
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), List.of(), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

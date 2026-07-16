@@ -47,7 +47,7 @@ public record TargetConditionBiCondition(Condition condition) implements BiCondi
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, TargetConditionBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Target Condition")
                     .setDescription("Checks if the target entity fulfills the specified conditions.")
-                    .add("conditions", TYPE_CONDITION_LIST, "Conditions to check for on the target entity.")
+                    .add("conditions", TYPE_CONDITION_LIST, "The conditions to check for on the target entity.")
                     .addExampleObject(new TargetConditionBiCondition(new net.threetag.palladium.logic.condition.CrouchingCondition()));
         }
     }

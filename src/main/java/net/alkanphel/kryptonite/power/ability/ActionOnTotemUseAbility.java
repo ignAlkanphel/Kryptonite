@@ -80,7 +80,7 @@ public class ActionOnTotemUseAbility extends Ability {
             builder.setName("Action On Totem Use")
                     .setDescription("Runs actions when the entity uses a Totem of Undying to prevent death.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when the totem activates.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions when these conditions are fulfilled by the damage source that caused the totem to be used.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions if these damage conditions are fulfilled by the damage source that caused the totem to be used.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Which hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
                     .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on totem use!"))), List.of(), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on Totem Use if death via Iron Golem!"))), List.of(new AttackerDamageCondition(Optional.of(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

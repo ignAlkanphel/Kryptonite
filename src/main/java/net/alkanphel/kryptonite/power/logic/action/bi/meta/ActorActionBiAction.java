@@ -61,7 +61,7 @@ public class ActorActionBiAction extends BiAction {
         public void addDocumentation(CodecDocumentationBuilder<BiAction, ActorActionBiAction> builder, HolderLookup.Provider provider) {
             builder.setName("Actor Action")
                     .setDescription("Runs actions on the actor entity.")
-                    .add("actions", TYPE_ACTION_LIST, "Actions to run on the actor.")
+                    .add("actions", TYPE_ACTION_LIST, "The actions to run on the actor entity.")
                     .addExampleObject(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say I am the actor!"))))));
         }
     }

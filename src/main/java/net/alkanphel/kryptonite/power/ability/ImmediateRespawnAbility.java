@@ -38,7 +38,7 @@ public class ImmediateRespawnAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ImmediateRespawnAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Allows the player to instantly respawn as if the vanilla 'immediate_respawn' game rule was enabled.")
+            builder.setDescription("Allows the player to instantly respawn as if the vanilla \"immediate_respawn\" game rule was enabled.")
                     .addExampleObject(new ImmediateRespawnAbility(AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()));
         }
     }

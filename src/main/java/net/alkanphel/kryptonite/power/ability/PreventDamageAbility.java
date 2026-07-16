@@ -82,10 +82,10 @@ public class PreventDamageAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDamageAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Damage")
-                    .setDescription("Makes the living entity immune against certain damage types. Works the same as the base Palladium version, just with damage conditions & some additional fields.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage conditions that must be fulfilled for damage to be prevented.")
-                    .addOptional("prevent_fire", TYPE_BOOLEAN, "If true, makes the living entity unable to be set on fire.", false)
-                    .addOptional("prevent_freeze", TYPE_BOOLEAN, "If true, makes the living entity unable to freeze.", false)
+                    .setDescription("Makes the entity immune to certain damage types.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "The damage conditions that must be fulfilled for damage to be prevented.")
+                    .addOptional("prevent_fire", TYPE_BOOLEAN, "If true, makes the entity unable to be set on fire.", false)
+                    .addOptional("prevent_freeze", TYPE_BOOLEAN, "If true, makes the entity unable to freeze.", false)
                     .addExampleObject(new PreventDamageAbility(List.of(), false, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION))), false, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

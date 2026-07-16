@@ -47,7 +47,7 @@ public class PreventFarmlandTrampleAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventFarmlandTrampleAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the trampling of farmland blocks.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents trampling if the block fulfills these conditions.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents trampling if the block fulfills these block conditions.")
                     .addExampleObject(new PreventFarmlandTrampleAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

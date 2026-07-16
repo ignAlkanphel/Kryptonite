@@ -54,8 +54,8 @@ public record ProjectileDamageCondition(Optional<HolderSet<EntityType<?>>> proje
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, ProjectileDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Projectile")
                     .setDescription("Checks if the damage source was projectile damage, and optionally the type of projectile it was (if specified).")
-                    .addOptional("projectile", TYPE_ENTITY_TYPE_HOLDER_SET, "If set, the check will only pass if the projectile was of the specified entity type.")
-                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "If set, the check will only pass if the projectile entity fulfills these conditions.")
+                    .addOptional("projectile", TYPE_ENTITY_TYPE_HOLDER_SET, "If specified, the check will only pass if the projectile was of the specified entity type.")
+                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "If specified, the check will only pass if the projectile entity fulfills these conditions.")
                     .addExampleObject(new ProjectileDamageCondition(Optional.empty(), Optional.empty()));
         }
     }

@@ -3,17 +3,23 @@ package net.alkanphel.kryptonite.power;
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.*;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -23,6 +29,58 @@ import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
+
+    @SubscribeEvent // Projectile Impact ability
+    public static void onProjectileImpact(ProjectileImpactEvent e) {
+        if (!(e.getRayTraceResult() instanceof EntityHitResult result)) return;
+        if (!(result.getEntity() instanceof LivingEntity holder)) return;
+
+        Projectile projectile = e.getProjectile();
+
+        var instances = AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.PROJECTILE_IMPACT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(holder, projectile))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        for (AbilityInstance<ProjectileImpactAbility> instance : instances) {
+            instance.getAbility().runActions(holder, projectile);
+
+            switch (instance.getAbility().impactResult) {
+                case IGNORE -> e.setCanceled(true);
+                case DISCARD -> {
+                    e.setCanceled(true);
+                    projectile.discard();
+                }
+                case DEFAULT -> {}
+            }
+        }
+    }
+
+    @SubscribeEvent // Projectile Accuracy ability
+    public static void onEntityJoinLevel(EntityJoinLevelEvent e) {
+        if (!(e.getEntity() instanceof Projectile projectile)) return;
+        if (!(projectile.getOwner() instanceof ServerPlayer player)) return;
+
+        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PROJECTILE_ACCURACY.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(player, projectile))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        Vec3 delta = projectile.getDeltaMovement();
+        if (delta.lengthSqr() <= 0) return;
+
+        double speed = delta.length();
+        Vec3 look = player.getLookAngle().normalize().scale(speed);
+        projectile.setDeltaMovement(look);
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onLivingIncomingDamageTaken(LivingIncomingDamageEvent e) {
@@ -82,6 +140,21 @@ public class KryptoniteAbilityEventHandler {
                 .forEach(instance -> instance.getAbility().runActions(entity));
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    static void onLivingHeal(LivingHealEvent e) { // Prevent Healing ability
+        for (AbilityInstance<PreventHealingAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_HEALING.get())) {
+            if (PreventHealingAbility.isFullPrevention(instance)) {
+                e.setAmount(0);
+                e.setCanceled(true);
+                return;
+            }
+        }
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+
     @SubscribeEvent // Action On Item Fished ability
     public static void onItemFished(ItemFishedEvent e) {
         Player player = e.getEntity();
@@ -96,17 +169,6 @@ public class KryptoniteAbilityEventHandler {
                     .map(AbilityInstance::getAbility)
                     .filter(ability -> ability.doesApply(player, stack))
                     .forEach(ability -> ability.runActions(player, slotAccess));
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    static void onLivingHeal(LivingHealEvent e) { // Prevent Healing ability
-        for (AbilityInstance<PreventHealingAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_HEALING.get())) {
-            if (PreventHealingAbility.isFullPrevention(instance)) {
-                e.setAmount(0);
-                e.setCanceled(true);
-                return;
-            }
         }
     }
 
