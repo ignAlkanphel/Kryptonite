@@ -20,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -155,6 +156,38 @@ public class KryptoniteAbilityEventHandler {
     // ------------------------------------------------------------------------------------------------------------------------
 
 
+    @SubscribeEvent // Action On Item Drop ability
+    public static void onItemToss(ItemTossEvent e) {
+        LivingEntity living = e.getPlayer();
+        if (living.level().isClientSide()) return;
+
+        ItemStack stack = e.getEntity().getItem();
+        SlotAccess slotAccess = SlotAccess.of(() -> stack, s -> e.getEntity().setItem(s));
+
+        AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(living, stack))
+                .forEach(instance -> instance.getAbility().runActions(living, slotAccess));
+    }
+
+    @SubscribeEvent // Action On Item Swap ability
+    public static void onItemSwap(LivingSwapItemsEvent.Hands e) {
+        LivingEntity holder = e.getEntity();
+        if (holder.level().isClientSide()) return;
+
+        ItemStack mainStack = e.getItemSwappedToMainHand();
+        ItemStack offStack = e.getItemSwappedToOffHand();
+
+        SlotAccess mainReference = SlotAccess.of(e::getItemSwappedToMainHand, e::setItemSwappedToMainHand);
+        SlotAccess offReference = SlotAccess.of(e::getItemSwappedToOffHand, e::setItemSwappedToOffHand);
+
+        AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.ACTION_ON_ITEM_SWAP.get())
+                .stream()
+                .map(AbilityInstance::getAbility)
+                .filter(ability -> ability.doesApply(holder, mainStack, offStack))
+                .forEach(ability -> ability.runActions(holder, mainReference, offReference));
+    }
+
     @SubscribeEvent // Action On Item Fished ability
     public static void onItemFished(ItemFishedEvent e) {
         Player player = e.getEntity();
@@ -171,6 +204,10 @@ public class KryptoniteAbilityEventHandler {
                     .forEach(ability -> ability.runActions(player, slotAccess));
         }
     }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
 
     @SubscribeEvent // Action On Jump
     public static void onLivingJump(LivingEvent.LivingJumpEvent e) {

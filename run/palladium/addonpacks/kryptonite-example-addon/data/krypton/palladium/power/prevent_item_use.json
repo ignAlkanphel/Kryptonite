@@ -1,0 +1,13 @@
+{
+  "name": "Prevent Item Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_item_use": {
+      "type": "kryptonite:prevent_item_use",
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:bow"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Action On Item Swap", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_item_swap": {
+      "type": "kryptonite:action_on_item_swap",
+      "trigger": "both",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Diamond (Mainhand) + Coal (Offhand)!"
+      },
+      "main_item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:diamond"
+      },
+      "off_item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:coal"
+      }
+    },
+    "action_on_item_swap2": {
+      "type": "kryptonite:action_on_item_swap",
+      "trigger": "off",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Dirt (Offhand)!"
+      },
+      "off_item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:dirt"
+      }
+    },
+    "action_on_item_swap3": {
+      "type": "kryptonite:action_on_item_swap",
+      "trigger": "main",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Dirt (Mainhand)!"
+      },
+      "main_item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:dirt"
+      }
+    }
+  }
+}

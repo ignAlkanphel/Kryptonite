@@ -1,0 +1,49 @@
+{
+  "name": "Prevent Block Selection", "icon": "minecraft:glass",
+
+  "abilities": {
+    "prevent_block_selection": {
+      "type": "kryptonite:prevent_block_selection",
+      "block_conditions": {
+        "type": "kryptonite:or",
+        "conditions": [
+          {"type": "kryptonite:block", "block": "minecraft:sand"},
+          {"type": "kryptonite:block", "block": "minecraft:red_sand"}
+        ]
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Prevent Block Selection",
+        "icon": "minecraft:sand",
+        "list_index": 0
+      }
+    },
+    "prevent_block_selection_visual_only": {
+      "type": "kryptonite:prevent_block_selection",
+      "visual_only": true,
+      "block_conditions": {
+        "type": "kryptonite:or",
+        "conditions": [
+          {"type": "kryptonite:block", "block": "minecraft:sand"},
+          {"type": "kryptonite:block", "block": "minecraft:red_sand"}
+        ]
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Visual Only",
+        "icon": "minecraft:sand",
+        "list_index": 1
+      }
+    }
+  }
+}
