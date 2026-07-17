@@ -1,4 +1,4 @@
-package net.alkanphel.kryptonite.util.apoli;
+package net.alkanphel.kryptonite.util.apoli.ability;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.power.ability.Ability;

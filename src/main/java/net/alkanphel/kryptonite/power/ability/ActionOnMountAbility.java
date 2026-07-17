@@ -83,7 +83,7 @@ public class ActionOnMountAbility extends Ability {
             builder.setName("Action On Mount")
                     .setDescription("Runs actions when the entity mounts (or dismounts) a vehicle. In the context of this ability, the \"actor\" is the ability holder & \"target\" mounted vehicle.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity that mounted the vehicle.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both the \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these bi conditions are fulfilled by either or both the \"actor\" & \"target\" entities.")
                     .addOptional("switch_to_dismount", TYPE_BOOLEAN, "If true, this ability will instead run when the entity dismounts a vehicle.", false)
                     .addExampleObject(new ActionOnMountAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on mount!"))), List.of(), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("oak_boat")))))))), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

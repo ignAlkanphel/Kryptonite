@@ -1,0 +1,16 @@
+{
+  "name": "Prevent Being Used", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_being_used": {
+      "type": "kryptonite:prevent_being_used",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"
+        }
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@ import net.alkanphel.kryptonite.power.logic.condition.bi.meta.ActorConditionBiCo
 import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
-import net.alkanphel.kryptonite.util.apoli.Prioritized;
+import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -129,8 +129,8 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventItemPickupAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Item Pickup")
                     .setDescription("Prevents the entity that has this ability from picking up items.")
-                    .addOptional("bientity_actions_thrower", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both the actor & target entities. In the context of this ability field, the \"actor\" is the entity that threw the item & \"target\" the entity about to pick up the item.")
-                    .addOptional("bientity_actions_item", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both the actor & target entities. In the context of this ability field, the \"actor\" is the entity about to pick up the item & \"target\" the item entity to be picked up. ")
+                    .addOptional("bientity_actions_thrower", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both actor & target entities. In the context of this ability field, the \"actor\" is the entity that threw the item & \"target\" the entity about to pick up the item.")
+                    .addOptional("bientity_actions_item", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both actor & target entities. In the context of this ability field, the \"actor\" is the entity about to pick up the item & \"target\" the item entity to be picked up. ")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the item that was attempted to be picked up.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, prevention will only happen if these bi conditions are fulfilled by either or both the actor & target entities. In the context of this ability field, the \"actor\" is the entity that threw the item & \"target\" the entity about to pick up the item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, prevention will only happen if these item conditions are fulfilled by the item about to be picked up.")

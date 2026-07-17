@@ -11,7 +11,7 @@ import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.meta.TargetConditionBiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
-import net.alkanphel.kryptonite.util.apoli.Prioritized;
+import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -118,7 +118,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemPickupAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Pickup")
                     .setDescription("Runs actions upon the entity picking up an item. In the context of this ability, the \"actor\" is the entity that may have thrown the item & the \"target\" is the entity that picked up the item.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both the \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these bi actions will be run on either or both \"actor\" & \"target\" entities.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the item that was picked up.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these actions will only be run if these bi conditions are fulfilled by either or both the \"actor & \"target\" entities.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, these actions will only be run if these item conditions are fulfilled by the item about to be picked up.")

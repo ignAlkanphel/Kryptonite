@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.alkanphel.kryptonite.power.ability.ActionOnItemPickupAbility;
 import net.alkanphel.kryptonite.power.ability.PreventItemPickupAbility;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
-import net.alkanphel.kryptonite.util.apoli.Prioritized;
+import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;

@@ -1,0 +1,33 @@
+{
+  "name": "Prevent Entity Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_entity_use": {
+      "type": "kryptonite:prevent_entity_use",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "title @s actionbar {\"text\": \"Cannot interact with pigs!\", \"color\": \"red\"}"
+        }
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:pig"
+        }
+      },
+      "state": {
+        "enabling": [
+          {
+            "type": "palladium:not",
+            "conditions": {
+              "type": "palladium:crouching"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
