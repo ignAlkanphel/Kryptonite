@@ -1,0 +1,24 @@
+{
+  "name": "Modify Block Harvest", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_block_harvest": {
+      "type": "kryptonite:modify_block_harvest",
+      "allow": true,
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:cobblestone"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:cobblestone",
+        "list_index": 0
+      }
+    }
+  }
+}

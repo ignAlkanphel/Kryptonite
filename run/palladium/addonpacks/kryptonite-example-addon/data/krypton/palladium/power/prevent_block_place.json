@@ -1,0 +1,21 @@
+{
+  "name": "Prevent Block Place", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_block_place": {
+      "type": "kryptonite:prevent_block_place",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "tellraw @s {\"text\": \"Cannot place on the up & down faces of a stone block!\", \"color\": \"red\"}"
+      },
+      "place_on_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:stone"
+      },
+      "directions": [
+        "up",
+        "down"
+      ]
+    }
+  }
+}

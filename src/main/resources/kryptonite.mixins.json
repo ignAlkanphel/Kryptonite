@@ -6,6 +6,7 @@
   "mixins": [
     "common.EntityAccessor",
     "common.ItemEntityAccessor",
+    "common.UseOnContextAccessor",
     "common.EntityMixin",
     "common.MobMixin",
     "common.LivingEntityMixin",

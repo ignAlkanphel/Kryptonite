@@ -1,6 +1,8 @@
 package net.alkanphel.kryptonite.power;
 
+import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.CardinalLighting;
@@ -29,9 +31,11 @@ public interface KryptoniteDocumented<T, R extends T> {
 
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());
     SettingType TYPE_CARDINAL_LIGHTING = SettingType.enumList(CardinalLighting.Type.values());
+    SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
     SettingType TYPE_INTERACTION_HAND = SettingType.enumList(InteractionHand.values());
     SettingType TYPE_INTERACTION_RESULT = SettingType.enumList(InteractionResultUtil.InteractionResultType.values());
-    SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
+    SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
+    SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
 
     CodecDocumentationBuilder<T, R> getDocumentation(HolderLookup.Provider var1);
 }

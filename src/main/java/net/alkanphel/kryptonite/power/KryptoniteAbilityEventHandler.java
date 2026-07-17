@@ -2,13 +2,17 @@ package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
+import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.alkanphel.kryptonite.util.apoli.access.BlockBreakDirectionHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +23,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -31,6 +36,8 @@ import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
@@ -195,6 +202,37 @@ public class KryptoniteAbilityEventHandler {
 
     // ------------------------------------------------------------------------------------------------------------------------
 
+
+    @SubscribeEvent // Modify Block Harvest ability
+    public static void onPlayerHarvestCheck(PlayerEvent.HarvestCheck e) {
+        LivingEntity living = e.getEntity();
+
+        var savedBlockPosition = new SavedBlockPosition(living.level(), e.getPos(), e.getTargetBlock(), living.level().getBlockEntity(e.getPos()));
+        ModifyBlockHarvestAbility.resolve(living, savedBlockPosition).ifPresent(e::setCanHarvest);
+    }
+
+    @SubscribeEvent // Prevent Block Use ability
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock e) {
+        Player player = e.getEntity();
+        InteractionHand hand = e.getHand();
+        ItemStack stack = player.getItemInHand(hand);
+        BlockHitResult hitResult = e.getHitVec();
+
+        BlockUsagePhase phase = (e.getUseBlock() == TriState.FALSE) ? BlockUsagePhase.ITEM : BlockUsagePhase.BLOCK;
+
+        Prioritized.CallInstance<PreventBlockUseAbility> instance = new Prioritized.CallInstance<>();
+        instance.add(player, PreventBlockUseAbility.class, a -> a.doesPrevent(player, phase, hitResult, stack, hand));
+
+        if (instance.isEmpty()) return;
+
+        PreventBlockUseAbility ability = instance.getAllAbilities().getFirst();
+        ability.runActions(player, hitResult, hand);
+
+        e.setUseBlock(TriState.FALSE);
+        e.setUseItem(TriState.FALSE);
+        e.setCancellationResult(InteractionResult.FAIL);
+        e.setCanceled(true);
+    }
 
     @SubscribeEvent // Action On Block Break ability
     public static void onBreak(BreakBlockEvent e) {
