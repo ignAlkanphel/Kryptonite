@@ -1,0 +1,39 @@
+{
+  "name": "Action On Block Place", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_block_place": {
+      "type": "kryptonite:action_on_block_place",
+      "action_result": "pass",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Ahhhhh!"
+      },
+      "place_on_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:farmland"
+      },
+      "directions": [
+        "up"
+      ],
+      "hands": [
+        "off_hand"
+      ]
+    },
+    "action_on_block_place2": {
+      "type": "kryptonite:action_on_block_place",
+      "priority": 2,
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say PRIORITY 2!"
+      },
+      "place_on_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:farmland"
+      },
+      "directions": [
+        "up"
+      ]
+    }
+  }
+}

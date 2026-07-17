@@ -1,0 +1,31 @@
+{
+  "name": "Action On Block Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_block_use": {
+      "type": "kryptonite:action_on_block_use",
+      "held_item_actions": {
+        "type": "kryptonite:consume",
+        "amount": 1
+      },
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Coal Block used!"
+      },
+      "block_actions": {
+        "type": "kryptonite:set_block",
+        "block": {
+          "Name": "minecraft:diamond_block"
+        }
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:coal_block"
+      },
+      "directions": [
+        "up",
+        "down"
+      ]
+    }
+  }
+}

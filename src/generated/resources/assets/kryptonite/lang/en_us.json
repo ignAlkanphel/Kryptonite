@@ -1,5 +1,7 @@
 {
   "ability.kryptonite.action_on_block_break": "Action On Block Break",
+  "ability.kryptonite.action_on_block_place": "Action On Block Place",
+  "ability.kryptonite.action_on_block_use": "Action On Block Use",
   "ability.kryptonite.action_on_death": "Action On Death",
   "ability.kryptonite.action_on_entity_collision": "Action On Entity Collision",
   "ability.kryptonite.action_on_farmland_trample": "Action On Farmland Trample",
@@ -8,6 +10,7 @@
   "ability.kryptonite.action_on_item_fished": "Action On Item Fished",
   "ability.kryptonite.action_on_item_pickup": "Action On Item Pickup",
   "ability.kryptonite.action_on_item_swap": "Action On Item Swap",
+  "ability.kryptonite.action_on_item_use": "Action On Item Use",
   "ability.kryptonite.action_on_jump": "Action On Jump",
   "ability.kryptonite.action_on_land": "Action On Land",
   "ability.kryptonite.action_on_mount": "Action On Mount",

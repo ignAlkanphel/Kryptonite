@@ -37,6 +37,8 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
         protected void addTranslations() {
             // Abilities
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK, "Action On Block Break");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_PLACE, "Action On Block Place");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_USE, "Action On Block Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DEATH, "Action On Death");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_COLLISION, "Action On Entity Collision");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE, "Action On Farmland Trample");
@@ -45,6 +47,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_PICKUP, "Action On Item Pickup");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_SWAP, "Action On Item Swap");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_USE, "Action On Item Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_JUMP, "Action On Jump");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_LAND, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_MOUNT, "Action On Mount");

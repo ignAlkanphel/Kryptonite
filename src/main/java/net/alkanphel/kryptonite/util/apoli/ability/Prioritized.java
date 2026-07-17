@@ -37,6 +37,12 @@ public interface Prioritized {
             buckets.values().forEach(list -> list.forEach(action));
         }
 
+        public void forEachBucketUntil(Predicate<List<T>> bucketAction) {
+            for (List<T> abilities : buckets.values()) {
+                if (bucketAction.test(abilities)) break;
+            }
+        }
+
         public boolean isEmpty() {
             return buckets.isEmpty();
         }

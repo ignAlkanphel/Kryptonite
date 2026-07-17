@@ -1,0 +1,48 @@
+{
+  "name": "Action On Item Use", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_item_use": {
+      "type": "kryptonite:action_on_item_use",
+      "trigger": [
+        "instant"
+      ],
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Ender Pearl item used with INSTANT trigger!"
+      },
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:ender_pearl"
+      }
+    },
+    "action_on_item_use2": {
+      "type": "kryptonite:action_on_item_use",
+      "trigger": [
+        "stop"
+      ],
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Bow used with STOP trigger!"
+      },
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:bow"
+      }
+    },
+    "action_on_item_use3": {
+      "type": "kryptonite:action_on_item_use",
+      "trigger": [
+        "finish"
+      ],
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Apple used with FINISH trigger!"
+      },
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:apple"
+      }
+    }
+  }
+}

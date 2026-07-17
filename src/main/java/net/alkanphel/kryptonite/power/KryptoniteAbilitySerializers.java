@@ -12,6 +12,8 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredRegister<AbilitySerializer<?>> ABILITIES_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ABILITY_SERIALIZER, Kryptonite.MOD_ID);
 
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockUseAbility.Serializer> ACTION_ON_BLOCK_USE = ABILITIES_SERIALIZERS.register("action_on_block_use", ActionOnBlockUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnDeathAbility.Serializer> ACTION_ON_DEATH = ABILITIES_SERIALIZERS.register("action_on_death", ActionOnDeathAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnEntityCollisionAbility.Serializer> ACTION_ON_ENTITY_COLLISION = ABILITIES_SERIALIZERS.register("action_on_entity_collision", ActionOnEntityCollisionAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnFarmlandTrampleAbility.Serializer> ACTION_ON_FARMLAND_TRAMPLE = ABILITIES_SERIALIZERS.register("action_on_farmland_trample", ActionOnFarmlandTrampleAbility.Serializer::new);
@@ -20,6 +22,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemFishedAbility.Serializer> ACTION_ON_ITEM_FISHED = ABILITIES_SERIALIZERS.register("action_on_item_fished", ActionOnItemFishedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemPickupAbility.Serializer> ACTION_ON_ITEM_PICKUP = ABILITIES_SERIALIZERS.register("action_on_item_pickup", ActionOnItemPickupAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemSwapAbility.Serializer> ACTION_ON_ITEM_SWAP = ABILITIES_SERIALIZERS.register("action_on_item_swap", ActionOnItemSwapAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemUseAbility.Serializer> ACTION_ON_ITEM_USE = ABILITIES_SERIALIZERS.register("action_on_item_use", ActionOnItemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTameAbility.Serializer> ACTION_ON_TAME = ABILITIES_SERIALIZERS.register("action_on_tame", ActionOnTameAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTotemUseAbility.Serializer> ACTION_ON_TOTEM_USE = ABILITIES_SERIALIZERS.register("action_on_totem_use", ActionOnTotemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnWakeUpAbility.Serializer> ACTION_ON_WAKE_UP = ABILITIES_SERIALIZERS.register("action_on_wake_up", ActionOnWakeUpAbility.Serializer::new);

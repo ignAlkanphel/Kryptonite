@@ -5,6 +5,7 @@ import net.alkanphel.kryptonite.power.ability.*;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
+import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.alkanphel.kryptonite.util.apoli.access.BlockBreakDirectionHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,9 +42,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
+import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumSet;
+import java.util.List;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
@@ -199,6 +204,61 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
+    @SubscribeEvent // Action On Item Use ability (instant trigger)
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem e) {
+        Player holder = e.getEntity();
+        ItemStack stack = e.getItemStack();
+
+        if (stack.getUseDuration(holder) == 0) {
+            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.INSTANT), PriorityPhase.BEFORE);
+        }
+    }
+
+    @SubscribeEvent // Action On Item Use ability (start trigger)
+    public static void onUseItemStart(LivingEntityUseItemEvent.Start e) {
+        LivingEntity holder = e.getEntity();
+        ItemStack stack = e.getItem();
+
+        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.BEFORE);
+
+        if (!e.isCanceled() && e.getDuration() > 0) {
+            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.AFTER);
+        }
+    }
+
+    @SubscribeEvent // Action On Item Use ability (tick trigger)
+    public static void onUseItemTick(LivingEntityUseItemEvent.Tick e) {
+        LivingEntity holder = e.getEntity();
+        ItemStack stack = e.getItem();
+
+        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.BEFORE);
+
+        if (!e.isCanceled() && e.getDuration() > 0) {
+            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.AFTER);
+        }
+    }
+
+    @SubscribeEvent // Action On Item Use ability (stop trigger)
+    public static void onUseItemStop(LivingEntityUseItemEvent.Stop e) {
+        LivingEntity holder = e.getEntity();
+        ItemStack stack = e.getItem();
+
+        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.BEFORE);
+
+        if (!e.isCanceled()) {
+            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.AFTER);
+        }
+    }
+
+    @SubscribeEvent // Action On Item Use ability (finish trigger)
+    public static void onUseItemFinish(LivingEntityUseItemEvent.Finish e) {
+        LivingEntity holder = e.getEntity();
+        ItemStack stack = e.getItem();
+
+        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.BEFORE);
+        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.AFTER);
+    }
+
 
     // ------------------------------------------------------------------------------------------------------------------------
 
@@ -232,6 +292,41 @@ public class KryptoniteAbilityEventHandler {
         e.setUseItem(TriState.FALSE);
         e.setCancellationResult(InteractionResult.FAIL);
         e.setCanceled(true);
+    }
+
+    @SubscribeEvent // Action On Block Use ability
+    public static void onBlockRightClick(PlayerInteractEvent.RightClickBlock e) {
+        Player player = e.getEntity();
+
+        InteractionHand hand = e.getHand();
+        ItemStack heldStack = player.getItemInHand(hand);
+        BlockHitResult hitResult = e.getHitVec();
+        DataContext context = DataContext.forEntity(player);
+
+        BlockUsagePhase usePhase = (e.getUseBlock() != TriState.FALSE) ? BlockUsagePhase.BLOCK : BlockUsagePhase.ITEM;
+
+        // before phase
+        Prioritized.CallInstance<ActionOnBlockUseAbility> beforeInstances = new Prioritized.CallInstance<>();
+        beforeInstances.add(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.BEFORE, hand, heldStack, hitResult));
+
+        InteractionResult beforeResult = ActionOnBlockUseAbility.interactionResultHelper(beforeInstances, context, hitResult, hand, player);
+        if (beforeResult != InteractionResult.PASS) {
+            e.setCancellationResult(beforeResult);
+            e.setCanceled(true);
+            return;
+        }
+
+        // after phase
+        if (e.getUseBlock() == TriState.DEFAULT && e.getUseItem() == TriState.DEFAULT) {
+            Prioritized.CallInstance<ActionOnBlockUseAbility> afterInstances = new Prioritized.CallInstance<>();
+            afterInstances.add(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.AFTER, hand, heldStack, hitResult));
+
+            InteractionResult afterResult = ActionOnBlockUseAbility.interactionResultHelper(afterInstances, context, hitResult, hand, player);
+            if (afterResult != InteractionResult.PASS) {
+                e.setCancellationResult(afterResult);
+                e.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent // Action On Block Break ability
