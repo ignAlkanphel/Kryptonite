@@ -10,6 +10,7 @@ import net.alkanphel.kryptonite.util.apoli.access.BlockBreakDirectionHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
@@ -36,10 +37,7 @@ import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
+import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.threetag.palladium.logic.context.DataContext;
@@ -122,15 +120,8 @@ public class KryptoniteAbilityEventHandler {
 
         if (instances.isEmpty()) return;
 
-        long wantDamage = instances
-                .stream()
-                .filter(instance -> instance.getAbility().shouldDamageArmor(target))
-                .count();
-
-        long doNotWantDamage = instances
-                .stream()
-                .filter(instance -> !instance.getAbility().shouldDamageArmor(target))
-                .count();
+        long wantDamage = instances.stream().filter(instance -> instance.getAbility().shouldDamageArmor(target)).count();
+        long doNotWantDamage = instances.stream().filter(instance -> !instance.getAbility().shouldDamageArmor(target)).count();
 
         if (wantDamage == doNotWantDamage) return;
 
@@ -209,8 +200,25 @@ public class KryptoniteAbilityEventHandler {
                 .forEach(instance -> instance.getAbility().runActions(entity));
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW) // Modify Healing ability
+    public static void onLivingHealModify(LivingHealEvent e) {
+        LivingEntity entity = e.getEntity();
+        float amount = e.getAmount();
+
+        var instances = AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_HEALING.get());
+        if (instances.isEmpty()) return;
+
+        float newAmount = amount;
+
+        for (var instance : instances) {
+            newAmount = instance.getAbility().applyModifiers(newAmount, instance, entity);
+        }
+
+        e.setAmount(Math.max(0F, newAmount));
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
-    static void onLivingHeal(LivingHealEvent e) { // Prevent Healing ability
+    static void onLivingHealPrevent(LivingHealEvent e) { // Prevent Healing ability
         for (AbilityInstance<PreventHealingAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_HEALING.get())) {
             if (PreventHealingAbility.isFullPrevention(e.getEntity(), instance)) {
                 e.setAmount(0);
@@ -496,7 +504,6 @@ public class KryptoniteAbilityEventHandler {
         projectile.setDeltaMovement(look);
     }
 
-
     @SubscribeEvent // Prevent Mob Aggro ability
     public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
         LivingEntity newTarget = e.getNewAboutToBeSetTarget();
@@ -529,6 +536,28 @@ public class KryptoniteAbilityEventHandler {
 
         instances.forEach(ability -> ability.runActions(living));
         e.setCanceled(true);
+    }
+
+    @SubscribeEvent // Prevent Sleeping ability
+    public static void onCanSleep(CanPlayerSleepEvent e) {
+        ServerPlayer player = e.getEntity();
+        BlockPos bedPos = e.getPos();
+
+        if (PreventSleepingAbility.isSleepPrevented(player, bedPos)) {
+            String message = PreventSleepingAbility.getSleepMessage(player, bedPos);
+            player.sendOverlayMessage(Component.literal(message));
+            e.setProblem(Player.BedSleepingProblem.OTHER_PROBLEM);
+        }
+    }
+
+    @SubscribeEvent // Prevent Sleeping ability (spawnpoint)
+    public static void onSetSpawn(PlayerSetSpawnEvent e) {
+        if (!(e.getEntity() instanceof ServerPlayer player)) return;
+        BlockPos bedPos = e.getNewSpawn() != null ? e.getNewSpawn() : player.blockPosition();
+
+        if (PreventSleepingAbility.isSpawnPrevented(player, bedPos)) {
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent // Action On Jump

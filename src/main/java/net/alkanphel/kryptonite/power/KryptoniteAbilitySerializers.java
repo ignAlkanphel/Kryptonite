@@ -42,6 +42,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageTakenAbility.Serializer> MODIFY_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("modify_damage_taken", ModifyDamageTakenAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyFogTypeAbility.Serializer> MODIFY_FOG_TYPE = ABILITIES_SERIALIZERS.register("modify_fog_type", ModifyFogTypeAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyFrictionAbility.Serializer> MODIFY_FRICTION = ABILITIES_SERIALIZERS.register("modify_friction", ModifyFrictionAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ModifyHealingAbility.Serializer> MODIFY_HEALING = ABILITIES_SERIALIZERS.register("modify_healing", ModifyHealingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBeingUsedAbility.Serializer> PREVENT_BEING_USED = ABILITIES_SERIALIZERS.register("prevent_being_used", PreventBeingUsedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBlockPlaceAbility.Serializer> PREVENT_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("prevent_block_place", PreventBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBlockSelectionAbility.Serializer> PREVENT_BLOCK_SELECTION = ABILITIES_SERIALIZERS.register("prevent_block_selection", PreventBlockSelectionAbility.Serializer::new);
@@ -59,9 +60,11 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, PreventItemUseAbility.Serializer> PREVENT_ITEM_USE = ABILITIES_SERIALIZERS.register("prevent_item_use", PreventItemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventItemPickupAbility.Serializer> PREVENT_ITEM_PICKUP = ABILITIES_SERIALIZERS.register("prevent_item_pickup", PreventItemPickupAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventMobAggroAbility.Serializer> PREVENT_MOB_AGGRO = ABILITIES_SERIALIZERS.register("prevent_mob_aggro", PreventMobAggroAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, PreventSleepingAbility.Serializer> PREVENT_SLEEPING = ABILITIES_SERIALIZERS.register("prevent_sleeping", PreventSleepingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSprintingAbility.Serializer> PREVENT_SPRINTING = ABILITIES_SERIALIZERS.register("prevent_sprinting", PreventSprintingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventTotemUseAbility.Serializer> PREVENT_TOTEM_USE = ABILITIES_SERIALIZERS.register("prevent_totem_use", PreventTotemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileAccuracyAbility.Serializer> PROJECTILE_ACCURACY = ABILITIES_SERIALIZERS.register("projectile_accuracy", ProjectileAccuracyAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileImpactAbility.Serializer> PROJECTILE_IMPACT = ABILITIES_SERIALIZERS.register("projectile_impact", ProjectileImpactAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, StepDownAbility.Serializer> STEP_DOWN = ABILITIES_SERIALIZERS.register("step_down", StepDownAbility.Serializer::new);
 
 }

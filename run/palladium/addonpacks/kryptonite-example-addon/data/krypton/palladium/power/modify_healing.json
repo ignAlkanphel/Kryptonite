@@ -1,0 +1,13 @@
+{
+  "name": "Modify Healing", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_healing": {
+      "type": "kryptonite:modify_healing",
+      "modifiers": {
+        "operation": "multiply_total_additive",
+        "amount": -0.5
+      }
+    }
+  }
+}

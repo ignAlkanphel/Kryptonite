@@ -1,0 +1,69 @@
+{
+  "name": "Prevent Sleeping", "icon": "minecraft:black_bed",
+
+  "abilities": {
+    "prevent_sleeping": {
+      "type": "kryptonite:prevent_sleeping",
+      "set_spawn": false,
+      "message": "Priority of 5 and cannot set spawn!",
+      "priority": 5,
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:black_bed"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "A Prevention",
+        "icon": "minecraft:red_bed",
+        "list_index": 0
+      }
+    },
+    "prevent_sleeping2": {
+      "type": "kryptonite:prevent_sleeping",
+      "set_spawn": false,
+      "message": "Priority of 10 but I still cannot set spawn!",
+      "priority": 10,
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:black_bed"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "B Prevention",
+        "icon": "minecraft:blue_bed",
+        "list_index": 1
+      }
+    },
+    "prevent_sleeping3": {
+      "type": "kryptonite:prevent_sleeping",
+      "set_spawn": true,
+      "message": "Priority of 10 as well, but I win because I can set spawn!",
+      "priority": 10,
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:black_bed"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "C Prevention",
+        "icon": "minecraft:yellow_bed",
+        "list_index": 2
+      }
+    }
+  }
+}

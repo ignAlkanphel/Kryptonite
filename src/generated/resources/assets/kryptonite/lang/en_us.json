@@ -29,6 +29,7 @@
   "kryptonite.ability.kryptonite.modify_damage_taken": "Modify Damage Taken",
   "kryptonite.ability.kryptonite.modify_fog_type": "Modify Fog Type",
   "kryptonite.ability.kryptonite.modify_friction": "Modify Friction",
+  "kryptonite.ability.kryptonite.modify_healing": "Modify Healing",
   "kryptonite.ability.kryptonite.prevent_being_used": "Prevent Being Used",
   "kryptonite.ability.kryptonite.prevent_block_selection": "Prevent Block Selection",
   "kryptonite.ability.kryptonite.prevent_block_use": "Prevent Block Use",
@@ -45,8 +46,10 @@
   "kryptonite.ability.kryptonite.prevent_item_pickup": "Prevent Item Pickup",
   "kryptonite.ability.kryptonite.prevent_item_use": "Prevent Item Use",
   "kryptonite.ability.kryptonite.prevent_mob_aggro": "Prevent Mob Aggro",
+  "kryptonite.ability.kryptonite.prevent_sleeping": "Prevent Sleeping",
   "kryptonite.ability.kryptonite.prevent_sprinting": "Prevent Sprinting",
   "kryptonite.ability.kryptonite.prevent_totem_use": "Prevent Totem Use",
   "kryptonite.ability.kryptonite.projectile_accuracy": "Projectile Accuracy",
-  "kryptonite.ability.kryptonite.projectile_impact": "Projectile Impact"
+  "kryptonite.ability.kryptonite.projectile_impact": "Projectile Impact",
+  "kryptonite.ability.kryptonite.step_down": "Step Down"
 }

@@ -66,6 +66,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN, "Modify Damage Taken");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_FOG_TYPE, "Modify Fog Type");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_FRICTION, "Modify Friction");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_HEALING, "Modify Healing");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BEING_USED, "Prevent Being Used");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION, "Prevent Block Selection");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_USE, "Prevent Block Use");
@@ -82,10 +83,12 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_PICKUP, "Prevent Item Pickup");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO, "Prevent Mob Aggro");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLEEPING, "Prevent Sleeping");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_TOTEM_USE, "Prevent Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_ACCURACY, "Projectile Accuracy");
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_IMPACT, "Projectile Impact");
+            this.addAbility(KryptoniteAbilitySerializers.STEP_DOWN, "Step Down");
 
             // Datapack
         }
