@@ -23,7 +23,9 @@
     "common.AbilityInstanceMixin"
   ],
   "client": [
+    "client.EntityMixin",
     "client.LocalPlayerMixin",
+    "client.MinecraftMixin",
     "client.EntityRendererMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",

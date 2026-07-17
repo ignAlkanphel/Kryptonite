@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.CardinalLighting;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.FogType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -23,6 +24,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_ITEM_ACTION_LIST = SettingType.listOrPrimitive("Item Action");
 
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
+    SettingType TYPE_RGB_VALUE = SettingType.simple("(Dynamic) RGB Value");
 
     SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");
     SettingType TYPE_BLOCK_TYPE_HOLDER_SET = SettingType.simple("Block ID(s) / Tag(s)");
@@ -34,6 +36,8 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
     SettingType TYPE_INTERACTION_HAND = SettingType.enumList(InteractionHand.values());
     SettingType TYPE_INTERACTION_RESULT = SettingType.enumList(InteractionResultUtil.InteractionResultType.values());
+    SettingType TYPE_CLIP_CONTEXT_BLOCK = SettingType.enumList(ClipContext.Block.values());
+    SettingType TYPE_CLIP_CONTEXT_FLUID = SettingType.enumList(ClipContext.Fluid.values());
     SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
 

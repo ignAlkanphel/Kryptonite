@@ -35,6 +35,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionWhenHitAbility.Serializer> ACTION_WHEN_HIT = ABILITIES_SERIALIZERS.register("action_when_hit", ActionWhenHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, DynamicLightsAbility.Serializer> DYNAMIC_LIGHTS = ABILITIES_SERIALIZERS.register("dynamic_lights", DynamicLightsAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, GlowingAbility.Serializer> GLOWING = ABILITIES_SERIALIZERS.register("glowing", GlowingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ImmediateRespawnAbility.Serializer> IMMEDIATE_RESPAWN = ABILITIES_SERIALIZERS.register("immediate_respawn", ImmediateRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockDestroySpeedAbility.Serializer> MODIFY_BLOCK_DESTROY_SPEED = ABILITIES_SERIALIZERS.register("modify_block_destroy_speed", ModifyBlockDestroySpeedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockHarvestAbility.Serializer> MODIFY_BLOCK_HARVEST = ABILITIES_SERIALIZERS.register("modify_block_harvest", ModifyBlockHarvestAbility.Serializer::new);

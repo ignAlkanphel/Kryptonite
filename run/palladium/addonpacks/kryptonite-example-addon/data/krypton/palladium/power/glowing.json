@@ -1,0 +1,58 @@
+{
+  "name": "Glowing", "icon": "minecraft:glowstone_dust",
+
+  "abilities": {
+    "glowing_self": {
+      "type": "kryptonite:glowing", "mode": "self",
+      "color": {
+        "red": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_red",
+          "fallback": 0.0
+        },
+        "green": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_green",
+          "fallback": 1.0
+        },
+        "blue": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_blue",
+          "fallback": 0.0
+        }
+      },
+      "use_teams": false,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Self",
+        "icon": "minecraft:glowstone_dust",
+        "list_index": 0
+      }
+    },
+    "glowing_other": {
+      "type": "kryptonite:glowing", "mode": "other",
+      "color": {"red": 0.2, "green": 0.8, "blue": 1.0}, "use_teams": true,
+      "bientity_conditions": {
+        "type": "kryptonite:distance",
+        "comparator": "<=",
+        "compare_to": 10
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Other",
+        "icon": "minecraft:glowstone",
+        "list_index": 1
+      }
+    }
+  }
+}
