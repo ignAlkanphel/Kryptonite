@@ -74,7 +74,7 @@ public class PreventEntityRenderAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityRenderAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Entity Render")
-                    .setDescription("Prevents entities from rendering to the entity that has the ability. Warning that the condition fields of this ability evaluate client-side.")
+                    .setDescription("Prevents entities from rendering to the entity that has this ability. Warning that the condition fields of this ability evaluate client-side.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, only prevents rendering of entities fulfilling these conditions.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the ability will only be active if these bi conditions are fulfilled by either or both \"actor\" (ability holder) & \"target\" (entity that won't render) entities.")
                     .addExampleObject(new PreventEntityRenderAbility(Optional.empty(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

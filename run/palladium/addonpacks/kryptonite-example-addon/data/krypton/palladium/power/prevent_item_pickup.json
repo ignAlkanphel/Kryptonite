@@ -1,0 +1,20 @@
+{
+  "name": "Prevent Item Pickup", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_item_pickup": {
+      "type": "kryptonite:prevent_item_pickup",
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:apple"
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:actor_condition",
+        "conditions": {
+          "type": "palladium:has_effect",
+          "effect": "minecraft:speed"
+        }
+      }
+    }
+  }
+}

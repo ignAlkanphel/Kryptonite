@@ -18,6 +18,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnHitAbility.Serializer> ACTION_ON_HIT = ABILITIES_SERIALIZERS.register("action_on_hit", ActionOnHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemDropAbility.Serializer> ACTION_ON_ITEM_DROP = ABILITIES_SERIALIZERS.register("action_on_item_drop", ActionOnItemDropAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemFishedAbility.Serializer> ACTION_ON_ITEM_FISHED = ABILITIES_SERIALIZERS.register("action_on_item_fished", ActionOnItemFishedAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemPickupAbility.Serializer> ACTION_ON_ITEM_PICKUP = ABILITIES_SERIALIZERS.register("action_on_item_pickup", ActionOnItemPickupAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemSwapAbility.Serializer> ACTION_ON_ITEM_SWAP = ABILITIES_SERIALIZERS.register("action_on_item_swap", ActionOnItemSwapAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTameAbility.Serializer> ACTION_ON_TAME = ABILITIES_SERIALIZERS.register("action_on_tame", ActionOnTameAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTotemUseAbility.Serializer> ACTION_ON_TOTEM_USE = ABILITIES_SERIALIZERS.register("action_on_totem_use", ActionOnTotemUseAbility.Serializer::new);
@@ -42,6 +43,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, PreventGlidingAbility.Serializer> PREVENT_GLIDING = ABILITIES_SERIALIZERS.register("prevent_gliding", PreventGlidingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventHealingAbility.Serializer> PREVENT_HEALING = ABILITIES_SERIALIZERS.register("prevent_healing", PreventHealingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventItemUseAbility.Serializer> PREVENT_ITEM_USE = ABILITIES_SERIALIZERS.register("prevent_item_use", PreventItemUseAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, PreventItemPickupAbility.Serializer> PREVENT_ITEM_PICKUP = ABILITIES_SERIALIZERS.register("prevent_item_pickup", PreventItemPickupAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventMobAggroAbility.Serializer> PREVENT_MOB_AGGRO = ABILITIES_SERIALIZERS.register("prevent_mob_aggro", PreventMobAggroAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSprintingAbility.Serializer> PREVENT_SPRINTING = ABILITIES_SERIALIZERS.register("prevent_sprinting", PreventSprintingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventTotemUseAbility.Serializer> PREVENT_TOTEM_USE = ABILITIES_SERIALIZERS.register("prevent_totem_use", PreventTotemUseAbility.Serializer::new);

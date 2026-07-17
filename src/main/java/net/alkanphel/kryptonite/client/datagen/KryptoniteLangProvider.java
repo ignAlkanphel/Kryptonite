@@ -43,6 +43,8 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_HIT, "Action On Hit");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP, "Action On Item Drop");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_PICKUP, "Action On Item Pickup");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_SWAP, "Action On Item Swap");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_JUMP, "Action On Jump");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_LAND, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_MOUNT, "Action On Mount");
@@ -64,6 +66,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GAME_EVENT, "Prevent Game Event");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GLIDING, "Prevent Gliding");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_HEALING, "Prevent Healing");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_PICKUP, "Prevent Item Pickup");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO, "Prevent Mob Aggro");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
