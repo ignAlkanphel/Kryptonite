@@ -1,11 +1,14 @@
 package net.alkanphel.kryptonite.power.ability;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.logic.value.StaticValue;
+import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
@@ -14,19 +17,19 @@ import java.util.List;
 public class PreventHealingAbility extends Ability {
 
     public static final MapCodec<PreventHealingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.BOOL.optionalFieldOf("full_prevention", false).forGetter(ab -> ab.fullPrevention),
+            Value.CODEC.optionalFieldOf("full_prevention", new StaticValue(false)).forGetter(a -> a.fullPrevention),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventHealingAbility::new));
 
-    public final boolean fullPrevention;
+    public final Value fullPrevention;
 
-    public PreventHealingAbility(boolean fullPrevention, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventHealingAbility(Value fullPrevention, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.fullPrevention = fullPrevention;
     }
 
-    public static boolean isFullPrevention(AbilityInstance<PreventHealingAbility> ability) {
-        return ability.isEnabled() && ability.getAbility().fullPrevention;
+    public static boolean isFullPrevention(LivingEntity entity, AbilityInstance<PreventHealingAbility> ability) {
+        return ability.isEnabled() && ability.getAbility().fullPrevention.getAsBoolean(DataContext.forAbility(entity, ability));
     }
 
     @Override
@@ -44,9 +47,9 @@ public class PreventHealingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventHealingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from healing via natural means (e.g. the \"minecraft:natural_health_regeneration\" game rule).")
-                    .addOptional("full_prevention", TYPE_BOOLEAN, "If true, healing from things like potion effects will also be prevented.", false)
-                    .addExampleObject(new PreventHealingAbility(false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventHealingAbility(true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("full_prevention", TYPE_VALUE, "If true, healing from things like potion effects will also be prevented.", new StaticValue(false))
+                    .addExampleObject(new PreventHealingAbility(new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventHealingAbility(new StaticValue(true), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

@@ -1,0 +1,63 @@
+{
+  "name": "Modify Damage Dealt", "icon": "minecraft:wooden_sword",
+
+  "abilities": {
+    "modify_damage_dealt": {
+      "type": "kryptonite:modify_damage_dealt",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": -1
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:owner"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "No Damage To Pets",
+        "icon": "minecraft:wooden_sword",
+        "list_index": 0
+      }
+    },
+    "modify_damage_dealt2": {
+      "type": "kryptonite:modify_damage_dealt",
+      "modifiers": {
+        "operation": "set_total",
+        "amount": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Max Damage Of 1",
+        "icon": "minecraft:stick",
+        "list_index": 1
+      }
+    },
+    "modify_damage_dealt3": {
+      "type": "kryptonite:modify_damage_dealt",
+      "modifiers": {
+        "operation": "add_base_early",
+        "amount": 4
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "+4 Damage",
+        "icon": "minecraft:golden_sword",
+        "list_index": 2
+      }
+    }
+  }
+}

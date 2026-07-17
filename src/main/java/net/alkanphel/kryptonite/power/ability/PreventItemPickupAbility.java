@@ -49,8 +49,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventItemPickupAbility::new));
 
-    private final List<BiAction> biEntityActionsThrower;
-    private final List<BiAction> biEntityActionsItem;
+    private final List<BiAction> biEntityActionsThrower, biEntityActionsItem;
     private final List<ItemAction> itemActions;
     private final List<BiCondition> biEntityConditions;
     private final List<ItemCondition> itemConditions;

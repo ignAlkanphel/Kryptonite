@@ -36,8 +36,7 @@ public class PreventMobAggroAbility extends Ability {
 
     public final Optional<Condition> mobConditions;
     public final List<BiCondition> biEntityConditions;
-    public final boolean mobAggroOnAttack;
-    public final boolean mobAggroReset;
+    public final boolean mobAggroOnAttack, mobAggroReset;
 
     public PreventMobAggroAbility(Optional<Condition> mobConditions, List<BiCondition> biEntityConditions, boolean mobAggroOnAttack, boolean mobAggroReset, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);

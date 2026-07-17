@@ -47,8 +47,7 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
     }));
 
     public final List<Action> entityActions;
-    public final List<BlockAction> placeToActions;
-    public final List<BlockAction> placeOnActions;
+    public final List<BlockAction> placeToActions, placeOnActions;
     public final List<BlockCondition> placeToConditions;
     public final List<BlockCondition> placeOnConditions;
     public final EnumSet<Direction> directions;

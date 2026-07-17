@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.condition.bi.internal;
 
 import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.power.logic.condition.bi.*;
 import net.alkanphel.kryptonite.power.logic.condition.bi.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,5 +18,7 @@ public class BiConditionSerializers {
     public static final DeferredHolder<BiConditionSerializer<?>, ActorConditionBiCondition.Serializer> ACTOR_CONDITION = BI_CONDITION_SERIALIZERS.register("actor_condition", ActorConditionBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, TargetConditionBiCondition.Serializer> TARGET_CONDITION = BI_CONDITION_SERIALIZERS.register("target_condition", TargetConditionBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, InvertBiCondition.Serializer> INVERT = BI_CONDITION_SERIALIZERS.register("invert", InvertBiCondition.Serializer::new);
+
+    public static final DeferredHolder<BiConditionSerializer<?>, OwnerBiCondition.Serializer> OWNER = BI_CONDITION_SERIALIZERS.register("owner", OwnerBiCondition.Serializer::new);
 
 }

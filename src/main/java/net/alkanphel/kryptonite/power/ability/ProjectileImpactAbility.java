@@ -46,10 +46,8 @@ public class ProjectileImpactAbility extends Ability {
     ).apply(instance, ProjectileImpactAbility::new));
 
     public final List<Action> entityActions;
-    public final List<BiAction> biEntityActions;
-    public final List<BiCondition> biEntityConditions;
-    public final List<BiAction> projectileActions;
-    public final List<BiCondition> projectileConditions;
+    public final List<BiAction> biEntityActions, projectileActions;
+    public final List<BiCondition> biEntityConditions, projectileConditions;
     public final ImpactResult impactResult;
 
     public ProjectileImpactAbility(List<Action> entityActions, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<BiAction> projectileActions, List<BiCondition> projectileConditions, ImpactResult impactResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {

@@ -1,0 +1,23 @@
+{
+  "name": "Modify Friction", "icon": "minecraft:ice",
+
+  "abilities": {
+    "modify_friction": {
+      "type": "kryptonite:modify_friction",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": 0.75
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:ice",
+        "list_index": 0
+      }
+    }
+  }
+}

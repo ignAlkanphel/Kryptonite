@@ -49,10 +49,8 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
     }));
 
     public final List<Action> entityActions;
-    public final List<BlockAction> placeToActions;
-    public final List<BlockAction> placeOnActions;
-    public final List<BlockCondition> placeToConditions;
-    public final List<BlockCondition> placeOnConditions;
+    public final List<BlockAction> placeToActions, placeOnActions;
+    public final List<BlockCondition> placeToConditions, placeOnConditions;
     public final EnumSet<Direction> directions;
 
     public PreventBlockPlaceAbility(List<Action> entityActions, List<BlockAction> placeToActions, List<BlockAction> placeOnActions, List<BlockCondition> placeToConditions, List<BlockCondition> placeOnConditions, EnumSet<Direction> directions, List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {

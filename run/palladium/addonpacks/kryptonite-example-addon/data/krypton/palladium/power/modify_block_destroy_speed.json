@@ -1,0 +1,54 @@
+{
+  "name": "Modify Block Break Speed", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_block_destroy_speed": {
+      "type": "kryptonite:modify_block_destroy_speed",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": 0.5
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:netherrack"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:netherrack",
+        "list_index": 0
+      }
+    },
+    "modify_block_destroy_speed2": {
+      "type": "kryptonite:modify_block_destroy_speed",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": -0.9
+      },
+      "hardness_modifiers": [
+        {
+          "operation": "max_total",
+          "amount": -1.0
+        },
+        {
+          "operation": "min_total",
+          "amount": 0.1
+        }
+      ],
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:cobblestone",
+        "list_index": 1
+      }
+    }
+  }
+}

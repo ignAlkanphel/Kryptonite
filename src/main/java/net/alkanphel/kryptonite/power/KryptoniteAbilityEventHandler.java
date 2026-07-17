@@ -48,10 +48,34 @@ import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
-import java.util.List;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // Modify Damage Dealt ability
+    public static void onLivingIncomingDamageDealt(LivingIncomingDamageEvent e) {
+        DamageSource source = e.getSource();
+        if (!(source.getEntity() instanceof LivingEntity attacker)) return;
+
+        LivingEntity target = e.getEntity();
+        float damage = e.getAmount();
+
+        var instances = AbilityUtil.getEnabledInstances(attacker, KryptoniteAbilitySerializers.MODIFY_DAMAGE_DEALT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(source, damage, attacker, target))
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        float newDamage = damage;
+
+        for (AbilityInstance<ModifyDamageDealtAbility> instance : instances) {
+            newDamage = instance.getAbility().applyModifiers(newDamage, instance, attacker);
+            instance.getAbility().runActions(attacker, target);
+        }
+
+        e.setAmount(newDamage);
+    }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onLivingIncomingDamageTaken(LivingIncomingDamageEvent e) {
@@ -64,10 +88,55 @@ public class KryptoniteAbilityEventHandler {
             if (PreventDamageAbility.isImmuneAgainst(instance, source, amount, target)) {
                 e.setAmount(0);
                 e.setCanceled(true);
-                return;
+                return; // return to prevent 'Modify Damage Taken'
             }
         }
 
+        // Modify Damage Taken
+        var modifyDamageTakenInstances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(source, amount, target))
+                .toList();
+
+        if (modifyDamageTakenInstances.isEmpty()) return;
+
+        float newDamage = amount;
+        Entity attacker = source.getEntity();
+
+        for (AbilityInstance<ModifyDamageTakenAbility> instance : modifyDamageTakenInstances) {
+            newDamage = instance.getAbility().applyModifiers(newDamage, instance, target);
+            instance.getAbility().runActions(attacker, target);
+        }
+
+        e.setAmount(newDamage);
+    }
+
+    @SubscribeEvent // Modify Damage Taken ability (armor part)
+    public static void onArmorHurt(ArmorHurtEvent e) {
+        LivingEntity target = e.getEntity();
+
+        var instances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get())
+                .stream()
+                .filter(instance -> instance.getAbility().modifiesArmorDamaging())
+                .toList();
+
+        if (instances.isEmpty()) return;
+
+        long wantDamage = instances
+                .stream()
+                .filter(instance -> instance.getAbility().shouldDamageArmor(target))
+                .count();
+
+        long doNotWantDamage = instances
+                .stream()
+                .filter(instance -> !instance.getAbility().shouldDamageArmor(target))
+                .count();
+
+        if (wantDamage == doNotWantDamage) return;
+
+        if (doNotWantDamage > wantDamage) {
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -143,7 +212,7 @@ public class KryptoniteAbilityEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     static void onLivingHeal(LivingHealEvent e) { // Prevent Healing ability
         for (AbilityInstance<PreventHealingAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_HEALING.get())) {
-            if (PreventHealingAbility.isFullPrevention(instance)) {
+            if (PreventHealingAbility.isFullPrevention(e.getEntity(), instance)) {
                 e.setAmount(0);
                 e.setCanceled(true);
                 return;

@@ -44,10 +44,8 @@ public class ActionOnItemSwapAbility extends Ability {
     ).apply(instance, ActionOnItemSwapAbility::new));
 
     private final List<Action> entityActions;
-    private final List<ItemAction> mainItemActions;
-    private final List<ItemAction> offItemActions;
-    private final List<ItemCondition> mainItemConditions;
-    private final List<ItemCondition> offItemConditions;
+    private final List<ItemAction> mainItemActions, offItemActions;
+    private final List<ItemCondition> mainItemConditions, offItemConditions;
     private final TriggerType trigger;
 
     public ActionOnItemSwapAbility(List<Action> entityActions, List<ItemAction> mainItemActions, List<ItemAction> offItemActions, List<ItemCondition> mainItemConditions, List<ItemCondition> offItemConditions, TriggerType trigger, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {

@@ -1,0 +1,37 @@
+{
+  "name": "Modify Damage Taken", "icon": "minecraft:shield",
+
+  "abilities": {
+    "modify_damage_taken": {
+      "type": "kryptonite:modify_damage_taken",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": -1
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:actor_condition",
+        "conditions": [
+          {
+            "type": "palladium:item_in_slot",
+            "item": "minecraft:netherite_sword",
+            "slot": "mainhand"
+          },
+          {
+            "type": "palladium:has_effect",
+            "effect": "minecraft:glowing"
+          }
+        ]
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:shield",
+        "list_index": 0
+      }
+    }
+  }
+}

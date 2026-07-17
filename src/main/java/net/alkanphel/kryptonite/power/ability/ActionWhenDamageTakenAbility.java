@@ -20,27 +20,26 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ActionWhenDamageTakenAbility extends Ability {
 
     public static final MapCodec<ActionWhenDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.fieldOf("entity_actions").forGetter(a -> a.entityActions),
-            DamageCondition.CODEC.optionalFieldOf("damage_conditions").forGetter(a -> a.damageConditions),
+            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionWhenDamageTakenAbility::new));
 
     public final List<Action> entityActions;
-    public final Optional<DamageCondition> damageConditions;
+    public final List<DamageCondition> damageConditions;
 
-    public ActionWhenDamageTakenAbility(List<Action> entityActions, Optional<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionWhenDamageTakenAbility(List<Action> entityActions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.damageConditions = damageConditions;
     }
 
     public boolean doesApply(DamageSource source, float amount) {
-        return damageConditions.map(condition -> condition.test(source, amount)).orElse(true);
+        return damageConditions.isEmpty() || DamageCondition.checkConditions(damageConditions, source, amount);
     }
 
     public void whenHit(LivingEntity holder) {
@@ -65,7 +64,7 @@ public class ActionWhenDamageTakenAbility extends Ability {
                     .setDescription("Runs actions on the entity that has this ability if damage was taken.")
                     .add("entity_actions", TYPE_ACTION_LIST, "The actions to run upon taking damage.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions if the damage matches these damage conditions.")
-                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("I'm feeling spicy!"))), Optional.of(new DamageTypeDamageCondition(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

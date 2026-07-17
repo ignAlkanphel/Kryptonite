@@ -24,7 +24,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
 
     public void addAbilityTemplate(AbilitySerializer<?> key, String name) {
         var id = PalladiumRegistries.ABILITY_SERIALIZER.getKey(key);
-        this.add("ability." + Objects.requireNonNull(id).getNamespace() + "." + id.getPath(), name);
+        this.add(Kryptonite.MOD_ID + ".ability." + Objects.requireNonNull(id).getNamespace() + "." + id.getPath(), name);
     }
 
     public static class English extends KryptoniteLangProvider {
@@ -60,8 +60,12 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE, "Allow Enderman Stare");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
             this.addAbility(KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN, "Immediate Respawn");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_BLOCK_DESTROY_SPEED, "Modify Block Destroy Speed");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_BLOCK_HARVEST, "Modify Block Harvest");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_DAMAGE_DEALT, "Modify Damage Dealt");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN, "Modify Damage Taken");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_FOG_TYPE, "Modify Fog Type");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_FRICTION, "Modify Friction");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BEING_USED, "Prevent Being Used");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION, "Prevent Block Selection");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_USE, "Prevent Block Use");

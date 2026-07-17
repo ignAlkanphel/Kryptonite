@@ -29,9 +29,7 @@ public class ActionOnEntityCollisionAbility extends Ability {
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnEntityCollisionAbility::new));
 
-    public final List<BiAction> biEntityActionsFirstTick;
-    public final List<BiAction> biEntityActionsTick;
-    public final List<BiAction> biEntityActionsLastTick;
+    public final List<BiAction> biEntityActionsFirstTick, biEntityActionsTick, biEntityActionsLastTick;
     public final List<BiCondition> biEntityConditions;
 
     private final Set<UUID> currentlyColliding = new HashSet<>();
