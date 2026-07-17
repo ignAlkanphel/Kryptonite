@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.Ability;
 import net.threetag.palladium.power.ability.AbilityProperties;
 import net.threetag.palladium.power.ability.AbilitySerializer;
@@ -65,8 +64,8 @@ public class InteractionAbility extends Ability {
     }
 
     public boolean doesApplyToItem(ItemStack heldStack) {
-        var entity = DataContext.create().getLivingEntity();
-        return heldItemConditions.isEmpty() || ItemCondition.checkConditions(heldItemConditions, entity.level(), heldStack);
+        if (heldItemConditions.isEmpty()) return true;
+        return ItemCondition.checkConditions(heldItemConditions, null, heldStack);
     }
 
     public InteractionResult getActionResult() {

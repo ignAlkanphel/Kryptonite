@@ -7,6 +7,7 @@ import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -40,6 +41,12 @@ public interface Prioritized {
         public void forEachBucketUntil(Predicate<List<T>> bucketAction) {
             for (List<T> abilities : buckets.values()) {
                 if (bucketAction.test(abilities)) break;
+            }
+        }
+
+        public void forEachBucketEntryUntil(BiPredicate<Integer, List<T>> bucketAction) {
+            for (Map.Entry<Integer, List<T>> entry : buckets.entrySet()) {
+                if (bucketAction.test(entry.getKey(), entry.getValue())) break;
             }
         }
 

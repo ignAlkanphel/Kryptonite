@@ -1,0 +1,31 @@
+{
+  "name": "Action On Being Used", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_being_used": {
+      "type": "kryptonite:action_on_being_used",
+      "action_result": "consume",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "title @s actionbar {\"text\": \"Action (actor_action) on being used!\", \"color\": \"red\"}"
+        }
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:iron_golem"
+        }
+      },
+      "held_item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:stick"
+      },
+      "hands": [
+        "off_hand"
+      ]
+    }
+  }
+}
