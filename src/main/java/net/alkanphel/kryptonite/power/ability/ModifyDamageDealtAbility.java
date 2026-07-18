@@ -89,7 +89,7 @@ public class ModifyDamageDealtAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageDealtAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Damage Dealt")
                     .setDescription("Modifies the amount of damage the entity that has this ability deals. In the context of this ability, the \"actor\" is the entity that has this ability & the \"target\" is the entity that was hit.")
-                    .add("modifiers", TYPE_ATTRIBUTE_MODIFIER, "If specified, these modifiers will be applied to the damage dealt by the \"actor\" entity.")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the damage dealt by the \"actor\" entity.")
                     .addOptional("self_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the \"actor\" entity whenever the modifiers apply.")
                     .addOptional("target_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the \"target\" entity whenever the modifiers apply.")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both \"actor\" & \"target\" entities whenever the modifiers apply.")

@@ -1,0 +1,17 @@
+{
+  "name": "Shaking", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "shaking": {
+      "type": "kryptonite:shaking",
+      "frequency": 3.25,
+      "amplitude": 0.4,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

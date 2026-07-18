@@ -28,6 +28,8 @@
     "client.MinecraftMixin",
     "client.EntityRendererMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.LivingEntityRendererMixin",
+    "client.LivingEntityRenderStateMixin",
     "client.GameRendererMixin",
     "client.CameraMixin",
     "client.KeyMappingAccessor"

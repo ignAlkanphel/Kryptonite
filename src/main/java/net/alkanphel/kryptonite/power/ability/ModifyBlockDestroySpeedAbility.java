@@ -73,8 +73,8 @@ public class ModifyBlockDestroySpeedAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyBlockDestroySpeedAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Block Destroy Speed")
                     .setDescription("Modifies how fast the player destroys blocks.")
-                    .add("modifiers", TYPE_ATTRIBUTE_MODIFIER, "If specified, these modifiers will be applied to the destroy speed.")
-                    .add("hardness_modifiers", TYPE_ATTRIBUTE_MODIFIER, "If specified, these modifiers will be applied to the effective destroy speed value of the block while calculating the block's destroy speed.")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the destroy speed.")
+                    .add("hardness_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the effective destroy speed value of the block while calculating the block's destroy speed.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the modifiers will only apply to blocks that fulfill these conditions.")
                     .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.5), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.35), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

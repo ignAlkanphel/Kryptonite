@@ -2,7 +2,9 @@ package net.alkanphel.kryptonite.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
@@ -11,11 +13,15 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import org.joml.Vector3f;
 
+import java.util.EnumSet;
+import java.util.List;
+
 public class KryptoniteCodecs {
 
     public static final Codec<InteractionHand> HAND_CODEC = Codec.STRING.xmap(string -> InteractionHand.valueOf(string.toUpperCase()), hand -> hand.name().toLowerCase());
     public static final Codec<ClipContext.Block> CLIP_CONTEXT_BLOCK_CODEC = Codec.STRING.xmap(string -> ClipContext.Block.valueOf(string.toUpperCase()), block -> block.name().toLowerCase());
     public static final Codec<ClipContext.Fluid> CLIP_CONTEXT_FLUID_CODEC = Codec.STRING.xmap(string -> ClipContext.Fluid.valueOf(string.toUpperCase()), fluid -> fluid.name().toLowerCase());
+    public static final Codec<EnumSet<Direction.Axis>> DIRECTION_AXIS_CODEC = ExtraCodecs.compactListCodec(Direction.Axis.CODEC).xmap(list -> list.isEmpty() ? EnumSet.allOf(Direction.Axis.class) : EnumSet.copyOf(list), List::copyOf);
 
     public static final Codec<Vec3> VEC3_OBJECT = RecordCodecBuilder.create(instance -> instance.group(
             Codec.DOUBLE.optionalFieldOf("x", 0.0).forGetter(Vec3::x),

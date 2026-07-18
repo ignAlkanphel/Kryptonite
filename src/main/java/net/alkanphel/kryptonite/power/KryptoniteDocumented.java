@@ -23,8 +23,9 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_BLOCK_ACTION_LIST = SettingType.listOrPrimitive("Block Action");
     SettingType TYPE_ITEM_ACTION_LIST = SettingType.listOrPrimitive("Item Action");
 
-    SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
+    SettingType TYPE_VALUE_MODIFIER = SettingType.simple("Value Modifier (amount*, operation*)");
     SettingType TYPE_RGB_VALUE = SettingType.simple("(Dynamic) RGB Value");
+    SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 
     SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");
     SettingType TYPE_BLOCK_TYPE_HOLDER_SET = SettingType.simple("Block ID(s) / Tag(s)");

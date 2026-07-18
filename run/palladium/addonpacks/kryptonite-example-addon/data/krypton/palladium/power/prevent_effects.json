@@ -1,0 +1,40 @@
+{
+  "name": "Prevent Effects", "icon": "minecraft:glass_bottle",
+
+  "abilities": {
+    "prevent_effects": {
+      "type": "kryptonite:prevent_effects",
+      "effects": [
+        "minecraft:weakness",
+        "minecraft:poison"
+      ],
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "list_index": 0
+      }
+    },
+    "prevent_effects_inverted": {
+      "type": "kryptonite:prevent_effects",
+      "inverted": true,
+      "effects": [
+        "minecraft:weakness",
+        "minecraft:poison"
+      ],
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Inverted Prevent Effects",
+        "list_index": 1
+      }
+    }
+  }
+}

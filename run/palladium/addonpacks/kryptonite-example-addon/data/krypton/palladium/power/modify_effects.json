@@ -1,0 +1,24 @@
+{
+  "name": "Modify Effect", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_effect_amplifier": {
+      "type": "kryptonite:modify_effects",
+      "mode": "amplifier",
+      "effects": "minecraft:speed",
+      "modifiers": {
+        "operation": "add_base_early",
+        "amount": 1
+      }
+    },
+    "modify_effect_duration": {
+      "type": "kryptonite:modify_effects",
+      "mode": "duration",
+      "effects": "minecraft:speed",
+      "modifiers": {
+        "operation": "multiply_base_additive",
+        "amount": 0.25
+      }
+    }
+  }
+}

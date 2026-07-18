@@ -7,6 +7,7 @@ import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.Mth;
@@ -24,18 +25,14 @@ import net.threetag.palladium.util.NumberComparator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.function.Function;
 
 public record RelativeRotationBiCondition(RotationType actorRotationType, RotationType targetRotationType, EnumSet<Direction.Axis> axes, NumberComparator comparator, Value compareTo) implements BiCondition {
 
-    //TODO Clean up the Axis CODEC
     public static final MapCodec<RelativeRotationBiCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             RotationType.CODEC.optionalFieldOf("actor_rotation", RotationType.HEAD).forGetter(RelativeRotationBiCondition::actorRotationType),
             RotationType.CODEC.optionalFieldOf("target_rotation", RotationType.BODY).forGetter(RelativeRotationBiCondition::targetRotationType),
-            Direction.Axis.CODEC.listOf().optionalFieldOf("axes", List.of(Direction.Axis.values()))
-                    .xmap(list -> EnumSet.copyOf(list.isEmpty() ? EnumSet.allOf(Direction.Axis.class) : list), List::copyOf)
-                    .forGetter(RelativeRotationBiCondition::axes),
+            KryptoniteCodecs.DIRECTION_AXIS_CODEC.optionalFieldOf("axes", EnumSet.allOf(Direction.Axis.class)).forGetter(RelativeRotationBiCondition::axes),
             NumberComparator.CODEC.fieldOf("comparator").forGetter(RelativeRotationBiCondition::comparator),
             Value.CODEC.fieldOf("compare_to").forGetter(RelativeRotationBiCondition::compareTo)
     ).apply(instance, RelativeRotationBiCondition::new));
@@ -102,7 +99,7 @@ public record RelativeRotationBiCondition(RotationType actorRotationType, Rotati
                     .setDescription("Compares the rotation angle of the actor entity to the target entity.")
                     .addOptional("actor_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the actor.", RotationType.HEAD)
                     .addOptional("target_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the target.", RotationType.BODY)
-                    .addOptional("axes", SettingType.enumList(Direction.Axis.values()), "The axes to get the angle values to calculate, and compare to.", Direction.Axis.values())
+                    .addOptional("axes", SettingType.enumList(Direction.Axis.values()), "The axes to get the angle values to calculate, and compare to.", EnumSet.allOf(Direction.Axis.class))
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Determines how the calculated angle value should be compared to the specified value.")
                     .add("compare_to", TYPE_VALUE, "The value at which the calculated angle value will be compared to.")
                     .addExampleObject(new RelativeRotationBiCondition(RotationType.HEAD, RotationType.BODY, EnumSet.allOf(Direction.Axis.class), NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.0D)));

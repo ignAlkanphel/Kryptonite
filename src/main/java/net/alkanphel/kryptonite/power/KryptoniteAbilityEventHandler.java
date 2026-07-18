@@ -180,6 +180,33 @@ public class KryptoniteAbilityEventHandler {
                 .forEach(instance -> instance.getAbility().whenHit(target));
     }
 
+    @SubscribeEvent // Modify Invulnerability Ticks ability
+    public static void onLivingIncomingDamageHurtTicks(LivingIncomingDamageEvent e) {
+        LivingEntity target = e.getEntity();
+        Entity attacker = e.getSource().getEntity();
+        float amount = e.getAmount();
+
+        // Modify Invulnerability Ticks ability (SELF)
+        AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApplyToSelf(e.getSource(), amount))
+                .forEach(instance -> {
+                    instance.getAbility().applyModifiers(e, DataContext.forAbility(target, instance));
+                    instance.getAbility().runActions(attacker, target);
+                });
+
+        // Modify Invulnerability Ticks ability (OTHER)
+        if (attacker instanceof LivingEntity livingAttacker) {
+            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())
+                    .stream()
+                    .filter(instance -> instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), amount))
+                    .forEach(instance -> {
+                        instance.getAbility().applyModifiers(e, DataContext.forAbility(livingAttacker, instance));
+                        instance.getAbility().runActions(livingAttacker, target);
+                    });
+        }
+    }
+
     @SubscribeEvent
     public static void onLivingUseTotem(LivingUseTotemEvent e) {
         LivingEntity entity = e.getEntity();
@@ -456,6 +483,7 @@ public class KryptoniteAbilityEventHandler {
 
     // ------------------------------------------------------------------------------------------------------------------------
 
+
     @SubscribeEvent // Projectile Impact ability
     public static void onProjectileImpact(ProjectileImpactEvent e) {
         if (!(e.getRayTraceResult() instanceof EntityHitResult result)) return;
@@ -518,6 +546,16 @@ public class KryptoniteAbilityEventHandler {
         if (mob.getTarget() != null && PreventMobAggroAbility.shouldAggroReset(newTarget, mob)) {
             mob.setTarget(null);
             mob.setLastHurtByMob(null);
+        }
+    }
+
+    @SubscribeEvent // Prevent Effect ability
+    public static void onEffect(MobEffectEvent.Applicable e) {
+        for (AbilityInstance<PreventEffectsAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_EFFECTS.get())) {
+            if (PreventEffectsAbility.isImmuneTo(e.getEntity(), instance, e.getEffectInstance().getEffect())) {
+                e.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+                return;
+            }
         }
     }
 

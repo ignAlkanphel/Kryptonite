@@ -1,0 +1,29 @@
+{
+  "name": "Swing Through Grass", "icon": "minecraft:glass",
+
+  "abilities": {
+    "swing_through_grass": {
+      "type": "kryptonite:prevent_block_selection",
+      "block_conditions": {
+        "type": "kryptonite:or",
+        "conditions": [
+          {"type": "kryptonite:block", "block": "minecraft:short_grass"},
+          {"type": "kryptonite:block", "block": "minecraft:tall_grass"},
+          {"type": "kryptonite:block", "block": "minecraft:short_dry_grass"},
+          {"type": "kryptonite:block", "block": "minecraft:tall_dry_grass"}
+        ]
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Swing Through Grass",
+        "icon": "minecraft:tall_grass",
+        "list_index": 0
+      }
+    }
+  }
+}

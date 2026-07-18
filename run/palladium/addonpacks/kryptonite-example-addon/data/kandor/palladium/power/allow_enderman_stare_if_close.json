@@ -1,0 +1,14 @@
+{
+  "name": "Allow Enderman Stare If Close", "icon": "minecraft:carved_pumpkin",
+
+  "abilities": {
+    "allow_enderman_stare": {
+      "type": "kryptonite:allow_enderman_stare",
+      "bientity_conditions": {
+        "type": "kryptonite:distance",
+        "comparator": "<=",
+        "compare_to": 5
+      }
+    }
+  }
+}

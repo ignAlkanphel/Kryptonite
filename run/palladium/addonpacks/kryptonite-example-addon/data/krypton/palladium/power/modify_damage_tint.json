@@ -1,0 +1,31 @@
+{
+  "name": "Modify Damage Tint", "icon": "minecraft:glowstone_dust",
+
+  "abilities": {
+    "modify_damage_tint": {
+      "type": "kryptonite:modify_damage_tint",
+      "color": {
+        "red": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_red",
+          "fallback": 1.0
+        },
+        "green": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_green",
+          "fallback": 1.0
+        },
+        "blue": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_blue",
+          "fallback": 1.0
+        },
+        "alpha": {
+          "type": "palladium:float_data_attachment",
+          "attachment": "krypton:glow_alpha",
+          "fallback": 0.0
+        }
+      }
+    }
+  }
+}

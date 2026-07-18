@@ -1,0 +1,22 @@
+{
+  "name": "More Zombies On Kill", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "more_zombies": {
+      "type": "kryptonite:action_on_hit",
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "execute as @s at @s run summon minecraft:zombie"
+        }
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:health", "min": 0, "max": 0
+        }
+      }
+    }
+  }
+}

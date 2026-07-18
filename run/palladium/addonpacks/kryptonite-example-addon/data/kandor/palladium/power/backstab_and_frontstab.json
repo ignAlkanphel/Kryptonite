@@ -1,0 +1,30 @@
+{
+  "name": "Detect Backstab & Frontstab", "icon": "minecraft:diamond_sword",
+
+  "abilities": {
+    "detect_backstab": {
+      "type": "kryptonite:glowing", "mode": "other",
+      "color": {"red": 1.0, "green": 0.0, "blue": 0.5}, "use_teams": false,
+      "bientity_conditions": {
+        "type": "kryptonite:and",
+        "conditions": [
+          { "type": "kryptonite:distance", "comparator": "<=", "compare_to": 2.5 },
+          { "type": "kryptonite:relative_rotation", "actor_rotation": "head", "target_rotation": "body", "comparator": ">", "compare_to": 0.85 },
+          { "type": "kryptonite:can_see", "shape_type": "visual" }
+        ]
+      }
+    },
+    "detect_frontstab": {
+      "type": "kryptonite:glowing", "mode": "other",
+      "color": {"red": 0.1, "green": 0.75, "blue": 0.5}, "use_teams": false,
+      "bientity_conditions": {
+        "type": "kryptonite:and",
+        "conditions": [
+          { "type": "kryptonite:distance", "comparator": "<=", "compare_to": 2.5 },
+          { "type": "kryptonite:relative_rotation", "actor_rotation": "head", "target_rotation": "body", "comparator": "<", "compare_to": -0.85 },
+          { "type": "kryptonite:can_see", "shape_type": "visual" }
+        ]
+      }
+    }
+  }
+}
