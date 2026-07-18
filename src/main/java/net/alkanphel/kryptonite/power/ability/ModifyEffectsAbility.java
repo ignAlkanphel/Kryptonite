@@ -11,6 +11,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,17 +29,17 @@ import java.util.Optional;
 public class ModifyEffectsAbility extends Ability {
 
     public static final MapCodec<ModifyEffectsAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Mode.CODEC.fieldOf("mode").forGetter(a -> a.mode),
+            ExtraCodecs.compactListCodec(Mode.CODEC).fieldOf("mode").forGetter(a -> a.mode),
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("modifiers", List.of()).forGetter(a -> a.modifiers),
             RegistryCodecs.homogeneousList(Registries.MOB_EFFECT).optionalFieldOf("effects").forGetter(a -> a.effects),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyEffectsAbility::new));
 
-    public final Mode mode;
+    public final List<Mode> mode;
     public final List<KryptoniteModifiers.ValueModifier> modifiers;
     public final Optional<HolderSet<MobEffect>> effects;
 
-    public ModifyEffectsAbility(Mode mode, List<KryptoniteModifiers.ValueModifier> modifiers, Optional<HolderSet<MobEffect>> effects, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyEffectsAbility(List<Mode> mode, List<KryptoniteModifiers.ValueModifier> modifiers, Optional<HolderSet<MobEffect>> effects, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.mode = mode;
         this.modifiers = modifiers;
@@ -69,11 +70,11 @@ public class ModifyEffectsAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyEffectsAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Effects")
                     .setDescription("Modifies the amplifier or duration for effects applied to the entity that has this ability.")
-                    .add("mode", SettingType.enumList(Mode.values()), "Mode to use for the ability.")
+                    .add("mode", SettingType.enumList(Mode.values()), "Mode(s) to use for the ability. Accepts singular & list.")
                     .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "The modifiers to apply for the effects.")
                     .addOptional("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "If specified, only modifies the listed effects upon them being added. If none specified, applies to all effects.")
-                    .addExampleObject(new ModifyEffectsAbility(Mode.AMPLIFIER, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(1.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyEffectsAbility(Mode.DURATION, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.5), KryptoniteModifiers.Operation.MULTIPLY_TOTAL_ADDITIVE)), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ModifyEffectsAbility(List.of(Mode.AMPLIFIER), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(1.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ModifyEffectsAbility(List.of(Mode.DURATION), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.5), KryptoniteModifiers.Operation.MULTIPLY_TOTAL_ADDITIVE)), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
 
         }
     }

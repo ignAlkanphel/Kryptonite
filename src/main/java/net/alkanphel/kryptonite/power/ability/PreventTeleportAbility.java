@@ -40,10 +40,8 @@ public class PreventTeleportAbility extends Ability {
     ).apply(instance, PreventTeleportAbility::new));
 
     public final List<Action> entityActions;
-    public final List<DimensionCondition> originDimensionConditions;
-    public final List<DimensionCondition> destinationDimensionConditions;
-    public final Optional<Double> minDistance;
-    public final Optional<Double> maxDistance;
+    public final List<DimensionCondition> originDimensionConditions, destinationDimensionConditions;
+    public final Optional<Double> minDistance, maxDistance;
     public final Source source;
 
     public PreventTeleportAbility(List<Action> entityActions, List<DimensionCondition> originDimensionConditions, List<DimensionCondition> destinationDimensionConditions, Optional<Double> minDistance, Optional<Double> maxDistance, Source source, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {

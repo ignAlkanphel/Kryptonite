@@ -4,11 +4,13 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
 import net.alkanphel.kryptonite.power.ability.PreventEntityCollisionAbility;
+import net.alkanphel.kryptonite.power.ability.PreventParticlesAbility;
 import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.threetag.palladium.power.ability.AbilityUtil;
@@ -62,6 +64,20 @@ public abstract class EntityMixin {
         if (AbilityUtil.getEnabledInstances(livingEntity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
             cir.setReturnValue(false);
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+    // Prevent Particles (Sprinting) ability
+    @ModifyReturnValue(method = "canSpawnSprintParticle", at = @At("TAIL"))
+    private boolean kryptonite$preventParticlesSprinting(boolean original) {
+        if (!((Object) this instanceof Player player)) return original;
+        if (AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.SPRINTING))) {
+            return false;
+        }
+
+        return original;
     }
 
 }

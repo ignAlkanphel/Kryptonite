@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite;
 
 import net.alkanphel.kryptonite.client.datagen.KryptoniteLangProvider;
+import net.alkanphel.kryptonite.client.particle.*;
 import net.alkanphel.kryptonite.power.compat.lambdynlights.DynLightsCompatClient;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxyClient;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
@@ -14,6 +15,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -30,6 +32,11 @@ public class KryptoniteClient {
             DynLightsCompatClient.init();
         }
 
+    }
+
+    @SubscribeEvent
+    public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(KryptoniteParticles.MXY_DUST.get(), MxyDustParticle.Provider::new);
     }
 
     @SubscribeEvent

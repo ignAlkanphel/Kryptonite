@@ -1,0 +1,29 @@
+{
+  "name": "Action On Callback", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_callback": {
+      "type": "kryptonite:action_on_callback",
+      "on_spawn": {
+        "type": "palladium:run_command",
+        "command": "say Action On Callback - Spawn"
+      },
+      "on_load": {
+        "type": "palladium:run_command",
+        "command": "say Action On Callback - Load"
+      },
+      "on_unload": {
+        "type": "palladium:run_command",
+        "command": "say Action On Callback - Unload"
+      },
+      "on_gain": {
+        "type": "palladium:run_command",
+        "command": "say Action On Callback - Gain"
+      },
+      "on_loss": {
+        "type": "palladium:run_command",
+        "command": "say Action On Callback - Loss"
+      }
+    }
+  }
+}

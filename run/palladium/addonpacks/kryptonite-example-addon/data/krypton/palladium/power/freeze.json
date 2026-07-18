@@ -1,0 +1,15 @@
+{
+  "name": "Freeze", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "freeze": {
+      "type": "kryptonite:freeze",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

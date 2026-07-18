@@ -41,6 +41,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK, "Action On Block Break");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_PLACE, "Action On Block Place");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_USE, "Action On Block Use");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_CALLBACK, "Action On Callback");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT, "Action On Critical Hit");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DEATH, "Action On Death");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_COLLISION, "Action On Entity Collision");
@@ -95,6 +96,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_PICKUP, "Prevent Item Pickup");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO, "Prevent Mob Aggro");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_PARTICLES, "Prevent Particles");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLEEPING, "Prevent Sleeping");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLOWDOWN, "Prevent Slowdown");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");

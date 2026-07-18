@@ -19,6 +19,7 @@
     "common.BlockStateBaseMixin",
     "common.ServerPlayerGameModeMixin",
     "common.EntitySuperpowerHandlerMixin",
+    "common.EntityPowerHandlerMixin",
     "common.PowerInstanceMixin",
     "common.AbilityInstanceMixin"
   ],

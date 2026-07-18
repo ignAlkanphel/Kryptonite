@@ -1,8 +1,8 @@
 package net.alkanphel.kryptonite.util;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.Value;
@@ -13,23 +13,14 @@ import java.util.stream.Collectors;
 
 public class KryptoniteModifiers {
 
+    public static final Codec<List<ValueModifier>> VALUE_MODIFIERS_CODEC = ExtraCodecs.compactListCodec(ValueModifier.CODEC);
+
     public record ValueModifier(Value amount, Operation operation) {
         public static final Codec<ValueModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Value.CODEC.fieldOf("amount").forGetter(ValueModifier::amount),
                 Operation.CODEC.fieldOf("operation").forGetter(ValueModifier::operation)
         ).apply(instance, ValueModifier::new));
     }
-
-    public static final Codec<List<ValueModifier>> VALUE_MODIFIERS_CODEC = Codec.either(ValueModifier.CODEC, ValueModifier.CODEC.listOf()).xmap(
-            either -> either.map(List::of, list -> list),
-            list -> {
-                if (list.size() == 1) {
-                    return Either.left(list.getFirst());
-                } else {
-                    return Either.right(list);
-                }
-            }
-    );
 
     public enum Operation implements StringRepresentable {
         ADD_BASE_EARLY(Phase.BASE, 0, (values, base, total) -> values.stream().reduce(total, Double::sum)),

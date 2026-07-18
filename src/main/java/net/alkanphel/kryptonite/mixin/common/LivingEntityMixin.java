@@ -2,12 +2,11 @@ package net.alkanphel.kryptonite.mixin.common;
 
 import net.alkanphel.kryptonite.network.p2c.S2CSyncAttacker;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.ability.ModifyEffectsAbility;
-import net.alkanphel.kryptonite.power.ability.ModifyFrictionAbility;
-import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
-import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
+import net.alkanphel.kryptonite.power.ability.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -89,9 +88,11 @@ public abstract class LivingEntityMixin extends Entity {
                 continue;
             }
 
-            switch (ability.mode) {
-                case AMPLIFIER -> newAmplifier = ability.applyModifiers(newAmplifier, self, instance);
-                case DURATION -> newDuration = ability.applyModifiers(newDuration, self, instance);
+            for (ModifyEffectsAbility.Mode mode : ability.mode) {
+                switch (mode) {
+                    case AMPLIFIER -> newAmplifier = ability.applyModifiers(newAmplifier, self, instance);
+                    case DURATION -> newDuration = ability.applyModifiers(newDuration, self, instance);
+                }
             }
         }
 
@@ -144,6 +145,40 @@ public abstract class LivingEntityMixin extends Entity {
             if (self.canFreeze()) {
                 self.setTicksFrozen(Math.min(self.getTicksRequiredToFreeze(), self.getTicksFrozen() + 1));
             }
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+    // Prevent Particles (Landing) ability
+    @Redirect(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private <T extends ParticleOptions> int kryptonite$preventParticlesLanding(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
+        LivingEntity self = (LivingEntity)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.LANDING))) {
+            return 0;
+        }
+
+        return level.sendParticles(particle, x, y, z, count, xDist, yDist, zDist, speed);
+    }
+
+    // Prevent Particles (Death) ability
+    @Inject(method = "makePoofParticles", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventParticlesDeath(CallbackInfo ci) {
+        LivingEntity self = (LivingEntity)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DEATH))) {
+            ci.cancel();
+        }
+    }
+
+    // Prevent Particles (Drowning) ability
+    @Inject(method = "makeDrownParticles", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventParticlesDrowning(CallbackInfo ci) {
+        LivingEntity self = (LivingEntity)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DROWNING))) {
+            ci.cancel();
         }
     }
 

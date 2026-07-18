@@ -11,6 +11,8 @@ import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +27,7 @@ import net.threetag.palladium.power.ability.AbilityUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -184,6 +187,53 @@ public abstract class PlayerMixin extends LivingEntity {
         if (AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
             this.setSwimming(false);
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+    // Prevent Particles (Critical Hit) ability
+    @Redirect(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;crit(Lnet/minecraft/world/entity/Entity;)V"))
+    private void kryptonite$preventParticlesCriticalHit(Player instance, Entity entity) {
+        if (AbilityUtil.getEnabledInstances(instance, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.CRITICAL_HIT))) {
+            return;
+        }
+
+        instance.crit(entity);
+    }
+
+    // Prevent Particles (Magical Critical Hit) ability
+    @Redirect(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;magicCrit(Lnet/minecraft/world/entity/Entity;)V"))
+    private void kryptonite$preventParticlesMagicCriticalHit(Player instance, Entity entity) {
+        if (AbilityUtil.getEnabledInstances(instance, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.MAGIC_CRITICAL_HIT))) {
+            return;
+        }
+        instance.magicCrit(entity);
+    }
+
+    // Prevent Particles (Damage Indicator) ability
+    @Redirect(method = "damageStatsAndHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private <T extends ParticleOptions> int kryptonite$preventParticlesDamageIndicator(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
+        Player self = (Player)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DAMAGE_INDICATOR))) {
+            return 0;
+        }
+
+        return level.sendParticles(particle, x, y, z, count, xDist, yDist, zDist, speed);
+    }
+
+    // Prevent Particles (Sweep Attack) ability
+    @Redirect(method = "doSweepAttack(Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;FLnet/minecraft/world/phys/AABB;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private <T extends ParticleOptions> int kryptonite$preventParticlesSweepAttack(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
+        Player self = (Player)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
+                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.SWEEP_ATTACK))) {
+            return 0;
+        }
+
+        return level.sendParticles(particle, x, y, z, count, xDist, yDist, zDist, speed);
     }
 
 }
