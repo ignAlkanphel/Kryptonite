@@ -1,0 +1,32 @@
+{
+  "name": "Area of Effect", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "area_of_effect_test": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:area_of_effect",
+        "include_actor": false,
+        "radius": 10,
+        "bientity_actions": {
+          "type": "kryptonite:target_action",
+          "actions": {
+            "type": "kryptonite:set_on_fire",
+            "duration": 60
+          }
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Area of Effect",
+        "icon": "minecraft:white_wool",
+        "list_index": 0
+      }
+    }
+  }
+}

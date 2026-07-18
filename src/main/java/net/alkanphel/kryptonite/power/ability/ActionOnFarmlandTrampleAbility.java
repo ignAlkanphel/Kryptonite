@@ -4,10 +4,15 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.block.SpawnEntityBlockAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -76,7 +81,8 @@ public class ActionOnFarmlandTrampleAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity that trampled the farmland.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run on the trampled farmland block.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs the actions if the farmland block fulfills these conditions.")
-                    .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample! Aw, man!"))), List.of(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SpawnEntityBlockAction.Serializer.addExampleNbt())), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

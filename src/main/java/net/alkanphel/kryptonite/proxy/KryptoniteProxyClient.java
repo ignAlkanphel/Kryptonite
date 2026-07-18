@@ -5,11 +5,20 @@ import net.alkanphel.kryptonite.network.p2c.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
 
 public class KryptoniteProxyClient extends KryptoniteProxy {
+
+    @Override
+    public void displayItemActivation(ItemStack stack) {
+        var mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        mc.gameRenderer.displayItemActivation(stack);
+    }
 
     @Override
     public void packetHandleS2CSyncAttacker(S2CSyncAttacker packet, IPayloadContext context) {

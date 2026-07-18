@@ -1,0 +1,24 @@
+{
+  "name": "Display Item Activation", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "display_item_activation": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:display_item_activation",
+        "item": "minecraft:book"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Display Item Activation",
+        "icon": "minecraft:totem_of_undying",
+        "list_index": 0
+      }
+    }
+  }
+}

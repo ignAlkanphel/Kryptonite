@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.FogType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -42,6 +43,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_INTERACTION_RESULT = SettingType.enumList(InteractionResultUtil.InteractionResultType.values());
     SettingType TYPE_CLIP_CONTEXT_BLOCK = SettingType.enumList(ClipContext.Block.values());
     SettingType TYPE_CLIP_CONTEXT_FLUID = SettingType.enumList(ClipContext.Fluid.values());
+    SettingType TYPE_EXPLOSION_INTERACTION = SettingType.enumList(Level.ExplosionInteraction.values());
     SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
     SettingType TYPE_SHAPE = SettingType.enumList(Shape.values());
