@@ -1,0 +1,50 @@
+{
+  "name": "Prevent Critical Hit", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_critical_hit_self": {
+      "type": "kryptonite:prevent_critical_hit",
+      "mode": "self",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "title @s actionbar {\"text\": \"Cannot deal critical hits!\", \"color\": \"red\"}"
+        }
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:villager"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:iron_sword",
+        "title": "Self",
+        "list_index": 0
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "prevent_critical_hit_other": {
+      "type": "kryptonite:prevent_critical_hit",
+      "mode": "other",
+      "properties": {
+        "icon": "minecraft:diamond_sword",
+        "title": "Other",
+        "list_index": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

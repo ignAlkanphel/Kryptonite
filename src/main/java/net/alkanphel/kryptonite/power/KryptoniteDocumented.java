@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
+import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -41,6 +42,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_CLIP_CONTEXT_FLUID = SettingType.enumList(ClipContext.Fluid.values());
     SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
+    SettingType TYPE_SHAPE = SettingType.enumList(Shape.values());
 
     CodecDocumentationBuilder<T, R> getDocumentation(HolderLookup.Provider var1);
 }

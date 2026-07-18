@@ -75,7 +75,7 @@ public class KryptoniteAbilityEventHandler {
         e.setAmount(newDamage);
     }
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
+    @SubscribeEvent
     public static void onLivingIncomingDamageTaken(LivingIncomingDamageEvent e) {
         LivingEntity target = e.getEntity();
         DamageSource source = e.getSource();
@@ -180,6 +180,26 @@ public class KryptoniteAbilityEventHandler {
                 .forEach(instance -> instance.getAbility().whenHit(target));
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onCriticalHit(CriticalHitEvent e) {
+        if (!(e.getEntity() instanceof ServerPlayer player)) return;
+        Entity target = e.getTarget();
+
+        // Prevent Critical Hit
+        if (PreventCriticalHitAbility.shouldPreventCrit(player, target)) {
+            e.setCriticalHit(false);
+            e.setDamageMultiplier(1.0F);
+            return; // stops actions running for 'Action On Critical Hit'
+        }
+
+        // Action On Critical Hit
+        if (!e.isCriticalHit()) return;
+        AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().doesApply(player, target))
+                .forEach(instance -> instance.getAbility().runActions(player, target));
+    }
+
     @SubscribeEvent // Modify Invulnerability Ticks ability
     public static void onLivingIncomingDamageHurtTicks(LivingIncomingDamageEvent e) {
         LivingEntity target = e.getEntity();
@@ -205,6 +225,29 @@ public class KryptoniteAbilityEventHandler {
                         instance.getAbility().runActions(livingAttacker, target);
                     });
         }
+    }
+
+    @SubscribeEvent // Modify Knockback ability
+    public static void onLivingKnockback(LivingKnockBackEvent e) {
+        LivingEntity entity = e.getEntity();
+
+        var instances = AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get());
+        if (instances.isEmpty()) return;
+
+        float strength = e.getStrength();
+        double ratioX = e.getRatioX();
+        double ratioZ = e.getRatioZ();
+
+        for (AbilityInstance<ModifyKnockbackAbility> instance : instances) {
+            strength = instance.getAbility().applyStrength(strength, entity, instance);
+            ratioX = instance.getAbility().applyRatioX(ratioX, entity, instance);
+            ratioZ = instance.getAbility().applyRatioZ(ratioZ, entity, instance);
+            instance.getAbility().runActions(entity);
+        }
+
+        e.setStrength(strength);
+        e.setRatioX(ratioX);
+        e.setRatioZ(ratioZ);
     }
 
     @SubscribeEvent
@@ -562,7 +605,7 @@ public class KryptoniteAbilityEventHandler {
     @SubscribeEvent // Prevent Game Event ability
     public static void onVanillaGameEvent(VanillaGameEvent e) {
         Entity cause = e.getCause();
-        if (!(cause instanceof LivingEntity living)) return;
+        if (e.getCause() != null || !(cause instanceof LivingEntity living)) return;
 
         var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
                 .stream()

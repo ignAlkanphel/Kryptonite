@@ -16,6 +16,7 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, NotBlockCondition.Serializer> NOT = BLOCK_CONDITION_SERIALIZERS.register("not", NotBlockCondition.Serializer::new);
 
     public static final DeferredHolder<BlockConditionSerializer<?>, BlockBlockCondition.Serializer> BLOCK = BLOCK_CONDITION_SERIALIZERS.register("block", BlockBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, DistanceFromCoordinatesBlockCondition.Serializer> DISTANCE_FROM_COORDINATES = BLOCK_CONDITION_SERIALIZERS.register("distance_from_coordinates", DistanceFromCoordinatesBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, FrictionBlockCondition.Serializer> FRICTION = BLOCK_CONDITION_SERIALIZERS.register("friction", FrictionBlockCondition.Serializer::new);
 
 }

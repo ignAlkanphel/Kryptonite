@@ -1,0 +1,20 @@
+{
+  "name": "Action On Critical Hit", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_critical_hit": {
+      "type": "kryptonite:action_on_critical_hit",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Critical Hit!"
+      },
+      "bientity_conditions": {
+        "type": "kryptonite:target_condition",
+        "conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:villager"
+        }
+      }
+    }
+  }
+}

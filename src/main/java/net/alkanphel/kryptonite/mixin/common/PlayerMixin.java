@@ -62,10 +62,12 @@ public abstract class PlayerMixin extends LivingEntity {
         }
 
         // Prevent Being Used ability
-        for (AbilityInstance<PreventBeingUsedAbility> instance : AbilityUtil.getEnabledInstances((LivingEntity) entity, KryptoniteAbilitySerializers.PREVENT_BEING_USED.get())) {
-            PreventBeingUsedAbility preventBeingUsed = instance.getAbility();
-            if (preventBeingUsed.doesApply(player, entity, hand, stackInHand)) {
-                return preventBeingUsed.runActions(player, entity, hand);
+        if (entity instanceof LivingEntity living) {
+            for (AbilityInstance<PreventBeingUsedAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_BEING_USED.get())) {
+                PreventBeingUsedAbility preventBeingUsed = instance.getAbility();
+                if (preventBeingUsed.doesApply(player, entity, hand, stackInHand)) {
+                    return preventBeingUsed.runActions(player, entity, hand);
+                }
             }
         }
 
