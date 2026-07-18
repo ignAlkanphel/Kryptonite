@@ -36,6 +36,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionWhenHitAbility.Serializer> ACTION_WHEN_HIT = ABILITIES_SERIALIZERS.register("action_when_hit", ActionWhenHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, DynamicLightsAbility.Serializer> DYNAMIC_LIGHTS = ABILITIES_SERIALIZERS.register("dynamic_lights", DynamicLightsAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, FreezeAbility.Serializer> FREEZE = ABILITIES_SERIALIZERS.register("freeze", FreezeAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, GlowingAbility.Serializer> GLOWING = ABILITIES_SERIALIZERS.register("glowing", GlowingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ImmediateRespawnAbility.Serializer> IMMEDIATE_RESPAWN = ABILITIES_SERIALIZERS.register("immediate_respawn", ImmediateRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockDestroySpeedAbility.Serializer> MODIFY_BLOCK_DESTROY_SPEED = ABILITIES_SERIALIZERS.register("modify_block_destroy_speed", ModifyBlockDestroySpeedAbility.Serializer::new);
@@ -70,6 +71,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, PreventMobAggroAbility.Serializer> PREVENT_MOB_AGGRO = ABILITIES_SERIALIZERS.register("prevent_mob_aggro", PreventMobAggroAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSleepingAbility.Serializer> PREVENT_SLEEPING = ABILITIES_SERIALIZERS.register("prevent_sleeping", PreventSleepingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSprintingAbility.Serializer> PREVENT_SPRINTING = ABILITIES_SERIALIZERS.register("prevent_sprinting", PreventSprintingAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, PreventSlowdownAbility.Serializer> PREVENT_SLOWDOWN = ABILITIES_SERIALIZERS.register("prevent_slowdown", PreventSlowdownAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventTeleportAbility.Serializer> PREVENT_TELEPORT = ABILITIES_SERIALIZERS.register("prevent_teleport", PreventTeleportAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventTotemUseAbility.Serializer> PREVENT_TOTEM_USE = ABILITIES_SERIALIZERS.register("prevent_totem_use", PreventTotemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileAccuracyAbility.Serializer> PROJECTILE_ACCURACY = ABILITIES_SERIALIZERS.register("projectile_accuracy", ProjectileAccuracyAbility.Serializer::new);

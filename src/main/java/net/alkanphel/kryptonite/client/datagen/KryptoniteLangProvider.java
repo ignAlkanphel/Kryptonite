@@ -5,6 +5,7 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.threetag.palladium.Palladium;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.registry.PalladiumRegistries;
 
@@ -24,7 +25,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
 
     public void addAbilityTemplate(AbilitySerializer<?> key, String name) {
         var id = PalladiumRegistries.ABILITY_SERIALIZER.getKey(key);
-        this.add(Kryptonite.MOD_ID + ".ability." + Objects.requireNonNull(id).getNamespace() + "." + id.getPath(), name);
+        this.add(Palladium.MOD_ID + ".ability." + Objects.requireNonNull(id).getNamespace() + "." + id.getPath(), name);
     }
 
     public static class English extends KryptoniteLangProvider {
@@ -56,10 +57,12 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_MOUNT, "Action On Mount");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TAME, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP, "Action On Wake Up");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN, "Action When Damage Taken");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_HIT, "Action When Hit");
             this.addAbility(KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE, "Allow Enderman Stare");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
+            this.addAbility(KryptoniteAbilitySerializers.FREEZE, "Freeze");
             this.addAbility(KryptoniteAbilitySerializers.GLOWING, "Glowing");
             this.addAbility(KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN, "Immediate Respawn");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_BLOCK_DESTROY_SPEED, "Modify Block Destroy Speed");
@@ -74,6 +77,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS, "Modify Invulnerability Ticks");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_KNOCKBACK, "Modify Knockback");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BEING_USED, "Prevent Being Used");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_PLACE, "Prevent Block Place");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION, "Prevent Block Selection");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_USE, "Prevent Block Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_CRITICAL_HIT, "Prevent Critical Hit");
@@ -92,6 +96,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO, "Prevent Mob Aggro");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLEEPING, "Prevent Sleeping");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLOWDOWN, "Prevent Slowdown");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_TELEPORT, "Prevent Teleport");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_TOTEM_USE, "Prevent Totem Use");

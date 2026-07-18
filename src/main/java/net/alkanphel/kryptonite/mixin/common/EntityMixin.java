@@ -4,12 +4,17 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
 import net.alkanphel.kryptonite.power.ability.PreventEntityCollisionAbility;
+import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -45,6 +50,16 @@ public abstract class EntityMixin {
     @Inject(method = "isPickable", at = @At("RETURN"), cancellable = true)
     private void kryptonite$preventEntityCollision(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && PreventEntityCollisionAbility.doesApply((Entity) (Object) this, (Entity) (Object) this)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    // Prevent Slowdown (water) ability
+    @Inject(method = "isInWater", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventSlowdownWaterIgnoreIsInWater(CallbackInfoReturnable<Boolean> cir) {
+        if (!((Object) this instanceof LivingEntity livingEntity)) return;
+
+        if (AbilityUtil.getEnabledInstances(livingEntity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
             cir.setReturnValue(false);
         }
     }

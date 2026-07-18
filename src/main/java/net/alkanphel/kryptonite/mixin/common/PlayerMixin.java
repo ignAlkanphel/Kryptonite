@@ -6,10 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.ability.ActionOnBeingUsedAbility;
-import net.alkanphel.kryptonite.power.ability.ActionOnEntityUseAbility;
-import net.alkanphel.kryptonite.power.ability.PreventBeingUsedAbility;
-import net.alkanphel.kryptonite.power.ability.PreventEntityUseAbility;
+import net.alkanphel.kryptonite.power.ability.*;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
@@ -29,6 +26,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Player.class, priority = 999)
@@ -176,6 +174,16 @@ public abstract class PlayerMixin extends LivingEntity {
         }
 
         return InteractionResultUtil.shouldOverride(original, newResult) ? newResult : original;
+    }
+
+    // Prevent Slowdown (water) ability
+    @Inject(method = "updateSwimming", at = @At("TAIL"))
+    private void kryptonite$preventSlowdownWaterUpdateSwimming(CallbackInfo ci) {
+        Player player = (Player) (Object) this;
+
+        if (AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
+            this.setSwimming(false);
+        }
     }
 
 }

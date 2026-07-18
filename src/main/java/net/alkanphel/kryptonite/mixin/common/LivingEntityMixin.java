@@ -5,6 +5,7 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.ModifyEffectsAbility;
 import net.alkanphel.kryptonite.power.ability.ModifyFrictionAbility;
 import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
+import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -14,6 +15,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
@@ -105,6 +109,41 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (PreventDamageAbility.preventsFreeze(living)) {
             cir.setReturnValue(false);
+        }
+    }
+
+    // Prevent Slowdown (water) ability
+    @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;jumpInFluid(Lnet/neoforged/neoforge/fluids/FluidType;)V"))
+    private void kryptonite$preventSlowdownWaterAllowJumping(LivingEntity self, FluidType fluidType) {
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER)) && fluidType == NeoForgeMod.WATER_TYPE.value()) {
+            return;
+        }
+
+        self.jumpInFluid(fluidType);
+    }
+
+    // Prevent Slowdown (water) ability
+    @Inject(method = "shouldTravelInFluid", at = @At("HEAD"), cancellable = true)
+    private void kryptonite$preventSlowdownWaterIgnoreFluidCheck(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity self = (LivingEntity)(Object)this;
+        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
+            if (fluidState.getFluidType() == NeoForgeMod.WATER_TYPE.value()) {
+                cir.setReturnValue(false);
+            }
+        }
+    }
+
+    // Freeze ability
+    @Inject(method = "aiStep", at = @At("HEAD"))
+    private void kryptonite$applyFreeze(CallbackInfo ci) {
+        LivingEntity self = (LivingEntity)(Object)this;
+        if (self.level().isClientSide()) return;
+
+        if (AbilityUtil.isTypeEnabled(self, KryptoniteAbilitySerializers.FREEZE.get())) {
+            self.setIsInPowderSnow(true);
+            if (self.canFreeze()) {
+                self.setTicksFrozen(Math.min(self.getTicksRequiredToFreeze(), self.getTicksFrozen() + 1));
+            }
         }
     }
 

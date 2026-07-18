@@ -1,0 +1,39 @@
+{
+  "name": "Prevent Slowdown", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_slowdown": {
+      "type": "kryptonite:prevent_slowdown",
+      "modes": [
+        "block",
+        "item",
+        "crouching",
+        "hunger"
+      ],
+      "blocks": [
+        "cobweb",
+        "sweet_berry_bush",
+        "soul_sand",
+        "honey_block",
+        "slime_block"
+      ]
+    },
+    "prevent_slowdown_water": {
+      "type": "kryptonite:prevent_slowdown",
+      "modes": [
+        "water"
+      ],
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Ignore Water",
+        "icon": "minecraft:water_bucket",
+        "list_index": 0
+      }
+    }
+  }
+}

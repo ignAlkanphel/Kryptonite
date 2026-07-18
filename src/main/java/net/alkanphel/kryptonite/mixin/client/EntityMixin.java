@@ -1,11 +1,15 @@
 package net.alkanphel.kryptonite.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.GlowingAbility;
+import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.scores.Team;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.AbilityInstance;
@@ -17,6 +21,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+
+    // Prevent Slowdown (soul_sand & honey_block) ability
+    @ModifyExpressionValue(method = "getBlockSpeedFactor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;"))
+    private Block kryptonite$preventSlowdownSoulSandHoneyBlock(Block original) {
+        var mc = Minecraft.getInstance();
+        var player = mc.player;
+
+        if ((Object) this != player) return original;
+
+        if (original == Blocks.SOUL_SAND && AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())
+                .stream().anyMatch(i -> i.getAbility().modeBlocksPrevents(PreventSlowdownAbility.ModeBlocks.SOUL_SAND))) {
+            return Blocks.STONE;
+        }
+
+        if (original == Blocks.HONEY_BLOCK && AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())
+                .stream().anyMatch(i -> i.getAbility().modeBlocksPrevents(PreventSlowdownAbility.ModeBlocks.HONEY_BLOCK))) {
+            return Blocks.STONE;
+        }
+
+        return original;
+    }
 
     // Glowing ability
     @Inject(method = "getTeamColor", at = @At("RETURN"), cancellable = true)
