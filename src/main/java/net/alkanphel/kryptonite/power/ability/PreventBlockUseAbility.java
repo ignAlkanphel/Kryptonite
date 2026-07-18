@@ -7,6 +7,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.NbtBlockCondition;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
@@ -116,7 +117,8 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new PreventBlockUseAbility(List.of(), List.of(), List.of(), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use Crafting Table!\", \"color\": \"red\"}"))), List.of(), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("crafting_table")))))), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use Crafting Table!\", \"color\": \"red\"}"))), List.of(), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("crafting_table")))))), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use block with this custom NBT!\", \"color\": \"red\"}"))), List.of(), List.of(new NbtBlockCondition(NbtBlockCondition.addExampleNbt())), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

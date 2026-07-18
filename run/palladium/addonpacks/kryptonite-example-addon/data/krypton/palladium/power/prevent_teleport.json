@@ -1,0 +1,42 @@
+{
+  "name": "Prevent Teleport", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "prevent_teleport_dimension_travel": {
+      "type": "kryptonite:prevent_teleport",
+      "source": "dimension_travel",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"
+      },
+      "from_dimension_conditions": {
+        "type": "kryptonite:dimension",
+        "dimension": "minecraft:overworld"
+      },
+      "to_dimension_conditions": {
+        "type": "kryptonite:dimension",
+        "dimension": "minecraft:the_nether"
+      }
+    },
+    "prevent_teleport_command": {
+      "type": "kryptonite:prevent_teleport",
+      "source": "command_teleport",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "title @s actionbar {\"text\":\"You cannot teleport via teleport command if in the Nether!\"}"
+      },
+      "from_dimension_conditions": {
+        "type": "kryptonite:dimension",
+        "dimension": "minecraft:the_nether"
+      }
+    },
+    "prevent_teleport_ender_pearl": {
+      "type": "kryptonite:prevent_teleport",
+      "source": "ender_pearl",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "title @s actionbar {\"text\":\"You cannot teleport via Ender Pearls!\"}"
+      }
+    }
+  }
+}

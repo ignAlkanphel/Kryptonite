@@ -70,6 +70,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, PreventMobAggroAbility.Serializer> PREVENT_MOB_AGGRO = ABILITIES_SERIALIZERS.register("prevent_mob_aggro", PreventMobAggroAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSleepingAbility.Serializer> PREVENT_SLEEPING = ABILITIES_SERIALIZERS.register("prevent_sleeping", PreventSleepingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventSprintingAbility.Serializer> PREVENT_SPRINTING = ABILITIES_SERIALIZERS.register("prevent_sprinting", PreventSprintingAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, PreventTeleportAbility.Serializer> PREVENT_TELEPORT = ABILITIES_SERIALIZERS.register("prevent_teleport", PreventTeleportAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventTotemUseAbility.Serializer> PREVENT_TOTEM_USE = ABILITIES_SERIALIZERS.register("prevent_totem_use", PreventTotemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileAccuracyAbility.Serializer> PROJECTILE_ACCURACY = ABILITIES_SERIALIZERS.register("projectile_accuracy", ProjectileAccuracyAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileImpactAbility.Serializer> PROJECTILE_IMPACT = ABILITIES_SERIALIZERS.register("projectile_impact", ProjectileImpactAbility.Serializer::new);

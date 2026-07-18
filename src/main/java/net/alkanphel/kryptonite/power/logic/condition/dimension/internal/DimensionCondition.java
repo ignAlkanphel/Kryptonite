@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,6 +24,20 @@ public interface DimensionCondition {
 
     default boolean test(DimensionType dimensionType, @Nullable Level level, @Nullable Entity entity) {
         return this.test(new DimensionConditionContext(dimensionType, level, entity));
+    }
+
+    static boolean checkConditions(Collection<DimensionCondition> conditions, DimensionType dimensionType, @Nullable Level level, @Nullable Entity entity) {
+        return checkConditions(conditions, new DimensionConditionContext(dimensionType, level, entity));
+    }
+
+    static boolean checkConditions(Collection<DimensionCondition> conditions, DimensionConditionContext context) {
+        for (DimensionCondition condition : conditions) {
+            if (!condition.test(context)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     DimensionConditionSerializer<?> getSerializer();

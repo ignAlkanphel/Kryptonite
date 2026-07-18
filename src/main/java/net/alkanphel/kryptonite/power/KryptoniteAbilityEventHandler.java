@@ -32,9 +32,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.VanillaGameEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.EntityMountEvent;
-import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
@@ -590,6 +588,41 @@ public class KryptoniteAbilityEventHandler {
             mob.setTarget(null);
             mob.setLastHurtByMob(null);
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // Prevent Teleport ability (dimension travel)
+    public static void onEntityTravelToDimension(EntityTravelToDimensionEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity living)) return;
+
+        if (PreventTeleportAbility.doesPreventDimensionTravel(living, e.getDimension())) {
+            e.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // Prevent Teleport ability
+    public static void onTeleport(EntityTeleportEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity living)) return;
+        PreventTeleportAbility.Source source;
+
+        switch (e) {
+            case EntityTeleportEvent.TeleportCommand _ -> source = PreventTeleportAbility.Source.COMMAND_TELEPORT;
+            case EntityTeleportEvent.SpreadPlayersCommand _ -> source = PreventTeleportAbility.Source.COMMAND_SPREAD_PLAYERS;
+            case EntityTeleportEvent.EnderPearl _ -> source = PreventTeleportAbility.Source.ENDER_PEARL;
+            case EntityTeleportEvent.EnderEntity _ -> source = PreventTeleportAbility.Source.ENDER_ENTITY;
+            case EntityTeleportEvent.ItemConsumption _ -> source = PreventTeleportAbility.Source.ITEM_CONSUMPTION;
+            default -> {
+                return;
+            }
+        }
+
+        AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_TELEPORT.get())
+                .stream()
+                .filter(instance -> instance.getAbility().source == source)
+                .filter(instance -> instance.getAbility().doesApply(living, e.getTargetLevel(), e.getTarget()))
+                .forEach(instance -> {
+                    instance.getAbility().runActions(living);
+                    e.setCanceled(true);
+                });
     }
 
     @SubscribeEvent // Prevent Effect ability

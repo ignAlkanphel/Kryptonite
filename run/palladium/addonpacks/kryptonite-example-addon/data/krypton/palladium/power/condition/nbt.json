@@ -1,0 +1,21 @@
+{
+  "name": "NBT", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "nbt": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the correct NBT data!\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:nbt",
+          "nbt": {
+            "OnGround": 1,
+            "Dimension": "minecraft:the_nether"
+          }
+        }
+      }
+    }
+  }
+}

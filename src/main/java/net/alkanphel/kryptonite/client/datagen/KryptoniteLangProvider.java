@@ -93,6 +93,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO, "Prevent Mob Aggro");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SLEEPING, "Prevent Sleeping");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_SPRINTING, "Prevent Sprinting");
+            this.addAbility(KryptoniteAbilitySerializers.PREVENT_TELEPORT, "Prevent Teleport");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_TOTEM_USE, "Prevent Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_ACCURACY, "Projectile Accuracy");
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_IMPACT, "Projectile Impact");

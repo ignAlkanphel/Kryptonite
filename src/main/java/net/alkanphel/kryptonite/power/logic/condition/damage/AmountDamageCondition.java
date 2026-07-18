@@ -7,6 +7,9 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.DamageConditionContext;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
@@ -18,6 +21,12 @@ public record AmountDamageCondition(NumberComparator comparator, Value compareTo
             NumberComparator.CODEC.fieldOf("comparator").forGetter(AmountDamageCondition::comparator),
             Value.CODEC.fieldOf("compare_to").forGetter(AmountDamageCondition::compareTo)
     ).apply(instance, AmountDamageCondition::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AmountDamageCondition> STREAM_CODEC = StreamCodec.composite(
+            NumberComparator.STREAM_CODEC, AmountDamageCondition::comparator,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), AmountDamageCondition::compareTo,
+            AmountDamageCondition::new
+    );
 
     @Override
     public boolean test(DamageConditionContext context) {

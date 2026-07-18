@@ -10,6 +10,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -19,6 +22,11 @@ public record DamageTypeDamageCondition(HolderSet<DamageType> damageType) implem
     public static final MapCodec<DamageTypeDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             RegistryCodecs.homogeneousList(Registries.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageTypeDamageCondition::damageType)
     ).apply(instance, DamageTypeDamageCondition::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, DamageTypeDamageCondition> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.holderSet(Registries.DAMAGE_TYPE), DamageTypeDamageCondition::damageType,
+            DamageTypeDamageCondition::new
+    );
 
     @Override
     public boolean test(DamageConditionContext context) {

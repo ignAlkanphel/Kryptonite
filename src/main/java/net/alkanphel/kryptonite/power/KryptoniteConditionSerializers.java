@@ -14,5 +14,6 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, DimensionWrapperCondition.Serializer> DIMENSION = CONDITIONS_SERIALIZERS.register("dimension", DimensionWrapperCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, DistanceFromCoordinatesCondition.Serializer> DISTANCE_FROM_COORDINATES = CONDITIONS_SERIALIZERS.register("distance_from_coordinates", DistanceFromCoordinatesCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, KeyBindCondition.Serializer> KEY_BIND = CONDITIONS_SERIALIZERS.register("key_bind", KeyBindCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
 
 }

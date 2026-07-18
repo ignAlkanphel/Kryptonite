@@ -7,6 +7,9 @@ import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSer
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.context.DataContextKeys;
@@ -20,6 +23,12 @@ public record DistanceBiCondition(NumberComparator comparator, Value compareTo) 
             NumberComparator.CODEC.fieldOf("comparator").forGetter(DistanceBiCondition::comparator),
             Value.CODEC.fieldOf("compare_to").forGetter(DistanceBiCondition::compareTo)
     ).apply(instance, DistanceBiCondition::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, DistanceBiCondition> STREAM_CODEC = StreamCodec.composite(
+            NumberComparator.STREAM_CODEC, DistanceBiCondition::comparator,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), DistanceBiCondition::compareTo,
+            DistanceBiCondition::new
+    );
 
     @Override
     public boolean test(BiConditionContext context) {
