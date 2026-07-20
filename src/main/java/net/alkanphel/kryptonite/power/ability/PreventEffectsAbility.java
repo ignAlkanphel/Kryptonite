@@ -57,7 +57,7 @@ public class PreventEffectsAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEffectsAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from being able to gain OR only be able to gain the specified effects. Does NOT clear effects.")
-                    .addOptional("inverted", TYPE_VALUE, "If to be immune to all BUT the specified effects.", new StaticValue(false))
+                    .addOptional("inverted", TYPE_VALUE, "If to be immune to all BUT the specified effects.", false)
                     .add("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "The effects that you will be immune to.")
                     .addExampleObject(new PreventEffectsAbility(new StaticValue(false), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("poison"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("weakness")))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

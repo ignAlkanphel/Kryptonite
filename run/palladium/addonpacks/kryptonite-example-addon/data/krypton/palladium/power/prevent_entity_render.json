@@ -3,7 +3,60 @@
 
   "abilities": {
     "prevent_entity_render": {
-      "type": "kryptonite:prevent_entity_render"
+      "type": "kryptonite:prevent_entity_render",
+      "target_opacity": 0,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "No Transition",
+        "icon": "minecraft:glass",
+        "list_index": 0
+      }
+    },
+    "prevent_entity_render_quarter": {
+      "type": "kryptonite:prevent_entity_render",
+      "target_opacity": 0.25,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "animation_timer": {
+          "max": 10,
+          "easing": "in_expo"
+        },
+        "title": "Quarter Visibility",
+        "icon": "minecraft:glass",
+        "list_index": 1
+      }
+    },
+    "prevent_entity_render_full": {
+      "type": "kryptonite:prevent_entity_render",
+      "target_opacity": 0,
+      "bientity_conditions": {
+        "type": "kryptonite:distance", "comparator": ">", "compare_to": 7
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "animation_timer": {
+          "max": 20,
+          "easing": "in_expo"
+        },
+        "title": "Zero Visibility",
+        "icon": "minecraft:glass",
+        "list_index": 2
+      }
     }
   }
 }

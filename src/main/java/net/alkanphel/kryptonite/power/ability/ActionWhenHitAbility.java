@@ -77,7 +77,7 @@ public class ActionWhenHitAbility extends Ability {
             builder.setName("Action When Hit")
                     .setDescription("Runs actions when the entity that has this ability has been hit by another entity. In the context of this ability, the \"actor\" is the entity that hit & \"target\" is the ability holder.")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these bi conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, the actions will only run if these damage conditions are fulfilled by the damage dealt by the \"actor\" entity.")
                     .addExampleObject(new ActionWhenHitAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action when hit (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionWhenHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action when hit (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

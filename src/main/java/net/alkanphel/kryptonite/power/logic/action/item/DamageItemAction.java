@@ -71,8 +71,8 @@ public class DamageItemAction extends ItemAction {
         public void addDocumentation(CodecDocumentationBuilder<ItemAction, DamageItemAction> builder, HolderLookup.Provider provider) {
             builder.setName("Damage")
                     .setDescription("Damages the item stack.")
-                    .addOptional("amount", TYPE_VALUE, "Amount of damage to apply to the item stack.", new StaticValue(1))
-                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN, "If true, it will ignore the Unbreaking enchantment.", new StaticValue(false))
+                    .addOptional("amount", TYPE_VALUE, "Amount of damage to apply to the item stack.", 1)
+                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN, "If true, it will ignore the Unbreaking enchantment.", false)
                     .addExampleObject(new DamageItemAction(new StaticValue(7), new StaticValue(true)));
         }
     }

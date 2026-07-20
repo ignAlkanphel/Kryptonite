@@ -6,7 +6,6 @@ import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.BlockActionContext;
-import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -14,7 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -51,14 +50,14 @@ public class RunCommandBlockAction extends BlockAction implements CommandSource 
                 pos.getCenter(),
                 Vec2.ZERO,
                 serverLevel,
-                MiscUtil.applyPermissionLevel(PermissionLevel.GAMEMASTERS),
+                PermissionSet.ALL_PERMISSIONS,
                 translationKey,
                 Component.translatable(translationKey),
                 server,
                 null
         );
 
-        server.getFunctions().execute(command.getCommandFunction(server), commandSource.withSuppressedOutput());
+        server.getFunctions().execute(command.getCommandFunction(server), commandSource.withSuppressedOutput().withMaximumPermission(PermissionSet.ALL_PERMISSIONS));
         return true;
     }
 
@@ -96,7 +95,7 @@ public class RunCommandBlockAction extends BlockAction implements CommandSource 
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, RunCommandBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Run Command")
                     .setDescription("Runs commands at the block's position.")
-                    .addOptional("command", TYPE_STRING_ARRAY, "The commands to run.")
+                    .addOptional("command", TYPE_STRING_ARRAY, "The command(s) to run.")
                     .addExampleObject(new RunCommandBlockAction(new ParsedCommands(Collections.singletonList("say Hello from a block!"))))
                     .addExampleObject(new RunCommandBlockAction(new ParsedCommands(List.of("say Command 1!", "say Command 2!"))));
         }

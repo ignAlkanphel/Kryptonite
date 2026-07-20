@@ -4,12 +4,15 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.AddVelocityAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.meta.ActorActionBiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.meta.TargetConditionBiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.util.KryptoniteCodecs;
+import net.alkanphel.kryptonite.util.apoli.Space;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.condition.HealthCondition;
+import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
@@ -76,10 +80,12 @@ public class ActionOnHitAbility extends Ability {
             builder.setName("Action On Hit")
                     .setDescription("Runs actions when the entity that has this ability hits another entity. In the context of this ability, the \"actor\" is the ability holder & \"target\" the hit entity.")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these bi conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, the actions will only run if these damage conditions are fulfilled by the damage dealt by the \"actor\" entity.")
                     .addExampleObject(new ActionOnHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on hit (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on hit (actor_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0F), new StaticValue(0.5F)), Space.LOCAL_HORIZONTAL_NORMALIZED, new StaticValue(true))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(-0.1F), new StaticValue(-0.5F)), Space.LOCAL, new StaticValue(true))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("execute as @s at @s run summon minecraft:zombie"))))), List.of(new TargetConditionBiCondition(new HealthCondition(0F, 0F))), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

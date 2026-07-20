@@ -1,0 +1,41 @@
+{
+  "name": "Slippery Floor", "icon": "minecraft:ice",
+
+  "abilities": {
+    "slippery_floor": {
+      "type": "kryptonite:modify_friction",
+      "modifiers": {
+        "amount": 0.75,
+        "operation": "multiply_base_additive"
+      },
+      "state": {
+        "enabling": [
+          {
+            "type": "kryptonite:block_collision",
+            "offset_x": 0,
+            "offset_y": -0.1,
+            "offset_z": 0
+          },
+          {
+            "type": "kryptonite:block_on"
+          },
+          {
+            "type": "palladium:not",
+            "conditions": [
+              {
+                "type": "palladium:crouching"
+              },
+              {
+                "type": "palladium:sprinting"
+              }
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "icon": "minecraft:ice",
+        "list_index": 0
+      }
+    }
+  }
+}

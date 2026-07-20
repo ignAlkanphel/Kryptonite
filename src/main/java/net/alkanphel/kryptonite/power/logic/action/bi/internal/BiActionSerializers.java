@@ -15,6 +15,7 @@ public class BiActionSerializers {
     public static final DeferredHolder<BiActionSerializer<?>, InvertBiAction.Serializer> INVERT = BI_ACTION_SERIALIZERS.register("invert", InvertBiAction.Serializer::new);
     public static final DeferredHolder<BiActionSerializer<?>, TargetActionBiAction.Serializer> TARGET_ACTION = BI_ACTION_SERIALIZERS.register("target_action", TargetActionBiAction.Serializer::new);
 
+    public static final DeferredHolder<BiActionSerializer<?>, AddVelocityBiAction.Serializer> ADD_VELOCITY = BI_ACTION_SERIALIZERS.register("add_velocity", AddVelocityBiAction.Serializer::new);
     public static final DeferredHolder<BiActionSerializer<?>, SetInLoveBiAction.Serializer> SET_IN_LOVE = BI_ACTION_SERIALIZERS.register("set_in_love", SetInLoveBiAction.Serializer::new);
     public static final DeferredHolder<BiActionSerializer<?>, TameBiAction.Serializer> TAME = BI_ACTION_SERIALIZERS.register("tame", TameBiAction.Serializer::new);
 

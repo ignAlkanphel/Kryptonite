@@ -8,9 +8,11 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 @Mixin(LivingEntityRenderState.class)
 public class LivingEntityRenderStateMixin implements KryptoniteLivingEntityRenderState {
 
-    @Unique
-    private int kryptonite$damageTint = -1;
+    @Unique private int kryptonite$damageTint = -1;
     @Unique private float kryptonite$damageOverlayProgress = 0.0F;
+
+    @Unique private float kryptonite$shakingFrequency = 0.0F;
+    @Unique private float kryptonite$shakingAmplitude = 0.0F;
 
     @Override
     public void kryptonite$setDamageTint(int color) {
@@ -30,6 +32,26 @@ public class LivingEntityRenderStateMixin implements KryptoniteLivingEntityRende
     @Override
     public float kryptonite$getDamageTintAlpha() {
         return this.kryptonite$damageOverlayProgress;
+    }
+
+    @Override
+    public void kryptonite$setShakingFrequency(float frequency) {
+        this.kryptonite$shakingFrequency = frequency;
+    }
+
+    @Override
+    public float kryptonite$getShakingFrequency() {
+        return this.kryptonite$shakingFrequency;
+    }
+
+    @Override
+    public void kryptonite$setShakingAmplitude(float amplitude) {
+        this.kryptonite$shakingAmplitude = amplitude;
+    }
+
+    @Override
+    public float kryptonite$getShakingAmplitude() {
+        return this.kryptonite$shakingAmplitude;
     }
 
 }

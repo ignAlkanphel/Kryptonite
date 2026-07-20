@@ -1,0 +1,20 @@
+{
+  "name": "Attack Recoil Forward", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "attack_recoil": {
+      "type": "kryptonite:action_on_hit",
+      "bientity_actions": {
+        "type": "kryptonite:actor_action",
+        "actions": {
+          "type": "kryptonite:add_velocity",
+          "velocity": {
+            "z": 0.5
+          },
+          "space": "local_horizontal_normalized",
+          "set": true
+        }
+      }
+    }
+  }
+}

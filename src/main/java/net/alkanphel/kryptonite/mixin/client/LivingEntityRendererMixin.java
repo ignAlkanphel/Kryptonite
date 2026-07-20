@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.alkanphel.kryptonite.client.render.KryptoniteLivingEntityRenderState;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.ModifyDamageTintAbility;
+import net.alkanphel.kryptonite.power.ability.ShakingAbility;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -16,7 +17,6 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,32 +27,33 @@ import java.util.Collection;
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> {
 
-    @Unique
-    private LivingEntity kryptonite$currentEntity;
-
-    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("HEAD"))
-    private void kryptonite$captureEntity(LivingEntity entity, LivingEntityRenderState state, float partialTicks, CallbackInfo ci) {
-        this.kryptonite$currentEntity = entity;
-    }
-
-    // Shaking ability
-    @Inject(method = "setupRotations(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;FF)V", at = @At("HEAD"))
-    private void kryptonite$applyShaking(LivingEntityRenderState state, PoseStack poseStack, float bodyRot, float entityScale, CallbackInfo ci) {
-        LivingEntity entity = this.kryptonite$currentEntity;
-        if (entity == null) return;
+    // Shaking ability (extract)
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("TAIL"))
+    private void kryptonite$extractShaking(LivingEntity entity, LivingEntityRenderState state, float partialTicks, CallbackInfo ci) {
+        if (!(state instanceof KryptoniteLivingEntityRenderState renderStateExtension)) return;
 
         var instances = AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.SHAKING.get());
-        if (instances.isEmpty()) return;
 
         float frequency = 0F;
         float amplitude = 0F;
 
-        for (var instance : instances) {
+        for (AbilityInstance<ShakingAbility> instance : instances) {
             DataContext context = DataContext.forAbility(entity, instance);
             frequency = Math.max(frequency, (float) instance.getAbility().frequency.getAsDouble(context));
             amplitude = Math.max(amplitude, (float) instance.getAbility().amplitude.getAsDouble(context));
         }
 
+        renderStateExtension.kryptonite$setShakingFrequency(frequency);
+        renderStateExtension.kryptonite$setShakingAmplitude(amplitude);
+    }
+
+    // Shaking ability (apply)
+    @Inject(method = "setupRotations(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;FF)V", at = @At("HEAD"))
+    private void kryptonite$applyShaking(LivingEntityRenderState state, PoseStack poseStack, float bodyRot, float entityScale, CallbackInfo ci) {
+        if (!(state instanceof KryptoniteLivingEntityRenderState renderStateExtension)) return;
+
+        float frequency = renderStateExtension.kryptonite$getShakingFrequency();
+        float amplitude = renderStateExtension.kryptonite$getShakingAmplitude();
         if (frequency <= 0F || amplitude <= 0F) return;
 
         float time = state.ageInTicks + state.partialTick;
@@ -72,10 +73,10 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
                 ModifyDamageTintAbility ability = instance.getAbility();
                 DataContext context = DataContext.forAbility(entity, instance);
 
-                float r = (float) ability.color.red().getAsDouble(context);
-                float g = (float) ability.color.green().getAsDouble(context);
-                float b = (float) ability.color.blue().getAsDouble(context);
-                float alphaFactor = Math.max(0.0F, Math.min(1.0F, (float) ability.color.alpha().getAsDouble(context)));
+                float r = ability.color.red(context);
+                float g = ability.color.green(context);
+                float b = ability.color.blue(context);
+                float alphaFactor = Math.max(0.0F, Math.min(1.0F, ability.color.alpha(context)));
 
                 renderStateExtension.kryptonite$setDamageTintAlpha(alphaFactor);
 

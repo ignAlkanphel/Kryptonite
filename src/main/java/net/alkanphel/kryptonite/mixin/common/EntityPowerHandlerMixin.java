@@ -65,11 +65,13 @@ public abstract class EntityPowerHandlerMixin {
         LivingEntity entity = ((EntityPowerHandler) (Object) this).getEntity();
         if (entity.level().isClientSide()) return;
 
-        var callbacks = AbilityUtil.getInstances(entity, KryptoniteAbilitySerializers.ACTION_ON_CALLBACK.get());
-        callbacks.forEach(ab -> ab.getAbility().onLoad(entity));
+        boolean isNewGain = kryptonite$initializedPowers && !kryptonite$previousPowers.contains(instance.getPowerId());
 
-        if (kryptonite$initializedPowers && !kryptonite$previousPowers.contains(instance.getPowerId())) {
-            callbacks.forEach(ab -> ab.getAbility().onGain(entity));
+        for (var ability : instance.getPower().value().getAbilities().values()) {
+            if (ability instanceof ActionOnCallbackAbility callback) {
+                callback.onLoad(entity);
+                if (isNewGain) callback.onGain(entity);
+            }
         }
     }
 

@@ -81,7 +81,7 @@ public class ActionOnTameAbility extends Ability {
                     .setDescription("Runs actions when the player tames an animal. In the context of this ability, the \"actor\" is the player taming the animal & \"target\" the animal being tamed.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the player that tamed the animal.")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these bi conditions are fulfilled by either or both the \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both the \"actor\" & \"target\" entities.")
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on tame!"))), List.of(new SetInLoveBiAction()), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("wolf")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

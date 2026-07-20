@@ -180,7 +180,7 @@ public class KryptoniteAbilityEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onCriticalHit(CriticalHitEvent e) {
-        if (!(e.getEntity() instanceof ServerPlayer player)) return;
+        Player player = e.getEntity();
         Entity target = e.getTarget();
 
         // Prevent Critical Hit
@@ -191,11 +191,11 @@ public class KryptoniteAbilityEventHandler {
         }
 
         // Action On Critical Hit
-        if (!e.isCriticalHit()) return;
+        if (!(player instanceof ServerPlayer serverPlayer) || !e.isCriticalHit()) return;
         AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT.get())
                 .stream()
-                .filter(instance -> instance.getAbility().doesApply(player, target))
-                .forEach(instance -> instance.getAbility().runActions(player, target));
+                .filter(instance -> instance.getAbility().doesApply(serverPlayer, target))
+                .forEach(instance -> instance.getAbility().runActions(serverPlayer, target));
     }
 
     @SubscribeEvent // Modify Invulnerability Ticks ability
@@ -638,7 +638,7 @@ public class KryptoniteAbilityEventHandler {
     @SubscribeEvent // Prevent Game Event ability
     public static void onVanillaGameEvent(VanillaGameEvent e) {
         Entity cause = e.getCause();
-        if (e.getCause() != null || !(cause instanceof LivingEntity living)) return;
+        if (!(cause instanceof LivingEntity living)) return;
 
         var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
                 .stream()

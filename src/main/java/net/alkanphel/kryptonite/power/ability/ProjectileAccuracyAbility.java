@@ -59,7 +59,7 @@ public class ProjectileAccuracyAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ProjectileAccuracyAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes projectiles shot by the player more accurate by making their divergence less random. In the context of this ability, the \"actor\" is the ability holder & \"target\" the projectile.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only affects projectiles that fulfill these bi conditions.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only affects projectiles that fulfill these conditions.")
                     .addExampleObject(new ProjectileAccuracyAbility(List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()));
         }
     }

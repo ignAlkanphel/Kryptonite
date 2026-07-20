@@ -45,7 +45,7 @@ public record UndirectedBiCondition(BiCondition biEntityCondition) implements Bi
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, UndirectedBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Undirected")
-                    .setDescription("Checks if these bi conditions are true before or after swapping the actor & target context. The example listed: WITHOUT \"undirected\", it's true if A owns B or B owns A. Whereas without \"undirected\", it would only be true if A owns B.")
+                    .setDescription("Checks if these conditions are true before or after swapping the actor & target context. The example listed: WITHOUT \"undirected\", it's true if A owns B or B owns A. Whereas without \"undirected\", it would only be true if A owns B.")
                     .add("conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "The bi condition type to check for.")
                     .addExampleObject(new UndirectedBiCondition(new OwnerBiCondition()));
         }

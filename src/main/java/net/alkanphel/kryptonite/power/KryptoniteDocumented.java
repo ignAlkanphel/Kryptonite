@@ -28,6 +28,9 @@ public interface KryptoniteDocumented<T, R extends T> {
 
     SettingType TYPE_VALUE_MODIFIER = SettingType.simple("Value Modifier (amount*, operation*)");
     SettingType TYPE_RGB_VALUE = SettingType.simple("(Dynamic) RGB Value");
+    SettingType TYPE_VECTOR3_VALUE = SettingType.simple("(Dynamic) Vector3D Value");
+    SettingType TYPE_VECTOR3i_VALUE = SettingType.simple("(Dynamic) Vector3i Value");
+    SettingType TYPE_VECTOR3f_VALUE = SettingType.simple("(Dynamic) Vector3f Value");
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 
     SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");

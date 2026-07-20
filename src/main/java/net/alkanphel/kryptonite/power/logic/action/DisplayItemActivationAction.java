@@ -2,14 +2,15 @@ package net.alkanphel.kryptonite.power.logic.action;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.network.p2c.S2CDisplayItemActivation;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
@@ -29,10 +30,9 @@ public class DisplayItemActivationAction extends Action {
 
     @Override
     public boolean run(DataContext context) {
-        var entity = context.getEntity();
-        if (!(entity instanceof Player player) || !player.level().isClientSide()) return false;
+        if (!(context.getEntity() instanceof ServerPlayer player)) return false;
 
-        Kryptonite.PROXY.displayItemActivation(new ItemStack(item.value()));
+        PacketDistributor.sendToPlayer(player, new S2CDisplayItemActivation(new ItemStack(item.value())));
         return true;
     }
 

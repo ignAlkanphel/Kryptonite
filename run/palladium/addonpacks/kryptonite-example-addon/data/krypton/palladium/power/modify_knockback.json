@@ -1,0 +1,35 @@
+{
+  "name": "Modify Knockback", "icon": "minecraft:ice",
+
+  "abilities": {
+    "modify_knockback": {
+      "type": "kryptonite:modify_knockback",
+      "strength_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0.75
+      },
+      "ratio_x_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0
+      },
+      "ratio_z_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0
+      },
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say modify_knockback action(s)!"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "icon": "minecraft:stick",
+        "list_index": 0
+      }
+    }
+  }
+}

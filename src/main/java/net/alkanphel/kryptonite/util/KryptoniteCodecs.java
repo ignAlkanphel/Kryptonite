@@ -23,23 +23,47 @@ public class KryptoniteCodecs {
     public static final Codec<ClipContext.Fluid> CLIP_CONTEXT_FLUID_CODEC = Codec.STRING.xmap(string -> ClipContext.Fluid.valueOf(string.toUpperCase()), fluid -> fluid.name().toLowerCase());
     public static final Codec<EnumSet<Direction.Axis>> DIRECTION_AXIS_CODEC = ExtraCodecs.compactListCodec(Direction.Axis.CODEC).xmap(list -> list.isEmpty() ? EnumSet.allOf(Direction.Axis.class) : EnumSet.copyOf(list), List::copyOf);
 
-    public static final Codec<Vec3> VEC3_OBJECT = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.DOUBLE.optionalFieldOf("x", 0.0).forGetter(Vec3::x),
-            Codec.DOUBLE.optionalFieldOf("y", 0.0).forGetter(Vec3::y),
-            Codec.DOUBLE.optionalFieldOf("z", 0.0).forGetter(Vec3::z)
-    ).apply(instance, Vec3::new));
+    public record Vec3Value(Value x, Value y, Value z) {
+        public static final Codec<Vec3Value> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Value.CODEC.optionalFieldOf("x", new StaticValue(0.0D)).forGetter(Vec3Value::x),
+                Value.CODEC.optionalFieldOf("y", new StaticValue(0.0D)).forGetter(Vec3Value::y),
+                Value.CODEC.optionalFieldOf("z", new StaticValue(0.0D)).forGetter(Vec3Value::z)
+        ).apply(instance, Vec3Value::new));
 
-    public static final Codec<Vec3i> VEC3F_OBJECT_INT = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.optionalFieldOf("x", 0).forGetter(Vec3i::getX),
-            Codec.INT.optionalFieldOf("y", 0).forGetter(Vec3i::getY),
-            Codec.INT.optionalFieldOf("z", 0).forGetter(Vec3i::getZ)
-    ).apply(instance, Vec3i::new));
+        public static final Vec3Value ZERO = new Vec3Value(new StaticValue(0.0D), new StaticValue(0.0D), new StaticValue(0.0D));
 
-    public static final Codec<Vector3f> VEC3F_OBJECT_FLOAT = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.optionalFieldOf("x", 0F).forGetter(Vector3f::x),
-            Codec.FLOAT.optionalFieldOf("y", 0F).forGetter(Vector3f::y),
-            Codec.FLOAT.optionalFieldOf("z", 0F).forGetter(Vector3f::z)
-    ).apply(instance, Vector3f::new));
+        public Vec3 get(DataContext context) {
+            return new Vec3(this.x.getAsDouble(context), this.y.getAsDouble(context), this.z.getAsDouble(context));
+        }
+    }
+
+    public record Vec3iValue(Value x, Value y, Value z) {
+        public static final Codec<Vec3iValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Value.CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(Vec3iValue::x),
+                Value.CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(Vec3iValue::y),
+                Value.CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(Vec3iValue::z)
+        ).apply(instance, Vec3iValue::new));
+
+        public static final Vec3iValue ZERO = new Vec3iValue(new StaticValue(0), new StaticValue(0), new StaticValue(0));
+
+        public Vec3i get(DataContext context) {
+            return new Vec3i(this.x.getAsInt(context), this.y.getAsInt(context), this.z.getAsInt(context));
+        }
+    }
+
+    public record Vec3fValue(Value x, Value y, Value z) {
+        public static final Codec<Vec3fValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Value.CODEC.optionalFieldOf("x", new StaticValue(0.0F)).forGetter(Vec3fValue::x),
+                Value.CODEC.optionalFieldOf("y", new StaticValue(0.0F)).forGetter(Vec3fValue::y),
+                Value.CODEC.optionalFieldOf("z", new StaticValue(0.0F)).forGetter(Vec3fValue::z)
+        ).apply(instance, Vec3fValue::new));
+
+        public static final Vec3fValue ZERO = new Vec3fValue(new StaticValue(0.0F), new StaticValue(0.0F), new StaticValue(0.0F));
+
+        public Vector3f get(DataContext context) {
+            return new Vector3f(this.x.getAsFloat(context), this.y.getAsFloat(context), this.z.getAsFloat(context));
+        }
+    }
 
     public record RGBValue(Value red, Value green, Value blue) {
         public static final Codec<RGBValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(

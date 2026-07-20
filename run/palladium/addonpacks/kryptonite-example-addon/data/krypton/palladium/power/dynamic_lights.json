@@ -1,0 +1,64 @@
+{
+  "name": "Dynamic Lights", "icon": "minecraft:torch",
+
+  "abilities": {
+    "dynamic_lights": {
+      "type": "kryptonite:dynamic_lights",
+      "luminance": {
+        "type": "palladium:integer_data_attachment",
+        "attachment": "krypton:luminance",
+        "fallback": 0
+      },
+      "properties": {
+        "animation_timer": {
+          "easing": "in_out_cubic",
+          "max": 15
+        },
+        "icon": "minecraft:torch",
+        "title": "Dynamic Lights A",
+        "list_index": 0
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "dynamic_lights_2": {
+      "type": "kryptonite:dynamic_lights",
+      "luminance": 10,
+      "model_light": 15,
+      "properties": {
+        "animation_timer": {
+          "easing": "in_out_cubic",
+          "max": 15
+        },
+        "icon": "minecraft:redstone_torch",
+        "title": "Dynamic Lights B",
+        "list_index": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "dynamic_lights_3": {
+      "type": "kryptonite:dynamic_lights",
+      "luminance": 10,
+      "properties": {
+        "icon": "minecraft:redstone_lamp",
+        "title": "Dynamic Lights C",
+        "list_index": 2
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

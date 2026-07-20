@@ -17,6 +17,7 @@
     "common.BlockItemMixin",
     "common.BlockBehaviourMixin",
     "common.BlockStateBaseMixin",
+    "common.ServerPlayerGameModeAccessor",
     "common.ServerPlayerGameModeMixin",
     "common.EntitySuperpowerHandlerMixin",
     "common.EntityPowerHandlerMixin",
@@ -36,6 +37,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",
+    "client.MultiPlayerGameModeAccessor",
     "client.GameRendererMixin",
     "client.CameraMixin",
     "client.KeyMappingAccessor"

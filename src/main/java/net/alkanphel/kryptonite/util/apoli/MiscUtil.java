@@ -9,9 +9,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.permissions.PermissionLevel;
-import net.minecraft.server.permissions.PermissionSet;
-import net.minecraft.server.permissions.Permissions;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,21 +30,6 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public class MiscUtil {
-
-
-    public static PermissionSet applyPermissionLevel(PermissionLevel level) {
-        return permission -> switch (level) {
-            case ALL -> true;
-            case MODERATORS -> permission == Permissions.COMMANDS_MODERATOR;
-            case GAMEMASTERS -> permission == Permissions.COMMANDS_GAMEMASTER;
-            case ADMINS -> permission == Permissions.COMMANDS_ADMIN;
-            case OWNERS -> permission == Permissions.COMMANDS_OWNER;
-        };
-    }
-
-
-    // ------------------------------------------------------------------------------------------------------------------------
-
 
     public static final WeightedList<ExplosionParticleInfo> DEFAULT_EXPLOSION_BLOCK_PARTICLES = WeightedList.<ExplosionParticleInfo>builder().add(new ExplosionParticleInfo(ParticleTypes.POOF, 0.5F, 1.0F)).add(new ExplosionParticleInfo(ParticleTypes.SMOKE, 1.0F, 1.0F)).build();
 

@@ -1,0 +1,30 @@
+{
+  "name": "Has Effect", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "has_effect": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have an effect!\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_effect"
+        }
+      }
+    },
+    "has_effect_speed": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the speed effect with a min amplifier of 1!\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_effect",
+          "effect": "minecraft:speed",
+          "min_amplifier": 1
+        }
+      }
+    }
+  }
+}

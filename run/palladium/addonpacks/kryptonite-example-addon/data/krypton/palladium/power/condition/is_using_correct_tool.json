@@ -1,0 +1,15 @@
+{
+  "name": "Is Using Correct Tool", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "is_using_correct_tool": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are using the correct tool to break this block!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_using_correct_tool"
+        }
+      }
+    }
+  }
+}

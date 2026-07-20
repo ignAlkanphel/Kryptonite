@@ -91,7 +91,7 @@ public class PreventMobAggroAbility extends Ability {
             builder.setName("Prevent Mob Aggro")
                     .setDescription("Makes entities that are an instanceof Mob not aggro the entity that has this ability. In the context of this ability, the \"actor\" is the mob & the \"target\" ability holder.")
                     .addOptional("mob_conditions", TYPE_CONDITION_LIST, "If specified, only mobs fulfilling these conditions will be affected.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only applies when fulfilling these bi conditions.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only applies when fulfilling these conditions.")
                     .addOptional("mob_aggro_on_attack", TYPE_BOOLEAN, "If true, mobs that are attacked will be able to fight back.", true)
                     .addOptional("mob_aggro_reset", TYPE_BOOLEAN, "If true, mobs will have their aggro reset.", false)
                     .addExampleObject(new PreventMobAggroAbility(Optional.empty(), List.of(), true, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

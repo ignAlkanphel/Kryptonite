@@ -50,7 +50,7 @@ public class AllowEndermanStareAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, AllowEndermanStareAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows looking into the eyes of an enderman without angering it. In the context of this ability, the \"actor\" is the ability holder & \"target\" the enderman.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actor is only allowed to stare if the target fulfills these bi conditions.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actor is only allowed to stare if the target fulfills these conditions.")
                     .addExampleObject(new AllowEndermanStareAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

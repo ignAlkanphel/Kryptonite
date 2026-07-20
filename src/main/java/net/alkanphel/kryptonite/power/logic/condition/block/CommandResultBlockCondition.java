@@ -7,7 +7,6 @@ import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondit
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
-import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -18,7 +17,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -59,7 +58,7 @@ public record CommandResultBlockCondition(String command, NumberComparator compa
                 Vec3.atCenterOf(pos),
                 Vec2.ZERO,
                 serverLevel,
-                MiscUtil.applyPermissionLevel(PermissionLevel.GAMEMASTERS),
+                PermissionSet.ALL_PERMISSIONS,
                 blockName,
                 Component.literal(blockName),
                 server,

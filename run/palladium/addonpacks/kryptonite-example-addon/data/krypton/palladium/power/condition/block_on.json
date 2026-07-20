@@ -1,0 +1,29 @@
+{
+  "name": "Block On", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "block_on": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are standing on a block!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_on"
+        }
+      }
+    },
+    "block_on_stone": {
+      "type": "palladium:command",
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are standing on a block with a friction value of greater or equal to 0.98!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_on",
+          "block_conditions": {
+            "type": "kryptonite:friction",
+            "comparator": ">=",
+            "compare_to": 0.98
+          }
+        }
+      }
+    }
+  }
+}

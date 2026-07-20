@@ -73,7 +73,7 @@ public class PreventBlockSelectionAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockSelectionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the selection of blocks. The player won't be able to mine or interact with said blocks; meaning actions will pass through to whatever is behind said blocks.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents selection of blocks that fulfill these block conditions.")
-                    .addOptional("visual_only", TYPE_VALUE, "If true, the ability will be purely visual.", new StaticValue(false))
+                    .addOptional("visual_only", TYPE_VALUE, "If true, the ability will be purely visual.", false)
                     .addExampleObject(new PreventBlockSelectionAbility(List.of(), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES))), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

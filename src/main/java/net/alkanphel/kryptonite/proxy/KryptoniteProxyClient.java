@@ -1,10 +1,13 @@
 package net.alkanphel.kryptonite.proxy;
 
 import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.mixin.client.MultiPlayerGameModeAccessor;
 import net.alkanphel.kryptonite.network.p2c.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -18,6 +21,14 @@ public class KryptoniteProxyClient extends KryptoniteProxy {
         if (mc.player == null) return;
 
         mc.gameRenderer.displayItemActivation(stack);
+    }
+
+    @Override
+    public BlockPos getBreakingBlockPos(Player player) {
+        var mc = Minecraft.getInstance();
+        if (mc.gameMode == null) return null;
+        MultiPlayerGameModeAccessor accessor = (MultiPlayerGameModeAccessor) mc.gameMode;
+        return accessor.kryptonite$isDestroying() ? accessor.kryptonite$getDestroyBlockPos() : null;
     }
 
     @Override

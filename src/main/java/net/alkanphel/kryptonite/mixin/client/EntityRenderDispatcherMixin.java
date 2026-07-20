@@ -1,6 +1,6 @@
 package net.alkanphel.kryptonite.mixin.client;
 
-import net.alkanphel.kryptonite.power.ability.PreventEntityRenderAbility;
+import net.alkanphel.kryptonite.client.render.OpacityRenderChanging;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -20,10 +20,9 @@ public class EntityRenderDispatcherMixin {
         if (!cir.getReturnValue()) return;
 
         var mc = Minecraft.getInstance();
-        if (!(mc.player instanceof LivingEntity viewer)) return;
-//        if (entity == viewer) return;
+        if (!(mc.player instanceof LivingEntity viewer) || entity == viewer) return;
 
-        if (PreventEntityRenderAbility.shouldPreventRender(viewer, entity)) {
+        if (OpacityRenderChanging.isFullyHidden(viewer, entity, mc.getDeltaTracker().getGameTimeDeltaPartialTick(true))) {
             cir.setReturnValue(false);
         }
     }

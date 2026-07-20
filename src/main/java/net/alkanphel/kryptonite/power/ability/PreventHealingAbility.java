@@ -47,7 +47,7 @@ public class PreventHealingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventHealingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from healing via natural means (e.g. the \"minecraft:natural_health_regeneration\" game rule).")
-                    .addOptional("full_prevention", TYPE_VALUE, "If true, healing from things like potion effects will also be prevented.", new StaticValue(false))
+                    .addOptional("full_prevention", TYPE_VALUE, "If true, healing from things like potion effects will also be prevented.", false)
                     .addExampleObject(new PreventHealingAbility(new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventHealingAbility(new StaticValue(true), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

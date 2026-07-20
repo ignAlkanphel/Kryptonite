@@ -58,7 +58,7 @@ public class PreventEntitySelectionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntitySelectionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents entities from being selected/targeted by the crosshair. In the context of this ability, the \"actor\" is the ability holder & \"target\" the selected entity.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only prevents entity selection if these bi conditions are fulfilled.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only prevents entity selection if these conditions are fulfilled.")
                     .addExampleObject(new PreventEntitySelectionAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntitySelectionAbility(List.of(new TargetConditionBiCondition(new IsUnderWaterCondition())), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

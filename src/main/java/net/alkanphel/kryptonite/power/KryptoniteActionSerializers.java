@@ -11,10 +11,14 @@ public class KryptoniteActionSerializers {
 
     public static final DeferredRegister<ActionSerializer<?>> ACTION_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ACTION_SERIALIZER, Kryptonite.MOD_ID);
 
+    public static final DeferredHolder<ActionSerializer<?>, AddVelocityAction.Serializer> ADD_VELOCITY = ACTION_SERIALIZERS.register("add_velocity", AddVelocityAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AreaOfEffectAction.Serializer> AREA_OF_EFFECT = ACTION_SERIALIZERS.register("area_of_effect", AreaOfEffectAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, BlockActionAtAction.Serializer> BLOCK_ACTION_AT = ACTION_SERIALIZERS.register("block_action_at", BlockActionAtAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DisplayItemActivationAction.Serializer> DISPLAY_ITEM_ACTIVATION = ACTION_SERIALIZERS.register("display_item_activation", DisplayItemActivationAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExplodeAction.Serializer> EXPLODE = ACTION_SERIALIZERS.register("explode", ExplodeAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExtinguishAction.Serializer> EXTINGUISH = ACTION_SERIALIZERS.register("extinguish", ExtinguishAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, GameEventAction.Serializer> GAME_EVENT = ACTION_SERIALIZERS.register("game_event", GameEventAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, HealAction.Serializer> HEAL = ACTION_SERIALIZERS.register("heal", HealAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetFallDistanceAction.Serializer> SET_FALL_DISTANCE = ACTION_SERIALIZERS.register("set_fall_distance", SetFallDistanceAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetOnFireAction.Serializer> SET_ON_FIRE = ACTION_SERIALIZERS.register("set_on_fire", SetOnFireAction.Serializer::new);
 

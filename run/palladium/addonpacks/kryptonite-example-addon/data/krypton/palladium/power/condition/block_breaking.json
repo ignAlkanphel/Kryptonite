@@ -1,0 +1,56 @@
+{
+  "name": "Block Breaking", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "block_breaking": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are currently breaking a block!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_breaking"
+        }
+      }
+    },
+    "block_breaking_diamond_block_correct_tool": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are currently breaking a diamond block with the correct tool to harvest!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_breaking",
+          "block_conditions": {
+            "type": "kryptonite:block",
+            "block": "minecraft:diamond_block"
+          },
+          "using_correct_tool": true
+        }
+      }
+    },
+    "block_breaking_diamond_block_incorrect_tool": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"red\",\"text\":\"You are currently breaking a diamond block with the incorrect tool to harvest!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_breaking",
+          "block_conditions": {
+            "type": "kryptonite:block",
+            "block": "minecraft:diamond_block"
+          },
+          "using_correct_tool": true
+        }
+      }
+    },
+    "block_breaking_diamond_block_tool_omitted": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"blue\",\"text\":\"You are currently breaking a diamond block and the tool to harvest does not matter!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_breaking",
+          "block_conditions": {
+            "type": "kryptonite:block",
+            "block": "minecraft:diamond_block"
+          }
+        }
+      }
+    }
+  }
+}

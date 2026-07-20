@@ -23,13 +23,14 @@ public class BiConditionSerializers {
     public static final DeferredHolder<BiConditionSerializer<?>, AttackerBiCondition.Serializer> ATTACKER = BI_CONDITION_SERIALIZERS.register("attacker", AttackerBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, AttackTargetBiCondition.Serializer> ATTACK_TARGET = BI_CONDITION_SERIALIZERS.register("attack_target", AttackTargetBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, CanSeeBiCondition.Serializer> CAN_SEE = BI_CONDITION_SERIALIZERS.register("can_see", CanSeeBiCondition.Serializer::new);
-    public static final DeferredHolder<BiConditionSerializer<?>, CollidingBiCondition.Serializer> COLLIDING = BI_CONDITION_SERIALIZERS.register("colliding", CollidingBiCondition.Serializer::new);
+    public static final DeferredHolder<BiConditionSerializer<?>, CollisionBiCondition.Serializer> COLLISION = BI_CONDITION_SERIALIZERS.register("collision", CollisionBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, DistanceBiCondition.Serializer> DISTANCE = BI_CONDITION_SERIALIZERS.register("distance", DistanceBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, EqualBiCondition.Serializer> EQUAL = BI_CONDITION_SERIALIZERS.register("equal", EqualBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, IsRidingBiCondition.Serializer> IS_RIDING = BI_CONDITION_SERIALIZERS.register("is_riding", IsRidingBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, IsRidingRecursiveBiCondition.Serializer> IS_RIDING_RECURSIVE = BI_CONDITION_SERIALIZERS.register("is_riding_recursive", IsRidingRecursiveBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, IsRidingRootBiCondition.Serializer> IS_RIDING_ROOT = BI_CONDITION_SERIALIZERS.register("is_riding_root", IsRidingRootBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, OwnerBiCondition.Serializer> OWNER = BI_CONDITION_SERIALIZERS.register("owner", OwnerBiCondition.Serializer::new);
+    public static final DeferredHolder<BiConditionSerializer<?>, ObjectiveScoreBiEntityCondition.Serializer> OBJECTIVE_SCORE = BI_CONDITION_SERIALIZERS.register("objective_score", ObjectiveScoreBiEntityCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, RelativeRotationBiCondition.Serializer> RELATIVE_ROTATION = BI_CONDITION_SERIALIZERS.register("relative_rotation", RelativeRotationBiCondition.Serializer::new);
 
 }
