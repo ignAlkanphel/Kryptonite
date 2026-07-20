@@ -38,6 +38,7 @@
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",
     "client.MultiPlayerGameModeAccessor",
+    "client.ClientAdvancementsAccessor",
     "client.GameRendererMixin",
     "client.CameraMixin",
     "client.KeyMappingAccessor"
