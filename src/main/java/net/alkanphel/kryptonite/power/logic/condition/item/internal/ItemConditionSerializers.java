@@ -30,7 +30,7 @@ public class ItemConditionSerializers {
     public static final DeferredHolder<ItemConditionSerializer<?>, FuelItemCondition.Serializer> FUEL = ITEM_CONDITION_SERIALIZERS.register("fuel", FuelItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, HolderConditionItemCondition.Serializer> HOLDER_CONDITION = ITEM_CONDITION_SERIALIZERS.register("holder_condition", HolderConditionItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, ItemItemCondition.Serializer> ITEM = ITEM_CONDITION_SERIALIZERS.register("item", ItemItemCondition.Serializer::new);
-    public static final DeferredHolder<ItemConditionSerializer<?>, OnCooldownItemCondition.Serializer> ON_COOLDOWN = ITEM_CONDITION_SERIALIZERS.register("cooldown_on", OnCooldownItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, OnCooldownItemCondition.Serializer> ON_COOLDOWN = ITEM_CONDITION_SERIALIZERS.register("on_cooldown", OnCooldownItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, RepairableItemCondition.Serializer> REPAIRABLE = ITEM_CONDITION_SERIALIZERS.register("repairable", RepairableItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, SmeltableItemCondition.Serializer> SMELTABLE = ITEM_CONDITION_SERIALIZERS.register("smeltable", SmeltableItemCondition.Serializer::new);
 
