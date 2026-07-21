@@ -23,6 +23,7 @@
     "common.ServerPlayerGameModeMixin",
     "common.ServerPlayerGameModeAccessor",
     "common.DelayedDataComponentMapAccessor",
+    "common.SlotRangesAccessor",
     "common.UseOnContextAccessor"
   ],
   "client": [

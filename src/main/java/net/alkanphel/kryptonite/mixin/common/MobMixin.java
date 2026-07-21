@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.alkanphel.kryptonite.power.ability.ActionOnItemPickupAbility;
 import net.alkanphel.kryptonite.power.ability.PreventItemPickupAbility;
+import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +31,7 @@ public abstract class MobMixin extends LivingEntity {
     // Action On Item Pickup ability
     @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;pickUpItem(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/item/ItemEntity;)V"))
     private void kryptonite$actionOnItemPickup(Mob mobEntity, ServerLevel level, ItemEntity itemEntity, Operation<Void> original) {
-        SlotAccess stackReference = MiscUtil.createStackReference(itemEntity.getItem());
+        SlotAccess stackReference = InventoryUtil.createStackReference(itemEntity.getItem());
 
         EntityReference<Entity> throwerReference = ((ItemEntityAccessor) itemEntity).kryptonite$getThrowerUuid();
 

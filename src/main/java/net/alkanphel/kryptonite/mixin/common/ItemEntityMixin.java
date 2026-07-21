@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.alkanphel.kryptonite.power.ability.ActionOnItemPickupAbility;
 import net.alkanphel.kryptonite.power.ability.PreventItemPickupAbility;
-import net.alkanphel.kryptonite.util.apoli.MiscUtil;
+import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityReference;
@@ -40,8 +40,8 @@ public abstract class ItemEntityMixin extends Entity {
             return false;
         }
 
-        else if (MiscUtil.hasSpaceInInventory(playerInventory, itemStack)) {
-            SlotAccess stackReference = MiscUtil.createStackReference(itemStack);
+        else if (InventoryUtil.hasSpaceInInventory(playerInventory, itemStack)) {
+            SlotAccess stackReference = InventoryUtil.createStackReference(itemStack);
             Entity thrower = EntityReference.getEntity(this.thrower, this.level());
 
             Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, player);

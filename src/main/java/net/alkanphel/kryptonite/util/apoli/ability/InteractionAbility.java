@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
-import net.alkanphel.kryptonite.util.apoli.MiscUtil;
+import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -81,7 +81,7 @@ public class InteractionAbility extends Ability {
         }
 
         ItemStack resultStack = this.resultStack.isPresent() ? this.resultStack.get().copy() : heldStackReference.get().copy();
-        SlotAccess resultStackReference = MiscUtil.createStackReference(resultStack);
+        SlotAccess resultStackReference = InventoryUtil.createStackReference(resultStack);
 
         boolean modified = this.resultStack.isPresent() || !resultItemActions.isEmpty();
 

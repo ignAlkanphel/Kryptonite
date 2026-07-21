@@ -44,6 +44,43 @@
         "icon": "minecraft:barrier",
         "list_index": 1
       }
+    },
+    "equipment_cooldown": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:equipment",
+        "equipment_slot": "mainhand",
+        "item_actions": {
+          "type": "kryptonite:cooldown",
+          "ticks": 60
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Cooldown Equipment",
+        "icon": "minecraft:barrier",
+        "list_index": 2
+      }
+    },
+    "equipment_on_cooldown": {
+      "type": "palladium:command",
+      "commands": [
+        "tellraw @s {\"color\":\"blue\",\"text\":\"Item on cooldown!\"}"
+      ],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": {
+            "type": "kryptonite:on_cooldown"
+          }
+        }
+      }
     }
   }
 }

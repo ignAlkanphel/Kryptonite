@@ -12,6 +12,7 @@ import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.meta.ActorConditionBiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.core.HolderLookup;
@@ -103,7 +104,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     }
 
     public void runActions(ItemEntity itemEntity, Entity thrower, Entity holder) {
-        SlotAccess stackReference = MiscUtil.createStackReference(itemEntity.getItem());
+        SlotAccess stackReference = InventoryUtil.createStackReference(itemEntity.getItem());
 
         if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
         if (!biEntityActionsThrower.isEmpty()) BiAction.runList(biEntityActionsThrower, thrower, holder);

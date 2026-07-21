@@ -3,6 +3,8 @@ package net.alkanphel.kryptonite.mixin.common;
 import net.alkanphel.kryptonite.network.p2c.S2CSyncAttacker;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
+import net.alkanphel.kryptonite.util.apoli.access.EntityLinkedItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -40,6 +42,12 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Shadow @Nullable private LivingEntity lastHurtMob;
+
+    // EntityLinkedItemStack tick
+    @Inject(method = "baseTick", at = @At("TAIL"))
+    private void kryptonite$updateItemStackHolder(CallbackInfo ci) {
+        InventoryUtil.forEachStack(this, stack -> ((EntityLinkedItemStack) (Object) stack).kryptonite$setEntity(this));
+    }
 
     // S2C Sync Attacker packet
     @Inject(method = "setLastHurtByMob", at = @At("TAIL"))

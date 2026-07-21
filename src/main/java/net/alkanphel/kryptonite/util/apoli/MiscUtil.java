@@ -14,9 +14,6 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
@@ -25,7 +22,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -147,54 +143,6 @@ public class MiscUtil {
         else {
             return defaultValue;
         }
-    }
-
-
-    // ------------------------------------------------------------------------------------------------------------------------
-
-
-    public static OptionalInt getSpaceInInventory(Player player, ItemStack stack) {
-        return getSpaceInInventory(player.getInventory(), stack);
-    }
-
-    public static OptionalInt getSpaceInInventory(Inventory inventory, ItemStack stack) {
-        int slot = inventory.getSlotWithRemainingSpace(stack);
-        if (slot == -1) slot = inventory.getFreeSlot();
-
-        return slot == -1 ? OptionalInt.empty() : OptionalInt.of(slot);
-    }
-
-    public static boolean hasSpaceInInventory(Player player, ItemStack stack) {
-        return getSpaceInInventory(player, stack).isPresent();
-    }
-
-    public static boolean hasSpaceInInventory(Inventory playerInventory, ItemStack stack) {
-        return getSpaceInInventory(playerInventory, stack).isPresent();
-    }
-
-    /**
-     * Creates a stack reference that is not linked to any entity for use with item actions.
-     * <p>
-     * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's StackReference.
-     *
-     * @param startingStack The ItemStack that this reference will start with.
-     * @return A {@linkplain SlotAccess} that contains an ItemStack.
-     */
-    public static SlotAccess createStackReference(ItemStack startingStack) {
-        return new SlotAccess() {
-            ItemStack stack = startingStack;
-
-            @Override
-            public ItemStack get() {
-                return stack;
-            }
-
-            @Override
-            public boolean set(ItemStack stack) {
-                this.stack = stack;
-                return true;
-            }
-        };
     }
 
 

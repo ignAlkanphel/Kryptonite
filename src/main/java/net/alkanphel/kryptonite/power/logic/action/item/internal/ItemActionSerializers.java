@@ -11,6 +11,8 @@ public class ItemActionSerializers {
     public static final DeferredRegister<ItemActionSerializer<?>> ITEM_ACTION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.ITEM_ACTION_SERIALIZER, Kryptonite.MOD_ID);
 
     public static final DeferredHolder<ItemActionSerializer<?>, ConsumeItemAction.Serializer> CONSUME = ITEM_ACTION_SERIALIZERS.register("consume", ConsumeItemAction.Serializer::new);
+    public static final DeferredHolder<ItemActionSerializer<?>, CooldownItemAction.Serializer> COOLDOWN = ITEM_ACTION_SERIALIZERS.register("cooldown", CooldownItemAction.Serializer::new);
     public static final DeferredHolder<ItemActionSerializer<?>, DamageItemAction.Serializer> DAMAGE = ITEM_ACTION_SERIALIZERS.register("damage", DamageItemAction.Serializer::new);
+    public static final DeferredHolder<ItemActionSerializer<?>, HolderActionItemAction.Serializer> HOLDER_ACTION = ITEM_ACTION_SERIALIZERS.register("holder_action", HolderActionItemAction.Serializer::new);
 
 }
