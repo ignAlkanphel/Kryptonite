@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.minecraft.core.HolderLookup;
@@ -77,7 +78,7 @@ public record EntityInRadiusCondition(List<BiCondition> biCondition, Shape shape
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area to search.", Shape.CUBE)
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used", NumberComparator.GREATER_THAN)
                     .addOptional("compare_to", TYPE_VALUE, "The value that is being compared against", 0)
-                    .add("radius", TYPE_VALUE, "The radius to search within.")
+                    .add("radius", KryptoniteSettingType.doubleValueRange(0.0, Double.MAX_VALUE), "The radius to search within.")
                     .addExampleObject(new EntityInRadiusCondition(List.of(), Shape.CUBE, NumberComparator.GREATER_THAN, new StaticValue(0), new StaticValue(16)));
         }
     }

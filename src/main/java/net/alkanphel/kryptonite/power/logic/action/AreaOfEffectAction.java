@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
@@ -78,7 +79,7 @@ public class AreaOfEffectAction extends Action {
                     .add("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on each entity in range.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, filters which entities in range the actions run on.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
-                    .addOptional("radius", TYPE_VALUE, "The radius of the area.", 16)
+                    .addOptional("radius", KryptoniteSettingType.doubleValueRange(0, Integer.MAX_VALUE), "The radius of the area.", 16)
                     .addOptional("include_actor", TYPE_VALUE, "If the \"actor\" should be included as a target.", false)
                     .addExampleObject(new AreaOfEffectAction(List.of(new TargetActionBiAction(List.of(new SetOnFireAction(new StaticValue(60))))), Optional.empty(), Shape.CUBE, new StaticValue(5), new StaticValue(false)));
         }

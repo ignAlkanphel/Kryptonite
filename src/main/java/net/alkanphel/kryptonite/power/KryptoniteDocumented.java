@@ -7,6 +7,7 @@ import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -31,6 +32,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_VECTOR3_VALUE = SettingType.simple("(Dynamic) Vector3D Value");
     SettingType TYPE_VECTOR3i_VALUE = SettingType.simple("(Dynamic) Vector3i Value");
     SettingType TYPE_VECTOR3f_VALUE = SettingType.simple("(Dynamic) Vector3f Value");
+    SettingType TYPE_DATA_COMPONENT = SettingType.simple("Data Component");
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 
     SettingType TYPE_ITEM_TYPE_HOLDER_SET = SettingType.simple("Item ID(s) / Tag(s)");
@@ -40,12 +42,13 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_TIMELINE_HOLDER_SET = SettingType.simple("Timeline ID(s) / Tag(s)");
 
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());
-    SettingType TYPE_CARDINAL_LIGHTING = SettingType.enumList(CardinalLighting.Type.values());
     SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
+    SettingType TYPE_CARDINAL_LIGHTING = SettingType.enumList(CardinalLighting.Type.values());
     SettingType TYPE_INTERACTION_HAND = SettingType.enumList(InteractionHand.values());
     SettingType TYPE_INTERACTION_RESULT = SettingType.enumList(InteractionResultUtil.InteractionResultType.values());
     SettingType TYPE_CLIP_CONTEXT_BLOCK = SettingType.enumList(ClipContext.Block.values());
     SettingType TYPE_CLIP_CONTEXT_FLUID = SettingType.enumList(ClipContext.Fluid.values());
+    SettingType TYPE_EQUIPMENT_SLOT_GROUP = SettingType.enumList(EquipmentSlotGroup.values());
     SettingType TYPE_EXPLOSION_INTERACTION = SettingType.enumList(Level.ExplosionInteraction.values());
     SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());

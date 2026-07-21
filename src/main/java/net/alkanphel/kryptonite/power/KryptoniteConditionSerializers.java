@@ -24,6 +24,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, DistanceFromCoordinatesCondition.Serializer> DISTANCE_FROM_COORDINATES = CONDITIONS_SERIALIZERS.register("distance_from_coordinates", DistanceFromCoordinatesCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, KeyBindCondition.Serializer> KEY_BIND = CONDITIONS_SERIALIZERS.register("key_bind", KeyBindCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EntityInRadiusCondition.Serializer> ENTITY_IN_RADIUS = CONDITIONS_SERIALIZERS.register("entity_in_radius", EntityInRadiusCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EquipmentCondition.Serializer> EQUIPMENT = CONDITIONS_SERIALIZERS.register("equipment", EquipmentCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectCondition.Serializer> HAS_EFFECT = CONDITIONS_SERIALIZERS.register("has_effect", HasEffectCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEffectPossibleCondition.Serializer> IS_EFFECT_POSSIBLE = CONDITIONS_SERIALIZERS.register("is_effect_possible", IsEffectPossibleCondition.Serializer::new);
@@ -31,6 +32,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsGlowingCondition.Serializer> IS_GLOWING = CONDITIONS_SERIALIZERS.register("is_glowing", IsGlowingCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsTamedCondition.Serializer> IS_TAMED = CONDITIONS_SERIALIZERS.register("is_tamed", IsTamedCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingCorrectToolCondition.Serializer> IS_USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("is_using_correct_tool", IsUsingCorrectToolCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
 
 }

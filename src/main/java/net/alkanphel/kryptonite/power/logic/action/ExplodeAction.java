@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
@@ -106,8 +107,8 @@ public class ExplodeAction extends Action {
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
                     .addOptional("damage_self", TYPE_VALUE, "If the entity that triggered the explosion also takes damage from it.", true)
                     .addOptional("create_fire", TYPE_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
-                    .addOptional("power", TYPE_VALUE, "The strength/radius of the explosion.")
-                    .addOptional("indestructible_resistance", TYPE_VALUE, "The explosion resistance value used for indestructible blocks.", 10.0F)
+                    .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")
+                    .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
                     .addExampleObject(new ExplodeAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, new StaticValue(false), new StaticValue(false), new StaticValue(4), new StaticValue(10)));
         }
     }

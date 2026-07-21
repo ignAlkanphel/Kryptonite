@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.action;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
@@ -48,7 +49,7 @@ public class SetOnFireAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, SetOnFireAction> builder, HolderLookup.Provider provider) {
             builder.setName("Set On Fire")
                     .setDescription("Sets the entity on fire for the specified amount of time in ticks.")
-                    .addOptional("duration", TYPE_VALUE, "How long the entity will burn.")
+                    .addOptional("duration", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "How long the entity will burn.")
                     .addExampleObject(new SetOnFireAction(new StaticValue(5)));
         }
     }

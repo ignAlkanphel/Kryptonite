@@ -1,0 +1,49 @@
+{
+  "name": "Equipment", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "equipment_consume": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:equipment",
+        "equipment_slot": "mainhand",
+        "item_actions": {
+          "type": "kryptonite:consume"
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Consume Equipment",
+        "icon": "minecraft:barrier",
+        "list_index": 0
+      }
+    },
+    "equipment_damage": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:equipment",
+        "equipment_slot": "mainhand",
+        "item_actions": {
+          "type": "kryptonite:damage",
+          "amount": 1
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Damage Equipment",
+        "icon": "minecraft:barrier",
+        "list_index": 1
+      }
+    }
+  }
+}

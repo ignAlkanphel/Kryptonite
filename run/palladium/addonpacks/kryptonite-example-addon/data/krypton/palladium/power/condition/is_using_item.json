@@ -1,0 +1,67 @@
+{
+  "name": "Is Using Item", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "is_using_item": {
+      "type": "palladium:command",
+      "first_tick_commands": [],
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are using an item!\"}"],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_using_item"
+        }
+      }
+    },
+    "is_using_item_max_stack_16": {
+      "type": "palladium:command",
+      "first_tick_commands": [],
+      "commands": ["tellraw @s {\"color\":\"aqua\",\"text\":\"You are using an item with a max stack size of 1!\"}"],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_using_item",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:max_stack_size": 1
+            }
+          }
+        }
+      }
+    },
+    "is_using_item_food": {
+      "type": "palladium:command",
+      "first_tick_commands": [],
+      "commands": ["tellraw @s {\"color\":\"aqua\",\"text\":\"You are using a food item!\"}"],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_using_item",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:food": {}
+            }
+          }
+        }
+      }
+    },
+    "is_using_item_amount_13": {
+      "type": "palladium:command",
+      "first_tick_commands": [],
+      "commands": ["tellraw @s {\"color\":\"blue\",\"text\":\"You are using an item with a stack amount of 13!\"}"],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_using_item",
+          "item_conditions": {
+            "type": "kryptonite:amount",
+            "comparator": "=",
+            "compare_to": 13
+          }
+        }
+      }
+    }
+  }
+}

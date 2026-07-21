@@ -68,7 +68,7 @@ public record NbtCondition(CompoundTag nbt) implements Condition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, NbtCondition> builder, HolderLookup.Provider provider) {
             builder.setName("NBT")
-                    .setDescription("Checks the entity's NBT. Warning that some NBT data from the server (e.g. tags added via /tag) is not synced to the client.")
+                    .setDescription("Checks the NBT of an entity. Warning that some NBT data from the server (e.g. tags added via /tag) is not synced to the client.")
                     .add("nbt", TYPE_NBT, "Partial match NBT data to compare against the entity.")
                     .addExampleObject(new NbtCondition(addExampleNbt()));
         }

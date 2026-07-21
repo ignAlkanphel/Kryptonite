@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -73,12 +74,12 @@ public record CalendarCondition(@Nullable Value year, @Nullable Value month, @Nu
         public void addDocumentation(CodecDocumentationBuilder<Condition, CalendarCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Calendar")
                     .setDescription("Checks the current real-life date and time. Omitted fields are ignored.")
-                    .addOptional("year", SettingType.intRange(1, Year.MAX_VALUE), "The year to match.")
-                    .addOptional("month", SettingType.intRange(1, Month.values().length), "The month to match.")
-                    .addOptional("day", SettingType.intRange(1, 31), "The day to match.")
-                    .addOptional("hour", SettingType.intRange(0, LocalTime.MAX.getHour()), "The hour to match.")
-                    .addOptional("minute", SettingType.intRange(0, LocalTime.MAX.getMinute()), "The minute to match.")
-                    .addOptional("second", SettingType.intRange(0, LocalTime.MAX.getSecond()), "The second to match.")
+                    .addOptional("year", KryptoniteSettingType.intValueRange(1, Year.MAX_VALUE), "The year to match.")
+                    .addOptional("month", KryptoniteSettingType.intValueRange(1, Month.values().length), "The month to match.")
+                    .addOptional("day", KryptoniteSettingType.intValueRange(1, 31), "The day to match.")
+                    .addOptional("hour", KryptoniteSettingType.intValueRange(0, LocalTime.MAX.getHour()), "The hour to match.")
+                    .addOptional("minute", KryptoniteSettingType.intValueRange(0, LocalTime.MAX.getMinute()), "The minute to match.")
+                    .addOptional("second", KryptoniteSettingType.intValueRange(0, LocalTime.MAX.getSecond()), "The second to match.")
                     .addExampleObject(new CalendarCondition(null, new StaticValue(7), new StaticValue(8), null, null, null));
         }
     }

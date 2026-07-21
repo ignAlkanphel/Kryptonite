@@ -15,6 +15,7 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, AreaOfEffectAction.Serializer> AREA_OF_EFFECT = ACTION_SERIALIZERS.register("area_of_effect", AreaOfEffectAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, BlockActionAtAction.Serializer> BLOCK_ACTION_AT = ACTION_SERIALIZERS.register("block_action_at", BlockActionAtAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DisplayItemActivationAction.Serializer> DISPLAY_ITEM_ACTIVATION = ACTION_SERIALIZERS.register("display_item_activation", DisplayItemActivationAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, EquipmentAction.Serializer> EQUIPMENT = ACTION_SERIALIZERS.register("equipment", EquipmentAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExplodeAction.Serializer> EXPLODE = ACTION_SERIALIZERS.register("explode", ExplodeAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExtinguishAction.Serializer> EXTINGUISH = ACTION_SERIALIZERS.register("extinguish", ExtinguishAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, GameEventAction.Serializer> GAME_EVENT = ACTION_SERIALIZERS.register("game_event", GameEventAction.Serializer::new);

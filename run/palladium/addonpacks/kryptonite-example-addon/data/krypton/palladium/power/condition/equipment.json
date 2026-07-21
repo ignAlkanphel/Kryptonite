@@ -1,0 +1,82 @@
+{
+  "name": "Has Equipment", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "equipment_mainhand": {
+      "type": "palladium:command",
+      "commands": [
+        "tellraw @s {\"color\":\"green\",\"text\":\"You are holding an item with epic rarity!\"}"
+      ],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:rarity": "epic"
+            }
+          }
+        }
+      }
+    },
+    "equipment_custom_data": {
+      "type": "palladium:command",
+      "commands": [
+        "tellraw @s {\"color\":\"green\",\"text\":\"You are holding an item with the correct custom data!\"}"
+      ],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:custom_data": {
+                "foo": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "damage_resistant": {
+      "type": "palladium:command",
+      "commands": [
+        "tellraw @s {\"color\":\"blue\",\"text\":\"You are holding a damage resistant item!\"}"
+      ],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:damage_resistant": {}
+            }
+          }
+        }
+      }
+    },
+    "damage_resistant_fire": {
+      "type": "palladium:command",
+      "commands": [
+        "tellraw @s {\"color\":\"red\",\"text\":\"You are holding a '#minecraft:is_fire' damage resistant item!\"}"
+      ],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": {
+            "type": "kryptonite:component",
+            "components": {
+              "minecraft:damage_resistant": {
+                "types": "#minecraft:is_fire"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
