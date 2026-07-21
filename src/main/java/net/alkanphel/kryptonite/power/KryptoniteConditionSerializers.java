@@ -27,9 +27,15 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, EquipmentCondition.Serializer> EQUIPMENT = CONDITIONS_SERIALIZERS.register("equipment", EquipmentCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectCondition.Serializer> HAS_EFFECT = CONDITIONS_SERIALIZERS.register("has_effect", HasEffectCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, HasUUIDCondition.Serializer> HAS_UUID = CONDITIONS_SERIALIZERS.register("has_uuid", HasUUIDCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEffectPossibleCondition.Serializer> IS_EFFECT_POSSIBLE = CONDITIONS_SERIALIZERS.register("is_effect_possible", IsEffectPossibleCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEntityCondition.Serializer> IS_ENTITY = CONDITIONS_SERIALIZERS.register("is_entity", IsEntityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsGlowingCondition.Serializer> IS_GLOWING = CONDITIONS_SERIALIZERS.register("is_glowing", IsGlowingCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsPassengerCondition.Serializer> IS_PASSENGER = CONDITIONS_SERIALIZERS.register("is_passenger", IsPassengerCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsPassengerRecursiveCondition.Serializer> IS_PASSENGER_RECURSIVE = CONDITIONS_SERIALIZERS.register("is_passenger_recursive", IsPassengerRecursiveCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsRidingCondition.Serializer> IS_RIDING = CONDITIONS_SERIALIZERS.register("is_riding", IsRidingCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsRidingRecursiveCondition.Serializer> IS_RIDING_RECURSIVE = CONDITIONS_SERIALIZERS.register("is_riding_recursive", IsRidingRecursiveCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsRidingRootCondition.Serializer> IS_RIDING_ROOT = CONDITIONS_SERIALIZERS.register("is_riding_root", IsRidingRootCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsTamedCondition.Serializer> IS_TAMED = CONDITIONS_SERIALIZERS.register("is_tamed", IsTamedCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingCorrectToolCondition.Serializer> IS_USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("is_using_correct_tool", IsUsingCorrectToolCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
