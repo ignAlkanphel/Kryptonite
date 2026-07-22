@@ -49,11 +49,7 @@ public class ActionOnItemDropAbility extends Ability {
     }
 
     public boolean doesApply(LivingEntity holder, ItemStack stack) {
-        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
-            return false;
-        }
-
-        return true;
+        return itemConditions.isEmpty() || ItemCondition.checkConditions(itemConditions, holder.level(), stack);
     }
 
     public void runActions(LivingEntity holder, SlotAccess slotAccess) {

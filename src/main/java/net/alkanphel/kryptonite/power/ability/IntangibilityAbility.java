@@ -29,34 +29,35 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class IntangibilityAbility extends Ability {
 
     public static final MapCodec<IntangibilityAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Condition.CODEC.optionalFieldOf("vertical_conditions", FalseCondition.INSTANCE).forGetter(ab -> ab.verticalConditions),
-            BlockCondition.CODEC.optionalFieldOf("block_conditions").forGetter(ab -> ab.blockConditions),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockConditions),
+            RenderType.CODEC.optionalFieldOf("render_type", RenderType.DEFAULT).forGetter(a -> a.renderType),
             Codec.BOOL.optionalFieldOf("blacklist", false).forGetter(ab -> ab.blacklist),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, IntangibilityAbility::new));
 
     private final Condition verticalConditions;
-    private final Optional<BlockCondition> blockConditions;
+    private final List<BlockCondition> blockConditions;
+    public final RenderType renderType;
     private final boolean blacklist;
 
-    public IntangibilityAbility(Condition verticalConditions, Optional<BlockCondition> blockConditions, boolean blacklist, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public IntangibilityAbility(Condition verticalConditions, List<BlockCondition> blockConditions, RenderType renderType, boolean blacklist, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.verticalConditions = verticalConditions;
         this.blockConditions = blockConditions;
+        this.renderType = renderType;
         this.blacklist = blacklist;
     }
 
     public boolean doesApply(Entity entity, BlockPos pos) {
-        return blockConditions
-                .map(condition -> blacklist != condition.test(entity.level(), pos))
-                .orElse(true);
+        return blockConditions.isEmpty() || blacklist != BlockCondition.checkConditions(blockConditions, entity.level(), pos);
     }
 
     public boolean shouldPhase(LivingEntity entity, AbilityInstance<IntangibilityAbility> instance, VoxelShape shape, BlockPos pos) {
@@ -68,7 +69,7 @@ public class IntangibilityAbility extends Ability {
         return verticalConditions.test(DataContext.forAbility(entity, instance));
     }
 
-    public static BlockState getInWallBlockState(LivingEntity playerEntity) {
+    public static @Nullable BlockState getInWallBlockState(LivingEntity playerEntity) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
         for (int i = 0; i < 8; ++i) {
@@ -103,8 +104,20 @@ public class IntangibilityAbility extends Ability {
                     .addOptional("vertical_conditions", TYPE_CONDITION_LIST, "If specified, the entity will only phase downward (vertically) through blocks if these conditions are fulfilled.", FalseCondition.INSTANCE)
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only blocks fulfilling these conditions are phased through. If omitted, all blocks are phased through.")
                     .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
-                    .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, Optional.empty(), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, Optional.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire")))))), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("render_type", SettingType.enumList(RenderType.values()), "How the environment is rendered while phasing through blocks.", RenderType.DEFAULT)
+                    .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, List.of(), RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire")))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+        }
+    }
+
+    public enum RenderType implements StringRepresentable {
+        DEFAULT, BLINDNESS, NONE;
+
+        public static final Codec<RenderType> CODEC = StringRepresentable.fromEnum(RenderType::values);
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name().toLowerCase();
         }
     }
 

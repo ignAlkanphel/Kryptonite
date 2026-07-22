@@ -31,11 +31,7 @@ public class PreventEntitySelectionAbility extends Ability {
     }
 
     public boolean doesPrevent(LivingEntity holder, Entity target) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, target)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, target);
     }
 
     public static boolean shouldPreventSelection(LivingEntity viewer, Entity target) {

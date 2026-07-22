@@ -32,11 +32,7 @@ public class PreventItemUseAbility extends Ability {
     }
 
     public boolean doesPrevent(Entity holder, ItemStack stack) {
-        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
-            return false;
-        }
-
-        return true;
+        return itemConditions.isEmpty() || ItemCondition.checkConditions(itemConditions, holder.level(), stack);
     }
 
     @Override

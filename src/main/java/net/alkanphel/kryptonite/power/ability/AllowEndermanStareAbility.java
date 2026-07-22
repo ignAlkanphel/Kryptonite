@@ -28,11 +28,7 @@ public class AllowEndermanStareAbility extends Ability {
     }
 
     public boolean appliesTo(Entity actor, Entity target) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, actor, target)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, actor, target);
     }
 
     @Override

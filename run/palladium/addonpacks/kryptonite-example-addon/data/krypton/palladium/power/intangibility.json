@@ -5,8 +5,52 @@
     "intangibility": {
       "type": "kryptonite:intangibility",
       "blacklist": false,
+      "render_type": "blindness",
       "vertical_conditions": {
         "type": "palladium:crouching"
+      },
+      "properties": {
+        "list_index": 0
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "intangibility2": {
+      "type": "kryptonite:intangibility",
+      "blacklist": true,
+      "render_type": "none",
+      "vertical_conditions": {
+        "type": "palladium:crouching"
+      },
+      "properties": {
+        "list_index": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "intangibility3": {
+      "type": "kryptonite:intangibility",
+      "blacklist": true,
+      "vertical_conditions": {
+        "type": "palladium:crouching"
+      },
+      "block_conditions": {
+        "type": "kryptonite:or",
+        "conditions": [
+          {"type": "kryptonite:block", "block": "minecraft:white_wool"},
+          {"type": "kryptonite:block", "block": "minecraft:dirt"}
+        ]
+      },
+      "properties": {
+        "list_index": 2
       },
       "state": {
         "enabling": {

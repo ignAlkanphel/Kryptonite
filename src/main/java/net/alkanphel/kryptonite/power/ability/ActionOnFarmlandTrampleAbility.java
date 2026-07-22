@@ -50,11 +50,7 @@ public class ActionOnFarmlandTrampleAbility extends Ability {
     }
 
     public boolean doesApply(Level level, BlockPos pos) {
-        if (!blockConditions.isEmpty() && !BlockCondition.checkConditions(blockConditions, level, pos)) {
-            return false;
-        }
-
-        return true;
+        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, level, pos);
     }
 
     public void runActions(LivingEntity entity, Level level, BlockPos pos) {

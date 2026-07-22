@@ -37,11 +37,7 @@ public class ProjectileAccuracyAbility extends Ability {
     }
 
     public boolean doesApply(LivingEntity holder, Projectile projectile) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, projectile)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, projectile);
     }
 
     @Override

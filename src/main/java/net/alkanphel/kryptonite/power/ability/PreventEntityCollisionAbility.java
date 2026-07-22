@@ -30,11 +30,7 @@ public class PreventEntityCollisionAbility extends Ability {
     }
 
     public boolean appliesTo(Entity holder, Entity target) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, target)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, target);
     }
 
     public static boolean doesApply(Entity fromEntity, Entity collidingEntity) {

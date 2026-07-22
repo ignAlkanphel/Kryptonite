@@ -43,11 +43,7 @@ public class ActionOnEntityCollisionAbility extends Ability {
     }
 
     public boolean doesApply(LivingEntity holder, Entity target) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, target)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, target);
     }
 
     @Override

@@ -40,11 +40,7 @@ public class PreventBlockSelectionAbility extends Ability {
     }
 
     public boolean doesPrevent(Level level, BlockPos pos) {
-        if (!blockConditions.isEmpty() && !BlockCondition.checkConditions(blockConditions, level, pos)) {
-            return false;
-        }
-
-        return true;
+        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, level, pos);
     }
 
     public static boolean doesPrevent(LivingEntity living, BlockPos pos) {
