@@ -11,7 +11,6 @@ import net.alkanphel.kryptonite.power.logic.context.BlockActionContext;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
-import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 

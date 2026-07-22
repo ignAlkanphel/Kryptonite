@@ -20,7 +20,6 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, ExplodeAction.Serializer> EXPLODE = ACTION_SERIALIZERS.register("explode", ExplodeAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExtinguishAction.Serializer> EXTINGUISH = ACTION_SERIALIZERS.register("extinguish", ExtinguishAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, GameEventAction.Serializer> GAME_EVENT = ACTION_SERIALIZERS.register("game_event", GameEventAction.Serializer::new);
-
     public static final DeferredHolder<ActionSerializer<?>, PocketAnvilAction.Serializer> POCKET_ANVIL = ACTION_SERIALIZERS.register("pocket_anvil", PocketAnvilAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketCraftingTableAction.Serializer> POCKET_CRAFTING_TABLE = ACTION_SERIALIZERS.register("pocket_crafting_table", PocketCraftingTableAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketEnchantingTableAction.Serializer> POCKET_ENCHANTING_TABLE = ACTION_SERIALIZERS.register("pocket_enchanting_table", PocketEnchantingTableAction.Serializer::new);

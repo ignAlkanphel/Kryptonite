@@ -17,17 +17,17 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
-public record OffsetBlockCondition(BlockCondition condition, Value x, Value y, Value z) implements BlockCondition {
+public record OffsetBlockCondition(BlockCondition blockConditions, Value x, Value y, Value z) implements BlockCondition {
 
     public static final MapCodec<OffsetBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.CODEC.fieldOf("block_conditions").forGetter(OffsetBlockCondition::condition),
+            BlockCondition.CODEC.fieldOf("block_conditions").forGetter(OffsetBlockCondition::blockConditions),
             Value.CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetBlockCondition::x),
             Value.CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetBlockCondition::y),
             Value.CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetBlockCondition::z)
     ).apply(instance, OffsetBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, OffsetBlockCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.CODEC), OffsetBlockCondition::condition,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.CODEC), OffsetBlockCondition::blockConditions,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::x,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::y,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::z,
@@ -39,7 +39,7 @@ public record OffsetBlockCondition(BlockCondition condition, Value x, Value y, V
         Level level = context.level();
         BlockPos offsetBlockPos = context.pos().offset(x.getAsInt(null), y.getAsInt(null), z.getAsInt(null));
 
-        return level.hasChunkAt(offsetBlockPos) && condition.test(level, offsetBlockPos);
+        return level.hasChunkAt(offsetBlockPos) && blockConditions.test(level, offsetBlockPos);
     }
 
     @Override

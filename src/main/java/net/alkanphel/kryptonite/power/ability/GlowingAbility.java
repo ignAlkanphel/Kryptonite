@@ -19,6 +19,7 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.FloatDataAttachmentValue;
 import net.threetag.palladium.logic.value.StaticValue;
+import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class GlowingAbility extends Ability {
             Mode.CODEC.optionalFieldOf("mode", Mode.SELF).forGetter(ab -> ab.mode),
             Condition.CODEC.optionalFieldOf("entity_conditions").forGetter(ab -> ab.entityConditions),
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(ab -> ab.biEntityConditions),
-            Codec.BOOL.optionalFieldOf("use_teams", true).forGetter(ab -> ab.useTeams),
+            Value.CODEC.optionalFieldOf("use_teams", new StaticValue(true)).forGetter(ab -> ab.useTeams),
             KryptoniteCodecs.RGBValue.CODEC.optionalFieldOf("color", KryptoniteCodecs.RGBValue.WHITE).forGetter(ab -> ab.color),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, GlowingAbility::new));
@@ -40,10 +41,10 @@ public class GlowingAbility extends Ability {
     public final Mode mode;
     public final Optional<Condition> entityConditions;
     public final List<BiCondition> biEntityConditions;
-    public final boolean useTeams;
+    public final Value useTeams;
     public final KryptoniteCodecs.RGBValue color;
 
-    public GlowingAbility(Mode mode, Optional<Condition> entityConditions, List<BiCondition> biEntityConditions, boolean useTeams, KryptoniteCodecs.RGBValue color, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public GlowingAbility(Mode mode, Optional<Condition> entityConditions, List<BiCondition> biEntityConditions, Value useTeams, KryptoniteCodecs.RGBValue color, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.mode = mode;
         this.entityConditions = entityConditions;
@@ -97,10 +98,10 @@ public class GlowingAbility extends Ability {
                     .addOptional("mode", TYPE_STRING, "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, filters which entities see the glow for \"self\" & which entities glow for \"other\".")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the bi conditions filter. In the context of this field, the \"actor\" is the entity that has this ability & \"target\" is the other entity.")
-                    .addOptional("use_teams", TYPE_BOOLEAN, "If true, the team color overrides the glow color when applicable.", true)
+                    .addOptional("use_teams", TYPE_VALUE, "If true, the team color overrides the glow color when applicable.", true)
                     .addOptional("color", KryptoniteDocumented.TYPE_RGB_VALUE, "The RGB glow color to use.", KryptoniteCodecs.RGBValue.WHITE)
-                    .addExampleObject(new GlowingAbility(Mode.SELF, Optional.empty(), List.of(), true, new KryptoniteCodecs.RGBValue(new StaticValue(0.85), new StaticValue(1.0), new StaticValue(0.1)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new GlowingAbility(Mode.OTHER, Optional.empty(), List.of(), false, new KryptoniteCodecs.RGBValue(new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_red")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_green")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_blue")), 1.0F, "")), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new GlowingAbility(Mode.SELF, Optional.empty(), List.of(), new StaticValue(true), new KryptoniteCodecs.RGBValue(new StaticValue(0.85), new StaticValue(1.0), new StaticValue(0.1)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new GlowingAbility(Mode.OTHER, Optional.empty(), List.of(), new StaticValue(false), new KryptoniteCodecs.RGBValue(new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_red")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_green")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "glow_blue")), 1.0F, "")), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

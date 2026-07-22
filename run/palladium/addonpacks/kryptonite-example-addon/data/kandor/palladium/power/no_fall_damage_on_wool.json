@@ -1,0 +1,23 @@
+{
+  "name": "No Fall Damage On Wool", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "no_fall_damage_on_wool": {
+      "type": "palladium:damage_immunity",
+      "damage_type": "minecraft:fall",
+      "state": {
+        "enabling": {
+          "type": "kryptonite:block_in",
+          "block_conditions": {
+            "type": "kryptonite:offset",
+            "block_conditions": {
+              "type": "kryptonite:block",
+              "block": "#minecraft:wool"
+            },
+            "y": -1
+          }
+        }
+      }
+    }
+  }
+}

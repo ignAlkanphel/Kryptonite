@@ -66,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity living = (LivingEntity) (Object) this;
 
         if (living.isFallFlying() && AbilityUtil.isTypeEnabled(living, KryptoniteAbilitySerializers.PREVENT_GLIDING.get())) {
-            ((EntityAccessor) living).kryptonite$setSharedFlag(7, false);
+            this.setSharedFlag(7, false);
         }
     }
 

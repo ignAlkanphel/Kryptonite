@@ -1,0 +1,30 @@
+{
+  "name": "Intangibility Test", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "ignore_redstone_traps": {
+      "type": "kryptonite:intangibility",
+      "blacklist": false,
+      "block_conditions": {
+        "type": "kryptonite:or",
+        "conditions": [
+          {"type": "kryptonite:block", "block": "minecraft:tripwire"},
+          {"type": "kryptonite:block", "block": "#minecraft:buttons"},
+          {"type": "kryptonite:block", "block": "#minecraft:pressure_plates"},
+          {"type": "kryptonite:block", "block": "minecraft:redstone_torch"},
+          {"type": "kryptonite:block", "block": "minecraft:repeater"},
+          {"type": "kryptonite:block", "block": "minecraft:comparator"},
+          {"type": "kryptonite:block", "block": "#minecraft:rails"}
+        ]
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:not",
+          "conditions": {
+            "type": "palladium:crouching"
+          }
+        }
+      }
+    }
+  }
+}

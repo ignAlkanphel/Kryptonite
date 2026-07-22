@@ -2,15 +2,13 @@ package net.alkanphel.kryptonite.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.ability.PreventDamageAbility;
-import net.alkanphel.kryptonite.power.ability.PreventEntityCollisionAbility;
-import net.alkanphel.kryptonite.power.ability.PreventParticlesAbility;
-import net.alkanphel.kryptonite.power.ability.PreventSlowdownAbility;
+import net.alkanphel.kryptonite.power.ability.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -59,6 +57,19 @@ public abstract class EntityMixin {
 
         if (AbilityUtil.getEnabledInstances(livingEntity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
             cir.setReturnValue(false);
+        }
+    }
+
+    // Intangibility ability
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/core/BlockPos;containing(DDD)Lnet/minecraft/core/BlockPos;"), method = "moveTowardsClosestSpace", cancellable = true)
+    protected void kryptonite$pushOutOfBlocks(double x, double y, double z, CallbackInfo ci) {
+        if ((Object) this instanceof LivingEntity living) {
+            for (AbilityInstance<IntangibilityAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.INTANGIBILITY.get())) {
+                if (instance.getAbility().doesApply(living, BlockPos.containing(x, y, z))) {
+                    ci.cancel();
+                    return;
+                }
+            }
         }
     }
 

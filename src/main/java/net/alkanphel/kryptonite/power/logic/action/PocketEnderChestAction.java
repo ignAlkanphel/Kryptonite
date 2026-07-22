@@ -26,8 +26,8 @@ public class PocketEnderChestAction extends Action {
     private static final Component CONTAINER_TITLE = Component.translatable("container.enderchest");
 
     public static final MapCodec<PocketEnderChestAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("increment_stat", true).forGetter(a -> a.incrementStat),
-            Value.CODEC.optionalFieldOf("anger_piglins", true).forGetter(a -> a.angerPiglins)
+            Value.CODEC.optionalFieldOf("increment_stat", new StaticValue(true)).forGetter(a -> a.incrementStat),
+            Value.CODEC.optionalFieldOf("anger_piglins", new StaticValue(true)).forGetter(a -> a.angerPiglins)
     ).apply(instance, PocketEnderChestAction::new));
 
     public final Value incrementStat, angerPiglins;

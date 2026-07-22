@@ -1,0 +1,19 @@
+{
+  "name": "Intangibility Test", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "intangibility": {
+      "type": "kryptonite:intangibility",
+      "blacklist": false,
+      "vertical_conditions": {
+        "type": "palladium:crouching"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

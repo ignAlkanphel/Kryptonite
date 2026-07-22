@@ -1,28 +1,39 @@
 package net.alkanphel.kryptonite.power.logic.action;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.logic.value.StaticValue;
+import net.threetag.palladium.logic.value.Value;
 
 public class ExtinguishAction extends Action {
 
-    public static final MapCodec<ExtinguishAction> CODEC = MapCodec.unit(new ExtinguishAction());
-    public static final StreamCodec<RegistryFriendlyByteBuf, ExtinguishAction> STREAM_CODEC = StreamCodec.unit(new ExtinguishAction());
+    public static final MapCodec<ExtinguishAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Value.CODEC.optionalFieldOf("no_effects", new StaticValue(false)).forGetter(a -> a.noEffects)
+    ).apply(instance, ExtinguishAction::new));
 
-    public ExtinguishAction() {}
+    public final Value noEffects;
+
+    public ExtinguishAction(Value noEffects) {
+        this.noEffects = noEffects;
+    }
 
     @Override
     public boolean run(DataContext context) {
         var entity = context.getEntity();
         if (entity == null) return false;
 
-        entity.extinguishFire();
+        if (noEffects.getAsBoolean(context)) {
+            entity.clearFire();
+        } else {
+            entity.extinguishFire();
+        }
+
         return true;
     }
 
@@ -42,7 +53,8 @@ public class ExtinguishAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, ExtinguishAction> builder, HolderLookup.Provider provider) {
             builder.setName("Extinguish")
                     .setDescription("Clears fire from the entity.")
-                    .addExampleObject(new ExtinguishAction());
+                    .addOptional("no_effects", TYPE_VALUE, "If true, clears the fire without additional effects like sound.", false)
+                    .addExampleObject(new ExtinguishAction(new StaticValue(false)));
         }
     }
 

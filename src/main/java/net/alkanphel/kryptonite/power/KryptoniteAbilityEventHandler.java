@@ -88,7 +88,7 @@ public class KryptoniteAbilityEventHandler {
             }
         }
 
-        // Modify Damage Taken
+        // Modify Damage Taken ability
         var modifyDamageTakenInstances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get())
                 .stream()
                 .filter(instance -> instance.getAbility().doesApply(source, amount, target))
@@ -618,7 +618,7 @@ public class KryptoniteAbilityEventHandler {
         AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_TELEPORT.get())
                 .stream()
                 .filter(instance -> instance.getAbility().source == source)
-                .filter(instance -> instance.getAbility().doesApply(living, e.getTargetLevel(), e.getTarget()))
+                .filter(instance -> instance.getAbility().doesApply(living, instance, e.getTargetLevel(), e.getTarget()))
                 .forEach(instance -> {
                     instance.getAbility().runActions(living);
                     e.setCanceled(true);
@@ -674,7 +674,7 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
-    @SubscribeEvent // Action On Jump
+    @SubscribeEvent // Action On Jump ability
     public static void onLivingJump(LivingEvent.LivingJumpEvent e) {
         LivingEntity entity = e.getEntity();
 

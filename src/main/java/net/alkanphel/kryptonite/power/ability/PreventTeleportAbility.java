@@ -19,6 +19,7 @@ import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
@@ -33,18 +34,18 @@ public class PreventTeleportAbility extends Ability {
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("from_dimension_conditions", List.of()).forGetter(a -> a.originDimensionConditions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("to_dimension_conditions", List.of()).forGetter(a -> a.destinationDimensionConditions),
-            Codec.DOUBLE.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
-            Codec.DOUBLE.optionalFieldOf("max_distance").forGetter(a -> a.maxDistance),
+            Value.CODEC.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
+            Value.CODEC.optionalFieldOf("max_distance").forGetter(a -> a.maxDistance),
             Source.CODEC.fieldOf("source").forGetter(a -> a.source),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventTeleportAbility::new));
 
     public final List<Action> entityActions;
     public final List<DimensionCondition> originDimensionConditions, destinationDimensionConditions;
-    public final Optional<Double> minDistance, maxDistance;
+    public final Optional<Value> minDistance, maxDistance;
     public final Source source;
 
-    public PreventTeleportAbility(List<Action> entityActions, List<DimensionCondition> originDimensionConditions, List<DimensionCondition> destinationDimensionConditions, Optional<Double> minDistance, Optional<Double> maxDistance, Source source, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventTeleportAbility(List<Action> entityActions, List<DimensionCondition> originDimensionConditions, List<DimensionCondition> destinationDimensionConditions, Optional<Value> minDistance, Optional<Value> maxDistance, Source source, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.originDimensionConditions = originDimensionConditions;
@@ -54,7 +55,7 @@ public class PreventTeleportAbility extends Ability {
         this.source = source;
     }
 
-    public boolean doesApply(LivingEntity entity, ServerLevel destinationLevel, Vec3 destination) {
+    public boolean doesApply(LivingEntity entity, AbilityInstance<?> instance, ServerLevel destinationLevel, Vec3 destination) {
         Vec3 origin = entity.position();
 
         if (!originDimensionConditions.isEmpty()) {
@@ -71,11 +72,11 @@ public class PreventTeleportAbility extends Ability {
 
         double distance = origin.distanceTo(destination);
 
-        if (minDistance.isPresent() && distance < minDistance.get()) {
+        if (minDistance.isPresent() && distance < minDistance.get().getAsDouble(DataContext.forAbility(entity, instance))) {
             return false;
         }
 
-        if (maxDistance.isPresent() && distance > maxDistance.get()) {
+        if (maxDistance.isPresent() && distance > maxDistance.get().getAsDouble(DataContext.forAbility(entity, instance))) {
             return false;
         }
 
@@ -142,8 +143,8 @@ public class PreventTeleportAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon teleportation being prevented.")
                     .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting from the dimension.")
                     .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting to the dimension.")
-                    .addOptional("min_distance", TYPE_DOUBLE, "The minimum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
-                    .addOptional("max_distance", TYPE_DOUBLE, "The maximum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+                    .addOptional("min_distance", TYPE_VALUE, "The minimum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+                    .addOptional("max_distance", TYPE_VALUE, "The maximum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
                     .add("source", SettingType.enumList(Source.values()), "The teleportation source to prevent.")
                     .addExampleObject(new PreventTeleportAbility(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Source.ENDER_PEARL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventTeleportAbility(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"))), List.of(new DimensionDimensionCondition(Level.OVERWORLD)), List.of(new DimensionDimensionCondition(Level.NETHER)), Optional.empty(), Optional.empty(), Source.DIMENSION_TRAVEL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

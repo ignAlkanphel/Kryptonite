@@ -62,7 +62,7 @@ public abstract class EntityMixin {
         if (renderedEntity != viewer) {
             for (AbilityInstance<GlowingAbility> instance : AbilityUtil.getEnabledInstances(viewer, KryptoniteAbilitySerializers.GLOWING.get())) {
                 var ability = instance.getAbility();
-                if (ability.mode != GlowingAbility.Mode.OTHER || (hasTeamColor && ability.useTeams) || !ability.doesApply(viewer, renderedEntity)) continue;
+                if (ability.mode != GlowingAbility.Mode.OTHER || (hasTeamColor && ability.useTeams.getAsBoolean(DataContext.forAbility(viewer, instance))) || !ability.doesApply(viewer, renderedEntity)) continue;
 
                 var ctx = DataContext.forAbility(viewer, instance);
 
@@ -77,7 +77,7 @@ public abstract class EntityMixin {
         if (renderedEntity instanceof LivingEntity livingRendered) {
             for (AbilityInstance<GlowingAbility> instance : AbilityUtil.getEnabledInstances(livingRendered, KryptoniteAbilitySerializers.GLOWING.get())) {
                 var ability = instance.getAbility();
-                if (ability.mode != GlowingAbility.Mode.SELF || (hasTeamColor && ability.useTeams) || !ability.doesApply(livingRendered, viewer)) continue;
+                if (ability.mode != GlowingAbility.Mode.SELF || (hasTeamColor && ability.useTeams.getAsBoolean(DataContext.forAbility(livingRendered, instance))) || !ability.doesApply(livingRendered, viewer)) continue;
 
                 var ctx = DataContext.forAbility(livingRendered, instance);
 
