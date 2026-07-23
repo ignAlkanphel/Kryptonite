@@ -34,19 +34,19 @@ import java.util.List;
 public class PreventCriticalHitAbility extends Ability {
 
     public static final MapCodec<PreventCriticalHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Mode.CODEC.fieldOf("mode").forGetter(a -> a.mode),
+            ApplyTo.CODEC.fieldOf("apply_to").forGetter(a -> a.applyTo),
             BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventCriticalHitAbility::new));
 
-    public final Mode mode;
+    public final ApplyTo applyTo;
     public final List<BiAction> biEntityActions;
     public final List<BiCondition> biEntityConditions;
 
-    public PreventCriticalHitAbility(Mode mode, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventCriticalHitAbility(ApplyTo applyTo, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.mode = mode;
+        this.applyTo = applyTo;
         this.biEntityActions = biEntityActions;
         this.biEntityConditions = biEntityConditions;
     }
@@ -65,7 +65,7 @@ public class PreventCriticalHitAbility extends Ability {
         for (AbilityInstance<PreventCriticalHitAbility> instance : AbilityUtil.getEnabledInstances(attacker, KryptoniteAbilitySerializers.PREVENT_CRITICAL_HIT.get())) {
             var ability = instance.getAbility();
 
-            if (ability.mode == Mode.SELF && ability.doesApply(attacker, target)) {
+            if (ability.applyTo == ApplyTo.SELF && ability.doesApply(attacker, target)) {
                 prevented = true;
                 ability.runActions(attacker, target);
             }
@@ -75,7 +75,7 @@ public class PreventCriticalHitAbility extends Ability {
             for (AbilityInstance<PreventCriticalHitAbility> instance : AbilityUtil.getEnabledInstances(livingTarget, KryptoniteAbilitySerializers.PREVENT_CRITICAL_HIT.get())) {
                 var ability = instance.getAbility();
 
-                if (ability.mode == Mode.OTHER && ability.doesApply(attacker, target)) {
+                if (ability.applyTo == ApplyTo.OTHER && ability.doesApply(attacker, target)) {
                     prevented = true;
                     ability.runActions(attacker, target);
                 }
@@ -100,18 +100,18 @@ public class PreventCriticalHitAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventCriticalHitAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents critical hits being dealt. In the context of this ability, the \"actor\" is the entity that dealt the critical hit & \"target\" the entity that was hit.")
-                    .add("mode", SettingType.enumList(PreventCriticalHitAbility.Mode.values()), "If to prevent critical hits when attacking (\"self\") or when being attacked (\"other\").")
+                    .add("apply_to", SettingType.enumList(ApplyTo.values()), "If to prevent critical hits when attacking (\"self\") or when being attacked (\"other\").")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both the \"actor\" & \"target\" entities upon preventing critical hits.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the ability will only prevent critical hits if these conditions are fulfilled by either or both the \"actor\" & the \"target\" entities.")
-                    .addExampleObject(new PreventCriticalHitAbility(Mode.SELF, List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()))
-                    .addExampleObject(new PreventCriticalHitAbility(Mode.SELF, List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Cannot deal critical hits!\", \"color\": \"red\"}"))))), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("villager")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()));
+                    .addExampleObject(new PreventCriticalHitAbility(ApplyTo.SELF, List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()))
+                    .addExampleObject(new PreventCriticalHitAbility(ApplyTo.SELF, List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Cannot deal critical hits!\", \"color\": \"red\"}"))))), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("villager")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, Collections.emptyList()));
         }
     }
 
-    public enum Mode implements StringRepresentable {
+    public enum ApplyTo implements StringRepresentable {
         SELF, OTHER;
 
-        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final Codec<ApplyTo> CODEC = StringRepresentable.fromEnum(ApplyTo::values);
 
         @Override
         public @NotNull String getSerializedName() {

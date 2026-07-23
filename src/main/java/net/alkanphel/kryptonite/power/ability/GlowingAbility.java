@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.FloatDataAttachmentValue;
@@ -95,7 +96,7 @@ public class GlowingAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, GlowingAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Glowing")
                     .setDescription("Makes entities glow like the \"minecraft:glowing\" effect. Use \"self\" mode to make the ability holder glow for others, \"target\" mode to make other entities glow for the ability holder.")
-                    .addOptional("mode", TYPE_STRING, "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
+                    .addOptional("mode", SettingType.enumList(Mode.values()), "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, filters which entities see the glow for \"self\" & which entities glow for \"other\".")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the bi conditions filter. In the context of this field, the \"actor\" is the entity that has this ability & \"target\" is the other entity.")
                     .addOptional("use_teams", TYPE_VALUE, "If true, the team color overrides the glow color when applicable.", true)

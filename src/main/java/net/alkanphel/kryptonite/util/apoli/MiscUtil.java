@@ -9,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,6 +145,37 @@ public class MiscUtil {
         else {
             return defaultValue;
         }
+    }
+
+
+    // ------------------------------------------------------------------------------------------------------------------------
+
+
+    public static boolean hasLocalVanillaRespawnPosition(ServerPlayer player) {
+        return player.getRespawnConfig() != null;
+    }
+
+    public static void clearLocalVanillaRespawnPosition(ServerPlayer player, boolean showMessage) {
+        player.setRespawnPosition(null, showMessage);
+    }
+
+    public static boolean teleportToLocalVanillaRespawnPosition(ServerPlayer player, boolean useCharge, boolean keepRotation) {
+        if (player.getRespawnConfig() == null) return false;
+
+        TeleportTransition transition = player.findRespawnPositionAndUseSpawnBlock(useCharge, TeleportTransition.DO_NOTHING);
+        if (transition.missingRespawnBlock()) return false;
+
+        if (keepRotation) transition = transition.withRotation(player.getYRot(), player.getXRot());
+        player.teleport(transition);
+        return true;
+    }
+
+    public static boolean teleportToGlobalVanillaRespawnPosition(ServerPlayer player, boolean keepRotation) {
+        TeleportTransition transition = TeleportTransition.createDefault(player, TeleportTransition.DO_NOTHING);
+
+        if (keepRotation) transition = transition.withRotation(player.getYRot(), player.getXRot());
+        player.teleport(transition);
+        return true;
     }
 
 

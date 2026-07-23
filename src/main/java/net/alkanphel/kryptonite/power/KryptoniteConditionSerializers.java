@@ -27,6 +27,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, EquipmentCondition.Serializer> EQUIPMENT = CONDITIONS_SERIALIZERS.register("equipment", EquipmentCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectCondition.Serializer> HAS_EFFECT = CONDITIONS_SERIALIZERS.register("has_effect", HasEffectCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, HasRespawnCondition.Serializer> HAS_RESPAWN = CONDITIONS_SERIALIZERS.register("has_respawn", HasRespawnCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasUUIDCondition.Serializer> HAS_UUID = CONDITIONS_SERIALIZERS.register("has_uuid", HasUUIDCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEffectPossibleCondition.Serializer> IS_EFFECT_POSSIBLE = CONDITIONS_SERIALIZERS.register("is_effect_possible", IsEffectPossibleCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEntityCondition.Serializer> IS_ENTITY = CONDITIONS_SERIALIZERS.register("is_entity", IsEntityCondition.Serializer::new);

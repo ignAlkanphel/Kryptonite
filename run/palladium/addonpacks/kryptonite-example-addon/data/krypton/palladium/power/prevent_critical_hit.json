@@ -4,7 +4,7 @@
   "abilities": {
     "prevent_critical_hit_self": {
       "type": "kryptonite:prevent_critical_hit",
-      "mode": "self",
+      "apply_to": "self",
       "properties": {
         "icon": "minecraft:diamond_sword",
         "title": "Self",
@@ -19,7 +19,7 @@
     },
     "prevent_critical_hit_other": {
       "type": "kryptonite:prevent_critical_hit",
-      "mode": "other",
+      "apply_to": "other",
       "properties": {
         "icon": "minecraft:diamond_sword",
         "title": "Other",
@@ -34,7 +34,7 @@
     },
     "prevent_critical_hit_self_villager": {
       "type": "kryptonite:prevent_critical_hit",
-      "mode": "self",
+      "apply_to": "self",
       "bientity_actions": {
         "type": "kryptonite:actor_action",
         "actions": {

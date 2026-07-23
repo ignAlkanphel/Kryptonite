@@ -20,12 +20,13 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, ExplodeAction.Serializer> EXPLODE = ACTION_SERIALIZERS.register("explode", ExplodeAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExtinguishAction.Serializer> EXTINGUISH = ACTION_SERIALIZERS.register("extinguish", ExtinguishAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, GameEventAction.Serializer> GAME_EVENT = ACTION_SERIALIZERS.register("game_event", GameEventAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, HealAction.Serializer> HEAL = ACTION_SERIALIZERS.register("heal", HealAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketAnvilAction.Serializer> POCKET_ANVIL = ACTION_SERIALIZERS.register("pocket_anvil", PocketAnvilAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketCraftingTableAction.Serializer> POCKET_CRAFTING_TABLE = ACTION_SERIALIZERS.register("pocket_crafting_table", PocketCraftingTableAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketEnchantingTableAction.Serializer> POCKET_ENCHANTING_TABLE = ACTION_SERIALIZERS.register("pocket_enchanting_table", PocketEnchantingTableAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketEnderChestAction.Serializer> POCKET_ENDER_CHEST = ACTION_SERIALIZERS.register("pocket_ender_chest", PocketEnderChestAction.Serializer::new);
-    public static final DeferredHolder<ActionSerializer<?>, HealAction.Serializer> HEAL = ACTION_SERIALIZERS.register("heal", HealAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, RespawnResetAction.Serializer> RESPAWN_RESET = ACTION_SERIALIZERS.register("respawn_reset", RespawnResetAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, RespawnTeleportAction.Serializer> RESPAWN_TELEPORT = ACTION_SERIALIZERS.register("respawn_teleport", RespawnTeleportAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetFallDistanceAction.Serializer> SET_FALL_DISTANCE = ACTION_SERIALIZERS.register("set_fall_distance", SetFallDistanceAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetOnFireAction.Serializer> SET_ON_FIRE = ACTION_SERIALIZERS.register("set_on_fire", SetOnFireAction.Serializer::new);
-
 }

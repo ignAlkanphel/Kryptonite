@@ -2,6 +2,7 @@ package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.registry.KryptoniteAttachments;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
@@ -43,10 +44,70 @@ import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
+
+    @SubscribeEvent // Modify Knockback ability (capture)
+    public static void onCaptureIncomingDamageKnockback(LivingIncomingDamageEvent e) {
+        LivingEntity target = e.getEntity();
+        Entity attacker = e.getSource().getEntity();
+
+        List<KryptoniteAttachments.PendingKnockbackModifier> pending = new ArrayList<>();
+
+        if (attacker instanceof LivingEntity livingAttacker) {
+            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get())
+                    .stream()
+                    .filter(instance -> instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), e.getAmount()))
+                    .forEach(instance -> pending.add(new KryptoniteAttachments.PendingKnockbackModifier(livingAttacker, instance)));
+        }
+
+        target.setData(KryptoniteAttachments.PENDING_KNOCKBACK_MODIFIER.get(), pending);
+    }
+
+    @SubscribeEvent // Modify Knockback ability
+    public static void onLivingKnockback(LivingKnockBackEvent e) {
+        LivingEntity entity = e.getEntity();
+
+        float strength = e.getStrength();
+        double ratioX = e.getRatioX();
+        double ratioZ = e.getRatioZ();
+
+        // SELF
+        for (AbilityInstance<ModifyKnockbackAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get())) {
+            if (!instance.getAbility().doesApplyToSelf()) continue;
+            strength = instance.getAbility().applyStrength(strength, entity, instance);
+            ratioX = instance.getAbility().applyRatioX(ratioX, entity, instance);
+            ratioZ = instance.getAbility().applyRatioZ(ratioZ, entity, instance);
+        }
+
+        // OTHER
+        List<KryptoniteAttachments.PendingKnockbackModifier> pending = entity.getData(KryptoniteAttachments.PENDING_KNOCKBACK_MODIFIER.get());
+        for (KryptoniteAttachments.PendingKnockbackModifier mod : pending) {
+            strength = mod.instance().getAbility().applyStrength(strength, mod.attacker(), mod.instance());
+            ratioX = mod.instance().getAbility().applyRatioX(ratioX, mod.attacker(), mod.instance());
+            ratioZ = mod.instance().getAbility().applyRatioZ(ratioZ, mod.attacker(), mod.instance());
+        }
+
+        e.setStrength(strength);
+        e.setRatioX(ratioX);
+        e.setRatioZ(ratioZ);
+
+        entity.setData(KryptoniteAttachments.PENDING_KNOCKBACK_MODIFIER.get(), new ArrayList<>());
+        if (e.isCanceled()) return;
+
+        for (AbilityInstance<ModifyKnockbackAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get())) {
+            if (instance.getAbility().doesApplyToSelf()) instance.getAbility().runActions(entity);
+        }
+
+        for (KryptoniteAttachments.PendingKnockbackModifier mod : pending) {
+            mod.instance().getAbility().runActions(entity);
+            mod.instance().getAbility().runBiActions(mod.attacker(), entity);
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH) // Modify Damage Dealt ability
     public static void onLivingIncomingDamageDealt(LivingIncomingDamageEvent e) {

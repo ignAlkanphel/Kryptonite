@@ -44,10 +44,7 @@ public class KryptoniteClient {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
 
-        // client
         event.createProvider(KryptoniteLangProvider.English::new);
-
-        // server
     }
 
     @SubscribeEvent
