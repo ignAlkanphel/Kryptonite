@@ -18,13 +18,13 @@ import net.threetag.palladium.util.NumberComparator;
 
 import java.util.Optional;
 
-public record IsRidingRecursiveCondition(Optional<BiCondition> biEntityConditions, NumberComparator comparator, Value compareTo) implements Condition {
+public record VehicleRidingRecursiveCondition(Optional<BiCondition> biEntityConditions, NumberComparator comparator, Value compareTo) implements Condition {
 
-    public static final MapCodec<IsRidingRecursiveCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<VehicleRidingRecursiveCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BiCondition.CODEC.optionalFieldOf("bientity_conditions").forGetter(c -> c.biEntityConditions),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(c -> c.comparator),
             Value.CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(c -> c.compareTo)
-    ).apply(instance, IsRidingRecursiveCondition::new));
+    ).apply(instance, VehicleRidingRecursiveCondition::new));
 
     @Override
     public boolean test(DataContext context) {
@@ -49,24 +49,24 @@ public record IsRidingRecursiveCondition(Optional<BiCondition> biEntityCondition
 
     @Override
     public ConditionSerializer<?> getSerializer() {
-        return KryptoniteConditionSerializers.IS_RIDING_RECURSIVE.get();
+        return KryptoniteConditionSerializers.VEHICLE_RIDING_RECURSIVE.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsRidingRecursiveCondition> {
+    public static class Serializer extends ConditionSerializer<VehicleRidingRecursiveCondition> {
 
         @Override
-        public MapCodec<IsRidingRecursiveCondition> codec() {
+        public MapCodec<VehicleRidingRecursiveCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsRidingRecursiveCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding Recursive")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, VehicleRidingRecursiveCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding Recursive")
                     .setDescription("Checks whether the \"actor\" entity is directly riding the \"target\" entity or the passenger(s) of the \"target\" entity. In the context of this condition, the \"actor\" is the passenger & the entity that fulfilled the condition, while the \"target\" entities are the entity that is being directly ridden and the passenger(s) of the said entity.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these conditions must be fulfilled by either or both the \"actor\" & \"target\" entities.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "How the amount of entities currently being ridden should be compared to the specified value.", NumberComparator.GREATER_THAN)
                     .addOptional("compare_to", KryptoniteSettingType.intValueRange(1, Integer.MAX_VALUE), "The value at which the amount of entities currently being ridden will be compared to.", 1)
-                    .addExampleObject(new IsRidingRecursiveCondition(Optional.empty(), NumberComparator.GREATER_THAN, new StaticValue(1)));
+                    .addExampleObject(new VehicleRidingRecursiveCondition(Optional.empty(), NumberComparator.GREATER_THAN, new StaticValue(1)));
         }
     }
 

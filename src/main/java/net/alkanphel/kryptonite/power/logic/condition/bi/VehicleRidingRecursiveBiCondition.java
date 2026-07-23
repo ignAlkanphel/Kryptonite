@@ -13,10 +13,10 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Objects;
 
-public record IsRidingRecursiveBiCondition() implements BiCondition {
+public record VehicleRidingRecursiveBiCondition() implements BiCondition {
 
-    public static final MapCodec<IsRidingRecursiveBiCondition> CODEC = MapCodec.unit(new IsRidingRecursiveBiCondition());
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsRidingRecursiveBiCondition> STREAM_CODEC = StreamCodec.unit(new IsRidingRecursiveBiCondition());
+    public static final MapCodec<VehicleRidingRecursiveBiCondition> CODEC = MapCodec.unit(new VehicleRidingRecursiveBiCondition());
+    public static final StreamCodec<RegistryFriendlyByteBuf, VehicleRidingRecursiveBiCondition> STREAM_CODEC = StreamCodec.unit(new VehicleRidingRecursiveBiCondition());
 
     @Override
     public boolean test(BiConditionContext context) {
@@ -35,22 +35,22 @@ public record IsRidingRecursiveBiCondition() implements BiCondition {
     }
 
     @Override
-    public BiConditionSerializer<IsRidingRecursiveBiCondition> getSerializer() {
-        return BiConditionSerializers.IS_RIDING_RECURSIVE.get();
+    public BiConditionSerializer<VehicleRidingRecursiveBiCondition> getSerializer() {
+        return BiConditionSerializers.VEHICLE_RIDING_RECURSIVE.get();
     }
 
-    public static class Serializer extends BiConditionSerializer<IsRidingRecursiveBiCondition> {
+    public static class Serializer extends BiConditionSerializer<VehicleRidingRecursiveBiCondition> {
 
         @Override
-        public MapCodec<IsRidingRecursiveBiCondition> codec() {
+        public MapCodec<VehicleRidingRecursiveBiCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BiCondition, IsRidingRecursiveBiCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding Recursive")
+        public void addDocumentation(CodecDocumentationBuilder<BiCondition, VehicleRidingRecursiveBiCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding Recursive")
                     .setDescription("Checks if the actor entity is riding the target entity, regardless of where the target entity is in the riding chain.")
-                    .addExampleObject(new IsRidingRecursiveBiCondition());
+                    .addExampleObject(new VehicleRidingRecursiveBiCondition());
         }
     }
 

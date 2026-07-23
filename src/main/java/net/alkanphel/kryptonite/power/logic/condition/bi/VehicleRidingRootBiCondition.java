@@ -12,10 +12,10 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Objects;
 
-public record IsRidingRootBiCondition() implements BiCondition {
+public record VehicleRidingRootBiCondition() implements BiCondition {
 
-    public static final MapCodec<IsRidingRootBiCondition> CODEC = MapCodec.unit(new IsRidingRootBiCondition());
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsRidingRootBiCondition> STREAM_CODEC = StreamCodec.unit(new IsRidingRootBiCondition());
+    public static final MapCodec<VehicleRidingRootBiCondition> CODEC = MapCodec.unit(new VehicleRidingRootBiCondition());
+    public static final StreamCodec<RegistryFriendlyByteBuf, VehicleRidingRootBiCondition> STREAM_CODEC = StreamCodec.unit(new VehicleRidingRootBiCondition());
 
     @Override
     public boolean test(BiConditionContext context) {
@@ -23,22 +23,22 @@ public record IsRidingRootBiCondition() implements BiCondition {
     }
 
     @Override
-    public BiConditionSerializer<IsRidingRootBiCondition> getSerializer() {
-        return BiConditionSerializers.IS_RIDING_ROOT.get();
+    public BiConditionSerializer<VehicleRidingRootBiCondition> getSerializer() {
+        return BiConditionSerializers.VEHICLE_RIDING_ROOT.get();
     }
 
-    public static class Serializer extends BiConditionSerializer<IsRidingRootBiCondition> {
+    public static class Serializer extends BiConditionSerializer<VehicleRidingRootBiCondition> {
 
         @Override
-        public MapCodec<IsRidingRootBiCondition> codec() {
+        public MapCodec<VehicleRidingRootBiCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BiCondition, IsRidingRootBiCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding Root")
+        public void addDocumentation(CodecDocumentationBuilder<BiCondition, VehicleRidingRootBiCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding Root")
                     .setDescription("Checks if the actor entity is riding the target entity from the very end of the riding chain.")
-                    .addExampleObject(new IsRidingRootBiCondition());
+                    .addExampleObject(new VehicleRidingRootBiCondition());
         }
     }
 

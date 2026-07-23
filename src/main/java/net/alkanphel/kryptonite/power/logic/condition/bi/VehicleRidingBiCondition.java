@@ -12,10 +12,10 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Objects;
 
-public record IsRidingBiCondition() implements BiCondition {
+public record VehicleRidingBiCondition() implements BiCondition {
 
-    public static final MapCodec<IsRidingBiCondition> CODEC = MapCodec.unit(new IsRidingBiCondition());
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsRidingBiCondition> STREAM_CODEC = StreamCodec.unit(new IsRidingBiCondition());
+    public static final MapCodec<VehicleRidingBiCondition> CODEC = MapCodec.unit(new VehicleRidingBiCondition());
+    public static final StreamCodec<RegistryFriendlyByteBuf, VehicleRidingBiCondition> STREAM_CODEC = StreamCodec.unit(new VehicleRidingBiCondition());
 
     @Override
     public boolean test(BiConditionContext context) {
@@ -23,22 +23,22 @@ public record IsRidingBiCondition() implements BiCondition {
     }
 
     @Override
-    public BiConditionSerializer<IsRidingBiCondition> getSerializer() {
-        return BiConditionSerializers.IS_RIDING.get();
+    public BiConditionSerializer<VehicleRidingBiCondition> getSerializer() {
+        return BiConditionSerializers.VEHICLE_RIDING.get();
     }
 
-    public static class Serializer extends BiConditionSerializer<IsRidingBiCondition> {
+    public static class Serializer extends BiConditionSerializer<VehicleRidingBiCondition> {
 
         @Override
-        public MapCodec<IsRidingBiCondition> codec() {
+        public MapCodec<VehicleRidingBiCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BiCondition, IsRidingBiCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding")
+        public void addDocumentation(CodecDocumentationBuilder<BiCondition, VehicleRidingBiCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding")
                     .setDescription("Checks if the actor entity is currently riding the target entity.")
-                    .addExampleObject(new IsRidingBiCondition());
+                    .addExampleObject(new VehicleRidingBiCondition());
         }
     }
 

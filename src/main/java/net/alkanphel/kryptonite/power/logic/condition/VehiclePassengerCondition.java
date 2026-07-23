@@ -18,13 +18,13 @@ import net.threetag.palladium.util.NumberComparator;
 
 import java.util.Optional;
 
-public record IsPassengerCondition(Optional<BiCondition> biEntityConditions, NumberComparator comparator, Value compareTo) implements Condition {
+public record VehiclePassengerCondition(Optional<BiCondition> biEntityConditions, NumberComparator comparator, Value compareTo) implements Condition {
 
-    public static final MapCodec<IsPassengerCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<VehiclePassengerCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BiCondition.CODEC.optionalFieldOf("bientity_conditions").forGetter(c -> c.biEntityConditions),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_OR_EQUAL).forGetter(c -> c.comparator),
             Value.CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(c -> c.compareTo)
-    ).apply(instance, IsPassengerCondition::new));
+    ).apply(instance, VehiclePassengerCondition::new));
 
     @Override
     public boolean test(DataContext context) {
@@ -41,24 +41,24 @@ public record IsPassengerCondition(Optional<BiCondition> biEntityConditions, Num
 
     @Override
     public ConditionSerializer<?> getSerializer() {
-        return KryptoniteConditionSerializers.IS_PASSENGER.get();
+        return KryptoniteConditionSerializers.VEHICLE_PASSENGER.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsPassengerCondition> {
+    public static class Serializer extends ConditionSerializer<VehiclePassengerCondition> {
 
         @Override
-        public MapCodec<IsPassengerCondition> codec() {
+        public MapCodec<VehiclePassengerCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsPassengerCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Passenger")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, VehiclePassengerCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Passenger")
                     .setDescription("Checks how many passengers are currently riding the entity. In the context of this condition, the \"actor\" entity/entities is/are the passenger(s) and the \"target\" is the entity that fulfilled the condition.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only increase the amount of passengers if either or both the \"actor\" entity/entities and the \"target\" entity fulfill the conditions.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "How the amount of passengers of the entity should be compared to the specified value.", NumberComparator.GREATER_OR_EQUAL)
                     .addOptional("compare_to", KryptoniteSettingType.intValueRange(1, Integer.MAX_VALUE), "The value at which the amount of passengers of the entity will be compared to.", 1)
-                    .addExampleObject(new IsPassengerCondition(Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new StaticValue(1)));
+                    .addExampleObject(new VehiclePassengerCondition(Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new StaticValue(1)));
         }
     }
 

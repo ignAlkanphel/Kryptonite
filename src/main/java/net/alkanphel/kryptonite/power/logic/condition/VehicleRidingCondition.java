@@ -21,11 +21,11 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-public record IsRidingCondition(List<BiCondition> biEntityConditions) implements Condition {
+public record VehicleRidingCondition(List<BiCondition> biEntityConditions) implements Condition {
 
-    public static final MapCodec<IsRidingCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<VehicleRidingCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(c -> c.biEntityConditions)
-    ).apply(instance, IsRidingCondition::new));
+    ).apply(instance, VehicleRidingCondition::new));
 
     @Override
     public boolean test(DataContext context) {
@@ -39,24 +39,24 @@ public record IsRidingCondition(List<BiCondition> biEntityConditions) implements
     }
 
     @Override
-    public ConditionSerializer<IsRidingCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_RIDING.get();
+    public ConditionSerializer<VehicleRidingCondition> getSerializer() {
+        return KryptoniteConditionSerializers.VEHICLE_RIDING.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsRidingCondition> {
+    public static class Serializer extends ConditionSerializer<VehicleRidingCondition> {
 
         @Override
-        public MapCodec<IsRidingCondition> codec() {
+        public MapCodec<VehicleRidingCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsRidingCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, VehicleRidingCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding")
                     .setDescription("Checks whether the \"actor\" entity is directly riding the \"target\" entity. In the context of this condition, the \"actor\" is the passenger & the entity that fulfilled the condition, while the \"target\" is the entity that is being ridden.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these conditions must be fulfilled by either or both the \"actor\" & \"target\" entities.")
-                    .addExampleObject(new IsRidingCondition(List.of()))
-                    .addExampleObject(new IsRidingCondition(List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("pig"))))))))));
+                    .addExampleObject(new VehicleRidingCondition(List.of()))
+                    .addExampleObject(new VehicleRidingCondition(List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("pig"))))))))));
         }
     }
 

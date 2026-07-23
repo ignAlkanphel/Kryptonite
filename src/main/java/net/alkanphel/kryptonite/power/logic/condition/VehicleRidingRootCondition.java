@@ -21,11 +21,11 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-public record IsRidingRootCondition(List<BiCondition> biEntityConditions) implements Condition {
+public record VehicleRidingRootCondition(List<BiCondition> biEntityConditions) implements Condition {
 
-    public static final MapCodec<IsRidingRootCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<VehicleRidingRootCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(c -> c.biEntityConditions)
-    ).apply(instance, IsRidingRootCondition::new));
+    ).apply(instance, VehicleRidingRootCondition::new));
 
     @Override
     public boolean test(DataContext context) {
@@ -38,24 +38,24 @@ public record IsRidingRootCondition(List<BiCondition> biEntityConditions) implem
     }
 
     @Override
-    public ConditionSerializer<IsRidingRootCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_RIDING_ROOT.get();
+    public ConditionSerializer<VehicleRidingRootCondition> getSerializer() {
+        return KryptoniteConditionSerializers.VEHICLE_RIDING_ROOT.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsRidingRootCondition> {
+    public static class Serializer extends ConditionSerializer<VehicleRidingRootCondition> {
 
         @Override
-        public MapCodec<IsRidingRootCondition> codec() {
+        public MapCodec<VehicleRidingRootCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsRidingRootCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Riding Root")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, VehicleRidingRootCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Vehicle Riding Root")
                     .setDescription("Checks whether the \"actor\" entity is indirectly riding the \"target\" entity. In the context of this condition, the \"actor\" is the passenger & the entity that fulfilled the condition, while the \"target\" is the entity that is being indirectly ridden (at the start of the riding chain).")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these conditions must be fulfilled by either or both the \"actor\" & and \"target\" entities.")
-                    .addExampleObject(new IsRidingRootCondition(List.of()))
-                    .addExampleObject(new IsRidingRootCondition(List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("pig"))))))))));
+                    .addExampleObject(new VehicleRidingRootCondition(List.of()))
+                    .addExampleObject(new VehicleRidingRootCondition(List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("pig"))))))))));
         }
     }
 
