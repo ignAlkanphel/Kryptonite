@@ -2,8 +2,9 @@
   "name": "Modify Knockback", "icon": "minecraft:ice",
 
   "abilities": {
-    "modify_knockback": {
+    "modify_knockback_self": {
       "type": "kryptonite:modify_knockback",
+      "apply_to": "self",
       "strength_modifiers": {
         "operation": "add_base_early",
         "amount": 0.75
@@ -16,9 +17,16 @@
         "operation": "add_base_early",
         "amount": 0
       },
-      "entity_actions": {
+      "target_actions": {
         "type": "palladium:run_command",
-        "command": "say modify_knockback action(s)!"
+        "command": "say Modify Knockback SELF target actions!"
+      },
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Modify Knockback SELF (target_action)!"
+        }
       },
       "state": {
         "enabling": {
@@ -27,8 +35,47 @@
         }
       },
       "properties": {
+        "title": "Modify Knockback (Self)",
         "icon": "minecraft:stick",
         "list_index": 0
+      }
+    },
+    "modify_knockback_other": {
+      "type": "kryptonite:modify_knockback",
+      "apply_to": "other",
+      "strength_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0.75
+      },
+      "ratio_x_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0
+      },
+      "ratio_z_modifiers": {
+        "operation": "add_base_early",
+        "amount": 0
+      },
+      "target_actions": {
+        "type": "palladium:run_command",
+        "command": "say Modify Knockback OTHER target actions!"
+      },
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "say Modify Knockback OTHER (target_action)!"
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Modify Knockback (Other)",
+        "icon": "minecraft:blaze_rod",
+        "list_index": 1
       }
     }
   }

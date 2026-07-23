@@ -1,0 +1,40 @@
+{
+  "name": "Bedrock Breaking", "icon": "minecraft:bedrock",
+
+  "abilities": {
+    "bedrock_breaking": {
+      "type": "kryptonite:modify_block_destroy_speed",
+      "modifiers": {
+        "operation": "set_total",
+        "amount": 0.1
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:bedrock"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Bedrock Breaking",
+        "icon": "minecraft:diamond_pickaxe",
+        "list_index": 0
+      }
+    },
+    "bedrock_breaking_loot": {
+      "type": "kryptonite:action_on_block_break",
+      "only_when_harvested": false,
+      "block_actions": {
+        "type": "kryptonite:run_command",
+        "command": "loot spawn ~ ~ ~ loot kandor:blocks/bedrock"
+      },
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:bedrock"
+      }
+    }
+  }
+}

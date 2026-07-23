@@ -13,6 +13,7 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
+import net.alkanphel.kryptonite.registry.KryptoniteAttachments;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -23,13 +24,15 @@ import org.slf4j.Logger;
 @Mod(Kryptonite.MOD_ID)
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class Kryptonite {
+
     public static final String MOD_ID = "kryptonite";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static KryptoniteProxy PROXY = new KryptoniteProxy();
 
     public Kryptonite(IEventBus modEventBus, ModContainer modContainer) {
 
-        KryptoniteParticles.register(modEventBus);
+        KryptoniteParticles.PARTICLE_TYPES.register(modEventBus);
+        KryptoniteAttachments.ATTACHMENT_TYPES.register(modEventBus);
         KryptoniteActionSerializers.ACTION_SERIALIZERS.register(modEventBus);
         KryptoniteAbilitySerializers.ABILITIES_SERIALIZERS.register(modEventBus);
         KryptoniteConditionSerializers.CONDITIONS_SERIALIZERS.register(modEventBus);

@@ -225,29 +225,6 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
-    @SubscribeEvent // Modify Knockback ability
-    public static void onLivingKnockback(LivingKnockBackEvent e) {
-        LivingEntity entity = e.getEntity();
-
-        var instances = AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get());
-        if (instances.isEmpty()) return;
-
-        float strength = e.getStrength();
-        double ratioX = e.getRatioX();
-        double ratioZ = e.getRatioZ();
-
-        for (AbilityInstance<ModifyKnockbackAbility> instance : instances) {
-            strength = instance.getAbility().applyStrength(strength, entity, instance);
-            ratioX = instance.getAbility().applyRatioX(ratioX, entity, instance);
-            ratioZ = instance.getAbility().applyRatioZ(ratioZ, entity, instance);
-            instance.getAbility().runActions(entity);
-        }
-
-        e.setStrength(strength);
-        e.setRatioX(ratioX);
-        e.setRatioZ(ratioZ);
-    }
-
     @SubscribeEvent
     public static void onLivingUseTotem(LivingUseTotemEvent e) {
         LivingEntity entity = e.getEntity();

@@ -103,8 +103,8 @@ public class IntangibilityAbility extends Ability {
             builder.setDescription("Makes the entity intangible to certain blocks.")
                     .addOptional("vertical_conditions", TYPE_CONDITION_LIST, "If specified, the entity will only phase downward (vertically) through blocks if these conditions are fulfilled.", FalseCondition.INSTANCE)
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only blocks fulfilling these conditions are phased through. If omitted, all blocks are phased through.")
-                    .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
                     .addOptional("render_type", SettingType.enumList(RenderType.values()), "How the environment is rendered while phasing through blocks.", RenderType.DEFAULT)
+                    .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
                     .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, List.of(), RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire")))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
