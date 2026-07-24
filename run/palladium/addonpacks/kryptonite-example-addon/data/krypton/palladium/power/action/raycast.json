@@ -1,0 +1,69 @@
+{
+  "name": "Raycast", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "raycast_action": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:raycast",
+        "distance": 16,
+        "include_blocks": true,
+        "include_entities": true,
+        "shape_type": "visual",
+        "fluid_handling": "any",
+        "pre_actions": {
+          "type": "palladium:run_command",
+          "command": "say pre action!"
+        },
+        "hit_actions": {
+          "type": "palladium:run_command",
+          "command": "say hit action"
+        },
+        "miss_actions": {
+          "type": "palladium:run_command",
+          "command": "say miss action!"
+        },
+        "bientity_actions": {
+          "type": "kryptonite:tame"
+        },
+        "block_actions": {
+          "type": "kryptonite:offset",
+          "block_actions": {
+            "type": "kryptonite:spawn_entity",
+            "entity_type": "minecraft:creeper",
+            "entity_nbt": {
+              "Health": 20.0,
+              "CustomName": "Aw, Man"
+            },
+            "entity_actions": {
+              "type": "palladium:run_command",
+              "command": "effect give @s glowing 5 0 true"
+            }
+          },
+          "y": 1.0
+        },
+        "action_at_hit": {
+          "type": "palladium:run_command",
+          "command": "say action at hit!"
+        },
+        "action_along_ray": {
+          "type": "palladium:run_command",
+          "command": "say action along ray!"
+        },
+        "action_step": 1,
+        "action_along_ray_only_on_hit": true
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Raycast",
+        "icon": "minecraft:blaze_rod",
+        "list_index": 0
+      }
+    }
+  }
+}

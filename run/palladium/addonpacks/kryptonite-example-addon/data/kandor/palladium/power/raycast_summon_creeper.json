@@ -1,0 +1,44 @@
+{
+  "name": "Raycast (Summon Creeper)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "raycast_creeper": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:raycast",
+        "distance": 20,
+        "include_blocks": true,
+        "include_entities": true,
+        "shape_type": "visual",
+        "fluid_handling": "any",
+        "block_actions": {
+          "type": "kryptonite:offset",
+          "block_actions": {
+            "type": "kryptonite:spawn_entity",
+            "entity_type": "minecraft:creeper",
+            "entity_nbt": {
+              "Health": 20,
+              "CustomName": "Aw, Man"
+            },
+            "entity_actions": {
+              "type": "palladium:run_command",
+              "command": "effect give @s glowing 5 0 true"
+            }
+          },
+          "y": 1.0
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Raycast (Summon Creeper)",
+        "icon": "minecraft:creeper_head",
+        "list_index": 0
+      }
+    }
+  }
+}

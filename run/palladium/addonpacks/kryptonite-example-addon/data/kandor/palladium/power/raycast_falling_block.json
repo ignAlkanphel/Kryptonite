@@ -1,0 +1,31 @@
+{
+  "name": "Raycast (Falling Block)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "raycast_falling_block_action": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:raycast",
+        "distance": 32,
+        "include_blocks": true,
+        "include_entities": true,
+        "shape_type": "visual",
+        "fluid_handling": "any",
+        "block_actions": {
+          "type": "kryptonite:falling_block"
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Raycast (Falling Block)",
+        "icon": "minecraft:sand",
+        "list_index": 0
+      }
+    }
+  }
+}

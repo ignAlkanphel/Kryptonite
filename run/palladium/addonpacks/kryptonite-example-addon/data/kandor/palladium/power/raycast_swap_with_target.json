@@ -1,0 +1,49 @@
+{
+  "name": "Raycast (Swap With Target)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "da_raycast": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:raycast",
+        "distance": 32,
+        "include_blocks": true,
+        "include_entities": true,
+        "shape_type": "outline",
+        "fluid_handling": "any",
+        "bientity_actions": {
+          "type": "kryptonite:target_action",
+          "actions": [
+            {
+              "type": "palladium:run_command",
+              "command": "summon armor_stand ~ ~ ~ {Tags:[\"tp_marker\"],Invisible:1b,Marker:1b,NoGravity:1b}"
+            },
+            {
+              "type": "palladium:run_command",
+              "command": "tp @s Dev"
+            },
+            {
+              "type": "palladium:run_command",
+              "command": "tp Dev @e[tag=tp_marker,limit=1]"
+            },
+            {
+              "type": "palladium:run_command",
+              "command": "kill @e[tag=tp_marker]"
+            }
+          ]
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Raycast (Swap With Target)",
+        "icon": "minecraft:ender_pearl",
+        "list_index": 0
+      }
+    }
+  }
+}
