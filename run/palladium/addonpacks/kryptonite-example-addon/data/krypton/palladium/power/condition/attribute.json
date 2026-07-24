@@ -5,8 +5,6 @@
     "attribute_strength": {
       "type": "palladium:command",
       "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have an attack damage attribute of 10 or greater!\"}"],
-      "commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:attribute",

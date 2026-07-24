@@ -33,7 +33,7 @@ public class ModifyBlockRenderAbility extends Ability {
     public static final MapCodec<ModifyBlockRenderAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockConditions),
             BlockState.CODEC.fieldOf("block_state").forGetter(ab -> ab.blockState),
-            Mode.CODEC.optionalFieldOf("mode", Mode.REFRESH_VISIBLE).forGetter(ab -> ab.mode),
+            Mode.CODEC.optionalFieldOf("chunk_mode", Mode.REFRESH_VISIBLE).forGetter(ab -> ab.mode),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyBlockRenderAbility::new));
 
@@ -58,7 +58,7 @@ public class ModifyBlockRenderAbility extends Ability {
     @Override
     public void lastTick(LivingEntity entity, AbilityInstance<?> abilityInstance) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, new S2CModifyBlockRender(this.mode));
+            PacketDistributor.sendToPlayer(serverPlayer, new S2CModifyBlockRender(Mode.REFRESH_ALL));
         }
     }
 
@@ -87,9 +87,9 @@ public class ModifyBlockRenderAbility extends Ability {
             builder.setDescription("Modifies how a block would look like to the player that has this ability.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only blocks fulfilling these conditions will have their rendering modified.")
                     .add("block_state", TYPE_BLOCK_STATE, "The block state to render in place of the specified block.")
-                    .addOptional("mode", SettingType.enumList(Mode.values()), "How the block visuals are updated on the client. \"refresh_all\" forces a full world update and loads all chunks again, while the \"refresh_visible\" field updates currently visible chunks asynchronously & is less performance taxing.", Mode.REFRESH_VISIBLE)
+                    .addOptional("chunk_mode", SettingType.enumList(Mode.values()), "How the block visuals are updated on the client. Mode \"refresh_all\" reloads all chunks again. Mode \"refresh_visible\" updates currently visible chunks in sections & is less performance taxing due to that. Regardless of which, \"refresh_all\" activates on the last tick of the ability.", Mode.REFRESH_VISIBLE)
                     .addExampleObject(new ModifyBlockRenderAbility(List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sponge")))))), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyBlockRenderAbility(List.of(), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ModifyBlockRenderAbility(List.of(), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_ALL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

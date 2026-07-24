@@ -1,0 +1,24 @@
+{
+  "name": "Switch Hotbar Slot", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "switch_hotbar_slot": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:switch_hotbar_slot",
+        "slot": 4
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Switch Hotbar Slot",
+        "icon": "minecraft:chest",
+        "list_index": 0
+      }
+    }
+  }
+}

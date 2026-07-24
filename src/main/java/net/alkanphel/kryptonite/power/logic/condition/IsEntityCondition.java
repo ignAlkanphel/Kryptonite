@@ -18,6 +18,7 @@ import net.minecraft.world.entity.projectile.arrow.*;
 import net.minecraft.world.entity.raid.Raider;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
@@ -75,7 +76,7 @@ public record IsEntityCondition(Type type) implements Condition {
         public void addDocumentation(CodecDocumentationBuilder<Condition, IsEntityCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is Entity")
                     .setDescription("Checks what \"instanceof\" type the entity is. \"existing\" simply checks if the entity exists.")
-                    .addOptional("type", TYPE_STRING, "The \"instanceof\" type.", Type.EXISTING)
+                    .addOptional("type", SettingType.enumList(Type.values()), "The \"instanceof\" type.", Type.EXISTING)
                     .addExampleObject(new IsEntityCondition(Type.EXISTING))
                     .addExampleObject(new IsEntityCondition(Type.LIVING));
         }

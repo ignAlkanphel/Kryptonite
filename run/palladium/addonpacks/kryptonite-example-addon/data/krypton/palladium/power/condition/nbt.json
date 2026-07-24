@@ -5,8 +5,6 @@
     "nbt": {
       "type": "palladium:command",
       "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the correct NBT data!\"}"],
-      "commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:nbt",

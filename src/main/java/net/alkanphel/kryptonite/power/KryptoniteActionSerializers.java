@@ -30,6 +30,7 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, RespawnTeleportAction.Serializer> RESPAWN_TELEPORT = ACTION_SERIALIZERS.register("respawn_teleport", RespawnTeleportAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetFallDistanceAction.Serializer> SET_FALL_DISTANCE = ACTION_SERIALIZERS.register("set_fall_distance", SetFallDistanceAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetOnFireAction.Serializer> SET_ON_FIRE = ACTION_SERIALIZERS.register("set_on_fire", SetOnFireAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, SwitchHotbarSlotAction.Serializer> SWITCH_HOTBAR_SLOT = ACTION_SERIALIZERS.register("switch_hotbar_slot", SwitchHotbarSlotAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehicleDismountAction.Serializer> VEHICLE_DISMOUNT = ACTION_SERIALIZERS.register("vehicle_dismount", VehicleDismountAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehiclePassengerActionAction.Serializer> VEHICLE_PASSENGER_ACTION = ACTION_SERIALIZERS.register("vehicle_passenger_action", VehiclePassengerActionAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehicleRidingActionAction.Serializer> VEHICLE_RIDING_ACTION = ACTION_SERIALIZERS.register("vehicle_riding_action", VehicleRidingActionAction.Serializer::new);

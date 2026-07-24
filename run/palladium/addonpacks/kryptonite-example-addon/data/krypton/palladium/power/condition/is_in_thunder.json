@@ -1,0 +1,15 @@
+{
+  "name": "Is In Thunder", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "is_in_thunder": {
+      "type": "palladium:command",
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"In thunder!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:is_in_thunder"
+        }
+      }
+    }
+  }
+}

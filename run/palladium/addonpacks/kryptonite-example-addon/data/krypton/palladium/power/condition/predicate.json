@@ -4,7 +4,6 @@
   "abilities": {
     "predicate_forest": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the correct fulfilled predicate (krypton:is_forest)!\"}"],
       "last_tick_commands": [],
       "state": {
@@ -16,9 +15,7 @@
     },
     "predicate_raining": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the correct fulfilled predicate (krypton:is_raining)!\"}"],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:predicate",

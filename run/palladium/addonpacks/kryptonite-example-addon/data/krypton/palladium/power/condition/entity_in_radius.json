@@ -5,8 +5,6 @@
     "entity_in_radius": {
       "type": "palladium:command",
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"The count of entity within a radius of 10 is greater or equal to 5!\"}"],
-      "first_tick_commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:entity_in_radius",
@@ -19,8 +17,6 @@
     "entity_in_radius_sheep": {
       "type": "palladium:command",
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"The count of sheep within a radius of 10 is greater or equal to 5!\"}"],
-      "first_tick_commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:entity_in_radius",

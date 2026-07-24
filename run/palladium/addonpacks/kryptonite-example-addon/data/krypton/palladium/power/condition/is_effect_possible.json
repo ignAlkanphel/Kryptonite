@@ -4,7 +4,6 @@
   "abilities": {
     "is_effect_possible": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["effect give @s minecraft:glowing 1 0 true"],
       "last_tick_commands": ["effect clear @s minecraft:glowing"],
       "state": {

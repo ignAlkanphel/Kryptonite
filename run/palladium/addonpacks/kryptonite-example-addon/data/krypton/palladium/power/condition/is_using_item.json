@@ -4,9 +4,7 @@
   "abilities": {
     "is_using_item": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are using an item!\"}"],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:is_using_item"
@@ -15,9 +13,7 @@
     },
     "is_using_item_max_stack_16": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"aqua\",\"text\":\"You are using an item with a max stack size of 1!\"}"],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:is_using_item",

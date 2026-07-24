@@ -13,6 +13,7 @@ public class KryptoniteConditionSerializers {
 
     public static final DeferredHolder<ConditionSerializer<?>, AdvancementCondition.Serializer> ADVANCEMENT = CONDITIONS_SERIALIZERS.register("advancement", AdvancementCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, AttributeCondition.Serializer> ATTRIBUTE = CONDITIONS_SERIALIZERS.register("attribute", AttributeCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, AirCondition.Serializer> AIR = CONDITIONS_SERIALIZERS.register("air", AirCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockBreakingCondition.Serializer> BLOCK_BREAKING = CONDITIONS_SERIALIZERS.register("block_breaking", BlockBreakingCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockCollisionCondition.Serializer> BLOCK_COLLISION = CONDITIONS_SERIALIZERS.register("block_collision", BlockCollisionCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockCollisionHorizontalCondition.Serializer> BLOCK_COLLISION_HORIZONTAL = CONDITIONS_SERIALIZERS.register("block_collision_horizontal", BlockCollisionHorizontalCondition.Serializer::new);
@@ -33,6 +34,8 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsEntityCondition.Serializer> IS_ENTITY = CONDITIONS_SERIALIZERS.register("is_entity", IsEntityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsGlowingCondition.Serializer> IS_GLOWING = CONDITIONS_SERIALIZERS.register("is_glowing", IsGlowingCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsTamedCondition.Serializer> IS_TAMED = CONDITIONS_SERIALIZERS.register("is_tamed", IsTamedCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsInSnowCondition.Serializer> IS_IN_SNOW = CONDITIONS_SERIALIZERS.register("is_in_snow", IsInSnowCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsInThunderCondition.Serializer> IS_IN_THUNDER = CONDITIONS_SERIALIZERS.register("is_in_thunder", IsInThunderCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingCorrectToolCondition.Serializer> IS_USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("is_using_correct_tool", IsUsingCorrectToolCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);

@@ -5,8 +5,6 @@
     "advancement": {
       "type": "palladium:command",
       "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the correct advancement (minecraft:story/smelt_iron)!\"}"],
-      "commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:advancement",
@@ -17,8 +15,6 @@
     "advancement_double": {
       "type": "palladium:command",
       "first_tick_commands": ["tellraw @s {\"color\":\"blue\",\"text\":\"You have the correct advancement (minecraft:story/mine_stone) & (minecraft:story/smelt_iron)!\"}"],
-      "commands": [],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:advancement",

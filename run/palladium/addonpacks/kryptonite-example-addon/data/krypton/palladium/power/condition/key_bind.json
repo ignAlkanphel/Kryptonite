@@ -4,9 +4,7 @@
   "abilities": {
     "key_bind": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"Key pressed!\"}"],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:key_bind",
@@ -19,9 +17,7 @@
     },
     "key_bind_continuous": {
       "type": "palladium:command",
-      "first_tick_commands": [],
       "commands": ["tellraw @s {\"color\":\"red\",\"text\":\"Key pressed continuously!\"}"],
-      "last_tick_commands": [],
       "state": {
         "enabling": {
           "type": "kryptonite:key_bind",

@@ -4,7 +4,7 @@
   "abilities": {
     "modify_block_render_refresh_visible": {
       "type": "kryptonite:modify_block_render",
-      "mode": "refresh_visible",
+      "chunk_mode": "refresh_visible",
       "block_conditions": {
         "type": "kryptonite:block",
         "block": "minecraft:stone"
@@ -26,7 +26,7 @@
     },
     "modify_block_render_refresh_all": {
       "type": "kryptonite:modify_block_render",
-      "mode": "refresh_all",
+      "chunk_mode": "refresh_all",
       "block_conditions": {
         "type": "kryptonite:block",
         "block": "minecraft:stone"

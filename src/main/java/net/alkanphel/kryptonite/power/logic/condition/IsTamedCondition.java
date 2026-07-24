@@ -14,6 +14,7 @@ import net.threetag.palladium.logic.context.DataContext;
 public class IsTamedCondition implements Condition {
 
     public static final IsTamedCondition INSTANCE = new IsTamedCondition();
+
     public static final MapCodec<IsTamedCondition> CODEC = MapCodec.unit(INSTANCE);
     public static final StreamCodec<RegistryFriendlyByteBuf, IsTamedCondition> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
@@ -41,7 +42,7 @@ public class IsTamedCondition implements Condition {
         public void addDocumentation(CodecDocumentationBuilder<Condition, IsTamedCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is Tamed")
                     .setDescription("Checks if the entity is tamed.")
-                    .addExampleObject(new IsTamedCondition());
+                    .addExampleObject(INSTANCE);
         }
     }
 
