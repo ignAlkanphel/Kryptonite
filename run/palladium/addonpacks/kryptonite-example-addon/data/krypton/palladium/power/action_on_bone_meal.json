@@ -1,0 +1,13 @@
+{
+  "name": "Action On Bone Meal", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_bone_meal": {
+      "type": "kryptonite:action_on_bone_meal",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on Bone Meal!"
+      }
+    }
+  }
+}

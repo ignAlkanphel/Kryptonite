@@ -8,9 +8,11 @@ import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Objects;
@@ -25,8 +27,10 @@ public record OwnerBiCondition() implements BiCondition {
         Entity actor = context.actor();
         Entity target = context.target();
 
-        return (target instanceof TamableAnimal tameableTarget && Objects.equals(actor, tameableTarget.getOwner())) ||
-               (target instanceof OwnableEntity ownableTarget && Objects.equals(actor, ownableTarget.getOwner()));
+        return (target instanceof TamableAnimal tameableTarget && Objects.equals(actor, tameableTarget.getOwner()))
+                || (target instanceof OwnableEntity ownableTarget && Objects.equals(actor, ownableTarget.getOwner()))
+                || (target instanceof Projectile projectile && Objects.equals(actor, projectile.getOwner()))
+                || (target instanceof AreaEffectCloud cloud && Objects.equals(actor, cloud.getOwner()));
     }
 
     @Override
@@ -44,7 +48,7 @@ public record OwnerBiCondition() implements BiCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, OwnerBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Owner")
-                    .setDescription("Checks whether the actor entity is the owner of the tamable target entity.")
+                    .setDescription("Checks whether the actor entity is the owner of the target entity.")
                     .addExampleObject(new OwnerBiCondition());
         }
     }

@@ -10,10 +10,18 @@
           "type": "kryptonite:block_in",
           "block_conditions": {
             "type": "kryptonite:offset",
-            "block_conditions": {
-              "type": "kryptonite:block",
-              "block": "#minecraft:wool"
-            },
+            "block_conditions": [
+              {
+                "type": "kryptonite:block",
+                "block": "#minecraft:wool"
+              },
+              {
+                "type": "kryptonite:not",
+                "conditions": {
+                  "type": "kryptonite:is_in_rain"
+                }
+              }
+            ],
             "y": -1
           }
         }

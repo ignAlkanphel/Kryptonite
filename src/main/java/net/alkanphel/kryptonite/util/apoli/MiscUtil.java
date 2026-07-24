@@ -83,6 +83,38 @@ public class MiscUtil {
         };
     }
 
+    @Nullable
+    public static ExplosionDamageCalculator createExplosionDamageCalculator(@Nullable Predicate<BlockConditionContext> indestructibleCondition, float resistance, @Nullable Predicate<Entity> damageEntityCondition) {
+        if (indestructibleCondition == null && damageEntityCondition == null) {
+            return null;
+        }
+
+        return new ExplosionDamageCalculator() {
+
+            @Override
+            public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter level, BlockPos pos, BlockState block, FluidState fluid) {
+                if (indestructibleCondition == null) {
+                    return super.getBlockExplosionResistance(explosion, level, pos, block, fluid);
+                }
+
+                Optional<Float> defaultValue = super.getBlockExplosionResistance(explosion, level, pos, block, fluid);
+                Optional<Float> newValue = indestructibleCondition.test(new BlockConditionContext((Level) level, pos)) ? Optional.of(resistance) : Optional.empty();
+
+                return defaultValue.flatMap(defVal -> newValue.map(newVal -> defVal > newVal ? defVal : newVal));
+            }
+
+            @Override
+            public boolean shouldBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state, float power) {
+                return indestructibleCondition == null || !indestructibleCondition.test(new BlockConditionContext((Level) level, pos));
+            }
+
+            @Override
+            public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
+                return damageEntityCondition == null || damageEntityCondition.test(entity);
+            }
+        };
+    }
+
 
     // ------------------------------------------------------------------------------------------------------------------------
 

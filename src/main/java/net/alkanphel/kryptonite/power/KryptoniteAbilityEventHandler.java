@@ -559,6 +559,20 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
+    @SubscribeEvent // Acton On Bone Meal ability
+    public static void onBlockBoneMeal(BonemealEvent e) {
+        if (!(e.getPlayer() instanceof LivingEntity living) || !e.isValidBonemealTarget()) return;
+
+        Level level = e.getLevel();
+        if (level.isClientSide()) return;
+
+        for (AbilityInstance<ActionOnBoneMealAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_BONE_MEAL.get())) {
+            if (instance.getAbility().doesApply(level, e.getPos())) {
+                instance.getAbility().runActions(living, level, e.getPos());
+            }
+        }
+    }
+
 
     // ------------------------------------------------------------------------------------------------------------------------
 

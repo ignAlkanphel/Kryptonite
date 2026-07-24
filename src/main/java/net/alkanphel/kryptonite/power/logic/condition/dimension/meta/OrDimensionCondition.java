@@ -17,17 +17,21 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public record OrDimensionCondition(List<DimensionCondition> conditions) implements DimensionCondition {
+public record OrDimensionCondition(List<DimensionCondition> dimensionConditions) implements DimensionCondition {
 
     public static final MapCodec<OrDimensionCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            DimensionCondition.LIST_CODEC.fieldOf("conditions").forGetter(OrDimensionCondition::conditions)
-    ).apply(instance, OrDimensionCondition::new));
+            DimensionCondition.LIST_CODEC.optionalFieldOf("dimension_conditions").forGetter(c -> Optional.of(c.dimensionConditions())),
+            DimensionCondition.LIST_CODEC.optionalFieldOf("conditions").forGetter(c -> Optional.empty())
+    ).apply(instance, (dimensionConditions, conditions) ->
+            new OrDimensionCondition(dimensionConditions.orElseGet(() -> conditions.orElse(List.of())))
+    ));
 
     @Override
     public boolean test(DimensionConditionContext context) {
-        for (DimensionCondition condition : this.conditions) {
-            if (condition.test(context)) {
+        for (DimensionCondition dimensionCondition : this.dimensionConditions) {
+            if (dimensionCondition.test(context)) {
                 return true;
             }
         }
@@ -49,8 +53,8 @@ public record OrDimensionCondition(List<DimensionCondition> conditions) implemen
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, OrDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("OR")
-                    .setDescription("Allows you to group multiple dimension conditions into one using the OR logic. At least one of the given dimension conditions must be true for this one to be true aswell.")
-                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions")
+                    .setDescription("Allows you to group multiple dimension conditions into one using the OR logic. At least one of the given dimension conditions must be true for this one to be true aswell. The namespace alias \"palladium:or\" is supported.")
+                    .add("dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions. This field supports aliases: \"dimension_conditions\" & \"conditions\"")
                     .addExampleObject(new OrDimensionCondition(Arrays.asList(new HasEnderDragonFightDimensionCondition(), new AttributesDimensionCondition(EnvironmentAttributeMap.builder().set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES).set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false).build()))));
         }
     }

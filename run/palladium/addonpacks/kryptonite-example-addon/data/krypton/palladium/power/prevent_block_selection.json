@@ -6,7 +6,7 @@
       "type": "kryptonite:prevent_block_selection",
       "block_conditions": {
         "type": "kryptonite:or",
-        "conditions": [
+        "block_conditions": [
           {"type": "kryptonite:block", "block": "minecraft:sand"},
           {"type": "kryptonite:block", "block": "minecraft:red_sand"}
         ]
@@ -28,7 +28,7 @@
       "visual_only": true,
       "block_conditions": {
         "type": "kryptonite:or",
-        "conditions": [
+        "block_conditions": [
           {"type": "kryptonite:block", "block": "minecraft:sand"},
           {"type": "kryptonite:block", "block": "minecraft:red_sand"}
         ]

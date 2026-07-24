@@ -4,8 +4,10 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.condition.block.*;
 import net.alkanphel.kryptonite.power.logic.condition.block.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
 
 public class BlockConditionSerializers {
 
@@ -14,6 +16,12 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, AndBlockCondition.Serializer> AND = BLOCK_CONDITION_SERIALIZERS.register("and", AndBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, OrBlockCondition.Serializer> OR = BLOCK_CONDITION_SERIALIZERS.register("or", OrBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, NotBlockCondition.Serializer> NOT = BLOCK_CONDITION_SERIALIZERS.register("not", NotBlockCondition.Serializer::new);
+
+    static {
+        BLOCK_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        BLOCK_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        BLOCK_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
 
     public static final DeferredHolder<BlockConditionSerializer<?>, AdjacentBlockCondition.Serializer> ADJACENT = BLOCK_CONDITION_SERIALIZERS.register("adjacent", AdjacentBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, AttachableBlockCondition.Serializer> ATTACHABLE = BLOCK_CONDITION_SERIALIZERS.register("attachable", AttachableBlockCondition.Serializer::new);
@@ -29,6 +37,9 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, FrictionBlockCondition.Serializer> FRICTION = BLOCK_CONDITION_SERIALIZERS.register("friction", FrictionBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, HeightBlockCondition.Serializer> HEIGHT = BLOCK_CONDITION_SERIALIZERS.register("height", HeightBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, IsBlockBlockCondition.Serializer> IS_BLOCK = BLOCK_CONDITION_SERIALIZERS.register("is_block", IsBlockBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, IsInRainBlockCondition.Serializer> IS_IN_RAIN = BLOCK_CONDITION_SERIALIZERS.register("is_in_rain", IsInRainBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, IsInSnowBlockCondition.Serializer> IS_IN_SNOW = BLOCK_CONDITION_SERIALIZERS.register("is_in_snow", IsInSnowBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, IsInThunderBlockCondition.Serializer> IS_IN_THUNDER = BLOCK_CONDITION_SERIALIZERS.register("is_in_thunder", IsInThunderBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, LightBlockingBlockCondition.Serializer> LIGHT_BLOCKING = BLOCK_CONDITION_SERIALIZERS.register("light_blocking", LightBlockingBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, LightLevelBlockCondition.Serializer> LIGHT_LEVEL = BLOCK_CONDITION_SERIALIZERS.register("light_level", LightLevelBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, MovementBlockingBlockCondition.Serializer> MOVEMENT_BLOCKING = BLOCK_CONDITION_SERIALIZERS.register("movement_blocking", MovementBlockingBlockCondition.Serializer::new);

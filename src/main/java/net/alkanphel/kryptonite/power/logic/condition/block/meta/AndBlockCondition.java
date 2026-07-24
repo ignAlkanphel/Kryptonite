@@ -20,17 +20,21 @@ import net.threetag.palladium.util.NumberComparator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public record AndBlockCondition(List<BlockCondition> conditions) implements BlockCondition {
+public record AndBlockCondition(List<BlockCondition> blockConditions) implements BlockCondition {
 
     public static final MapCodec<AndBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.LIST_CODEC.fieldOf("conditions").forGetter(AndBlockCondition::conditions)
-    ).apply(instance, AndBlockCondition::new));
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions").forGetter(c -> Optional.of(c.blockConditions())),
+            BlockCondition.LIST_CODEC.optionalFieldOf("conditions").forGetter(c -> Optional.empty())
+    ).apply(instance, (blockConditions, conditions) ->
+            new AndBlockCondition(blockConditions.orElseGet(() -> conditions.orElse(List.of())))
+    ));
 
     @Override
     public boolean test(BlockConditionContext context) {
-        for (BlockCondition condition : this.conditions) {
-            if (!condition.test(context)) {
+        for (BlockCondition blockCondition : this.blockConditions) {
+            if (!blockCondition.test(context)) {
                 return false;
             }
         }
@@ -52,8 +56,8 @@ public record AndBlockCondition(List<BlockCondition> conditions) implements Bloc
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, AndBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("AND")
-                    .setDescription("Allows you to group multiple block conditions into one using the AND logic. All of the given block conditions must be true for this one to be true aswell.")
-                    .add("conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "List of conditions")
+                    .setDescription("Allows you to group multiple block conditions into one using the AND logic. All of the given block conditions must be true for this one to be true aswell. The namespace alias \"palladium:and\" is supported.")
+                    .add("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "List of block conditions. This field supports aliases: \"block_conditions\" & \"conditions\"")
                     .addExampleObject(new AndBlockCondition(Arrays.asList(new FrictionBlockCondition(NumberComparator.EQUALS, new StaticValue(0.98)), new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("ice"))))))));
         }
     }

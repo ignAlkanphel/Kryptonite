@@ -4,8 +4,10 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.condition.damage.*;
 import net.alkanphel.kryptonite.power.logic.condition.damage.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
 
 public class DamageConditionSerializers {
 
@@ -14,6 +16,12 @@ public class DamageConditionSerializers {
     public static final DeferredHolder<DamageConditionSerializer<?>, AndDamageCondition.Serializer> AND = DAMAGE_CONDITION_SERIALIZERS.register("and", AndDamageCondition.Serializer::new);
     public static final DeferredHolder<DamageConditionSerializer<?>, NotDamageCondition.Serializer> NOT = DAMAGE_CONDITION_SERIALIZERS.register("not", NotDamageCondition.Serializer::new);
     public static final DeferredHolder<DamageConditionSerializer<?>, OrDamageCondition.Serializer> OR = DAMAGE_CONDITION_SERIALIZERS.register("or", OrDamageCondition.Serializer::new);
+
+    static {
+        DAMAGE_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        DAMAGE_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        DAMAGE_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
 
     public static final DeferredHolder<DamageConditionSerializer<?>, AmountDamageCondition.Serializer> AMOUNT = DAMAGE_CONDITION_SERIALIZERS.register("amount", AmountDamageCondition.Serializer::new);
     public static final DeferredHolder<DamageConditionSerializer<?>, AttackerDamageCondition.Serializer> ATTACKER = DAMAGE_CONDITION_SERIALIZERS.register("attacker", AttackerDamageCondition.Serializer::new);

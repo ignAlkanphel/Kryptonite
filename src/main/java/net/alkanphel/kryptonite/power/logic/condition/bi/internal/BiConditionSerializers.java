@@ -4,8 +4,10 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.condition.bi.*;
 import net.alkanphel.kryptonite.power.logic.condition.bi.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
 
 public class BiConditionSerializers {
     public static final DeferredRegister<BiConditionSerializer<?>> BI_CONDITION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.BI_CONDITION_SERIALIZER, Kryptonite.MOD_ID);
@@ -19,6 +21,12 @@ public class BiConditionSerializers {
     public static final DeferredHolder<BiConditionSerializer<?>, TargetConditionBiCondition.Serializer> TARGET_CONDITION = BI_CONDITION_SERIALIZERS.register("target_condition", TargetConditionBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, InvertBiCondition.Serializer> INVERT = BI_CONDITION_SERIALIZERS.register("invert", InvertBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, UndirectedBiCondition.Serializer> UNDIRECTED = BI_CONDITION_SERIALIZERS.register("undirected", UndirectedBiCondition.Serializer::new);
+
+    static {
+        BI_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        BI_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        BI_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
 
     public static final DeferredHolder<BiConditionSerializer<?>, AttackerBiCondition.Serializer> ATTACKER = BI_CONDITION_SERIALIZERS.register("attacker", AttackerBiCondition.Serializer::new);
     public static final DeferredHolder<BiConditionSerializer<?>, AttackTargetBiCondition.Serializer> ATTACK_TARGET = BI_CONDITION_SERIALIZERS.register("attack_target", AttackTargetBiCondition.Serializer::new);

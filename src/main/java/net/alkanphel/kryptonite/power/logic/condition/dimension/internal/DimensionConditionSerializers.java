@@ -4,8 +4,10 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.*;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.meta.*;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
 
 public class DimensionConditionSerializers {
 
@@ -14,6 +16,12 @@ public class DimensionConditionSerializers {
     public static final DeferredHolder<DimensionConditionSerializer<?>, NotDimensionCondition.Serializer> NOT = DIMENSION_CONDITION_SERIALIZERS.register("not", NotDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, OrDimensionCondition.Serializer> OR = DIMENSION_CONDITION_SERIALIZERS.register("or", OrDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, AndDimensionCondition.Serializer> AND = DIMENSION_CONDITION_SERIALIZERS.register("and", AndDimensionCondition.Serializer::new);
+
+    static {
+        DIMENSION_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        DIMENSION_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        DIMENSION_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
 
     public static final DeferredHolder<DimensionConditionSerializer<?>, AmbientLightDimensionCondition.Serializer> AMBIENT_LIGHT = DIMENSION_CONDITION_SERIALIZERS.register("ambient_light", AmbientLightDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, AttributesDimensionCondition.Serializer> ATTRIBUTES = DIMENSION_CONDITION_SERIALIZERS.register("attributes", AttributesDimensionCondition.Serializer::new);

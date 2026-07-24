@@ -15,6 +15,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockUseAbility.Serializer> ACTION_ON_BLOCK_USE = ABILITIES_SERIALIZERS.register("action_on_block_use", ActionOnBlockUseAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnBoneMealAbility.Serializer> ACTION_ON_BONE_MEAL = ABILITIES_SERIALIZERS.register("action_on_bone_meal", ActionOnBoneMealAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnCallbackAbility.Serializer> ACTION_ON_CALLBACK = ABILITIES_SERIALIZERS.register("action_on_callback", ActionOnCallbackAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnCriticalHitAbility.Serializer> ACTION_ON_CRITICAL_HIT = ABILITIES_SERIALIZERS.register("action_on_critical_hit", ActionOnCriticalHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnDeathAbility.Serializer> ACTION_ON_DEATH = ABILITIES_SERIALIZERS.register("action_on_death", ActionOnDeathAbility.Serializer::new);

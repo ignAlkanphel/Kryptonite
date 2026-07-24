@@ -1,0 +1,33 @@
+{
+  "name": "Explode", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "explode": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:explode",
+        "power": 2,
+        "destruction_type": "mob",
+        "damage_self": false,
+        "damage_bientity_conditions": {
+          "type": "kryptonite:target_condition",
+          "conditions": {
+            "type": "palladium:entity_type",
+            "entity_type": "minecraft:villager"
+          }
+        }
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Explode",
+        "icon": "minecraft:tnt",
+        "list_index": 0
+      }
+    }
+  }
+}

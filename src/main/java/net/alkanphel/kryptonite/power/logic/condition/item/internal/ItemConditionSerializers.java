@@ -1,12 +1,13 @@
 package net.alkanphel.kryptonite.power.logic.condition.item.internal;
 
 import net.alkanphel.kryptonite.Kryptonite;
-import net.alkanphel.kryptonite.power.logic.condition.item.CooldownRelativeItemCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.*;
 import net.alkanphel.kryptonite.power.logic.condition.item.meta.*;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
 
 public class ItemConditionSerializers {
 
@@ -15,6 +16,12 @@ public class ItemConditionSerializers {
     public static final DeferredHolder<ItemConditionSerializer<?>, AndItemCondition.Serializer> AND = ITEM_CONDITION_SERIALIZERS.register("and", AndItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, NotItemCondition.Serializer> NOT = ITEM_CONDITION_SERIALIZERS.register("not", NotItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, OrItemCondition.Serializer> OR = ITEM_CONDITION_SERIALIZERS.register("or", OrItemCondition.Serializer::new);
+
+    static {
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
 
     public static final DeferredHolder<ItemConditionSerializer<?>, AmountItemCondition.Serializer> AMOUNT = ITEM_CONDITION_SERIALIZERS.register("amount", AmountItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, BlockItemCondition.Serializer> BLOCK_ITEM = ITEM_CONDITION_SERIALIZERS.register("block_item", BlockItemCondition.Serializer::new);

@@ -17,17 +17,21 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public record NotDimensionCondition(List<DimensionCondition> conditions) implements DimensionCondition {
+public record NotDimensionCondition(List<DimensionCondition> dimensionConditions) implements DimensionCondition {
 
     public static final MapCodec<NotDimensionCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            DimensionCondition.LIST_CODEC.fieldOf("conditions").forGetter(NotDimensionCondition::conditions)
-    ).apply(instance, NotDimensionCondition::new));
+            DimensionCondition.LIST_CODEC.optionalFieldOf("dimension_conditions").forGetter(c -> Optional.of(c.dimensionConditions())),
+            DimensionCondition.LIST_CODEC.optionalFieldOf("conditions").forGetter(c -> Optional.empty())
+    ).apply(instance, (dimensionConditions, conditions) ->
+            new NotDimensionCondition(dimensionConditions.orElseGet(() -> conditions.orElse(List.of())))
+    ));
 
     @Override
     public boolean test(DimensionConditionContext context) {
-        for (DimensionCondition condition : this.conditions) {
-            if (condition.test(context)) {
+        for (DimensionCondition dimensionCondition : this.dimensionConditions) {
+            if (dimensionCondition.test(context)) {
                 return false;
             }
         }
@@ -49,8 +53,8 @@ public record NotDimensionCondition(List<DimensionCondition> conditions) impleme
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, NotDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("NOT")
-                    .setDescription("Allows you to group multiple dimension conditions into one using the NOT logic. None of the given dimension conditions must be true for this one to be true aswell.")
-                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions")
+                    .setDescription("Allows you to group multiple dimension conditions into one using the NOT logic. None of the given dimension conditions must be true for this one to be true aswell. The namespace alias \"palladium:not\" is supported.")
+                    .add("dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions. This field supports aliases: \"dimension_conditions\" & \"conditions\"")
                     .addExampleObject(new NotDimensionCondition(Arrays.asList(new HasEnderDragonFightDimensionCondition(), new AttributesDimensionCondition(EnvironmentAttributeMap.builder().set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES).set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false).build()))));
         }
     }
