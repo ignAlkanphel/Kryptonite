@@ -31,6 +31,7 @@
   "palladium.ability.kryptonite.intangibility": "Intangibility",
   "palladium.ability.kryptonite.modify_block_destroy_speed": "Modify Block Destroy Speed",
   "palladium.ability.kryptonite.modify_block_harvest": "Modify Block Harvest",
+  "palladium.ability.kryptonite.modify_block_render": "Modify Block Render",
   "palladium.ability.kryptonite.modify_damage_dealt": "Modify Damage Dealt",
   "palladium.ability.kryptonite.modify_damage_taken": "Modify Damage Taken",
   "palladium.ability.kryptonite.modify_damage_tint": "Modify Damage Tint",

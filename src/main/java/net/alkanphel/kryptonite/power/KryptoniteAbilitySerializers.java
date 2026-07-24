@@ -43,6 +43,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, IntangibilityAbility.Serializer> INTANGIBILITY = ABILITIES_SERIALIZERS.register("intangibility", IntangibilityAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockDestroySpeedAbility.Serializer> MODIFY_BLOCK_DESTROY_SPEED = ABILITIES_SERIALIZERS.register("modify_block_destroy_speed", ModifyBlockDestroySpeedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockHarvestAbility.Serializer> MODIFY_BLOCK_HARVEST = ABILITIES_SERIALIZERS.register("modify_block_harvest", ModifyBlockHarvestAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockRenderAbility.Serializer> MODIFY_BLOCK_RENDER = ABILITIES_SERIALIZERS.register("modify_block_render", ModifyBlockRenderAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageDealtAbility.Serializer> MODIFY_DAMAGE_DEALT = ABILITIES_SERIALIZERS.register("modify_damage_dealt", ModifyDamageDealtAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageTakenAbility.Serializer> MODIFY_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("modify_damage_taken", ModifyDamageTakenAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageTintAbility.Serializer> MODIFY_DAMAGE_TINT = ABILITIES_SERIALIZERS.register("modify_damage_tint", ModifyDamageTintAbility.Serializer::new);

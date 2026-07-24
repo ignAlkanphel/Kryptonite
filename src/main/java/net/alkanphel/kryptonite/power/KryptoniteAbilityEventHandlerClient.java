@@ -2,6 +2,7 @@ package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.IntangibilityAbility;
+import net.alkanphel.kryptonite.power.ability.ModifyBlockRenderAbility;
 import net.alkanphel.kryptonite.power.ability.PreventBlockSelectionAbility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
@@ -10,14 +11,34 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @EventBusSubscriber(modid = Kryptonite.MOD_ID, value = Dist.CLIENT)
 public class KryptoniteAbilityEventHandlerClient {
+
+    @SubscribeEvent // Modify Block Render
+    public static void onClientTick(ClientTickEvent.Post event) {
+        var mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            ModifyBlockRenderAbility.Cache.set(List.of());
+            return;
+        }
+
+        List<ModifyBlockRenderAbility> abilities = AbilityUtil.getEnabledInstances(mc.player, KryptoniteAbilitySerializers.MODIFY_BLOCK_RENDER.get())
+                .stream()
+                .map(AbilityInstance::getAbility)
+                .collect(Collectors.toList());
+
+        ModifyBlockRenderAbility.Cache.set(abilities);
+    }
 
     @SubscribeEvent // Prevent Intangibility ability
     static void renderFog(ViewportEvent.RenderFog e) {

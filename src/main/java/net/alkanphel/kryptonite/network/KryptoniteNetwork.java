@@ -21,6 +21,7 @@ public class KryptoniteNetwork {
         // Server -> Client
         registrar.playToClient(S2CSyncAttacker.TYPE, S2CSyncAttacker.STREAM_CODEC, S2CSyncAttacker::handle);
         registrar.playToClient(S2CDisplayItemActivation.TYPE, S2CDisplayItemActivation.STREAM_CODEC, S2CDisplayItemActivation::handle);
+        registrar.playToClient(S2CModifyBlockRender.TYPE, S2CModifyBlockRender.STREAM_CODEC, S2CModifyBlockRender::handle);
     }
 
 }

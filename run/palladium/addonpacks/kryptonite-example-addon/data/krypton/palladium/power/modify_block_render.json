@@ -1,0 +1,50 @@
+{
+  "name": "Modify Block Render", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_block_render_refresh_visible": {
+      "type": "kryptonite:modify_block_render",
+      "mode": "refresh_visible",
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:stone"
+      },
+      "block_state": {
+        "Name": "minecraft:diamond_block"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Refresh Visible",
+        "icon": "minecraft:diamond_block",
+        "list_index": 0
+      }
+    },
+    "modify_block_render_refresh_all": {
+      "type": "kryptonite:modify_block_render",
+      "mode": "refresh_all",
+      "block_conditions": {
+        "type": "kryptonite:block",
+        "block": "minecraft:stone"
+      },
+      "block_state": {
+        "Name": "minecraft:diamond_block"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      },
+      "properties": {
+        "title": "Refresh All",
+        "icon": "minecraft:diamond_block",
+        "list_index": 1
+      }
+    }
+  }
+}

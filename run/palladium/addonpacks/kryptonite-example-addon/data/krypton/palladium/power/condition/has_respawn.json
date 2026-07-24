@@ -1,0 +1,17 @@
+{
+  "name": "Has Respawn", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "has_respawn": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have a respawn point set!\"}"],
+      "commands": [],
+      "last_tick_commands": [],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_respawn"
+        }
+      }
+    }
+  }
+}

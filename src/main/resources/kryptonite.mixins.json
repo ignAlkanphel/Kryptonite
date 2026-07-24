@@ -41,6 +41,7 @@
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.ScreenEffectRendererMixin",
+    "client.RenderSectionRegionMixin",
     "client.SlimeBlockMixin",
     "client.SweetBerryBushBlockMixin",
     "client.WebBlockMixin"
