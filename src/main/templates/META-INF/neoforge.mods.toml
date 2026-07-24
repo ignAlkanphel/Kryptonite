@@ -46,4 +46,11 @@ modId = "lambdynlights"
 type = "optional"
 versionRange = "${lambdynamiclights_version_range}"
 ordering = "NONE"
+
+side = "CLIENT"
+[[dependencies."${mod_id}"]]
+modId = "shouldersurfing"
+type = "optional"
+versionRange = "${shouldersurfing_version_range}"
+ordering = "NONE"
 side = "CLIENT"

@@ -1,0 +1,5 @@
+{
+  "entrypoints": [
+    "net.alkanphel.kryptonite.power.compat.shouldersurfing.ShoulderSurfingCompatClient"
+  ]
+}

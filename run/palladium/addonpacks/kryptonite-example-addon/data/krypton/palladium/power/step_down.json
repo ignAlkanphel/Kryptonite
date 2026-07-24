@@ -1,6 +1,6 @@
 {
-  "name": "Step Down", "icon": "minecraft:diamond_boots",
-
+  "name": "Step Down",
+  "icon": "minecraft:diamond_boots",
   "abilities": {
     "step_down": {
       "type": "kryptonite:step_down",
@@ -9,16 +9,12 @@
       "safety_checks": true,
       "allow_vehicles": true,
       "state": {
-        "enabling": [
-          {
-            "type": "palladium:not",
-            "conditions": [
-              {
-                "type": "palladium:in_water"
-              }
-            ]
+        "enabling": {
+          "type": "palladium:not",
+          "conditions": {
+            "type": "palladium:in_water"
           }
-        ]
+        }
       }
     }
   }

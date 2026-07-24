@@ -1,0 +1,29 @@
+{
+  "name": "Shoulder Surfing", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "shoulder_surfing": {
+      "type": "kryptonite:shoulder_surfing",
+      "camera_coupling": true,
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "shoulder_surfing_loaded": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"red\",\"text\":\"You do not have the Shoulder Surfing mod installed!\"}"],
+      "state": {
+        "enabling": {
+          "type": "palladium:not",
+          "conditions": {
+            "type": "palladium:mod_loaded",
+            "mod_id": "shouldersurfing"
+          }
+        }
+      }
+    }
+  }
+}

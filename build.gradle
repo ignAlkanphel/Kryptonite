@@ -124,6 +124,9 @@ dependencies {
         }
     }
 
+    // Shoulder Surfing
+    compileOnly("maven.modrinth:shoulder-surfing-reloaded:${shouldersurfing_version}")
+
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -137,6 +140,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
                              player_animation_lib_version            : player_animation_lib_version,
                              lambdynamiclights_version      : lambdynamiclights_version,
                              lambdynamiclights_version_range      : lambdynamiclights_version_range,
+                             shouldersurfing_version      : shouldersurfing_version,
+                             shouldersurfing_version_range      : shouldersurfing_version_range,
                              mod_id                 : mod_id,
                              mod_name               : mod_name,
                              mod_license            : mod_license,

@@ -80,6 +80,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileAccuracyAbility.Serializer> PROJECTILE_ACCURACY = ABILITIES_SERIALIZERS.register("projectile_accuracy", ProjectileAccuracyAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ProjectileImpactAbility.Serializer> PROJECTILE_IMPACT = ABILITIES_SERIALIZERS.register("projectile_impact", ProjectileImpactAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ShakingAbility.Serializer> SHAKING = ABILITIES_SERIALIZERS.register("shaking", ShakingAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ShoulderSurfingAbility.Serializer> SHOULDER_SURFING = ABILITIES_SERIALIZERS.register("shoulder_surfing", ShoulderSurfingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, StepDownAbility.Serializer> STEP_DOWN = ABILITIES_SERIALIZERS.register("step_down", StepDownAbility.Serializer::new);
 
 }

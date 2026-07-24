@@ -106,6 +106,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_ACCURACY, "Projectile Accuracy");
             this.addAbility(KryptoniteAbilitySerializers.PROJECTILE_IMPACT, "Projectile Impact");
             this.addAbility(KryptoniteAbilitySerializers.SHAKING, "Shaking");
+            this.addAbility(KryptoniteAbilitySerializers.SHOULDER_SURFING, "Shoulder Surfing");
             this.addAbility(KryptoniteAbilitySerializers.STEP_DOWN, "Step Down");
 
             // Datapack
