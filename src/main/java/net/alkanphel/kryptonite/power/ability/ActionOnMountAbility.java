@@ -54,11 +54,7 @@ public class ActionOnMountAbility extends Ability {
     }
 
     public boolean doesApply(LivingEntity holder, Entity vehicle) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, vehicle)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, vehicle);
     }
 
     public void runActions(LivingEntity holder, Entity vehicle) {

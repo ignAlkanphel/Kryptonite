@@ -33,10 +33,12 @@ public class ItemConditionSerializers {
     public static final DeferredHolder<ItemConditionSerializer<?>, DurabilityRelativeItemCondition.Serializer> DURABILITY_RELATIVE = ITEM_CONDITION_SERIALIZERS.register("durability_relative", DurabilityRelativeItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, EmptyItemCondition.Serializer> EMPTY = ITEM_CONDITION_SERIALIZERS.register("empty", EmptyItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, EnchantableItemCondition.Serializer> ENCHANTABLE = ITEM_CONDITION_SERIALIZERS.register("enchantable", EnchantableItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, EnchantmentItemCondition.Serializer> ENCHANTMENT = ITEM_CONDITION_SERIALIZERS.register("enchantment", EnchantmentItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, EquipableItemCondition.Serializer> EQUIPABLE = ITEM_CONDITION_SERIALIZERS.register("equipable", EquipableItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, FuelItemCondition.Serializer> FUEL = ITEM_CONDITION_SERIALIZERS.register("fuel", FuelItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, HolderConditionItemCondition.Serializer> HOLDER_CONDITION = ITEM_CONDITION_SERIALIZERS.register("holder_condition", HolderConditionItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, ItemItemCondition.Serializer> ITEM = ITEM_CONDITION_SERIALIZERS.register("item", ItemItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, ModLoadedItemCondition.Serializer> MOD_LOADED = ITEM_CONDITION_SERIALIZERS.register("mod_loaded", ModLoadedItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, OnCooldownItemCondition.Serializer> ON_COOLDOWN = ITEM_CONDITION_SERIALIZERS.register("on_cooldown", OnCooldownItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, RepairableItemCondition.Serializer> REPAIRABLE = ITEM_CONDITION_SERIALIZERS.register("repairable", RepairableItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, SmeltableItemCondition.Serializer> SMELTABLE = ITEM_CONDITION_SERIALIZERS.register("smeltable", SmeltableItemCondition.Serializer::new);

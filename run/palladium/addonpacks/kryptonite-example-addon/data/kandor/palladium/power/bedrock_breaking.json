@@ -14,14 +14,21 @@
       },
       "state": {
         "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "toggle"
+          "type": "kryptonite:equipment",
+          "equipment_slot": "mainhand",
+          "item_conditions": [
+            {
+              "type": "kryptonite:item",
+              "item": "#minecraft:pickaxes"
+            },
+            {
+              "type": "kryptonite:enchantment",
+              "enchantment": "minecraft:efficiency",
+              "comparator": ">=",
+              "compare_to": 5
+            }
+          ]
         }
-      },
-      "properties": {
-        "title": "Bedrock Breaking",
-        "icon": "minecraft:diamond_pickaxe",
-        "list_index": 0
       }
     },
     "bedrock_breaking_loot": {

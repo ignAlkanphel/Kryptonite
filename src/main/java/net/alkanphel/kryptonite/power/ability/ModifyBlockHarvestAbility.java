@@ -61,11 +61,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
     }
 
     public boolean doesApply(SavedBlockPosition savedBlockPosition) {
-        if (!blockConditions.isEmpty() && !BlockCondition.checkConditions(blockConditions, savedBlockPosition)) {
-            return false;
-        }
-
-        return true;
+        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, savedBlockPosition);
     }
 
     public static Optional<Boolean> resolve(LivingEntity entity, SavedBlockPosition savedBlock) {

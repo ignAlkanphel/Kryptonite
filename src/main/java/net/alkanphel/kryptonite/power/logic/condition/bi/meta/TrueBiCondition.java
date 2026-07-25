@@ -38,7 +38,7 @@ public final class TrueBiCondition implements BiCondition {
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, TrueBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("TRUE")
                     .setDescription("It's just true. That's it.")
-                    .addExampleObject(new TrueBiCondition());
+                    .addExampleObject(INSTANCE);
         }
     }
 

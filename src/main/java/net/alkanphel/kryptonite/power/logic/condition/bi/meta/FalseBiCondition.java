@@ -38,7 +38,7 @@ public final class FalseBiCondition implements BiCondition {
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, FalseBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("FALSE")
                     .setDescription("It's just false. That's it.")
-                    .addExampleObject(new FalseBiCondition());
+                    .addExampleObject(INSTANCE);
         }
     }
 

@@ -44,7 +44,7 @@ public class IsGlowingCondition implements Condition {
         public void addDocumentation(CodecDocumentationBuilder<Condition, IsGlowingCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is Glowing")
                     .setDescription("Checks if the entity has a glowing outline (e.g. the \"minecraft:glowing\" effect).")
-                    .addExampleObject(new IsGlowingCondition());
+                    .addExampleObject(INSTANCE);
         }
     }
 

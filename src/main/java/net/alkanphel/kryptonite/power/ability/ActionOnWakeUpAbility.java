@@ -47,11 +47,7 @@ public class ActionOnWakeUpAbility extends Ability {
     }
 
     public boolean doesApply(BlockPos pos, LivingEntity entity) {
-        if (!blockConditions.isEmpty() && !BlockCondition.checkConditions(blockConditions, entity.level(), pos)) {
-            return false;
-        }
-
-        return true;
+        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, entity.level(), pos);
     }
 
     public void runActions(BlockPos pos, Direction direction, LivingEntity entity) {

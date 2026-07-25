@@ -51,11 +51,7 @@ public class ActionOnTameAbility extends Ability {
     }
 
     public boolean doesApply(Player tamer, Animal animal) {
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, tamer, animal)) {
-            return false;
-        }
-
-        return true;
+        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, tamer, animal);
     }
 
     public void runActions(Player tamer, Animal animal) {
