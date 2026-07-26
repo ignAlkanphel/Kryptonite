@@ -21,6 +21,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, BlockInCondition.Serializer> BLOCK_IN = CONDITIONS_SERIALIZERS.register("block_in", BlockInCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockOnCondition.Serializer> BLOCK_ON = CONDITIONS_SERIALIZERS.register("block_on", BlockOnCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, CalendarCondition.Serializer> CALENDAR = CONDITIONS_SERIALIZERS.register("calendar", CalendarCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, DamageImmunityCondition.Serializer> DAMAGE_IMMUNITY = CONDITIONS_SERIALIZERS.register("damage_immunity", DamageImmunityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, DimensionWrapperCondition.Serializer> DIMENSION = CONDITIONS_SERIALIZERS.register("dimension", DimensionWrapperCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, DistanceFromCoordinatesCondition.Serializer> DISTANCE_FROM_COORDINATES = CONDITIONS_SERIALIZERS.register("distance_from_coordinates", DistanceFromCoordinatesCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, KeyBindCondition.Serializer> KEY_BIND = CONDITIONS_SERIALIZERS.register("key_bind", KeyBindCondition.Serializer::new);

@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class ModifyKnockbackAbility extends Ability {
 
     public static final MapCodec<ModifyKnockbackAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

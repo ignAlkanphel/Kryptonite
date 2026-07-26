@@ -1,0 +1,22 @@
+{
+  "name": "Damage Immunity", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "damage_immunity": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have are immune to either cactus OR explosion damage!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:damage_immunity",
+          "damage_type": {
+            "type": "neoforge:or",
+            "values": [
+              "minecraft:cactus",
+              "#minecraft:is_explosion"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
