@@ -15,7 +15,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
 import java.util.List;
 
-public class ShoulderSurfingAbility extends Ability {
+public class ShoulderSurfingAbility extends Ability { // TODO Expand
 
     public static final MapCodec<ShoulderSurfingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Value.CODEC.optionalFieldOf("camera_coupling", new StaticValue(false)).forGetter(ab -> ab.cameraCoupling),

@@ -32,6 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.VanillaGameEvent;
 import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
@@ -50,6 +51,11 @@ import java.util.List;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public class KryptoniteAbilityEventHandler {
+
+    @SubscribeEvent // Modify Entity Type Tag ability
+    public static void onDatapackSync(OnDatapackSyncEvent event) {
+        event.getRelevantPlayers().forEach(ModifyEntityTypeTagAbility::sendTagCache);
+    }
 
     @SubscribeEvent // Modify Knockback ability (capture)
     public static void onCaptureIncomingDamageKnockback(LivingIncomingDamageEvent e) {

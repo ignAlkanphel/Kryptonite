@@ -4,6 +4,7 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.IntangibilityAbility;
 import net.alkanphel.kryptonite.power.ability.ModifyBlockRenderAbility;
 import net.alkanphel.kryptonite.power.ability.PreventBlockSelectionAbility;
+import net.alkanphel.kryptonite.util.apoli.internal.InternalClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +16,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 
@@ -23,6 +25,14 @@ import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID, value = Dist.CLIENT)
 public class KryptoniteAbilityEventHandlerClient {
+
+    @SubscribeEvent // Modify Entity Type Tag ability
+    public static void onClientWorldChanged(LevelEvent.Unload event) {
+        var level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        InternalClient.onClientWorldChanged();
+    }
 
     @SubscribeEvent // Modify Block Render
     public static void onClientTick(ClientTickEvent.Post event) {

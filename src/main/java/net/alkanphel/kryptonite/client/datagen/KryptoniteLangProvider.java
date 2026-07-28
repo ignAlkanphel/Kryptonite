@@ -75,6 +75,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN, "Modify Damage Taken");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_DAMAGE_TINT, "Modify Damage Tint");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_EFFECTS, "Modify Effects");
+            this.addAbility(KryptoniteAbilitySerializers.MODIFY_ENTITY_TYPE_TAG, "Modify Entity Type Tag");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_FOG_TYPE, "Modify Fog Type");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_FRICTION, "Modify Friction");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_HEALING, "Modify Healing");

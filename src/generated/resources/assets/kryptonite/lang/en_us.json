@@ -37,6 +37,7 @@
   "palladium.ability.kryptonite.modify_damage_taken": "Modify Damage Taken",
   "palladium.ability.kryptonite.modify_damage_tint": "Modify Damage Tint",
   "palladium.ability.kryptonite.modify_effects": "Modify Effects",
+  "palladium.ability.kryptonite.modify_entity_type_tag": "Modify Entity Type Tag",
   "palladium.ability.kryptonite.modify_fog_type": "Modify Fog Type",
   "palladium.ability.kryptonite.modify_friction": "Modify Friction",
   "palladium.ability.kryptonite.modify_healing": "Modify Healing",

@@ -1,0 +1,16 @@
+{
+  "name": "Modify Entity Type Tag", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "modify_entity_type_tag": {
+      "type": "kryptonite:modify_entity_type_tag",
+      "tag": "minecraft:powder_snow_walkable_mobs",
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    }
+  }
+}

@@ -3,8 +3,10 @@ package net.alkanphel.kryptonite.mixin.common;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.util.apoli.access.EntityLinkedType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +20,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
+
+    @ModifyReturnValue(method = "getType", at = @At("RETURN"))
+    private EntityType<?> kryptonite$modifyTypeTag(EntityType<?> original) {
+        if (original instanceof EntityLinkedType linkedType) {
+            linkedType.kryptonite$setEntity((Entity) (Object) this);
+        }
+
+        return original;
+    }
 
     // Action On Land ability
     @Inject(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;fallOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;D)V"))
