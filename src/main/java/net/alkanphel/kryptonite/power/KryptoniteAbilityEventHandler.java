@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -635,8 +637,7 @@ public class KryptoniteAbilityEventHandler {
     public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
         LivingEntity newTarget = e.getNewAboutToBeSetTarget();
 
-        if (newTarget == null) return;
-        if (!(e.getEntity() instanceof Mob mob)) return;
+        if (newTarget == null || !(e.getEntity() instanceof Mob mob)) return;
 
         if (PreventMobAggroAbility.shouldIgnore(newTarget, mob)) {
             e.setCanceled(true);
@@ -693,21 +694,40 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
-    @SubscribeEvent // Prevent Game Event ability
+    @SubscribeEvent(priority = EventPriority.HIGHEST) // Prevent Game Event ability
     public static void onVanillaGameEvent(VanillaGameEvent e) {
-        Entity cause = e.getCause();
-        if (!(cause instanceof LivingEntity living)) return;
+        if (!(e.getCause() instanceof LivingEntity living)) return;
 
-        var instances = AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())
-                .stream()
-                .map(AbilityInstance::getAbility)
-                .filter(ability -> ability.doesPrevent(living, e.getVanillaEvent()))
-                .toList();
+        for (AbilityInstance<PreventGameEventAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get())) {
+            if (instance.getAbility().doesPrevent(living, e.getVanillaEvent())) {
+                instance.getAbility().runActions(living);
+                e.setCanceled(true);
+                return; // stops actions running for 'Action On Game Event'
+            }
+        }
 
-        if (instances.isEmpty()) return;
+        // Action On Game Event ability
+        for (AbilityInstance<ActionOnGameEventAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_GAME_EVENT.get())) {
+            if (instance.getAbility().doesApply(living, e.getVanillaEvent())) {
+                instance.getAbility().runActions(living);
+            }
+        }
+    }
 
-        instances.forEach(ability -> ability.runActions(living));
-        e.setCanceled(true);
+    @SubscribeEvent // Game Event Listener ability
+    public static void onVanillaGameEventII(VanillaGameEvent e) {
+        if (e.isCanceled() || !(e.getLevel() instanceof ServerLevel serverLevel)) return;
+
+        int notificationRadius = e.getVanillaEvent().value().notificationRadius();
+        AABB aabb = new AABB(e.getEventPosition().x - notificationRadius, e.getEventPosition().y - notificationRadius, e.getEventPosition().z - notificationRadius, e.getEventPosition().x + notificationRadius, e.getEventPosition().y + notificationRadius, e.getEventPosition().z + notificationRadius);
+
+        for (LivingEntity listener : serverLevel.getEntitiesOfClass(LivingEntity.class, aabb)) {
+            for (AbilityInstance<GameEventListenerAbility> instance : AbilityUtil.getEnabledInstances(listener, KryptoniteAbilitySerializers.GAME_EVENT_LISTENER.get())) {
+                if (instance.getAbility().doesListen(listener, instance, e)) {
+                    instance.getAbility().run(listener, e);
+                }
+            }
+        }
     }
 
     @SubscribeEvent // Prevent Sleeping ability
@@ -734,10 +754,11 @@ public class KryptoniteAbilityEventHandler {
 
     @SubscribeEvent // Action On Jump ability
     public static void onLivingJump(LivingEvent.LivingJumpEvent e) {
-        LivingEntity entity = e.getEntity();
+        LivingEntity living = e.getEntity();
 
-        AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.ACTION_ON_JUMP.get())
-                .forEach(instance -> instance.getAbility().runActions(entity));
+        for (AbilityInstance<ActionOnJumpAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_JUMP.get())) {
+            instance.getAbility().runActions(living);
+        }
     }
 
     @SubscribeEvent // Action On Mount ability
@@ -745,11 +766,10 @@ public class KryptoniteAbilityEventHandler {
         if (!(e.getEntityMounting() instanceof LivingEntity rider)) return;
 
         Entity vehicle = e.getEntityBeingMounted();
-        boolean dismounting = e.isDismounting();
 
         AbilityUtil.getEnabledInstances(rider, KryptoniteAbilitySerializers.ACTION_ON_MOUNT.get())
                 .stream()
-                .filter(instance -> instance.getAbility().switchToDismount == dismounting)
+                .filter(instance -> instance.getAbility().switchToDismount == e.isDismounting())
                 .filter(instance -> instance.getAbility().doesApply(rider, vehicle))
                 .forEach(instance -> instance.getAbility().runActions(rider, vehicle));
     }
@@ -780,10 +800,8 @@ public class KryptoniteAbilityEventHandler {
     public static void onEnderManAnger(EnderManAngerEvent e) {
         if (!(e.getPlayer() instanceof ServerPlayer player)) return;
 
-        var enderman = e.getEntity();
-
         for (AbilityInstance<AllowEndermanStareAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE.get())) {
-            if (instance.getAbility().appliesTo(player, enderman)) {
+            if (instance.getAbility().appliesTo(player, e.getEntity())) {
                 e.setCanceled(true);
                 return;
             }

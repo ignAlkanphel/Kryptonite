@@ -25,21 +25,21 @@ public class PreventGameEventAbility extends Ability {
 
     public static final MapCodec<PreventGameEventAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
-            PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.events),
+            PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventGameEventAbility::new));
 
     public final List<Action> entityActions;
-    public final PalladiumHolderSet<GameEvent> events;
+    public final PalladiumHolderSet<GameEvent> gameEvents;
 
-    public PreventGameEventAbility(List<Action> entityActions, PalladiumHolderSet<GameEvent> events, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventGameEventAbility(List<Action> entityActions, PalladiumHolderSet<GameEvent> gameEvents, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.events = events;
+        this.gameEvents = gameEvents;
     }
 
     public boolean doesPrevent(LivingEntity entity, Holder<GameEvent> event) {
-        return events.resolve(entity.registryAccess()).contains(event);
+        return gameEvents.resolve(entity.registryAccess()).contains(event);
     }
 
     public void runActions(LivingEntity entity) {

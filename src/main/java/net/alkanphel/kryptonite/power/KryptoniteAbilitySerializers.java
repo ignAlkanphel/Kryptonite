@@ -11,8 +11,6 @@ public class KryptoniteAbilitySerializers {
 
     public static final DeferredRegister<AbilitySerializer<?>> ABILITIES_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ABILITY_SERIALIZER, Kryptonite.MOD_ID);
 
-    public static final DeferredHolder<AbilitySerializer<?>, ModifyEntityTypeTagAbility.Serializer> MODIFY_ENTITY_TYPE_TAG = ABILITIES_SERIALIZERS.register("modify_entity_type_tag", ModifyEntityTypeTagAbility.Serializer::new);
-
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBeingUsedAbility.Serializer> ACTION_ON_BEING_USED = ABILITIES_SERIALIZERS.register("action_on_being_used", ActionOnBeingUsedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
@@ -24,6 +22,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnEntityCollisionAbility.Serializer> ACTION_ON_ENTITY_COLLISION = ABILITIES_SERIALIZERS.register("action_on_entity_collision", ActionOnEntityCollisionAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnEntityUseAbility.Serializer> ACTION_ON_ENTITY_USE = ABILITIES_SERIALIZERS.register("action_on_entity_use", ActionOnEntityUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnFarmlandTrampleAbility.Serializer> ACTION_ON_FARMLAND_TRAMPLE = ABILITIES_SERIALIZERS.register("action_on_farmland_trample", ActionOnFarmlandTrampleAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnGameEventAbility.Serializer> ACTION_ON_GAME_EVENT = ABILITIES_SERIALIZERS.register("action_on_game_event", ActionOnGameEventAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnHitAbility.Serializer> ACTION_ON_HIT = ABILITIES_SERIALIZERS.register("action_on_hit", ActionOnHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemDropAbility.Serializer> ACTION_ON_ITEM_DROP = ABILITIES_SERIALIZERS.register("action_on_item_drop", ActionOnItemDropAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnItemFishedAbility.Serializer> ACTION_ON_ITEM_FISHED = ABILITIES_SERIALIZERS.register("action_on_item_fished", ActionOnItemFishedAbility.Serializer::new);
@@ -41,6 +40,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, DynamicLightsAbility.Serializer> DYNAMIC_LIGHTS = ABILITIES_SERIALIZERS.register("dynamic_lights", DynamicLightsAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, FreezeAbility.Serializer> FREEZE = ABILITIES_SERIALIZERS.register("freeze", FreezeAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, GameEventListenerAbility.Serializer> GAME_EVENT_LISTENER = ABILITIES_SERIALIZERS.register("game_event_listener", GameEventListenerAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, GlowingAbility.Serializer> GLOWING = ABILITIES_SERIALIZERS.register("glowing", GlowingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ImmediateRespawnAbility.Serializer> IMMEDIATE_RESPAWN = ABILITIES_SERIALIZERS.register("immediate_respawn", ImmediateRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, IntangibilityAbility.Serializer> INTANGIBILITY = ABILITIES_SERIALIZERS.register("intangibility", IntangibilityAbility.Serializer::new);
@@ -51,6 +51,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageTakenAbility.Serializer> MODIFY_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("modify_damage_taken", ModifyDamageTakenAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyDamageTintAbility.Serializer> MODIFY_DAMAGE_TINT = ABILITIES_SERIALIZERS.register("modify_damage_tint", ModifyDamageTintAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyEffectsAbility.Serializer> MODIFY_EFFECTS = ABILITIES_SERIALIZERS.register("modify_effects", ModifyEffectsAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ModifyEntityTypeTagAbility.Serializer> MODIFY_ENTITY_TYPE_TAG = ABILITIES_SERIALIZERS.register("modify_entity_type_tag", ModifyEntityTypeTagAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyFogTypeAbility.Serializer> MODIFY_FOG_TYPE = ABILITIES_SERIALIZERS.register("modify_fog_type", ModifyFogTypeAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyFrictionAbility.Serializer> MODIFY_FRICTION = ABILITIES_SERIALIZERS.register("modify_friction", ModifyFrictionAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyHealingAbility.Serializer> MODIFY_HEALING = ABILITIES_SERIALIZERS.register("modify_healing", ModifyHealingAbility.Serializer::new);

@@ -1,0 +1,17 @@
+{
+  "name": "Action On Game Event", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "action_on_game_event": {
+      "type": "kryptonite:action_on_game_event",
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say Action on game event!"
+      },
+      "game_events": [
+        "minecraft:hit_ground",
+        "minecraft:step"
+      ]
+    }
+  }
+}

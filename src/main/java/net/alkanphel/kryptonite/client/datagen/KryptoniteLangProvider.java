@@ -48,6 +48,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_COLLISION, "Action On Entity Collision");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_USE, "Action On Entity Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE, "Action On Farmland Trample");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_GAME_EVENT, "Action On Game Event");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_HIT, "Action On Hit");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP, "Action On Item Drop");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
@@ -65,6 +66,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE, "Allow Enderman Stare");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
             this.addAbility(KryptoniteAbilitySerializers.FREEZE, "Freeze");
+            this.addAbility(KryptoniteAbilitySerializers.GAME_EVENT_LISTENER, "Game Event Listener");
             this.addAbility(KryptoniteAbilitySerializers.GLOWING, "Glowing");
             this.addAbility(KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN, "Immediate Respawn");
             this.addAbility(KryptoniteAbilitySerializers.INTANGIBILITY, "Intangibility");

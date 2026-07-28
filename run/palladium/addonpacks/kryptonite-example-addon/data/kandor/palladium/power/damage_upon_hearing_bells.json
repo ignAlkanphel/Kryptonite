@@ -1,0 +1,21 @@
+{
+  "name": "Damage Upon Hearing Bells", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "game_event_listener": {
+      "type": "kryptonite:game_event_listener",
+      "delivery_mode": "by_distance",
+      "range": 32,
+      "bientity_actions": {
+        "type": "kryptonite:target_action",
+        "actions": {
+          "type": "palladium:run_command",
+          "command": "damage @s 2 minecraft:generic"
+        }
+      },
+      "game_events": [
+        "minecraft:block_change"
+      ]
+    }
+  }
+}
