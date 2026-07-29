@@ -36,6 +36,12 @@ repositories {
         url = "https://repo.redlance.org/public"
     }
 
+    // Curios
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+    }
+
     // LambDynamicLights
     maven {
         name = "Gegy"
@@ -116,6 +122,10 @@ dependencies {
 
     // Player Animation Library
     implementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:$player_animation_lib_version")
+
+    // Curios
+    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
+    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     // LambDynamicLights
     compileOnly("dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:${lambdynamiclights_version}") {

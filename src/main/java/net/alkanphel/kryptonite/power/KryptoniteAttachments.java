@@ -1,7 +1,8 @@
-package net.alkanphel.kryptonite.registry;
+package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.ModifyKnockbackAbility;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -20,5 +21,11 @@ public class KryptoniteAttachments {
 
     public static final Supplier<AttachmentType<List<PendingKnockbackModifier>>> PENDING_KNOCKBACK_MODIFIER =
             ATTACHMENT_TYPES.register("pending_knockback_modifier", () -> AttachmentType.builder((Supplier<List<PendingKnockbackModifier>>) ArrayList::new).build());
+
+    public static final class Addon {
+        private Addon() {}
+        public static final Identifier KEEP_INVENTORY = Kryptonite.id("keep_inventory");
+        public static final Identifier IMMEDIATE_RESPAWN = Kryptonite.id("immediate_respawn");
+    }
 
 }

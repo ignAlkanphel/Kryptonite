@@ -1,12 +1,15 @@
 package net.alkanphel.kryptonite.mixin.common;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteAttachments;
 import net.alkanphel.kryptonite.power.ability.*;
+import net.alkanphel.kryptonite.util.AttachmentUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
@@ -37,6 +40,34 @@ public abstract class PlayerMixin extends LivingEntity {
 
     protected PlayerMixin(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    // Keep Inventory ability
+    @Inject(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;dropAll()V"))
+    private void kryptonite$preventKeptItemsFromDropping(CallbackInfo ci) {
+        Player player = (Player) (Object) this;
+        for (AbilityInstance<KeepInventoryAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.KEEP_INVENTORY.get())) {
+            instance.getAbility().preventItemsFromDropping(player);
+        }
+    }
+
+    @Inject(method = "dropEquipment", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;dropAll()V", shift = At.Shift.AFTER))
+    private void kryptonite$restoreKeptItems(CallbackInfo ci) {
+        Player player = (Player) (Object) this;
+        for (AbilityInstance<KeepInventoryAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.KEEP_INVENTORY.get())) {
+            instance.getAbility().restoreSavedItems(player);
+        }
+    }
+
+    // Keep Inventory attachment
+    @ModifyExpressionValue(method = "dropEquipment", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
+    private boolean kryptonite$dropEquipmentKeepInventory(boolean original) {
+        return AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
+    }
+
+    @ModifyExpressionValue(method = "getBaseExperienceReward", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
+    private boolean kryptonite$experienceRewardKeepInventory(boolean original) {
+        return AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
     }
 
     // Prevent Gliding ability

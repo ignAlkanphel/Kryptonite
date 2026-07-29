@@ -1,0 +1,12 @@
+{
+  "name": "Keep Inventory (Hotbar)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "keep_inventory_hotbar": {
+      "type": "kryptonite:keep_inventory",
+      "slots": [
+        "hotbar.*"
+      ]
+    }
+  }
+}

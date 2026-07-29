@@ -4,6 +4,7 @@ import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.IntangibilityAbility;
 import net.alkanphel.kryptonite.power.ability.ModifyBlockRenderAbility;
 import net.alkanphel.kryptonite.power.ability.PreventBlockSelectionAbility;
+import net.alkanphel.kryptonite.util.AttachmentUtil;
 import net.alkanphel.kryptonite.util.apoli.internal.InternalClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DeathScreen;
@@ -86,14 +87,14 @@ public class KryptoniteAbilityEventHandlerClient {
         }
     }
 
-    @SubscribeEvent // Immediate Respawn ability
+    @SubscribeEvent // Immediate Respawn ability & attachment
     public static void onScreenOpening(ScreenEvent.Opening e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return;
 
         if (!(e.getNewScreen() instanceof DeathScreen)) return;
 
-        if (AbilityUtil.isTypeEnabled(mc.player, KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN.get())) {
+        if (AbilityUtil.isTypeEnabled(mc.player, KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN.get()) || AttachmentUtil.getBoolean(mc.player, KryptoniteAttachments.Addon.IMMEDIATE_RESPAWN)) {
             mc.player.respawn();
             e.setNewScreen(null);
         }

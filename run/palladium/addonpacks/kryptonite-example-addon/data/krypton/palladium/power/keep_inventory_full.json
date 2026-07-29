@@ -1,0 +1,9 @@
+{
+  "name": "Keep Inventory (Full)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "keep_inventory_full": {
+      "type": "kryptonite:keep_inventory"
+    }
+  }
+}

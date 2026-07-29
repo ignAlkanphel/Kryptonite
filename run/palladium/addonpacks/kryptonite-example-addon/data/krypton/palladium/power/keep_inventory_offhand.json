@@ -1,0 +1,12 @@
+{
+  "name": "Keep Inventory (Offhand)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "keep_inventory_offhand": {
+      "type": "kryptonite:keep_inventory",
+      "slots": [
+        "weapon.offhand"
+      ]
+    }
+  }
+}

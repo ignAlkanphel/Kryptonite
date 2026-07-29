@@ -1,0 +1,10 @@
+{
+  "name": "Walk On Powder Snow", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "walk_on_powder_snow": {
+      "type": "kryptonite:modify_entity_type_tag",
+      "tag": "minecraft:powder_snow_walkable_mobs"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Keep Inventory (Only Dirt)", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "keep_inventory_only_dirt": {
+      "type": "kryptonite:keep_inventory",
+      "item_conditions": {
+        "type": "kryptonite:item",
+        "item": "minecraft:dirt"
+      }
+    }
+  }
+}

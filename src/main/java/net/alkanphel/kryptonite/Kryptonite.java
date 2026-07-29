@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.alkanphel.kryptonite.client.particle.KryptoniteParticles;
 import net.alkanphel.kryptonite.network.KryptoniteNetwork;
 import net.alkanphel.kryptonite.power.*;
+import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompatImpl;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
@@ -13,10 +14,11 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
-import net.alkanphel.kryptonite.registry.KryptoniteAttachments;
+import net.alkanphel.kryptonite.power.KryptoniteAttachments;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -46,6 +48,10 @@ public class Kryptonite {
         DamageConditionSerializers.DAMAGE_CONDITION_SERIALIZERS.register(modEventBus);
 
         KryptoniteNetwork.init();
+
+        if (ModList.get().isLoaded("curios")) {
+            KryptoniteCuriosCompatImpl.register();
+        }
     }
 
     public static Identifier id(String path) {

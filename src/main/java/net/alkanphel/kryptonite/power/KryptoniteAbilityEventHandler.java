@@ -2,7 +2,6 @@ package net.alkanphel.kryptonite.power;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.ability.*;
-import net.alkanphel.kryptonite.registry.KryptoniteAttachments;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;

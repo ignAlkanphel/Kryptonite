@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.inventory.SlotRanges;
 import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -49,6 +50,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_CLIP_CONTEXT_BLOCK = SettingType.enumList(ClipContext.Block.values());
     SettingType TYPE_CLIP_CONTEXT_FLUID = SettingType.enumList(ClipContext.Fluid.values());
     SettingType TYPE_EQUIPMENT_SLOT_GROUP = SettingType.enumList(EquipmentSlotGroup.values());
+    SettingType TYPE_SLOT_RANGES = SettingType.enumList(SlotRanges.allNames().toList());
     SettingType TYPE_EXPLOSION_INTERACTION = SettingType.enumList(Level.ExplosionInteraction.values());
     SettingType TYPE_DIRECTION = SettingType.enumList(Direction.values());
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
