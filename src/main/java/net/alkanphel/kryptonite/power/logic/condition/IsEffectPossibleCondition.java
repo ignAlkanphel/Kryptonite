@@ -6,11 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
@@ -21,24 +17,20 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
-public record IsEffectPossibleCondition(HolderSet<MobEffect> mobEffect) implements Condition {
+public record IsEffectPossibleCondition(PalladiumHolderSet<MobEffect> mobEffect) implements Condition {
 
     public static final MapCodec<IsEffectPossibleCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.MOB_EFFECT).fieldOf("effects").forGetter(IsEffectPossibleCondition::mobEffect)
+            PalladiumHolderSet.codec(Registries.MOB_EFFECT).fieldOf("effects").forGetter(IsEffectPossibleCondition::mobEffect)
     ).apply(instance, IsEffectPossibleCondition::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsEffectPossibleCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderSet(Registries.MOB_EFFECT), IsEffectPossibleCondition::mobEffect,
-            IsEffectPossibleCondition::new
-    );
 
     @Override
     public boolean test(DataContext context) {
         var entity = context.getLivingEntity();
         if (entity == null) return false;
 
-        for (Holder<MobEffect> effectHolder : mobEffect.stream().toList()) {
+        for (Holder<MobEffect> effectHolder : mobEffect.resolve(entity.registryAccess())) {
             MobEffectInstance dummyInstance = new MobEffectInstance(effectHolder, 1, 0);
 
             MobEffectEvent.Applicable event = new MobEffectEvent.Applicable(entity, dummyInstance, null);
@@ -69,8 +61,8 @@ public record IsEffectPossibleCondition(HolderSet<MobEffect> mobEffect) implemen
             builder.setName("Is Effect Possible")
                     .setDescription("Checks if the entity is NOT immune to the specified effects.")
                     .add("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the effects")
-                    .addExampleObject(new IsEffectPossibleCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))))))
-                    .addExampleObject(new IsEffectPossibleCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue"))))));
+                    .addExampleObject(new IsEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))))
+                    .addExampleObject(new IsEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))));
         }
     }
 

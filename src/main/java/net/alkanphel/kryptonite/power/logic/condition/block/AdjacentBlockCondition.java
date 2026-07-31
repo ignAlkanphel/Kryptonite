@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.util.NumberComparator;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 public record AdjacentBlockCondition(BlockCondition adjacentCondition, NumberComparator comparator, float compareTo) implements BlockCondition {
 
@@ -72,7 +73,7 @@ public record AdjacentBlockCondition(BlockCondition adjacentCondition, NumberCom
                     .add("adjacent_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "The block conditions that need to be fulfilled by adjacent blocks to count towards the check.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
                     .add("compare_to", TYPE_FLOAT, "The value that is being compared against.")
-                    .addExampleObject(new AdjacentBlockCondition(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("iron_ore"))))), NumberComparator.GREATER_OR_EQUAL, 4));
+                    .addExampleObject(new AdjacentBlockCondition(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("iron_ore")))))), NumberComparator.GREATER_OR_EQUAL, 4));
         }
     }
 

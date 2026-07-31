@@ -21,7 +21,7 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.Optional;
 
-public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffect, Optional<Value> minDuration, Optional<Value> maxDuration, Optional<Value> minAmplifier, Optional<Value> maxAmplifier, Optional<Value> hiddenParticles) implements Condition {
+public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffect, Optional<Value> minDuration, Optional<Value> maxDuration, Optional<Value> minAmplifier, Optional<Value> maxAmplifier, Optional<Value> hiddenParticles, Optional<Value> matchAll) implements Condition {
 
     public static final MapCodec<HasEffectCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PalladiumHolderSet.codec(Registries.MOB_EFFECT).optionalFieldOf("effect").forGetter(HasEffectCondition::mobEffect),
@@ -29,7 +29,8 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
             Value.CODEC.optionalFieldOf("max_duration").forGetter(HasEffectCondition::maxDuration),
             Value.CODEC.optionalFieldOf("min_amplifier").forGetter(HasEffectCondition::minAmplifier),
             Value.CODEC.optionalFieldOf("max_amplifier").forGetter(HasEffectCondition::maxAmplifier),
-            Value.CODEC.optionalFieldOf("hidden_particles").forGetter(HasEffectCondition::hiddenParticles)
+            Value.CODEC.optionalFieldOf("hidden_particles").forGetter(HasEffectCondition::hiddenParticles),
+            Value.CODEC.optionalFieldOf("match_all").forGetter(HasEffectCondition::matchAll)
     ).apply(instance, HasEffectCondition::new));
 
     @Override
@@ -37,7 +38,9 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
         var entity = context.getLivingEntity();
         if (entity == null) return false;
 
-        if (mobEffect.isEmpty()) {
+        boolean requireAll = matchAll.map(v -> v.getAsBoolean(context)).orElse(false);
+
+        if (this.mobEffect.isEmpty()) {
             for (MobEffectInstance effectInstance : entity.getActiveEffects()) {
                 if (matches(effectInstance, context)) {
                     return true;
@@ -47,23 +50,53 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
             return false;
         }
 
-        for (Holder<MobEffect> effectHolder : mobEffect.get().resolve(entity.registryAccess())) {
+        for (Holder<MobEffect> effectHolder : this.mobEffect.get().resolve(entity.registryAccess())) {
             MobEffectInstance effectInstance = entity.getEffect(effectHolder);
+            boolean thisMatches = effectInstance != null && matches(effectInstance, context);
 
-            if (effectInstance != null && matches(effectInstance, context)) {
-                return true;
+            if (requireAll) {
+                if (!thisMatches) return false;
+            } else {
+                if (thisMatches) return true;
             }
         }
 
-        return false;
+        return requireAll;
     }
+
+//    @Override
+//    public boolean test(DataContext context) {
+//        var entity = context.getLivingEntity();
+//        if (entity == null) return false;
+//
+//        if (this.mobEffect.isEmpty()) {
+//            for (MobEffectInstance effectInstance : entity.getActiveEffects()) {
+//                if (matches(effectInstance, context)) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        }
+//
+//        for (Holder<MobEffect> effectHolder : this.mobEffect.get().resolve(entity.registryAccess())) {
+//            MobEffectInstance effectInstance = entity.getEffect(effectHolder);
+//
+//            if (effectInstance != null && matches(effectInstance, context)) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     private boolean matches(MobEffectInstance instance, DataContext context) {
         int duration = instance.getDuration();
         int amplifier = instance.getAmplifier();
+        boolean isInfinite = instance.isInfiniteDuration();
 
         boolean durationCheck =
-                minDuration.map(v -> duration >= v.getAsInt(context)).orElse(true)
+                minDuration.map(v -> v.getAsInt(context) == -1 ? isInfinite : duration >= v.getAsInt(context)).orElse(true)
                 && maxDuration.map(v -> duration <= v.getAsInt(context)).orElse(true);
 
         boolean amplifierCheck =
@@ -94,13 +127,14 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
             builder.setName("Has Effect")
                     .setDescription("Checks if the entity has the specified (potion) effect(s). Omitted fields will be ignored.")
                     .add("effect", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the required mob/potion effect")
-                    .addOptional("min_duration", TYPE_VALUE, "Minimum duration in ticks the effect should have left.")
+                    .addOptional("min_duration", TYPE_VALUE, "Minimum duration in ticks the effect should have left. For this field, -1 is explicitly infinite duration.")
                     .addOptional("max_duration", TYPE_VALUE, "Maximum duration in ticks the effect should have left.")
                     .addOptional("min_amplifier", TYPE_VALUE, "Minimum amplifier the effect should have.")
                     .addOptional("max_amplifier", TYPE_VALUE, "Maximum amplifier the effect should have.")
                     .addOptional("hidden_particles", TYPE_VALUE, "If true, the effect must have particles hidden.")
-                    .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
-                    .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))), Optional.of(new StaticValue(30)), Optional.empty(), Optional.of(new StaticValue(1)), Optional.of(new StaticValue(3)), Optional.of(new StaticValue(true))));
+                    .addExampleObject(new HasEffectCondition(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
+                    .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
+                    .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))), Optional.of(new StaticValue(30)), Optional.empty(), Optional.of(new StaticValue(1)), Optional.of(new StaticValue(3)), Optional.of(new StaticValue(true)), Optional.empty()));
         }
     }
 

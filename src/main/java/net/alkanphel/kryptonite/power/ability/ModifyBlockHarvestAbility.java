@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -92,7 +93,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only applies to blocks that fulfill these conditions.")
                     .addOptional("allow", TYPE_BOOLEAN, "If true, allows harvesting. If false, prevents it.", true)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ModifyBlockHarvestAbility(List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))), true, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ModifyBlockHarvestAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))), true, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

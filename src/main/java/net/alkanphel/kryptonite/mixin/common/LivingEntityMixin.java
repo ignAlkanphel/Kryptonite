@@ -60,16 +60,6 @@ public abstract class LivingEntityMixin extends Entity {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(this, packet);
     }
 
-    // Prevent Gliding ability
-    @Inject(method = "updateFallFlying", at = @At("HEAD"))
-    private void kryptonite$preventGlidingI(CallbackInfo ci) {
-        LivingEntity living = (LivingEntity) (Object) this;
-
-        if (living.isFallFlying() && AbilityUtil.isTypeEnabled(living, KryptoniteAbilitySerializers.PREVENT_GLIDING.get())) {
-            this.setSharedFlag(7, false);
-        }
-    }
-
     // Modify Friction ability
     @Redirect(method = "travelInAir", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"))
     private float kryptonite$modifyFriction(BlockState state, net.minecraft.world.level.LevelReader level, BlockPos pos, net.minecraft.world.entity.Entity entity) {

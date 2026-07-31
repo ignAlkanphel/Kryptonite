@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.alkanphel.kryptonite.network.p2c.S2CSyncEntityTypeTagCache;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.util.KryptoniteTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -114,7 +116,7 @@ public class ModifyEntityTypeTagAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyEntityTypeTagAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Entity Type Tag")
                     .setDescription("Makes the entity be apart of the specified entity type tag (including sub-tags).")
-                    .add("tag", TYPE_ENTITY_TYPE_HOLDER_SET, "The specified entity type tag.")
+                    .add("tag", KryptoniteDocumented.TYPE_ENTITY_TYPE_TAG, "The specified entity type tag.")
                     .addExampleObject(new ModifyEntityTypeTagAbility(TagKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("powder_snow_walkable_mobs")), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

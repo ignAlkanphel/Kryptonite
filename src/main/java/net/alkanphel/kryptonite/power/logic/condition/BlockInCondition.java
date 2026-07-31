@@ -18,6 +18,7 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public record BlockInCondition(List<BlockCondition> blockConditions) implements 
                     .setDescription("Checks if a is overlapping with the entity's feet.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the block that is overlapping with the entity's feet.")
                     .addExampleObject(new BlockInCondition(List.of()))
-                    .addExampleObject(new BlockInCondition(List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sand"))))))));
+                    .addExampleObject(new BlockInCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sand")))))))));
         }
     }
 

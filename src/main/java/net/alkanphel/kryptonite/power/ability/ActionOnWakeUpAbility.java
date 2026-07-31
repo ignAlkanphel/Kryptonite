@@ -21,6 +21,7 @@ import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public class ActionOnWakeUpAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when waking up.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run on the block the entity was sleeping on.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs actions if the sleeping block fulfills these conditions.")
-                    .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

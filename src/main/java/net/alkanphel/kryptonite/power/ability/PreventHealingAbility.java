@@ -14,6 +14,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class PreventHealingAbility extends Ability {
 
     public static final MapCodec<PreventHealingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -28,8 +29,8 @@ public class PreventHealingAbility extends Ability {
         this.fullPrevention = fullPrevention;
     }
 
-    public static boolean isFullPrevention(LivingEntity entity, AbilityInstance<PreventHealingAbility> ability) {
-        return ability.isEnabled() && ability.getAbility().fullPrevention.getAsBoolean(DataContext.forAbility(entity, ability));
+    public static boolean isFullPrevention(LivingEntity entity, AbilityInstance<PreventHealingAbility> instance) {
+        return instance.isEnabled() && instance.getAbility().fullPrevention.getAsBoolean(DataContext.forAbility(entity, instance));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class PreventHealingAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventHealingAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents the entity from healing via natural means (e.g. the \"minecraft:natural_health_regeneration\" game rule).")
+            builder.setDescription("Prevents the entity from healing via \"natural\" means (e.g. the \"minecraft:natural_health_regeneration\" game rule).")
                     .addOptional("full_prevention", TYPE_VALUE, "If true, healing from things like potion effects will also be prevented.", false)
                     .addExampleObject(new PreventHealingAbility(new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventHealingAbility(new StaticValue(true), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

@@ -10,30 +10,22 @@ import net.alkanphel.kryptonite.power.logic.context.ItemConditionContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-public record ItemItemCondition(HolderSet<Item> item) implements ItemCondition {
+public record ItemItemCondition(PalladiumHolderSet<Item> item) implements ItemCondition {
 
     public static final MapCodec<ItemItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("item").forGetter(ItemItemCondition::item)
+            PalladiumHolderSet.codec(Registries.ITEM).fieldOf("item").forGetter(ItemItemCondition::item)
     ).apply(instance, ItemItemCondition::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, ItemItemCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderSet(Registries.ITEM), ItemItemCondition::item,
-            ItemItemCondition::new
-    );
 
     @Override
     public boolean test(ItemConditionContext context) {
@@ -58,8 +50,8 @@ public record ItemItemCondition(HolderSet<Item> item) implements ItemCondition {
             builder.setName("Item")
                     .setDescription("Checks if the item is of a certain type.")
                     .add("item", KryptoniteDocumented.TYPE_ITEM_TYPE_HOLDER_SET, "Item IDs or tags this item needs to pass the check.")
-                    .addExampleObject(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))
-                    .addExampleObject(new ItemItemCondition(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.ITEM).getOrThrow(ItemTags.ARROWS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))));
+                    .addExampleObject(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))))
+                    .addExampleObject(new ItemItemCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.ITEM).getOrThrow(ItemTags.ARROWS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))))));
             }
         }
 

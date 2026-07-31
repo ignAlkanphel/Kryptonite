@@ -12,6 +12,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class PreventSprintingAbility extends Ability {
 
     public static final MapCodec<PreventSprintingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

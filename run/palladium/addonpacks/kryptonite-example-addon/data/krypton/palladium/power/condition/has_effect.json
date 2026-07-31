@@ -21,6 +21,44 @@
           "min_amplifier": 1
         }
       }
+    },
+    "has_effect_strength": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the strength effect with an infinite duration!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_effect",
+          "effect": "minecraft:strength",
+          "min_duration": -1
+        }
+      }
+    },
+    "has_effect_fire_resistance_or_resistance": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the resistance OR fire resistance effect!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_effect",
+          "effect": [
+            "minecraft:resistance",
+            "minecraft:fire_resistance"
+          ]
+        }
+      }
+    },
+    "has_effect_haste_and_strength": {
+      "type": "palladium:command",
+      "first_tick_commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You have the haste AND strength effect!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:has_effect",
+          "match_all": true,
+          "effect": [
+            "minecraft:haste",
+            "minecraft:strength"
+          ]
+        }
+      }
     }
   }
 }

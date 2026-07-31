@@ -18,6 +18,7 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class PreventDamageAbility extends Ability {
                     .addOptional("prevent_fire", TYPE_VALUE, "If true, makes the entity unable to be set on fire.", false)
                     .addOptional("prevent_freeze", TYPE_VALUE, "If true, makes the entity unable to freeze.", false)
                     .addExampleObject(new PreventDamageAbility(List.of(), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION))), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION)))), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

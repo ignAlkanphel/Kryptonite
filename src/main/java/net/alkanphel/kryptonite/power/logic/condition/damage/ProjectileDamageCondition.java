@@ -7,8 +7,6 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.DamageConditionContext;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,13 +15,14 @@ import net.minecraft.world.entity.EntityType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.Optional;
 
-public record ProjectileDamageCondition(Optional<HolderSet<EntityType<?>>> projectile, Optional<Condition> projectileCondition) implements DamageCondition {
+public record ProjectileDamageCondition(Optional<PalladiumHolderSet<EntityType<?>>> projectile, Optional<Condition> projectileCondition) implements DamageCondition {
 
     public static final MapCodec<ProjectileDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).optionalFieldOf("projectile").forGetter(ProjectileDamageCondition::projectile),
+            PalladiumHolderSet.codec(Registries.ENTITY_TYPE).optionalFieldOf("projectile").forGetter(ProjectileDamageCondition::projectile),
             Condition.CODEC.optionalFieldOf("projectile_conditions").forGetter(ProjectileDamageCondition::projectileCondition)
     ).apply(instance, ProjectileDamageCondition::new));
 

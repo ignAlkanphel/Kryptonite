@@ -21,6 +21,7 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the overlapping blocks.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used", NumberComparator.GREATER_OR_EQUAL)
                     .addOptional("compare_to", TYPE_VALUE, "The value that is being compared against", new StaticValue(1))
-                    .addExampleObject(new BlockInAnywhereCondition(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS))), NumberComparator.GREATER_THAN, new StaticValue(1)));
+                    .addExampleObject(new BlockInAnywhereCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS)))), NumberComparator.GREATER_THAN, new StaticValue(1)));
         }
     }
 

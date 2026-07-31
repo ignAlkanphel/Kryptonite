@@ -136,7 +136,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, prevention will only happen if these item conditions are fulfilled by the item about to be picked up.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), List.of(), List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), List.of(new ActorConditionBiCondition(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), List.of(new ActorConditionBiCondition(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

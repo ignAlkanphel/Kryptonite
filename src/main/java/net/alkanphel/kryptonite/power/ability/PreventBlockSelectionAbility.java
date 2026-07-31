@@ -19,6 +19,7 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class PreventBlockSelectionAbility extends Ability {
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents selection of blocks that fulfill these block conditions.")
                     .addOptional("visual_only", TYPE_VALUE, "If true, the ability will be purely visual.", false)
                     .addExampleObject(new PreventBlockSelectionAbility(List.of(), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES))), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES)))), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

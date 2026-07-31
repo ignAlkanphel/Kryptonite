@@ -7,26 +7,17 @@ import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCond
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.context.DamageConditionContext;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
-public record DamageTypeDamageCondition(HolderSet<DamageType> damageType) implements DamageCondition {
+public record DamageTypeDamageCondition(PalladiumHolderSet<DamageType> damageType) implements DamageCondition {
 
     public static final MapCodec<DamageTypeDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageTypeDamageCondition::damageType)
+            PalladiumHolderSet.codec(Registries.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageTypeDamageCondition::damageType)
     ).apply(instance, DamageTypeDamageCondition::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, DamageTypeDamageCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderSet(Registries.DAMAGE_TYPE), DamageTypeDamageCondition::damageType,
-            DamageTypeDamageCondition::new
-    );
 
     @Override
     public boolean test(DamageConditionContext context) {
@@ -50,7 +41,7 @@ public record DamageTypeDamageCondition(HolderSet<DamageType> damageType) implem
             builder.setName("Damage Type")
                     .setDescription("Checks whether the damage source is of a certain damage type.")
                     .addOptional("damage_type", TYPE_DAMAGE_TYPE_HOLDER_SET, "Damage types or tags to check against.")
-                    .addExampleObject(new DamageTypeDamageCondition(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FALL)));
+                    .addExampleObject(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FALL))));
         }
     }
 

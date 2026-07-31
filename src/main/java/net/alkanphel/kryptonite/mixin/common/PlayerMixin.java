@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Player.class, priority = 999)
 public abstract class PlayerMixin extends LivingEntity {
@@ -68,16 +67,6 @@ public abstract class PlayerMixin extends LivingEntity {
     @ModifyExpressionValue(method = "getBaseExperienceReward", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
     private boolean kryptonite$experienceRewardKeepInventory(boolean original) {
         return AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
-    }
-
-    // Prevent Gliding ability
-    @Inject(method = "tryToStartFallFlying", at = @At("HEAD"), cancellable = true)
-    private void kryptonite$preventGlidingII(CallbackInfoReturnable<Boolean> cir) {
-        Player player = (Player) (Object) this;
-
-        if (AbilityUtil.isTypeEnabled(player, KryptoniteAbilitySerializers.PREVENT_GLIDING.get())) {
-            cir.setReturnValue(false);
-        }
     }
 
     // Action On Entity Use & Action On Being Used & Prevent Entity Use & Prevent Being Used ability

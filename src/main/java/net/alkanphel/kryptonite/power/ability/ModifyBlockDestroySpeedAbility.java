@@ -19,6 +19,7 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class ModifyBlockDestroySpeedAbility extends Ability {
                     .add("hardness_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the effective destroy speed value of the block while calculating the block's destroy speed.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the modifiers will only apply to blocks that fulfill these conditions.")
                     .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.5), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.35), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.35), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ModifyBlockDestroySpeedAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-0.9), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-1.0), KryptoniteModifiers.Operation.MAX_TOTAL), new KryptoniteModifiers.ValueModifier(new StaticValue(0.1), KryptoniteModifiers.Operation.MIN_TOTAL)), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

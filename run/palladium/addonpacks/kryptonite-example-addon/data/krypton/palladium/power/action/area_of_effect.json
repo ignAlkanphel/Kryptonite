@@ -11,8 +11,8 @@
         "bientity_actions": {
           "type": "kryptonite:target_action",
           "actions": {
-            "type": "kryptonite:set_on_fire",
-            "duration": 60
+            "type": "palladium:run_command",
+            "command": "say I am in radius!"
           }
         }
       },

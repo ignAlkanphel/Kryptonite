@@ -14,9 +14,11 @@ import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
+import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
 import java.util.Objects;
@@ -81,7 +83,7 @@ public class AreaOfEffectAction extends Action {
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", KryptoniteSettingType.doubleValueRange(0, Integer.MAX_VALUE), "The radius of the area.", 16)
                     .addOptional("include_actor", TYPE_VALUE, "If the \"actor\" should be included as a target.", false)
-                    .addExampleObject(new AreaOfEffectAction(List.of(new TargetActionBiAction(List.of(new SetOnFireAction(new StaticValue(60))))), Optional.empty(), Shape.CUBE, new StaticValue(5), new StaticValue(false)));
+                    .addExampleObject(new AreaOfEffectAction(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say I am affected by the area of effect action!"))))), Optional.empty(), Shape.CUBE, new StaticValue(5), new StaticValue(false)));
         }
     }
 

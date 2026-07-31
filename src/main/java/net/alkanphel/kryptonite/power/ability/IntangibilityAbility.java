@@ -28,6 +28,7 @@ import net.threetag.palladium.logic.condition.FalseCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,7 +107,7 @@ public class IntangibilityAbility extends Ability {
                     .addOptional("render_type", SettingType.enumList(RenderType.values()), "How the environment is rendered while phasing through blocks.", RenderType.DEFAULT)
                     .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
                     .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, List.of(), RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire")))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire"))))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

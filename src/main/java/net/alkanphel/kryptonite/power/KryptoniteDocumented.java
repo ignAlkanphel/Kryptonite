@@ -42,6 +42,8 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_GAME_EVENT_HOLDER_SET = SettingType.simple("Game Event ID(s) / Tag(s)");
     SettingType TYPE_TIMELINE_HOLDER_SET = SettingType.simple("Timeline ID(s) / Tag(s)");
 
+    SettingType TYPE_ENTITY_TYPE_TAG = SettingType.simple("Entity Type Tag");
+
     SettingType TYPE_SKYBOX = SettingType.enumList(DimensionType.Skybox.values());
     SettingType TYPE_FOG_TYPE = SettingType.enumList(FogType.values());
     SettingType TYPE_CARDINAL_LIGHTING = SettingType.enumList(CardinalLighting.Type.values());

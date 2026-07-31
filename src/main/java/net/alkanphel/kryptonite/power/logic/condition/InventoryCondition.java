@@ -23,6 +23,7 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.util.NumberComparator;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +100,7 @@ public class InventoryCondition implements Condition {
                     .addOptional("compare_to", TYPE_INT, "The value at which the amount of items/stacks that were evaluated will be compared to.", 0)
                     .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, Optional.empty(), Optional.empty(), Optional.empty(), NumberComparator.GREATER_OR_EQUAL, 10))
                     .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, Optional.empty(), Optional.empty(), Optional.of(List.of()), NumberComparator.GREATER_OR_EQUAL, 10))
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, Optional.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt")))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, 16));
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, Optional.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, 16));
         }
     }
 

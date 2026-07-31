@@ -10,30 +10,22 @@ import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-public record BlockBlockCondition(HolderSet<Block> block) implements BlockCondition {
+public record BlockBlockCondition(PalladiumHolderSet<Block> block) implements BlockCondition {
 
     public static final MapCodec<BlockBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("block").forGetter(BlockBlockCondition::block)
+            PalladiumHolderSet.codec(Registries.BLOCK).fieldOf("block").forGetter(BlockBlockCondition::block)
     ).apply(instance, BlockBlockCondition::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlockBlockCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderSet(Registries.BLOCK), BlockBlockCondition::block,
-            BlockBlockCondition::new
-    );
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -58,8 +50,8 @@ public record BlockBlockCondition(HolderSet<Block> block) implements BlockCondit
             builder.setName("Block")
                     .setDescription("Checks whether the block is of a certain type.")
                     .add("block", KryptoniteDocumented.TYPE_BLOCK_TYPE_HOLDER_SET, "Block IDs or tags this block needs to pass the check.")
-                    .addExampleObject(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))
-                    .addExampleObject(new BlockBlockCondition(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.STONE_BRICKS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))));
+                    .addExampleObject(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))))
+                    .addExampleObject(new BlockBlockCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.STONE_BRICKS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))))));
             }
         }
 

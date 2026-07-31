@@ -31,11 +31,6 @@ public abstract class ItemStackMixin implements DataComponentHolder, EntityLinke
 
     @Override
     public Entity kryptonite$getEntity() {
-        return kryptonite$getEntity(true);
-    }
-
-    @Override // TODO Remove boolean as it is not needed for us
-    public Entity kryptonite$getEntity(boolean prioritiseVanillaHolder) {
         if (kryptonite$holdingEntity != null) {
             return kryptonite$holdingEntity.get();
         }

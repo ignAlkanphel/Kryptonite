@@ -10,30 +10,22 @@ import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-public record FluidTypeBlockCondition(HolderSet<Fluid> fluid) implements BlockCondition {
+public record FluidTypeBlockCondition(PalladiumHolderSet<Fluid> fluid) implements BlockCondition {
 
     public static final MapCodec<FluidTypeBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid_type").forGetter(FluidTypeBlockCondition::fluid)
+            PalladiumHolderSet.codec(Registries.FLUID).fieldOf("fluid_type").forGetter(FluidTypeBlockCondition::fluid)
     ).apply(instance, FluidTypeBlockCondition::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, FluidTypeBlockCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderSet(Registries.FLUID), FluidTypeBlockCondition::fluid,
-            FluidTypeBlockCondition::new
-    );
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -58,8 +50,8 @@ public record FluidTypeBlockCondition(HolderSet<Fluid> fluid) implements BlockCo
             builder.setName("Fluid Type")
                     .setDescription("Checks if the fluid type is at the block position.")
                     .add("fluid_type", KryptoniteDocumented.TYPE_FLUID_TYPE_HOLDER_SET, "IDs or tags of the required fluid type.")
-                    .addExampleObject(new FluidTypeBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("water"))))))
-                    .addExampleObject(new FluidTypeBlockCondition(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.FLUID).getOrThrow(FluidTags.WATER), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("lava"))))))));
+                    .addExampleObject(new FluidTypeBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("water")))))))
+                    .addExampleObject(new FluidTypeBlockCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.FLUID).getOrThrow(FluidTags.WATER), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("lava")))))))));
         }
     }
 

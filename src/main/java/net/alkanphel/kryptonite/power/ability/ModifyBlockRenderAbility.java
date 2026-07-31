@@ -25,6 +25,7 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class ModifyBlockRenderAbility extends Ability {
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only blocks fulfilling these conditions will have their rendering modified.")
                     .add("block_state", TYPE_BLOCK_STATE, "The block state to render in place of the specified block.")
                     .addOptional("chunk_mode", SettingType.enumList(Mode.values()), "How the block visuals are updated on the client. Mode \"refresh_all\" reloads all chunks again. Mode \"refresh_visible\" updates currently visible chunks in sections & is less performance taxing due to that. Regardless of which, \"refresh_all\" activates on the last tick of the ability.", Mode.REFRESH_VISIBLE)
-                    .addExampleObject(new ModifyBlockRenderAbility(List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sponge")))))), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ModifyBlockRenderAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sponge"))))))), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ModifyBlockRenderAbility(List.of(), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_ALL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

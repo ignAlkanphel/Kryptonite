@@ -21,6 +21,7 @@ import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public class ActionOnItemFishedAbility extends Ability {
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "The item actions that will be run on the reeled item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only run if these item conditions are fulfilled by the reeled item.")
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), List.of(), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

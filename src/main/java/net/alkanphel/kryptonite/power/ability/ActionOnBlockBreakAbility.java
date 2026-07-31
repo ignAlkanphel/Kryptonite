@@ -29,6 +29,7 @@ import net.threetag.palladium.power.ability.AbilityProperties;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.power.ability.AbilityStateManager;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
@@ -97,7 +98,7 @@ public class ActionOnBlockBreakAbility extends Ability {
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run at the broken block position.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs if the broken block fulfills these block conditions.")
                     .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only runs when the block was successfully harvested (using correct tool for drops).", false)
-                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new SetBlockBlockAction(Blocks.LAVA.defaultBlockState())), List.of(new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block")))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new SetBlockBlockAction(Blocks.LAVA.defaultBlockState())), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block"))))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

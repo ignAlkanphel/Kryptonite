@@ -26,6 +26,8 @@ public class IsInThunderCondition implements Condition {
     @Override
     public boolean test(DataContext context) {
         var entity = context.getEntity();
+        if (entity == null) return false;
+
         return inThunderstorm(entity.level(), BlockPos.containing(MiscUtil.getPoseDependentEyePos(entity)), entity.blockPosition());
     }
 

@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.util.NumberComparator;
+import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +59,7 @@ public record NotBlockCondition(List<BlockCondition> blockConditions) implements
             builder.setName("NOT")
                     .setDescription("Allows you to group multiple block conditions into one using the NOT logic. None of the given block conditions must be true for this one to be true aswell. The namespace alias \"palladium:not\" is supported.")
                     .add("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "List of block conditions. This field supports aliases: \"block_conditions\" & \"conditions\"")
-                    .addExampleObject(new NotBlockCondition(Arrays.asList(new FrictionBlockCondition(NumberComparator.EQUALS, new StaticValue(0.98)), new BlockBlockCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("ice"))))))));
+                    .addExampleObject(new NotBlockCondition(Arrays.asList(new FrictionBlockCondition(NumberComparator.EQUALS, new StaticValue(0.98)), new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("ice")))))))));
         }
     }
 

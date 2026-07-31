@@ -8,8 +8,6 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
@@ -21,6 +19,7 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,15 +30,15 @@ public class ModifyEffectsAbility extends Ability {
     public static final MapCodec<ModifyEffectsAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ExtraCodecs.compactListCodec(Mode.CODEC).fieldOf("mode").forGetter(a -> a.mode),
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("modifiers", List.of()).forGetter(a -> a.modifiers),
-            RegistryCodecs.homogeneousList(Registries.MOB_EFFECT).optionalFieldOf("effects").forGetter(a -> a.effects),
+            PalladiumHolderSet.codec(Registries.MOB_EFFECT).optionalFieldOf("effects").forGetter(a -> a.effects),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyEffectsAbility::new));
 
     public final List<Mode> mode;
     public final List<KryptoniteModifiers.ValueModifier> modifiers;
-    public final Optional<HolderSet<MobEffect>> effects;
+    public final Optional<PalladiumHolderSet<MobEffect>> effects;
 
-    public ModifyEffectsAbility(List<Mode> mode, List<KryptoniteModifiers.ValueModifier> modifiers, Optional<HolderSet<MobEffect>> effects, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyEffectsAbility(List<Mode> mode, List<KryptoniteModifiers.ValueModifier> modifiers, Optional<PalladiumHolderSet<MobEffect>> effects, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.mode = mode;
         this.modifiers = modifiers;

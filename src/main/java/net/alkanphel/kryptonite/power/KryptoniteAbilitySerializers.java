@@ -72,7 +72,6 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, PreventEntityUseAbility.Serializer> PREVENT_ENTITY_USE = ABILITIES_SERIALIZERS.register("prevent_entity_use", PreventEntityUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventFarmlandTrampleAbility.Serializer> PREVENT_FARMLAND_TRAMPLE = ABILITIES_SERIALIZERS.register("prevent_farmland_trample", PreventFarmlandTrampleAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventGameEventAbility.Serializer> PREVENT_GAME_EVENT = ABILITIES_SERIALIZERS.register("prevent_game_event", PreventGameEventAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, PreventGlidingAbility.Serializer> PREVENT_GLIDING = ABILITIES_SERIALIZERS.register("prevent_gliding", PreventGlidingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventHealingAbility.Serializer> PREVENT_HEALING = ABILITIES_SERIALIZERS.register("prevent_healing", PreventHealingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventItemUseAbility.Serializer> PREVENT_ITEM_USE = ABILITIES_SERIALIZERS.register("prevent_item_use", PreventItemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventItemPickupAbility.Serializer> PREVENT_ITEM_PICKUP = ABILITIES_SERIALIZERS.register("prevent_item_pickup", PreventItemPickupAbility.Serializer::new);

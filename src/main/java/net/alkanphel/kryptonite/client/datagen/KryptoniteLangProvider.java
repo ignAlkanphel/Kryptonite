@@ -98,7 +98,6 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ENTITY_USE, "Prevent Entity Use");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_FARMLAND_TRAMPLE, "Prevent Farmland Trample");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_GAME_EVENT, "Prevent Game Event");
-            this.addAbility(KryptoniteAbilitySerializers.PREVENT_GLIDING, "Prevent Gliding");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_HEALING, "Prevent Healing");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_PICKUP, "Prevent Item Pickup");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_ITEM_USE, "Prevent Item Use");

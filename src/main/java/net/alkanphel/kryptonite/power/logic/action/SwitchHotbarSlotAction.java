@@ -16,7 +16,7 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
-public class SwitchHotbarSlotAction extends Action { // TODO Keep this in?
+public class SwitchHotbarSlotAction extends Action {
 
     public static final MapCodec<SwitchHotbarSlotAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Value.CODEC.fieldOf("slot").forGetter(ab -> ab.slot)

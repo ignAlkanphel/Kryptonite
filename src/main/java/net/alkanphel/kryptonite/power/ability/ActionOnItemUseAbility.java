@@ -29,6 +29,7 @@ import net.threetag.palladium.power.ability.AbilityProperties;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.power.ability.AbilityStateManager;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.Collections;
@@ -118,9 +119,9 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only run if these conditions are fulfilled by the item before use.")
                     .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions run.", TriggerType.FINISH)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow")))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl")))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), List.of(), List.of(new ItemItemCondition(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
