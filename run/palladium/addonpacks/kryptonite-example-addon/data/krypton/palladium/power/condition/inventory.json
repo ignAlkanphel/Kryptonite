@@ -1,0 +1,35 @@
+{
+  "name": "Inventory", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "10_or_more_slots_occupied_with_curios": {
+      "type": "palladium:command",
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"10 or more slots are occupied in your inventory (Along with Curios mod slots counting towards the check)!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:inventory",
+          "curios_slots": [],
+          "process_mode": "stacks",
+          "comparator": ">=",
+          "compare_to": 10
+        }
+      }
+    },
+    "16_or_less_individual_flower_items": {
+      "type": "palladium:command",
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"16 or less individual items that are included in the #minecraft:flowers are in your inventory!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:inventory",
+          "process_mode": "items",
+          "item_conditions": {
+            "type": "kryptonite:item",
+            "item": "#minecraft:flowers"
+          },
+          "comparator": ">",
+          "compare_to": 16
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 package net.alkanphel.kryptonite.power.ability;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -13,6 +12,7 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompat;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -39,16 +39,8 @@ public class KeepInventoryAbility extends Ability {
             .flatMap(IntStream::boxed)
             .collect(Collectors.toCollection(ObjectOpenHashSet::new));
 
-    private static final Codec<SlotRange> SLOT_RANGE_CODEC = Codec.STRING.comapFlatMap(
-            name -> {
-                SlotRange range = SlotRanges.nameToIds(name);
-                return range != null ? DataResult.success(range) : DataResult.error(() -> "Unknown slot range: " + name);
-            },
-            SlotRange::getSerializedName
-    );
-
     public static final MapCodec<KeepInventoryAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SLOT_RANGE_CODEC.listOf().optionalFieldOf("slots").forGetter(a -> a.slotRanges),
+            KryptoniteCodecs.SLOT_RANGE_CODEC.listOf().optionalFieldOf("slots").forGetter(a -> a.slotRanges),
             Codec.STRING.listOf().optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
             ItemCondition.CODEC.optionalFieldOf("item_conditions").forGetter(a -> a.itemConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()

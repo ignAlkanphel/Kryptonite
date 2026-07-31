@@ -1,11 +1,14 @@
 package net.alkanphel.kryptonite.util;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.SlotRange;
+import net.minecraft.world.inventory.SlotRanges;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
 import net.threetag.palladium.logic.context.DataContext;
@@ -22,6 +25,7 @@ public class KryptoniteCodecs {
     public static final Codec<ClipContext.Block> CLIP_CONTEXT_BLOCK_CODEC = Codec.STRING.xmap(string -> ClipContext.Block.valueOf(string.toUpperCase()), block -> block.name().toLowerCase());
     public static final Codec<ClipContext.Fluid> CLIP_CONTEXT_FLUID_CODEC = Codec.STRING.xmap(string -> ClipContext.Fluid.valueOf(string.toUpperCase()), fluid -> fluid.name().toLowerCase());
     public static final Codec<EnumSet<Direction.Axis>> DIRECTION_AXIS_CODEC = ExtraCodecs.compactListCodec(Direction.Axis.CODEC).xmap(list -> list.isEmpty() ? EnumSet.allOf(Direction.Axis.class) : EnumSet.copyOf(list), List::copyOf);
+    public static final Codec<SlotRange> SLOT_RANGE_CODEC = Codec.STRING.comapFlatMap(name -> SlotRanges.nameToIds(name) != null ? DataResult.success(SlotRanges.nameToIds(name)) : DataResult.error(() -> "Unknown slot range: " + name), SlotRange::getSerializedName);
 
     public record Vec3Value(Value x, Value y, Value z) {
         public static final Codec<Vec3Value> CODEC = RecordCodecBuilder.create(instance -> instance.group(
