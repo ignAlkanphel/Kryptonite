@@ -16,6 +16,6 @@ Notably adapts things from the [Apoli](https://github.com/apace100/apoli/release
 
 <hr width="100%">
 
-TBA
+https://github.com/ignAlkanphel/Kryptonite/wiki
 
 </div>
