@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("ConstantValue")
 @Mixin(value = Player.class, priority = 999)
 public abstract class PlayerMixin extends LivingEntity {
 
@@ -61,12 +62,12 @@ public abstract class PlayerMixin extends LivingEntity {
     // Keep Inventory attachment
     @ModifyExpressionValue(method = "dropEquipment", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
     private boolean kryptonite$dropEquipmentKeepInventory(boolean original) {
-        return AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
+        return original || AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
     }
 
     @ModifyExpressionValue(method = "getBaseExperienceReward", at = @At(value = "INVOKE", target = "Ljava/lang/Boolean;booleanValue()Z"))
     private boolean kryptonite$experienceRewardKeepInventory(boolean original) {
-        return AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
+        return original || AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
     }
 
     // Action On Entity Use & Action On Being Used & Prevent Entity Use & Prevent Being Used ability
