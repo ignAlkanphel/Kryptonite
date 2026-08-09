@@ -18,7 +18,7 @@ import java.util.List;
 public class ModifyHealingAbility extends Ability {
 
     public static final MapCodec<ModifyHealingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("modifiers", List.of()).forGetter(a -> a.modifiers),
+            KryptoniteModifiers.VALUE_MODIFIERS_CODEC.fieldOf("modifiers").forGetter(a -> a.modifiers),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyHealingAbility::new));
 

@@ -14,7 +14,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
-import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
@@ -55,7 +54,7 @@ public record FuelItemCondition(NumberComparator comparator, Value compareTo) im
         @Override
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, FuelItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Fuel")
-                    .setDescription("Checks if the item is considered as fuel.")
+                    .setDescription("Checks and compares the value of items considered as fuel.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The fuel time value (in ticks) of the item stack should be compared to the value.", NumberComparator.GREATER_THAN)
                     .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "The value at which the fuel time value (in ticks) of the item stack will be compared to.")
                     .addExampleObject(new FuelItemCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(10)));

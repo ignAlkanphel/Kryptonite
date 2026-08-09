@@ -44,7 +44,7 @@ public record AttackTargetBiCondition() implements BiCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, AttackTargetBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Attack Target")
-                    .setDescription("Checks if the actor entity is currently aggressive to the target entity.")
+                    .setDescription("Checks if the actor entity is currently hostile to the target entity.")
                     .addExampleObject(new AttackTargetBiCondition());
         }
     }

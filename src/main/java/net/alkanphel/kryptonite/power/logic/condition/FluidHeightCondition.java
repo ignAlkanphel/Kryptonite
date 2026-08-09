@@ -48,9 +48,9 @@ public record FluidHeightCondition(TagKey<Fluid> fluidTag, NumberComparator comp
         public void addDocumentation(CodecDocumentationBuilder<Condition, FluidHeightCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Fluid Height")
                     .setDescription("Checks how high specific fluid is at the entity. A fluid height of 0 means the entity is not touching fluid.")
-                    .addOptional("fluid_tag", TYPE_FLUID_TAG, "The fluid tags to check.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "The value that is being compared against")
+                    .addOptional("fluid_tag", TYPE_FLUID_TAG, "The fluid tag to check.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
                     .addExampleObject(new FluidHeightCondition(FluidTags.WATER, NumberComparator.GREATER_THAN, new StaticValue(0.5)));
         }
     }

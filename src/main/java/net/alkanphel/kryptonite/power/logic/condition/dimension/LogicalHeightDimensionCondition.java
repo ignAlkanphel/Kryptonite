@@ -49,10 +49,10 @@ public record LogicalHeightDimensionCondition(NumberComparator comparator, int c
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, LogicalHeightDimensionCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Height")
-                    .setDescription("Checks the logical height of the current dimension.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .addOptional("compare_to", SettingType.combined(SettingType.intRange(0, DimensionType.Y_SIZE)), "Value that is being compared against")
+            builder.setName("Logical Height")
+                    .setDescription("Checks and compares the logical height of the dimension.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", SettingType.combined(SettingType.intRange(0, DimensionType.Y_SIZE)), "Value that is being compared against")
                     .addExampleObject(new LogicalHeightDimensionCondition(NumberComparator.EQUALS, 128));
         }
     }

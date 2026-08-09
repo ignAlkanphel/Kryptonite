@@ -25,7 +25,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
-public class InteractionAbility extends Ability {
+public class InteractionAbility extends Ability { // TODO Remove the "result_stack" & "result_item_actions" field ???
 
     public record InteractionFields(List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult) {
         public static final MapCodec<InteractionFields> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

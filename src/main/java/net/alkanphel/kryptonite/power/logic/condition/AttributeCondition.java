@@ -67,10 +67,10 @@ public record AttributeCondition(Holder<Attribute> attribute, NumberComparator c
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, AttributeCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Attribute")
-                    .setDescription("Checks if the attribute value of the entity matches the comparison.")
-                    .add("attribute", TYPE_ATTRIBUTE, "The attribute to check.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "The value that is being compared against")
+                    .setDescription("Checks and compares the attribute value of the entity.")
+                    .add("attribute", TYPE_ATTRIBUTE, "The id of the attribute to check.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
                     .addExampleObject(new AttributeCondition(Attributes.ARMOR, NumberComparator.GREATER_OR_EQUAL, new StaticValue(10.0D)));
         }
     }

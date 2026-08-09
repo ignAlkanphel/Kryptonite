@@ -86,10 +86,10 @@ public record CommandResultBlockCondition(String command, NumberComparator compa
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, CommandResultBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Command Result")
-                    .setDescription("Compares the result of the specified command to the specified value at the position of the block. This operates server-side.")
+                    .setDescription("Compares the result of the specified command to the specified value at the position of the block. Operates server-side.")
                     .add("command", TYPE_STRING, "The commands to run.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .addOptional("compare_to", TYPE_INT, "The value that is being compared against")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_INT, "Value that is being compared against")
                     .addExampleObject(new CommandResultBlockCondition("execute align xyz if entity @e[dy=0,dx=0,dz=0]", NumberComparator.GREATER_OR_EQUAL, 1));
         }
     }

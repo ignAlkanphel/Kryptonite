@@ -14,12 +14,13 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.*;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
 import org.jetbrains.annotations.NotNull;
 
 public record IsBlockBlockCondition(Type type) implements BlockCondition {
 
     public static final MapCodec<IsBlockBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Type.CODEC.fieldOf("type").forGetter(IsBlockBlockCondition::type)
+            Type.CODEC.fieldOf("instanceof").forGetter(IsBlockBlockCondition::type)
     ).apply(instance, IsBlockBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, IsBlockBlockCondition> STREAM_CODEC = StreamCodec.composite(
@@ -60,7 +61,7 @@ public record IsBlockBlockCondition(Type type) implements BlockCondition {
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsBlockBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is Block")
                     .setDescription("Checks what \"instanceof\" type the block is.")
-                    .addOptional("type", TYPE_STRING, "The \"instanceof\" type.")
+                    .add("instanceof", SettingType.enumList(Type.values()), "The \"instanceof\" type.")
                     .addExampleObject(new IsBlockBlockCondition(Type.FLOWER))
                     .addExampleObject(new IsBlockBlockCondition(Type.CROP));
         }

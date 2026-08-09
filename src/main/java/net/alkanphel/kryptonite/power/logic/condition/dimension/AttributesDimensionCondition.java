@@ -65,8 +65,8 @@ public record AttributesDimensionCondition(@Nullable EnvironmentAttributeMap att
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, AttributesDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Attributes")
-                    .setDescription("Checks environment attributes in the current dimension.")
-                    .addOptional("attributes", KryptoniteDocumented.TYPE_JSON_OBJECT, "Environment attributes to match.")
+                    .setDescription("Checks the environment attributes of the dimension. See also: https://minecraft.wiki/w/Environment_attribute")
+                    .addOptional("attributes", KryptoniteDocumented.TYPE_JSON_OBJECT, "The environment attributes to match.")
                     .addExampleObject(new AttributesDimensionCondition(EnvironmentAttributeMap.builder().set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES).set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, true).build()));
         }
     }

@@ -35,7 +35,7 @@ public record HasSkylightDimensionCondition() implements DimensionCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, HasSkylightDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Skylight")
-                    .setDescription("Checks if the current dimension has skylight.")
+                    .setDescription("Checks if the dimension has skylight (daylight cycle / weather).")
                     .addExampleObject(new HasSkylightDimensionCondition());
         }
     }

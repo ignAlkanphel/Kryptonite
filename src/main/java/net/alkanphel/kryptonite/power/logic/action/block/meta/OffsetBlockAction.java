@@ -1,4 +1,4 @@
-package net.alkanphel.kryptonite.power.logic.action.block;
+package net.alkanphel.kryptonite.power.logic.action.block.meta;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -56,7 +56,7 @@ public class OffsetBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, OffsetBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Offset")
-                    .setDescription("Runs the block actions at an offset position relative to the original block.")
+                    .setDescription("Runs block actions with an offset position relative to the original block.")
                     .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run at the offset position.")
                     .addOptional("x", TYPE_VALUE, "How much to offset the position on the x-axis.", 0)
                     .addOptional("y", TYPE_VALUE, "How much to offset the position on the y-axis.", 0)

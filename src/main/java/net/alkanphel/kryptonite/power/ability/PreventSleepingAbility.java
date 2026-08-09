@@ -90,9 +90,9 @@ public class PreventSleepingAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventSleepingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows preventing the (server) player from sleeping.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents sleep when the bed block fulfills these conditions.")
-                    .addOptional("set_spawn", TYPE_BOOLEAN, "If the spawnpoint of the player is set upon using a bed while being prevented.", false)
+                    .addOptional("set_spawn", TYPE_BOOLEAN, "If the spawn point of the player is set upon using a bed while being prevented.", false)
                     .addOptional("message", TYPE_STRING, "The message that will be shown when sleep is prevented.", "Sleep is being prevented via ability!")
-                    .addOptional("priority", TYPE_NON_NEGATIVE_INT, "The priority of which this ability will prevent the player to sleep, set their spawn and display a message. The ability with the highest priority and \"set_spawn_point\" set to true will be prioritized.", 0)
+                    .addOptional("priority", TYPE_INT, "The priority of which this ability will prevent the player to sleep, set their spawn and display a message. The ability with the highest priority and \"set_spawn\" set to true will be prioritized.", 0)
                     .addExampleObject(new PreventSleepingAbility(List.of(new BlockBlockCondition(new PalladiumHolderSet.Direct<>(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.BEDS)))), false, "You cannot sleep as an insomniac!", 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

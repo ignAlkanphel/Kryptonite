@@ -76,7 +76,7 @@ public record EnchantmentItemCondition(Optional<Holder<Enchantment>> enchantment
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, EnchantmentItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Enchantment")
                     .setDescription("Checks and compares the enchantment level of an item.")
-                    .add("enchantment", SettingType.simple("Enchantment"), "The enchantment to check. If omitted, checks any enchantment.")
+                    .addOptional("enchantment", SettingType.simple("Enchantment"), "The enchantment to check. If omitted, checks any enchantment.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator used to compare the enchantment level.")
                     .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "The enchantment level to compare against.")
                     .addExampleObject(new EnchantmentItemCondition(Optional.of(provider.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SHARPNESS)), NumberComparator.GREATER_OR_EQUAL, new StaticValue(5)));

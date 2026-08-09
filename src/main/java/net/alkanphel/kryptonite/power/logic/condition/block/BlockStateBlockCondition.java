@@ -75,7 +75,7 @@ public record BlockStateBlockCondition(String property, Optional<NumberComparato
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, BlockStateBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block State")
-                    .setDescription("Checks a block state property of the block. If none of the expected fields are specified, this condition will just check if the block has the specified property.")
+                    .setDescription("Checks and compares a block state property of the block. If none of the expected fields are specified, this condition will just check if the block has the specified property.")
                     .add("property", TYPE_STRING, "The name of the property that will be checked. Examples are \"facing\" or \"age\". See: https://minecraft.wiki/w/Block_states#List_of_block_states")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator used for integer properties.")
                     .addOptional("compare_to", TYPE_INT, "If specified, the integer at which the integer value of the specified property will be compared to. Only used if the specified property has an integer value.")

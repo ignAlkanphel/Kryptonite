@@ -53,9 +53,9 @@ public record DurabilityRelativeItemCondition(NumberComparator comparator, Value
         @Override
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, DurabilityRelativeItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Durability Relative")
-                    .setDescription("Checks the current durability of the item relative to its max durability by percentage. The formula is \"currentDurability / maxDurability\"")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", KryptoniteSettingType.floatValueRange(0F, 1F), "The value that is being compared against")
+                    .setDescription("Checks and compares the current durability of the item relative to its max durability by percentage. The formula is \"currentDurability / maxDurability\"")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", KryptoniteSettingType.floatValueRange(0F, 1F), "Value that is being compared against")
                     .addExampleObject(new DurabilityRelativeItemCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.9F)));
         }
     }

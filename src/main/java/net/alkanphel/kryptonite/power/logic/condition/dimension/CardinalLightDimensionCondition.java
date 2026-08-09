@@ -43,7 +43,7 @@ public record CardinalLightDimensionCondition(CardinalLighting.Type cardinalLigh
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, CardinalLightDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Cardinal Light")
-                    .setDescription("Checks the cardinal lighting type of the current dimension.")
+                    .setDescription("Checks if the cardinal lighting type of the dimension matches the specified type.")
                     .add("cardinal_light", KryptoniteDocumented.TYPE_CARDINAL_LIGHTING, "Cardinal lighting type to check.")
                     .addExampleObject(new CardinalLightDimensionCondition(CardinalLighting.Type.NETHER));
         }

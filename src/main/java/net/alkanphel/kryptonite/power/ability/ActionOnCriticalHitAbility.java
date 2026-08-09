@@ -66,9 +66,9 @@ public class ActionOnCriticalHitAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnCriticalHitAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Critical Hit")
-                    .setDescription("Runs actions when the entity that has this ability lands a critical hit. In the context of this ability, the \"actor\" is the attacker entity & \"target\" the hit entity.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run upon a critical hit being dealt.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run upon a critical hit being dealt.")
+                    .setDescription("Runs actions when the entity that has this ability lands a critical hit. In the context of this ability, the \"actor\" is the attacker entity & the \"target\" is the hit entity.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "These actions will be run upon a critical hit being dealt.")
+                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run upon a critical hit being dealt.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the actions if these conditions are fulfilled..")
                     .addExampleObject(new ActionOnCriticalHitAbility(List.of(new RunCommandAction(new ParsedCommands("Action on critical hit!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

@@ -67,9 +67,9 @@ public record CooldownItemCondition(NumberComparator comparator, Value compareTo
         @Override
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, CooldownItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Cooldown")
-                    .setDescription("Checks the remaining cooldown duration of the item stack in ticks for the holding player.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "The cooldown duration in ticks to compare against.")
+                    .setDescription("Checks and compares the remaining cooldown duration of the item stack in ticks for the holding player.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Cooldown duration in ticks to compare against.")
                     .addExampleObject(new CooldownItemCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(20)));
         }
     }

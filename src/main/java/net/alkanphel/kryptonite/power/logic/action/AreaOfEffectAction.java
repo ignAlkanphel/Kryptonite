@@ -78,11 +78,11 @@ public class AreaOfEffectAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, AreaOfEffectAction> builder, HolderLookup.Provider provider) {
             builder.setName("Area of Effect")
                     .setDescription("Runs bi actions on all entities within a specified radius. In the context of this action, the \"actor\" is the entity that ran the action & the \"targets\" are the entities within the specified radius.")
-                    .add("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on each entity in range.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, filters which entities in range the actions run on.")
+                    .add("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run on each entity in range.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the entities must fulfill these conditions for the actions to run on them.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", KryptoniteSettingType.doubleValueRange(0, Integer.MAX_VALUE), "The radius of the area.", 16)
-                    .addOptional("include_actor", TYPE_VALUE, "If the \"actor\" should be included as a target.", false)
+                    .addOptional("include_actor", TYPE_VALUE, "If the \"actor\" entity should be included as a target.", false)
                     .addExampleObject(new AreaOfEffectAction(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say I am affected by the area of effect action!"))))), Optional.empty(), Shape.CUBE, new StaticValue(5), new StaticValue(false)));
         }
     }

@@ -1,4 +1,4 @@
-package net.alkanphel.kryptonite.power.logic.condition.block;
+package net.alkanphel.kryptonite.power.logic.condition.block.meta;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -57,7 +57,7 @@ public record OffsetBlockCondition(BlockCondition blockConditions, Value x, Valu
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, OffsetBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Offset")
-                    .setDescription("Checks block conditions at a position offset from the entity's current block position.")
+                    .setDescription("Checks block conditions with an offset position relative to the entity's current block position.")
                     .add("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "The block condition to check at the offset position.")
                     .addOptional("x", TYPE_VALUE, "How much to offset the position on the x-axis.", new StaticValue(0))
                     .addOptional("y", TYPE_VALUE, "How much to offset the position on the y-axis.", new StaticValue(0))

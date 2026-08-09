@@ -44,7 +44,7 @@ public record IsInSnowBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInSnowBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is in Snow")
-                    .setDescription("Checks if it's snowing above a block.")
+                    .setDescription("Checks if it's snowing above the block.")
                     .addExampleObject(new IsInSnowBlockCondition());
         }
     }

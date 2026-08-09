@@ -18,7 +18,7 @@ import java.util.List;
 public class ActionOnLandAbility extends Ability {
 
     public static final MapCodec<ActionOnLandAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.fieldOf("entity_actions").forGetter(a -> a.entityActions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnLandAbility::new));
 
@@ -49,7 +49,7 @@ public class ActionOnLandAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnLandAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Land")
                     .setDescription("Run actions when the entity lands after being airborne.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon it landing.")
+                    .add("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon it landing.")
                     .addExampleObject(new ActionOnLandAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on land!"))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

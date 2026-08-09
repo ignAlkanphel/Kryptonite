@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.FloatDataAttachmentValue;
-import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
@@ -46,7 +45,7 @@ public class ModifyDamageTintAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageTintAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Modifies the damage tint color of the entity that has this ability.")
-                    .addOptional("color", KryptoniteDocumented.TYPE_RGB_VALUE, "The RGB color values.", new KryptoniteCodecs.RGBAValue(new StaticValue(1.0D), new StaticValue(1.0D), new StaticValue(1.0D), new StaticValue(1.0D)))
+                    .addOptional("color", KryptoniteDocumented.TYPE_RGBA_VALUE, "The RGBA color values.", KryptoniteCodecs.RGBAValue.WHITE)
                     .addExampleObject(new ModifyDamageTintAbility(new KryptoniteCodecs.RGBAValue(new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "tint_red")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "tint_green")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "tint_blue")), 1.0F, ""), new FloatDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "tint_alpha")), 1.0F, "")), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

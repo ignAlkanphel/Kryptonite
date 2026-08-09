@@ -35,7 +35,7 @@ public record HasFixedTimeDimensionCondition() implements DimensionCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, HasFixedTimeDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Fixed Time")
-                    .setDescription("Checks if the current dimension has a fixed time.")
+                    .setDescription("Checks if the dimension has a fixed time like the default Nether & End.")
                     .addExampleObject(new HasFixedTimeDimensionCondition());
         }
     }

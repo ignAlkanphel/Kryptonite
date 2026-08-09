@@ -2,6 +2,7 @@ package net.alkanphel.kryptonite.power.logic.action.block.internal;
 
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.action.block.*;
+import net.alkanphel.kryptonite.power.logic.action.block.meta.OffsetBlockAction;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;

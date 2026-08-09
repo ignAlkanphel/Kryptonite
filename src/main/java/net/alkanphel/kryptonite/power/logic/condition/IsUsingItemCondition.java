@@ -60,7 +60,7 @@ public record IsUsingItemCondition(List<ItemCondition> itemConditions) implement
         public void addDocumentation(CodecDocumentationBuilder<Condition, IsUsingItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is Using Item")
                     .setDescription("Checks if the entity is currently using an item (e.g. eating a food item, using shield or bow, etc.)")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, these conditions must be fulfilled for the item.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, these conditions must be fulfilled by the item being used.")
                     .addExampleObject(new IsUsingItemCondition(List.of()));
         }
     }

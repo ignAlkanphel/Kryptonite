@@ -35,7 +35,7 @@ public record HasEnderDragonFightDimensionCondition() implements DimensionCondit
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, HasEnderDragonFightDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Ender Dragon Fight")
-                    .setDescription("Checks if the current dimension has an Ender Dragon fight.")
+                    .setDescription("Checks if the dimension has an Ender Dragon fight like the default End.")
                     .addExampleObject(new HasEnderDragonFightDimensionCondition());
         }
     }

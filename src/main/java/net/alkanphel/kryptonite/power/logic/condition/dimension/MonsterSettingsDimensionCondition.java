@@ -98,9 +98,9 @@ public record MonsterSettingsDimensionCondition(@Nullable Integer monsterSpawnBl
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, MonsterSettingsDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Monster Settings")
-                    .setDescription("Checks the monster settings of the current dimension.)")
-                    .addOptional("monster_spawn_block_light_limit", SettingType.combined(SettingType.intRange(0, 15)), "Block light limit for monsters to spawn.")
-                    .addOptional("monster_spawn_light_level", SettingType.combined(SettingType.intRange(0, 15)), "Light level for monsters to spawn.")
+                    .setDescription("Checks the monster settings of the dimension.")
+                    .addOptional("monster_spawn_block_light_limit", SettingType.combined(SettingType.intRange(0, 15)), "The block light limit for monsters to spawn.")
+                    .addOptional("monster_spawn_light_level", SettingType.combined(SettingType.intRange(0, 15)), "The light level for monsters to spawn.")
                     .addExampleObject(new MonsterSettingsDimensionCondition(0, ConstantInt.of(7)))
                     .addExampleObject(new MonsterSettingsDimensionCondition(null, new UniformInt(0, 7)));
         }

@@ -51,10 +51,10 @@ public record HeightBlockCondition(NumberComparator comparator, Value compareTo)
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, HeightBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Height")
-                    .setDescription("Checks the Y position of the block.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "The value that is being compared against")
-                    .addExampleObject(new HeightBlockCondition(NumberComparator.GREATER_THAN, new StaticValue(64)));
+                    .setDescription("Checks and compares the y-axis position of the block.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .addExampleObject(new HeightBlockCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(64)));
         }
     }
 

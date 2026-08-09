@@ -45,7 +45,7 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, MovementBlockingBlockCondition.Serializer> MOVEMENT_BLOCKING = BLOCK_CONDITION_SERIALIZERS.register("movement_blocking", MovementBlockingBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, NbtBlockCondition.Serializer> NBT = BLOCK_CONDITION_SERIALIZERS.register("nbt", NbtBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, OffsetBlockCondition.Serializer> OFFSET = BLOCK_CONDITION_SERIALIZERS.register("offset", OffsetBlockCondition.Serializer::new);
-    public static final DeferredHolder<BlockConditionSerializer<?>, ReplacableBlockCondition.Serializer> REPLACEABLE = BLOCK_CONDITION_SERIALIZERS.register("replaceable", ReplacableBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, ReplaceableBlockCondition.Serializer> REPLACEABLE = BLOCK_CONDITION_SERIALIZERS.register("replaceable", ReplaceableBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, WaterLoggableBlockCondition.Serializer> WATER_LOGGABLE = BLOCK_CONDITION_SERIALIZERS.register("water_loggable", WaterLoggableBlockCondition.Serializer::new);
 
 }

@@ -36,7 +36,7 @@ public record WaterLoggableBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, WaterLoggableBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Water Loggable")
-                    .setDescription("Checks if the block is waterloggable, meaning that there can be fluid in the same block space (e.g. stairs).")
+                    .setDescription("Checks if the block is able to be water logged, meaning that there can be fluid in the same block space (e.g. stairs).")
                     .addExampleObject(new WaterLoggableBlockCondition());
         }
     }

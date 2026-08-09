@@ -75,7 +75,7 @@ public class PocketCraftingTableAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketCraftingTableAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Crafting Table")
                     .setDescription("Allows the player to open an instance of the Crafting Table GUI at their location.")
-                    .addOptional("increment_stat", TYPE_VALUE, "If the 'Interactions with Crafting Table' stat should be incremented.", true)
+                    .addOptional("increment_stat", TYPE_VALUE, "If true, the \"Interactions with Crafting Table\" stat will be incremented.", true)
                     .addExampleObject(new PocketCraftingTableAction(new StaticValue(true)));
         }
     }

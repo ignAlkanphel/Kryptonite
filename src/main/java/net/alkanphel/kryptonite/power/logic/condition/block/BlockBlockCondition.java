@@ -48,8 +48,8 @@ public record BlockBlockCondition(PalladiumHolderSet<Block> block) implements Bl
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, BlockBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block")
-                    .setDescription("Checks whether the block is of a certain type.")
-                    .add("block", KryptoniteDocumented.TYPE_BLOCK_TYPE_HOLDER_SET, "Block IDs or tags this block needs to pass the check.")
+                    .setDescription("Checks whether the block is of a specified type.")
+                    .add("block", KryptoniteDocumented.TYPE_BLOCK_TYPE_HOLDER_SET, "Block IDs or tags the block(s) must be.")
                     .addExampleObject(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))))
                     .addExampleObject(new BlockBlockCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.STONE_BRICKS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone")))))))));
             }

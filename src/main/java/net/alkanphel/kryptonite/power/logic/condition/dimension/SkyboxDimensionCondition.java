@@ -42,8 +42,8 @@ public record SkyboxDimensionCondition(DimensionType.Skybox skybox) implements D
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, SkyboxDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Skybox")
-                    .setDescription("Checks the skybox type of the current dimension.")
-                    .add("skybox", KryptoniteDocumented.TYPE_SKYBOX, "Skybox type to check.")
+                    .setDescription("Checks the skybox type of the dimension.")
+                    .add("skybox", KryptoniteDocumented.TYPE_SKYBOX, "The skybox type to check.")
                     .addExampleObject(new SkyboxDimensionCondition(DimensionType.Skybox.END));
         }
     }

@@ -50,9 +50,9 @@ public record HeightDimensionCondition(NumberComparator comparator, int compareT
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, HeightDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Height")
-                    .setDescription("Checks the height of the current dimension.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .addOptional("compare_to", SettingType.combined(SettingType.intRange(16, DimensionType.Y_SIZE)), "Value that is being compared against")
+                    .setDescription("Checks and compares the height of the dimension.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", SettingType.combined(SettingType.intRange(16, DimensionType.Y_SIZE)), "Value that is being compared against")
                     .addExampleObject(new HeightDimensionCondition(NumberComparator.GREATER_THAN, 256));
         }
     }

@@ -59,7 +59,7 @@ public class HolderActionItemAction extends ItemAction {
         public void addDocumentation(CodecDocumentationBuilder<ItemAction, HolderActionItemAction> builder, HolderLookup.Provider provider) {
             builder.setName("Holder Action")
                     .setDescription("Runs actions on the entity holding this item stack. Does nothing if the item has no holder.")
-                    .add("action", TYPE_ACTION_LIST, "The actions to run on the holding entity.")
+                    .add("actions", TYPE_ACTION_LIST, "The actions to run on the holding entity.")
                     .addExampleObject(new HolderActionItemAction(List.of()));
         }
     }

@@ -89,7 +89,7 @@ public record ComponentItemCondition(DelayedDataComponentMap components) impleme
             root.add("components", components);
 
             builder.setName("Component")
-                    .setDescription("Checks if an item has the specified (data) components. Leave empty (\"minecraft:damage_resistant\": {} to check if the component just exists on the item.")
+                    .setDescription("Checks if an item has the specified (data) components. Leave one empty \"minecraft:damage_resistant\": {} to check if the component simply exists on the item.")
                     .add("components", KryptoniteDocumented.TYPE_DATA_COMPONENT, "The components to check.")
                     .addExampleObject(new ComponentItemCondition(DelayedDataComponentMap.EMPTY))
                     .addExampleJson(root);

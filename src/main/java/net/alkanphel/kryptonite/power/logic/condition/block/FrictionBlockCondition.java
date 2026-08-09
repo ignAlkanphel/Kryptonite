@@ -51,7 +51,7 @@ public record FrictionBlockCondition(NumberComparator comparator, Value compareT
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, FrictionBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Friction")
-                    .setDescription("Checks the friction value of the block.")
+                    .setDescription("Checks and compares the friction value of the block.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
                     .add("compare_to", TYPE_VALUE, "Value that is being compared against")
                     .addExampleObject(new FrictionBlockCondition(NumberComparator.EQUALS, new StaticValue(0.98)));

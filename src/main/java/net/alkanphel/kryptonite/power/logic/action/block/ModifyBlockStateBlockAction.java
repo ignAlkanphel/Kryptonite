@@ -118,11 +118,11 @@ public class ModifyBlockStateBlockAction extends BlockAction {
             builder.setName("Modify Block State")
                     .setDescription("Modifies the block state property of the block. Depending on the property type, different values are expected: boolean properties use value, enumeration properties use enum, and integer properties use operation and change.")
                     .add("property", TYPE_STRING, "The name of the block state property to modify. See: https://minecraft.wiki/w/Block_states#List_of_block_states")
-                    .addOptional("operation", SettingType.enumList(ResourceOperation.values()), "Determines how the value specified in the change field is operated on the specified property.", ResourceOperation.ADD)
+                    .addOptional("operation", SettingType.enumList(ResourceOperation.values()), "Determines how the value specified in the \"change\" field is operated on the specified property.", ResourceOperation.ADD)
                     .addOptional("change", TYPE_INT, "If specified, the value to add, remove or set to/from the specified property if the specified property is an integer.")
                     .addOptional("value", TYPE_BOOLEAN, "If specified, the boolean to use as the new value for the specified property if the specified property is a boolean.")
                     .addOptional("enum", TYPE_STRING, "If specified, the string to use as the new value for the specified property if the specified property is a string.")
-                    .addOptional("cycle", TYPE_BOOLEAN, "If set to true, changes the property to the next state in the cycle, ignoring all other optional fields. All property types can use this operation.", false)
+                    .addOptional("cycle", TYPE_BOOLEAN, "If true, changes the property to the next state in the cycle, ignoring all other optional fields. All property types can use this operation.", false)
                     .addExampleObject(new ModifyBlockStateBlockAction("waterlogged", ResourceOperation.SET, Optional.empty(), Optional.of(true), Optional.empty(), false))
                     .addExampleObject(new ModifyBlockStateBlockAction("facing", ResourceOperation.ADD, Optional.empty(), Optional.empty(), Optional.empty(), true));
         }

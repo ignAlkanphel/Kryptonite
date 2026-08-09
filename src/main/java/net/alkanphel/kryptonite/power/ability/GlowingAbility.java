@@ -98,7 +98,7 @@ public class GlowingAbility extends Ability {
                     .setDescription("Makes entities glow like the \"minecraft:glowing\" effect. Use \"self\" mode to make the ability holder glow for others, \"target\" mode to make other entities glow for the ability holder.")
                     .addOptional("mode", SettingType.enumList(Mode.values()), "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, filters which entities see the glow for \"self\" & which entities glow for \"other\".")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the bi conditions filter. In the context of this field, the \"actor\" is the entity that has this ability & \"target\" is the other entity.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the bi conditions filter. In the context of this field, the \"actor\" is the entity that has this ability & the \"target\" is the other entity.")
                     .addOptional("use_teams", TYPE_VALUE, "If true, the team color overrides the glow color when applicable.", true)
                     .addOptional("color", KryptoniteDocumented.TYPE_RGB_VALUE, "The RGB glow color to use.", KryptoniteCodecs.RGBValue.WHITE)
                     .addExampleObject(new GlowingAbility(Mode.SELF, Optional.empty(), List.of(), new StaticValue(true), new KryptoniteCodecs.RGBValue(new StaticValue(0.85), new StaticValue(1.0), new StaticValue(0.1)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

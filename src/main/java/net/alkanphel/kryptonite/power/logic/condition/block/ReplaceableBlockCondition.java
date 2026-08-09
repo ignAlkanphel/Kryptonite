@@ -10,10 +10,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
-public record ReplacableBlockCondition() implements BlockCondition {
+public record ReplaceableBlockCondition() implements BlockCondition {
 
-    public static final MapCodec<ReplacableBlockCondition> CODEC = MapCodec.unit(ReplacableBlockCondition::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ReplacableBlockCondition> STREAM_CODEC = StreamCodec.unit(new ReplacableBlockCondition());
+    public static final MapCodec<ReplaceableBlockCondition> CODEC = MapCodec.unit(ReplaceableBlockCondition::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ReplaceableBlockCondition> STREAM_CODEC = StreamCodec.unit(new ReplaceableBlockCondition());
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -21,22 +21,22 @@ public record ReplacableBlockCondition() implements BlockCondition {
     }
 
     @Override
-    public BlockConditionSerializer<ReplacableBlockCondition> getSerializer() {
+    public BlockConditionSerializer<ReplaceableBlockCondition> getSerializer() {
         return BlockConditionSerializers.REPLACEABLE.get();
     }
 
-    public static class Serializer extends BlockConditionSerializer<ReplacableBlockCondition> {
+    public static class Serializer extends BlockConditionSerializer<ReplaceableBlockCondition> {
 
         @Override
-        public MapCodec<ReplacableBlockCondition> codec() {
+        public MapCodec<ReplaceableBlockCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, ReplacableBlockCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Replacable")
-                    .setDescription("Checks if the block is a replaceable material (e.g. short grass, water, ...).")
-                    .addExampleObject(new ReplacableBlockCondition());
+        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, ReplaceableBlockCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Replaceable")
+                    .setDescription("Checks if the block is able to be replaced with another (e.g. short grass, water, etc.).")
+                    .addExampleObject(new ReplaceableBlockCondition());
         }
     }
 

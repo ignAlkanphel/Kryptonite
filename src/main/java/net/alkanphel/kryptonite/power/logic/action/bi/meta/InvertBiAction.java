@@ -44,7 +44,7 @@ public class InvertBiAction extends BiAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiAction, InvertBiAction> builder, HolderLookup.Provider provider) {
             builder.setName("Invert")
-                    .setDescription("Swaps the actor and target entity before running the bi actions.")
+                    .setDescription("Swaps the context of the target entity and the actor entity.")
                     .add("actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run with the context swapped.")
                     .addExampleObject(new InvertBiAction(List.of()));
         }

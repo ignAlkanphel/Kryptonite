@@ -45,8 +45,8 @@ public record DimensionDimensionCondition(ResourceKey<Level> dimension) implemen
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, DimensionDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Dimension")
-                    .setDescription("Checks if the current dimension matches the dimension id.")
-                    .add("dimension", TYPE_IDENTIFIER, "Dimension id to check.")
+                    .setDescription("Checks if the dimension matches the specified id.")
+                    .add("dimension", TYPE_IDENTIFIER, "The dimension id to check.")
                     .addExampleObject(new DimensionDimensionCondition(Level.OVERWORLD));
         }
     }

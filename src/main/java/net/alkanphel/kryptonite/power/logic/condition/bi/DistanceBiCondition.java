@@ -56,8 +56,8 @@ public record DistanceBiCondition(NumberComparator comparator, Value compareTo) 
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, DistanceBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Distance")
                     .setDescription("Compares the distance between the actor & target entities.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator.")
-                    .add("compare_to", TYPE_VALUE, "The distance value to compare against.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
                     .addExampleObject(new DistanceBiCondition(NumberComparator.LESS_OR_EQUAL, new StaticValue(10.0D)));
         }
     }

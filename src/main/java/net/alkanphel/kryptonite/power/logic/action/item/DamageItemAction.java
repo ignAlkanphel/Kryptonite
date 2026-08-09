@@ -72,7 +72,7 @@ public class DamageItemAction extends ItemAction {
             builder.setName("Damage")
                     .setDescription("Damages the item stack.")
                     .addOptional("amount", TYPE_VALUE, "Amount of damage to apply to the item stack.", 1)
-                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN, "If true, it will ignore the Unbreaking enchantment.", false)
+                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN, "If true, it will ignore the \"minecraft:unbreaking\" enchantment.", false)
                     .addExampleObject(new DamageItemAction(new StaticValue(7), new StaticValue(true)));
         }
     }

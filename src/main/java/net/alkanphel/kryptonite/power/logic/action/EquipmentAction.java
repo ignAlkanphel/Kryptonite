@@ -66,7 +66,7 @@ public class EquipmentAction extends Action {
             builder.setName("Equipment")
                     .setDescription("Runs item actions on an item stack in the specified equipment slot.")
                     .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to run the actions on.")
-                    .add("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "The item actions to run on the item stack in the specified equipment slot.")
+                    .add("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "These actions will be run on the item stack in the specified equipment slot.")
                     .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, List.of(new ConsumeItemAction(new StaticValue(1)))));
         }
     }

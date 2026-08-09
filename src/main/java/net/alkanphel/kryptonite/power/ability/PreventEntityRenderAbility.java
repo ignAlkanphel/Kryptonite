@@ -110,7 +110,7 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityRenderAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Entity Render")
                     .setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. Warning that these condition fields evaluate client-side. In the context of this ability, the \"actor\" is the player/viewer that has the ability & the \"target\" is the entities whose rendering have been modified.")
-                    .addOptional("target_opacity", TYPE_VALUE, "The opacity value that the entities will render with.", 0)
+                    .addOptional("target_opacity", TYPE_VALUE, "The opacity value that the entities will render with. A value of 0 will explicitly cause entities to no longer render rather than have their opacity change.", 0)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, only entities that fulfill these conditions will be affected.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these conditions must be fulfilled by either or both \"actor\" & \"target\" entities.")
                     .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), Optional.empty(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

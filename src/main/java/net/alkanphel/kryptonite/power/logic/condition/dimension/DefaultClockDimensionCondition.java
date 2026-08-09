@@ -47,8 +47,8 @@ public record DefaultClockDimensionCondition(Holder<WorldClock> defaultClock) im
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, DefaultClockDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Default Clock")
-                    .setDescription("Checks the default world clock of the current dimension.")
-                    .add("default_clock", TYPE_IDENTIFIER, "Checks if the default clock of the dimension matches the specified id.")
+                    .setDescription("Checks if the default world clock of the dimension matches the specified id. See also: https://minecraft.wiki/w/World_clock")
+                    .add("default_clock", TYPE_IDENTIFIER, "The default clock id to check.")
                     .addExampleObject(new DefaultClockDimensionCondition(provider.lookupOrThrow(Registries.WORLD_CLOCK).getOrThrow(WorldClocks.OVERWORLD)));
         }
     }

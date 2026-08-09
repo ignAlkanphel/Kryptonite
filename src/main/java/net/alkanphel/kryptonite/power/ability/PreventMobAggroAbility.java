@@ -89,7 +89,7 @@ public class PreventMobAggroAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventMobAggroAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Mob Aggro")
-                    .setDescription("Makes entities that are an instanceof Mob not aggro the entity that has this ability. In the context of this ability, the \"actor\" is the mob & the \"target\" ability holder.")
+                    .setDescription("Makes entities that are an instanceof Mob not aggro the entity that has this ability. In the context of this ability, the \"actor\" is the mob & the \"target\" is the entity that has this ability..")
                     .addOptional("mob_conditions", TYPE_CONDITION_LIST, "If specified, only mobs fulfilling these conditions will be affected.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only applies when fulfilling these conditions.")
                     .addOptional("mob_aggro_on_attack", TYPE_BOOLEAN, "If true, mobs that are attacked will be able to fight back.", true)

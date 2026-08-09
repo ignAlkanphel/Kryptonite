@@ -46,7 +46,7 @@ public class AddBlockBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, AddBlockBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Add Block")
-                    .setDescription("Adds a block at the specified action position. Adding means setting the block at the position (offset by the direction of the action).")
+                    .setDescription("Adds/places a block at the action position (offset by the direction of the action).")
                     .add("block", TYPE_BLOCK_STATE, "The block state to place.")
                     .addExampleObject(new AddBlockBlockAction(Blocks.STONE.defaultBlockState()));
         }

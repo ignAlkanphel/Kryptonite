@@ -59,7 +59,7 @@ public class CooldownItemAction extends ItemAction {
         public void addDocumentation(CodecDocumentationBuilder<ItemAction, CooldownItemAction> builder, HolderLookup.Provider provider) {
             builder.setName("Cooldown")
                     .setDescription("Puts the item stack on cooldown for the holding player.")
-                    .addOptional("ticks", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Duration of the cooldown (in ticks).", 20)
+                    .addOptional("ticks", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Duration of the cooldown.", 20)
                     .addExampleObject(new CooldownItemAction(new StaticValue(20)));
         }
     }

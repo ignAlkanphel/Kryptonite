@@ -118,7 +118,7 @@ public class ExplodeAction extends Action {
                     .addOptional("destructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks that fulfill these conditions CAN be destroyed by the explosion.")
                     .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks fulfill the conditions can NOT be destroyed by the explosion.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
-                    .addOptional("damage_bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, determines if an entity will be damaged by the explosion if these conditions are fulfilled. In the context of this field, the entity who ran this action is the \"actor\" & the \"target\" is the entity in the explosion radius.")
+                    .addOptional("damage_bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, determines if an entity will be damaged by the explosion if these conditions are fulfilled. In the context of this field, the \"actor\" is the entity who ran this action & the \"target\" is the entity in the explosion radius.")
                     .addOptional("damage_self", TYPE_VALUE, "If the entity that triggered the explosion also takes damage from it.", true)
                     .addOptional("create_fire", TYPE_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")

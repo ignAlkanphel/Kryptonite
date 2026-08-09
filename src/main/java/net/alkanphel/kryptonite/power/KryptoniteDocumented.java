@@ -28,9 +28,10 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_BLOCK_ACTION_LIST = SettingType.listOrPrimitive("Block Action");
     SettingType TYPE_ITEM_ACTION_LIST = SettingType.listOrPrimitive("Item Action");
 
-    SettingType TYPE_VALUE_MODIFIER = SettingType.simple("Value Modifier (amount*, operation*)");
+    SettingType TYPE_VALUE_MODIFIER = SettingType.simple("Value Modifier");
     SettingType TYPE_RGB_VALUE = SettingType.simple("(Dynamic) RGB Value");
-    SettingType TYPE_VECTOR3_VALUE = SettingType.simple("(Dynamic) Vector3D Value");
+    SettingType TYPE_RGBA_VALUE = SettingType.simple("(Dynamic) RGBA Value");
+    SettingType TYPE_VECTOR3_VALUE = SettingType.simple("(Dynamic) Vector3d Value");
     SettingType TYPE_VECTOR3i_VALUE = SettingType.simple("(Dynamic) Vector3i Value");
     SettingType TYPE_VECTOR3f_VALUE = SettingType.simple("(Dynamic) Vector3f Value");
     SettingType TYPE_DATA_COMPONENT = SettingType.simple("Data Component");
@@ -58,6 +59,7 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_BLOCK_USAGE_PHASE = SettingType.enumList(BlockUsagePhase.values());
     SettingType TYPE_SHAPE = SettingType.enumList(Shape.values());
     SettingType TYPE_SPACE = SettingType.enumList(Space.values());
+    SettingType TYPE_KEY_BIND = SettingType.simple("Key Bind");
 
     CodecDocumentationBuilder<T, R> getDocumentation(HolderLookup.Provider var1);
 }

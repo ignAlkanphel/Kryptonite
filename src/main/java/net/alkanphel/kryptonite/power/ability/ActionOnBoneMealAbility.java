@@ -75,7 +75,7 @@ public class ActionOnBoneMealAbility extends Ability {
             builder.setName("Action On Bone Meal")
                     .setDescription("Runs actions when the player bone meals a block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will run on the entity that bone mealed the block.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "If specified, these block actions will run on the bone mealed block.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "If specified, these actions will run on the bone mealed block.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs the actions if the block bone meal was used on fulfills these conditions.")
                     .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal! Aw, man!"))), List.of(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SpawnEntityBlockAction.Serializer.addExampleNbt())), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

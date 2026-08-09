@@ -65,7 +65,7 @@ public class ActionWhenDamageTakenAbility extends Ability {
                     .setDescription("Runs actions on the entity that has this ability if damage was taken.")
                     .add("entity_actions", TYPE_ACTION_LIST, "The actions to run upon taking damage.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions if the damage matches these damage conditions.")
-                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE)))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE)))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

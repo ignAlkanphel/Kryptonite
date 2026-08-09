@@ -48,7 +48,7 @@ public class SetInLoveBiAction extends BiAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiAction, SetInLoveBiAction> builder, HolderLookup.Provider provider) {
             builder.setName("Set In Love")
-                    .setDescription("Sets the target entity into 'love mode', where they will seek out other animals to breed with. Note that this only works on animals that can breed, such as Cows or Pigs.")
+                    .setDescription("Sets the target entity in love, where they will seek out other animals to breed with. Only works on breedable animals.")
                     .addExampleObject(new SetInLoveBiAction());
         }
     }

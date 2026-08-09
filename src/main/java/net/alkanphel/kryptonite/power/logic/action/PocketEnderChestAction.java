@@ -76,8 +76,8 @@ public class PocketEnderChestAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketEnderChestAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Ender Chest")
                     .setDescription("Allows the player to open an instance of the Ender Chest GUI at their location.")
-                    .addOptional("increment_stat", TYPE_VALUE, "If the 'Ender Chests Opened' stat should be incremented.", true)
-                    .addOptional("anger_piglins", TYPE_VALUE, "If nearby Piglins should be angered. This is vanilla behaviour and also happens opening Shulker Boxes.", true)
+                    .addOptional("increment_stat", TYPE_VALUE, "If true, the \"Ender Chests Opened\" stat will be incremented.", true)
+                    .addOptional("anger_piglins", TYPE_VALUE, "If true, nearby Piglins will be angered. This is default game behaviour and also happens opening Shulker Boxes.", true)
                     .addExampleObject(new PocketEnderChestAction(new StaticValue(true), new StaticValue(false)));
         }
     }

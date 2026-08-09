@@ -37,7 +37,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-public class RaycastAction extends Action { // TODO Raycast offset?
+public class RaycastAction extends Action { // TODO Raycast offset? Also this needs an entire field revamp because dear god...
 
     private record ActionOptions(List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, Value actionAlongRayOnlyOnHit) {
         static final MapCodec<ActionOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

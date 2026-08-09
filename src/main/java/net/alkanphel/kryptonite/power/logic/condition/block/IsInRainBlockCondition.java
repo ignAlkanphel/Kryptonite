@@ -35,7 +35,7 @@ public record IsInRainBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInRainBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is in Rain")
-                    .setDescription("Checks if it's raining above a block.")
+                    .setDescription("Checks if it's raining above the block.")
                     .addExampleObject(new IsInRainBlockCondition());
         }
     }

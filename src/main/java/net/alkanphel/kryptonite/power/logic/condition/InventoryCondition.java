@@ -91,8 +91,8 @@ public class InventoryCondition implements Condition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, InventoryCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Inventory")
-                    .setDescription("Checks the inventory of the entity.")
-                    .addOptional("process_mode", SettingType.enumList(InventoryUtil.ProcessMode.values()), "Determines how the item stacks in the inventory are evaluated.")
+                    .setDescription("Checks and compares the inventory of the entity.")
+                    .addOptional("process_mode", SettingType.enumList(InventoryUtil.ProcessMode.values()), "Determines how the item stacks in the inventory are evaluated.", InventoryUtil.ProcessMode.ITEMS)
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, only account for items from the inventory that fulfill these conditions.")
                     .addOptional("slots", KryptoniteDocumented.TYPE_SLOT_RANGES, "If specified, only items from these specified item slots are evaluated.")
                     .addOptional("curios_slots", TYPE_STRING, "If specified, these slots from the Curios mod are also evaluated (independently from the \"slots\" field). An empty list evaluates all Curios slots. If this field is not specified at all, Curios slots are not evaluated.")

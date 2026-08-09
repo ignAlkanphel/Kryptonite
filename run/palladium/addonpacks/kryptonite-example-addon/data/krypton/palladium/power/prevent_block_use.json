@@ -17,15 +17,21 @@
       "type": "kryptonite:prevent_block_use",
       "entity_actions": {
         "type": "palladium:run_command",
-        "command": "tellraw @s {\"text\": \"Cannot use block with this custom NBT!\", \"color\": \"red\"}"
+        "command": "tellraw @s {\"text\": \"Cannot use a Chest with this custom NBT!\", \"color\": \"red\"}"
       },
-      "block_conditions": {
-        "type": "kryptonite:nbt",
-        "nbt": {
-          "Items": [],
-          "CustomName": "Test Chest"
+      "block_conditions": [
+        {
+          "type": "kryptonite:block",
+          "block": "minecraft:chest"
+        },
+        {
+          "type": "kryptonite:nbt",
+          "nbt": {
+            "Items": [],
+            "CustomName": "Test Chest"
+          }
         }
-      }
+      ]
     }
   }
 }

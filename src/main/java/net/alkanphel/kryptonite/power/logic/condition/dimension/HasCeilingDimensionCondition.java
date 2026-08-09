@@ -35,7 +35,7 @@ public record HasCeilingDimensionCondition() implements DimensionCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, HasCeilingDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Ceiling")
-                    .setDescription("Checks if the current dimension has a bedrock ceiling.")
+                    .setDescription("Checks if the dimension has a ceiling like the default Nether.")
                     .addExampleObject(new HasCeilingDimensionCondition());
         }
     }

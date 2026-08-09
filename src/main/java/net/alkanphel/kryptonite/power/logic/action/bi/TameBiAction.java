@@ -58,7 +58,7 @@ public class TameBiAction extends BiAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiAction, TameBiAction> builder, HolderLookup.Provider provider) {
             builder.setName("Tame")
-                    .setDescription("Tames the target entity with the actor entity as the owner. Only works on tameable entities such as wolves or cats.")
+                    .setDescription("Tames the target entity with the actor entity as the owner. Only works on tamable entities.")
                     .addExampleObject(new TameBiAction());
         }
     }

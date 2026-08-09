@@ -42,7 +42,7 @@ public class FallingBlockBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, FallingBlockBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Falling Block")
-                    .setDescription("Converts a block into a falling block entity.")
+                    .setDescription("Converts a block into the \"minecraft:falling_block\" entity.")
                     .addExampleObject(new FallingBlockBlockAction());
         }
     }

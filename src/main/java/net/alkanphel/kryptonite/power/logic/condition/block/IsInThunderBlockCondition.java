@@ -43,7 +43,7 @@ public record IsInThunderBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInThunderBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Is in Thunder")
-                    .setDescription("Checks if it's thundering above a block.")
+                    .setDescription("Checks if it's thundering above the block.")
                     .addExampleObject(new IsInThunderBlockCondition());
         }
     }

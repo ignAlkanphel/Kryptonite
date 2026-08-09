@@ -56,8 +56,8 @@ public record TimelinesDimensionCondition(HolderSet<Timeline> timelines) impleme
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, TimelinesDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Timelines")
-                    .setDescription("Checks if the current dimension contains any of the specified timelines.")
-                    .add("timelines", KryptoniteDocumented.TYPE_TIMELINE_HOLDER_SET, "Timeline IDs or tags that must exist for the current dimension.")
+                    .setDescription("Checks if the dimension contains any of the specified timeline ids or tags. See also: https://minecraft.wiki/w/Timeline")
+                    .add("timelines", KryptoniteDocumented.TYPE_TIMELINE_HOLDER_SET, "Timeline IDs or tags that must exist for the dimension.")
                     .addExampleObject(new TimelinesDimensionCondition(provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(TimelineTags.UNIVERSAL)))
                     .addExampleObject(new TimelinesDimensionCondition(provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(TimelineTags.IN_OVERWORLD)))
                     .addExampleObject(new TimelinesDimensionCondition(provider.lookupOrThrow(Registries.TIMELINE).getOrThrow(TimelineTags.IN_NETHER)))

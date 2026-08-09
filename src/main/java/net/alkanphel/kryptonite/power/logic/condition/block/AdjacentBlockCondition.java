@@ -69,10 +69,10 @@ public record AdjacentBlockCondition(BlockCondition adjacentCondition, NumberCom
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, AdjacentBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Adjacent")
-                    .setDescription("Checks whether a specified amount of blocks adjacent to the block in question fulfills block conditions.")
-                    .add("adjacent_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "The block conditions that need to be fulfilled by adjacent blocks to count towards the check.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", TYPE_FLOAT, "The value that is being compared against.")
+                    .setDescription("Checks and compares whether a specified amount of blocks adjacent to the block in question fulfills the block conditions.")
+                    .add("adjacent_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "The block conditions that must be fulfilled by adjacent blocks to count towards the check.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_FLOAT, "Value that is being compared against")
                     .addExampleObject(new AdjacentBlockCondition(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("iron_ore")))))), NumberComparator.GREATER_OR_EQUAL, 4));
         }
     }

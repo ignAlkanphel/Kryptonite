@@ -74,7 +74,7 @@ public class PocketAnvilAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketAnvilAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Anvil")
                     .setDescription("Allows the player to open an instance of the Anvil GUI at their location.")
-                    .addOptional("increment_stat", TYPE_VALUE, "If the 'Interactions with Anvil' stat should be incremented.", true)
+                    .addOptional("increment_stat", TYPE_VALUE, "If true, the \"Interactions with Anvil\" stat will be incremented.", true)
                     .addExampleObject(new PocketAnvilAction(new StaticValue(true)));
         }
     }

@@ -84,7 +84,7 @@ public record BlockBreakingCondition(List<BlockCondition> blockConditions, Optio
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockBreakingCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block Breaking")
                     .setDescription("Checks if the player is currently breaking a block.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the block that is breaking.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled by the block that is breaking.")
                     .addOptional("using_correct_tool", TYPE_VALUE, "If omitted, the tool is ignored. True requires using the correct tool to harvest, while false requires the incorrect one.", false)
                     .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("gold_block"))))))), Optional.of(new StaticValue(false))))
                     .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("diamond_block"))))))), Optional.of(new StaticValue(true))));

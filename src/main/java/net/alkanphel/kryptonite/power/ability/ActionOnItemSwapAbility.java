@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.item.ItemStack;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.context.DataContext;
@@ -97,7 +98,7 @@ public class ActionOnItemSwapAbility extends Ability {
                     .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the item swapped into the off hand.")
                     .addOptional("main_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the main hand item after the swap must fulfill these conditions.")
                     .addOptional("off_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the off hand item after the swap must fulfill these conditions.")
-                    .addOptional("trigger", TYPE_STRING, "Which hands must fulfill their item conditions for the actions to run.", "both")
+                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "Which hands must fulfill their item conditions for the actions to run.", "both")
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in main hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), List.of(), TriggerType.MAIN, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in off hand!")))), List.of(), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), TriggerType.OFF, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Diamond in main hand + Coal in off hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("coal"))))))), TriggerType.BOTH, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

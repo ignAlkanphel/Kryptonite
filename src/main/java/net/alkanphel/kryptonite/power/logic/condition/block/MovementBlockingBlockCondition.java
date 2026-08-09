@@ -37,7 +37,7 @@ public record MovementBlockingBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, MovementBlockingBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Movement Blocking")
-                    .setDescription("Checks if the block is marked in code as blocking movement & doesn't have an empty collision shape.")
+                    .setDescription("Checks if the block is considered to be movement blocking & doesn't have an empty collision shape.")
                     .addExampleObject(new MovementBlockingBlockCondition());
         }
     }

@@ -49,7 +49,7 @@ public record FluidTypeBlockCondition(PalladiumHolderSet<Fluid> fluid) implement
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, FluidTypeBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Fluid Type")
                     .setDescription("Checks if the fluid type is at the block position.")
-                    .add("fluid_type", KryptoniteDocumented.TYPE_FLUID_TYPE_HOLDER_SET, "IDs or tags of the required fluid type.")
+                    .add("fluid_type", KryptoniteDocumented.TYPE_FLUID_TYPE_HOLDER_SET, "Fluid IDs or tags of the required fluid type.")
                     .addExampleObject(new FluidTypeBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("water")))))))
                     .addExampleObject(new FluidTypeBlockCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.FLUID).getOrThrow(FluidTags.WATER), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.FLUID, Identifier.withDefaultNamespace("lava")))))))));
         }

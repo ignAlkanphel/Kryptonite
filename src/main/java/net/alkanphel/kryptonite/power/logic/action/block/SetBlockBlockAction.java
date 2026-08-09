@@ -44,7 +44,7 @@ public class SetBlockBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, SetBlockBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Set Block")
-                    .setDescription("Replaces the block at the current position with the specified block state.")
+                    .setDescription("Sets/replaces a block at the action position (offset by the direction of the action).")
                     .add("block", TYPE_BLOCK_STATE, "The block state to place.")
                     .addExampleObject(new SetBlockBlockAction(Blocks.STONE.defaultBlockState()));
         }

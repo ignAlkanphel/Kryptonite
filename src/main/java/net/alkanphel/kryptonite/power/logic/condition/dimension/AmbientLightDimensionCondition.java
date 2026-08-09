@@ -47,9 +47,9 @@ public record AmbientLightDimensionCondition(NumberComparator comparator, float 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, AmbientLightDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Ambient Light")
-                    .setDescription("Checks the ambient light level of the current dimension.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .addOptional("compare_to", TYPE_FLOAT, "Value that is being compared against")
+                    .setDescription("Checks and compares the ambient light level of the dimension.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_FLOAT, "Value that is being compared against")
                     .addExampleObject(new AmbientLightDimensionCondition(NumberComparator.GREATER_OR_EQUAL, 0.25f));
         }
     }

@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
@@ -51,8 +52,8 @@ public class DisplayItemActivationAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, DisplayItemActivationAction> builder, HolderLookup.Provider provider) {
             builder.setName("Display Item Activation")
-                    .setDescription("Triggers an item to animate on the screen like when a Totem of Undying is used.")
-                    .add("item", TYPE_ITEM_STACK, "The item stack to use for the animation.")
+                    .setDescription("Triggers an item to animate on the screen like when a Totem of Undying is activated.")
+                    .add("item", SettingType.simple("Item"), "The item to use for the animation.")
                     .addExampleObject(new DisplayItemActivationAction(Items.BOOK.builtInRegistryHolder()));
         }
     }

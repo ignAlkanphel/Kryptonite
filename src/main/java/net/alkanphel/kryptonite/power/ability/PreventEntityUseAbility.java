@@ -87,11 +87,11 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityUseAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Entity Use")
-                    .setDescription("Prevents the player that has this ability from \"using\" (right-clicking) an entity and runs actions upon being prevented. In the context of this ability, the \"actor\" is the entity that has this ability & \"target\" the entity that was \"used\" (right-clicked).")
+                    .setDescription("Prevents the player that has this ability from \"using\" (right-clicking) an entity and runs actions upon being prevented. In the context of this ability, the \"actor\" is the entity that has this ability & the \"target\" is the entity that was \"used\" (right-clicked).")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both \"actor\" & \"target\" entities.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
                     .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the item used by the \"actor\" entity for right-clicking the \"target\" entity.")
-                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by the item used by the \"actor\"' entity for right-clicking the \"target\" entity.")
+                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by the item used by the \"actor\" entity for right-clicking the \"target\" entity.")
                     .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the item that is given to the \"actor\" entity.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "If specified, this item stack will be given to the \"actor\" entity.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Determines if this ability should activate if the \"actor\" entity used the specified hands.")

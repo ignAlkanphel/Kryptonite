@@ -56,7 +56,7 @@ public class GameEventAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, GameEventAction> builder, HolderLookup.Provider provider) {
             builder.setName("Game Event")
-                    .setDescription("Emits the specified game events at the entity's position. See: https://minecraft.wiki/w/Vibration")
+                    .setDescription("Emits the specified game events at the entity's position. See also: https://minecraft.wiki/w/Vibration")
                     .add("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events to emit.")
                     .addExampleObject(new GameEventAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.GAME_EVENT, Identifier.withDefaultNamespace("teleport"))), provider.holderOrThrow(ResourceKey.create(Registries.GAME_EVENT, Identifier.withDefaultNamespace("block_destroy"))))));
 

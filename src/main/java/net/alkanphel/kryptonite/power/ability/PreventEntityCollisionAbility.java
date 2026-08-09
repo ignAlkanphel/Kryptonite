@@ -59,8 +59,8 @@ public class PreventEntityCollisionAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityCollisionAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents the entity from colliding with other entities. In the context of this ability, the \"actor\" is the ability holder & \"target\" the colliding entity.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only prevents entity collision when these bi condition are fulfilled.")
+            builder.setDescription("Prevents the entity from colliding with other entities. In the context of this ability, the \"actor\" is the entity that has this ability & \"target\" is the colliding entity.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only prevents entity collision when these conditions are fulfilled.")
                     .addExampleObject(new PreventEntityCollisionAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

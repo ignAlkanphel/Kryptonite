@@ -75,10 +75,10 @@ public class ActionOnDeathAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnDeathAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Death")
-                    .setDescription("Runs bi actions when the entity dies. In the context of this ability, the \"actor\" is the killer & \"target\" the entity that died.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the bi actions if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the bi actions if the killing damage of the \"actor\" entity matches these damage conditions.")
+                    .setDescription("Runs actions when the entity that has this ability dies. In the context of this ability, the \"actor\" is the killer & the \"target\" is the entity that died.")
+                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run on either or both \"actor\" & \"target\" entities.")
+                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the actions if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions if the killing damage of the \"actor\" entity matches these damage conditions.")
                     .addExampleObject(new ActionOnDeathAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on death (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnDeathAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on death (actor_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

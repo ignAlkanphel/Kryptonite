@@ -51,9 +51,9 @@ public record ExplosionResistanceBlockCondition(NumberComparator comparator, Val
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, ExplosionResistanceBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Explosion Resistance")
-                    .setDescription("Checks the explosion resistance value of the block.")
-                    .add("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "The value that is being compared against")
+                    .setDescription("Checks and compares the explosion resistance value of the block.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
                     .addExampleObject(new ExplosionResistanceBlockCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(1200)));
         }
     }

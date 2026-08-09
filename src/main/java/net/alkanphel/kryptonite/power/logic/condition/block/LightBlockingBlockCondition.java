@@ -35,7 +35,7 @@ public record LightBlockingBlockCondition() implements BlockCondition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, LightBlockingBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Light Blocking")
-                    .setDescription("Checks if the block is marked in code as blocking light. As an example: glass would fail this check.")
+                    .setDescription("Checks if the block is considered to block light from passing through (e.g. NOT glass).")
                     .addExampleObject(new LightBlockingBlockCondition());
         }
     }

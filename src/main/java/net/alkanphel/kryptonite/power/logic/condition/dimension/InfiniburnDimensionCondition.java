@@ -47,8 +47,8 @@ public record InfiniburnDimensionCondition(TagKey<Block> infiniburn) implements 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, InfiniburnDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Infiniburn")
-                    .setDescription("Checks the infiniburn block tag used by the dimension.")
-                    .add("infiniburn", TYPE_BLOCK_TAG, "Infiniburn block tag to use.")
+                    .setDescription("Checks the infiniburn block tag used by the dimension, which makes fire burn on those blocks indefinitely.")
+                    .add("infiniburn", TYPE_BLOCK_TAG, "The infiniburn block tag to check.")
                     .addExampleObject(new InfiniburnDimensionCondition(BlockTags.INFINIBURN_OVERWORLD))
                     .addExampleObject(new InfiniburnDimensionCondition(BlockTags.INFINIBURN_NETHER))
                     .addExampleObject(new InfiniburnDimensionCondition(BlockTags.INFINIBURN_END));

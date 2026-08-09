@@ -60,7 +60,7 @@ public record EquipmentCondition(ItemCondition itemCondition, EquipmentSlotGroup
         public void addDocumentation(CodecDocumentationBuilder<Condition, EquipmentCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Equipment")
                     .setDescription("Checks if the entity has the specified item equipped in the specified equipment slot.")
-                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "The item conditions that must be fulfilled for the item.")
+                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "The item conditions that must be fulfilled by the item.")
                     .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to check for the item.")
                     .addExampleObject(new EquipmentCondition(new EmptyItemCondition(), EquipmentSlotGroup.MAINHAND));
         }

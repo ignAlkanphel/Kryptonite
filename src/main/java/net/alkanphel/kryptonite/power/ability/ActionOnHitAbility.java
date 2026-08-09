@@ -78,8 +78,8 @@ public class ActionOnHitAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnHitAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Hit")
-                    .setDescription("Runs actions when the entity that has this ability hits another entity. In the context of this ability, the \"actor\" is the ability holder & \"target\" the hit entity.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "The bi actions to run on either or both \"actor\" & \"target\" entities.")
+                    .setDescription("Runs actions when the entity that has this ability hits another entity. In the context of this ability, the \"actor\" is the entity that has this ability & the \"target\" is the hit entity.")
+                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will run on either or both \"actor\" & \"target\" entities.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, the actions will only run if these damage conditions are fulfilled by the damage dealt by the \"actor\" entity.")
                     .addExampleObject(new ActionOnHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on hit (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

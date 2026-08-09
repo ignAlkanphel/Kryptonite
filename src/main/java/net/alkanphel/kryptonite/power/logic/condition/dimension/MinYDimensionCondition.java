@@ -50,7 +50,7 @@ public record MinYDimensionCondition(NumberComparator comparator, int compareTo)
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, MinYDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Min Y")
-                    .setDescription("Checks the min Y of the current dimension.")
+                    .setDescription("Checks and compares the min Y of the dimension. This is the minimum height in which blocks can exist within the dimension.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
                     .addOptional("compare_to", SettingType.combined(SettingType.intRange(DimensionType.MIN_Y, DimensionType.MAX_Y)), "Value that is being compared against")
                     .addExampleObject(new MinYDimensionCondition(NumberComparator.LESS_OR_EQUAL, -64));

@@ -44,7 +44,7 @@ public record InvertBiCondition(BiCondition biEntityCondition) implements BiCond
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BiCondition, InvertBiCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Invert")
-                    .setDescription("Swaps contexts of target & actor entity.")
+                    .setDescription("Swaps the context of the target entity and the actor entity.")
                     .add("conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "The bi conditions to check with the context swapped.")
                     .addExampleObject(new InvertBiCondition(new TrueBiCondition()));
         }

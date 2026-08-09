@@ -67,7 +67,8 @@ public record ObjectiveScoreBiEntityCondition(String actorObjective, String targ
                     .setDescription("Compares the scoreboard objective scores of the actor & target entities. NOT SYNCED TO THE CLIENT!")
                     .add("actor_objective", TYPE_STRING, "The scoreboard objective to get from the actor entity.")
                     .add("target_objective", TYPE_STRING, "The scoreboard objective to get from the target entity.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator used between both scores.")
+                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator used between both scores.", NumberComparator.EQUALS)
+                    .addExampleObject(new ObjectiveScoreBiEntityCondition("actor_obj", "target_obj", NumberComparator.EQUALS))
                     .addExampleObject(new ObjectiveScoreBiEntityCondition("kills", "deaths", NumberComparator.GREATER_THAN));
         }
     }

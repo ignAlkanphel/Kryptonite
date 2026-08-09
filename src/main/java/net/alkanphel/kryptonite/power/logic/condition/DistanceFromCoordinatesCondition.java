@@ -47,7 +47,7 @@ public record DistanceFromCoordinatesCondition(Reference reference, Shape shape,
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, DistanceFromCoordinatesCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Distance From Coordinates")
-                    .setDescription("Compares the distance of the entity's current position to the specified coordinates.")
+                    .setDescription("Compares and compares the distance of the entity's current position to the specified coordinates.")
                     .addOptional("reference", SettingType.enumList(Reference.values()), "The point to compare the distance to.", Reference.WORLD_ORIGIN)
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "Determines the shape of the check.", Shape.CUBE)
                     .addOptional("round_to_digit", TYPE_INT, "If specified, rounds the result to the closest number with the specified amount of digits after the comma. Negative numbers also work (e.g: -2 rounds to multiples of 100).")

@@ -48,8 +48,8 @@ public record ItemItemCondition(PalladiumHolderSet<Item> item) implements ItemCo
         @Override
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, ItemItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Item")
-                    .setDescription("Checks if the item is of a certain type.")
-                    .add("item", KryptoniteDocumented.TYPE_ITEM_TYPE_HOLDER_SET, "Item IDs or tags this item needs to pass the check.")
+                    .setDescription("Checks whether the item is of a specified type.")
+                    .add("item", KryptoniteDocumented.TYPE_ITEM_TYPE_HOLDER_SET, "Item IDs or tags the block(s) must be.")
                     .addExampleObject(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))))
                     .addExampleObject(new ItemItemCondition(PalladiumHolderSet.direct(new OrHolderSet<>(List.of(provider.lookupOrThrow(Registries.ITEM).getOrThrow(ItemTags.ARROWS), HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))))));
             }

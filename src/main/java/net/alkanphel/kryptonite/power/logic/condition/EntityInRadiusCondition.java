@@ -25,7 +25,7 @@ public record EntityInRadiusCondition(List<BiCondition> biCondition, Shape shape
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(EntityInRadiusCondition::biCondition),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(EntityInRadiusCondition::shape),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(EntityInRadiusCondition::comparator),
-            Value.CODEC.optionalFieldOf("compare_to", new StaticValue(0)).forGetter(EntityInRadiusCondition::compareTo),
+            Value.CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(EntityInRadiusCondition::compareTo),
             Value.CODEC.fieldOf("radius").forGetter(EntityInRadiusCondition::radius)
     ).apply(instance, EntityInRadiusCondition::new));
 
@@ -73,11 +73,11 @@ public record EntityInRadiusCondition(List<BiCondition> biCondition, Shape shape
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, EntityInRadiusCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Entity In Radius")
-                    .setDescription("Checks the number of entities within a radius. In the context of this ability, the \"actor\" is the entity with this ability & the \"target\" is the entity being counted.")
+                    .setDescription("Checks the number of entities within a radius. In the context of this ability, the \"target\" is the entity being counted.")
                     .add("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only target entities that fulfill these conditions will be counted.")
-                    .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area to search.", Shape.CUBE)
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "The comparison operator being used", NumberComparator.GREATER_THAN)
-                    .addOptional("compare_to", TYPE_VALUE, "The value that is being compared against", 0)
+                    .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "Shape of the area to search.", Shape.CUBE)
+                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_THAN)
+                    .addOptional("compare_to", TYPE_VALUE, "Value that is being compared against", 1)
                     .add("radius", KryptoniteSettingType.doubleValueRange(0.0, Double.MAX_VALUE), "The radius to search within.")
                     .addExampleObject(new EntityInRadiusCondition(List.of(), Shape.CUBE, NumberComparator.GREATER_THAN, new StaticValue(0), new StaticValue(16)));
         }

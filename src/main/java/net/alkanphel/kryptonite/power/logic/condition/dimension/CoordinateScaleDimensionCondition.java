@@ -49,9 +49,9 @@ public record CoordinateScaleDimensionCondition(NumberComparator comparator, dou
         @Override
         public void addDocumentation(CodecDocumentationBuilder<DimensionCondition, CoordinateScaleDimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Coordinate Scale")
-                    .setDescription("Checks the coordinate scale of the current dimension.")
-                    .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .addOptional("compare_to", SettingType.combined(SettingType.doubleRange(1.0E-5F, 3.0E7)), "Value that is being compared against")
+                    .setDescription("Checks and compares the coordinate scale of the dimension.")
+                    .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
+                    .add("compare_to", SettingType.combined(SettingType.doubleRange(1.0E-5F, 3.0E7)), "Value that is being compared against")
                     .addExampleObject(new CoordinateScaleDimensionCondition(NumberComparator.GREATER_THAN, 1.0));
         }
     }
