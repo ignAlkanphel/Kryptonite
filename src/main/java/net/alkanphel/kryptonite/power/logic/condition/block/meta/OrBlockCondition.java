@@ -59,6 +59,7 @@ public record OrBlockCondition(List<BlockCondition> blockConditions) implements 
             builder.setName("OR")
                     .setDescription("Allows you to group multiple block conditions into one using the OR logic. At least one of the given block conditions must be true for this one to be true aswell. The namespace alias \"palladium:or\" is supported.")
                     .add("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "List of block conditions. This field supports aliases: \"block_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "This field is a name alias of \"block_conditions\".")
                     .addExampleObject(new OrBlockCondition(Arrays.asList(new FrictionBlockCondition(NumberComparator.EQUALS, new StaticValue(0.98)), new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("ice")))))))));
         }
     }

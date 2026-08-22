@@ -55,6 +55,7 @@ public record NotDimensionCondition(List<DimensionCondition> dimensionConditions
             builder.setName("NOT")
                     .setDescription("Allows you to group multiple dimension conditions into one using the NOT logic. None of the given dimension conditions must be true for this one to be true aswell. The namespace alias \"palladium:not\" is supported.")
                     .add("dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions. This field supports aliases: \"dimension_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "This field is a name alias of \"dimension_conditions\".")
                     .addExampleObject(new NotDimensionCondition(Arrays.asList(new HasEnderDragonFightDimensionCondition(), new AttributesDimensionCondition(EnvironmentAttributeMap.builder().set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES).set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false).build()))));
         }
     }

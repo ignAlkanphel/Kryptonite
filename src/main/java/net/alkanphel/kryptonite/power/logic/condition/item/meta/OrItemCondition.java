@@ -48,7 +48,9 @@ public record OrItemCondition(List<ItemCondition> itemConditions) implements Ite
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, OrItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("OR")
                     .setDescription("Allows you to group multiple item conditions into one using the OR logic. At least one of the given item conditions must be true for this one to be true aswell. The namespace alias \"palladium:or\" is supported.")
-                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"");
+                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "This field is a name alias of \"item_conditions\".")
+                    .addExampleObject(new OrItemCondition(List.of()));
         }
     }
 

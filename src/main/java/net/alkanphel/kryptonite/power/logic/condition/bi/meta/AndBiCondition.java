@@ -51,6 +51,8 @@ public record AndBiCondition(List<BiCondition> biConditions) implements BiCondit
             builder.setName("AND")
                     .setDescription("Allows you to group multiple bi conditions into one using the AND logic. All of the given bi conditions must be true for this one to be true aswell. The namespace alias \"palladium:and\" is supported.")
                     .add("conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "List of bi conditions. This field supports aliases: \"bi_conditions\", \"bienity_conditions\", & \"conditions\"")
+                    .add("bi_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "This field is a name alias of \"conditions\".")
+                    .add("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "This field is a name alias of \"conditions\".")
                     .addExampleObject(new AndBiCondition(Arrays.asList(TrueBiCondition.INSTANCE, TrueBiCondition.INSTANCE)));
         }
     }

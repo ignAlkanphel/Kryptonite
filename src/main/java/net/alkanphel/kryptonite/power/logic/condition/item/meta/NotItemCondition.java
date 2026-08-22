@@ -48,7 +48,9 @@ public record NotItemCondition(List<ItemCondition> itemConditions) implements It
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, NotItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("NOT")
                     .setDescription("Allows you to group multiple item conditions into one using the NOT logic. None of the given item conditions must be true for this one to be true aswell. The namespace alias \"palladium:not\" is supported.")
-                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"");
+                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "This field is a name alias of \"item_conditions\".")
+                    .addExampleObject(new NotItemCondition(List.of()));
         }
     }
 

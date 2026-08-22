@@ -48,7 +48,9 @@ public record NotDamageCondition(List<DamageCondition> damageConditions) impleme
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, NotDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("NOT")
                     .setDescription("Allows you to group multiple damage conditions into one using the NOT logic. None of the given damage conditions must be true for this one to be true aswell. The namespace alias \"palladium:not\" is supported.")
-                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"");
+                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "This field is a name alias of \"damage_conditions\".")
+                    .addExampleObject(new NotDamageCondition(List.of()));
         }
     }
 

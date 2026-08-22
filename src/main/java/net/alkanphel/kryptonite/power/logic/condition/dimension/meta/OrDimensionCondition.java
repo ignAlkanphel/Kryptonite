@@ -55,6 +55,7 @@ public record OrDimensionCondition(List<DimensionCondition> dimensionConditions)
             builder.setName("OR")
                     .setDescription("Allows you to group multiple dimension conditions into one using the OR logic. At least one of the given dimension conditions must be true for this one to be true aswell. The namespace alias \"palladium:or\" is supported.")
                     .add("dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "List of dimension conditions. This field supports aliases: \"dimension_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "This field is a name alias of \"dimension_conditions\".")
                     .addExampleObject(new OrDimensionCondition(Arrays.asList(new HasEnderDragonFightDimensionCondition(), new AttributesDimensionCondition(EnvironmentAttributeMap.builder().set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES).set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false).build()))));
         }
     }

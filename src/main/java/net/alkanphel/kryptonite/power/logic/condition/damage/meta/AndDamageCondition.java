@@ -48,7 +48,9 @@ public record AndDamageCondition(List<DamageCondition> damageConditions) impleme
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, AndDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("AND")
                     .setDescription("Allows you to group multiple damage conditions into one using the AND logic. All of the given damage conditions must be true for this one to be true aswell. The namespace alias \"palladium:and\" is supported.")
-                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"");
+                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "This field is a name alias of \"damage_conditions\".")
+                    .addExampleObject(new AndDamageCondition(List.of()));
         }
     }
 

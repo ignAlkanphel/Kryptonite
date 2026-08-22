@@ -48,7 +48,9 @@ public record OrDamageCondition(List<DamageCondition> damageConditions) implemen
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, OrDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("OR")
                     .setDescription("Allows you to group multiple damage conditions into one using the OR logic. At least one of the given damage conditions must be true for this one to be true aswell. The namespace alias \"palladium:or\" is supported.")
-                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"");
+                    .add("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "List of damage conditions. This field supports aliases: \"damage_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "This field is a name alias of \"damage_conditions\".")
+                    .addExampleObject(new OrDamageCondition(List.of()));
         }
     }
 

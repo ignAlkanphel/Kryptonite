@@ -48,7 +48,9 @@ public record AndItemCondition(List<ItemCondition> itemConditions) implements It
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, AndItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("AND")
                     .setDescription("Allows you to group multiple item conditions into one using the AND logic. All of the given item conditions must be true for this one to be true aswell. The namespace alias \"palladium:and\" is supported.")
-                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"");
+                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "List of item conditions. This field supports aliases: \"item_conditions\" & \"conditions\"")
+                    .add("conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "This field is a name alias of \"item_conditions\".")
+                    .addExampleObject(new AndItemCondition(List.of()));
         }
     }
 
