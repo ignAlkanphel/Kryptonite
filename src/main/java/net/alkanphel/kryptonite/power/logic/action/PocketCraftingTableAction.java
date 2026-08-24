@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -75,7 +76,7 @@ public class PocketCraftingTableAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketCraftingTableAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Crafting Table")
                     .setDescription("Allows the player to open an instance of the Crafting Table GUI at their location.")
-                    .addOptional("increment_stat", TYPE_VALUE, "If true, the \"Interactions with Crafting Table\" stat will be incremented.", true)
+                    .addOptional("increment_stat", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"Interactions with Crafting Table\" stat will be incremented.", true)
                     .addExampleObject(new PocketCraftingTableAction(new StaticValue(true)));
         }
     }

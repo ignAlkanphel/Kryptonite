@@ -50,7 +50,7 @@ public record AmountDamageCondition(NumberComparator comparator, Value compareTo
             builder.setName("Amount")
                     .setDescription("Checks whether the damage is of a specified amount.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", TYPE_FLOAT_VALUE, "Value that is being compared against")
                     .addExampleObject(new AmountDamageCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(5)));
         }
     }

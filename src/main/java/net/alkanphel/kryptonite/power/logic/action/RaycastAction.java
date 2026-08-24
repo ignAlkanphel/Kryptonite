@@ -312,9 +312,9 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
                     .addOptional("action_hit_offset", TYPE_DOUBLE, "The offset of the actions specified in the \"action_at_hit\" field.")
                     .addOptional("action_along_ray", TYPE_ACTION_LIST, "The actions to run for each step of the raycast.")
                     .addOptional("action_step", TYPE_DOUBLE, "The step size of the raycast (in blocks).", 1.0D)
-                    .addOptional("action_along_ray_only_on_hit", TYPE_VALUE, "If true, the \"action_along_ray\" field will run those actions ONLY if the raycast hits blocks/entities.", false)
-                    .addOptional("include_entities", TYPE_VALUE, "If true, the raycast will include entities.", true)
-                    .addOptional("include_blocks", TYPE_VALUE, "If true, the raycast will include blocks.", true)
+                    .addOptional("action_along_ray_only_on_hit", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"action_along_ray\" field will run those actions ONLY if the raycast hits blocks/entities.", false)
+                    .addOptional("include_entities", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the raycast will include entities.", true)
+                    .addOptional("include_blocks", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the raycast will include blocks.", true)
                     .addExampleObject(new RaycastAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say pre action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say hit action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say miss action!")))), Optional.empty(), List.of(), List.of(), ClipContext.Block.VISUAL, ClipContext.Fluid.ANY, Optional.empty(), Space.WORLD, Optional.empty(), Optional.empty(), Optional.of(16.0D), List.of(new RunCommandAction(new ParsedCommands("summon pig"))), List.of(new RunCommandAction(new ParsedCommands("say COMMAND ALONG RAY"))), Optional.empty(), 1.0D, new StaticValue(true), new StaticValue(true), new StaticValue(true)));
         }
     }

@@ -69,7 +69,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
                     .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run on each block in range.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled by the blocks in the radius.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
-                    .addOptional("radius", TYPE_VALUE, "The radius of the area.", 16)
+                    .addOptional("radius", TYPE_INT_VALUE, "The radius of the area.", 16)
                     .addExampleObject(new AreaOfEffectBlockAction(List.of(), Optional.empty(), Shape.CUBE, new StaticValue(16)));
         }
     }

@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -87,10 +88,10 @@ public class StepDownAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, StepDownAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows for stepping down blocks fast.")
-                    .add("fall_speed", TYPE_VALUE, "Speed at which you fall off the block.")
-                    .add("fall_distance", TYPE_VALUE, "Fall distance it will enable at.")
-                    .addOptional("safety_checks", TYPE_VALUE, "If false, checks for if the ability SHOULD be enabled such as the entity being in spectator, fall flying, swimming, or on the ground will be disabled.", true)
-                    .addOptional("allow_vehicles", TYPE_VALUE, "If true, it will work for living vehicles.", false)
+                    .add("fall_speed", TYPE_FLOAT_VALUE, "Speed at which you fall off the block.")
+                    .add("fall_distance", TYPE_FLOAT_VALUE, "Fall distance it will enable at.")
+                    .addOptional("safety_checks", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If false, checks for if the ability SHOULD be enabled such as the entity being in spectator, fall flying, swimming, or on the ground will be disabled.", true)
+                    .addOptional("allow_vehicles", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, it will work for living vehicles.", false)
                     .addExampleObject(new StepDownAbility(new StaticValue(1), new StaticValue(1), new StaticValue(true), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

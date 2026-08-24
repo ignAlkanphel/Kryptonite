@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -70,7 +71,7 @@ public record AttributeCondition(Holder<Attribute> attribute, NumberComparator c
                     .setDescription("Checks and compares the attribute value of the entity.")
                     .add("attribute", TYPE_ATTRIBUTE, "The id of the attribute to check.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "Value that is being compared against")
                     .addExampleObject(new AttributeCondition(Attributes.ARMOR, NumberComparator.GREATER_OR_EQUAL, new StaticValue(10.0D)));
         }
     }

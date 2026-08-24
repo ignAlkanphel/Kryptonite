@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.FluidTags;
@@ -50,7 +51,7 @@ public record FluidHeightCondition(TagKey<Fluid> fluidTag, NumberComparator comp
                     .setDescription("Checks how high specific fluid is at the entity. A fluid height of 0 means the entity is not touching fluid.")
                     .addOptional("fluid_tag", TYPE_FLUID_TAG, "The fluid tag to check.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "Value that is being compared against")
                     .addExampleObject(new FluidHeightCondition(FluidTags.WATER, NumberComparator.GREATER_THAN, new StaticValue(0.5)));
         }
     }

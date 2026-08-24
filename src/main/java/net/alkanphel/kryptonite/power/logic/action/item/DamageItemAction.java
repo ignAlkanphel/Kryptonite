@@ -2,6 +2,8 @@ package net.alkanphel.kryptonite.power.logic.action.item;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializer;
@@ -71,8 +73,8 @@ public class DamageItemAction extends ItemAction {
         public void addDocumentation(CodecDocumentationBuilder<ItemAction, DamageItemAction> builder, HolderLookup.Provider provider) {
             builder.setName("Damage")
                     .setDescription("Damages the item stack.")
-                    .addOptional("amount", TYPE_VALUE, "Amount of damage to apply to the item stack.", 1)
-                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN, "If true, it will ignore the \"minecraft:unbreaking\" enchantment.", false)
+                    .addOptional("amount", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Amount of damage to apply to the item stack.", 1)
+                    .addOptional("ignore_unbreaking", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, it will ignore the \"minecraft:unbreaking\" enchantment.", false)
                     .addExampleObject(new DamageItemAction(new StaticValue(7), new StaticValue(true)));
         }
     }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -76,8 +77,8 @@ public class PocketEnderChestAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketEnderChestAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Ender Chest")
                     .setDescription("Allows the player to open an instance of the Ender Chest GUI at their location.")
-                    .addOptional("increment_stat", TYPE_VALUE, "If true, the \"Ender Chests Opened\" stat will be incremented.", true)
-                    .addOptional("anger_piglins", TYPE_VALUE, "If true, nearby Piglins will be angered. This is default game behaviour and also happens opening Shulker Boxes.", true)
+                    .addOptional("increment_stat", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"Ender Chests Opened\" stat will be incremented.", true)
+                    .addOptional("anger_piglins", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, nearby Piglins will be angered. This is default game behaviour and also happens opening Shulker Boxes.", true)
                     .addExampleObject(new PocketEnderChestAction(new StaticValue(true), new StaticValue(false)));
         }
     }

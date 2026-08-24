@@ -119,8 +119,8 @@ public class ExplodeAction extends Action {
                     .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks fulfill the conditions can NOT be destroyed by the explosion.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
                     .addOptional("damage_bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, determines if an entity will be damaged by the explosion if these conditions are fulfilled. In the context of this field, the \"actor\" is the entity who ran this action & the \"target\" is the entity in the explosion radius.")
-                    .addOptional("damage_self", TYPE_VALUE, "If the entity that triggered the explosion also takes damage from it.", true)
-                    .addOptional("create_fire", TYPE_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
+                    .addOptional("damage_self", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the entity that triggered the explosion also takes damage from it.", true)
+                    .addOptional("create_fire", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")
                     .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
                     .addExampleObject(new ExplodeAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, List.of(), new StaticValue(false), new StaticValue(false), new StaticValue(4), new StaticValue(10)));

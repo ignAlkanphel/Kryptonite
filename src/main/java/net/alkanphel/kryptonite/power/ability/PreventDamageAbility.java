@@ -90,8 +90,8 @@ public class PreventDamageAbility extends Ability {
             builder.setName("Prevent Damage")
                     .setDescription("Makes the entity immune to certain damage types.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "The damage conditions that must be fulfilled for damage to be prevented.")
-                    .addOptional("prevent_fire", TYPE_VALUE, "If true, makes the entity unable to be set on fire.", false)
-                    .addOptional("prevent_freeze", TYPE_VALUE, "If true, makes the entity unable to freeze.", false)
+                    .addOptional("prevent_fire", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to be set on fire.", false)
+                    .addOptional("prevent_freeze", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to freeze.", false)
                     .addExampleObject(new PreventDamageAbility(List.of(), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION)))), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

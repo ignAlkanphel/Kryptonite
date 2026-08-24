@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -64,32 +65,6 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
         return requireAll;
     }
 
-//    @Override
-//    public boolean test(DataContext context) {
-//        var entity = context.getLivingEntity();
-//        if (entity == null) return false;
-//
-//        if (this.mobEffect.isEmpty()) {
-//            for (MobEffectInstance effectInstance : entity.getActiveEffects()) {
-//                if (matches(effectInstance, context)) {
-//                    return true;
-//                }
-//            }
-//
-//            return false;
-//        }
-//
-//        for (Holder<MobEffect> effectHolder : this.mobEffect.get().resolve(entity.registryAccess())) {
-//            MobEffectInstance effectInstance = entity.getEffect(effectHolder);
-//
-//            if (effectInstance != null && matches(effectInstance, context)) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-
     private boolean matches(MobEffectInstance instance, DataContext context) {
         int duration = instance.getDuration();
         int amplifier = instance.getAmplifier();
@@ -127,12 +102,12 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
             builder.setName("Has Effect")
                     .setDescription("Checks if the entity has the specified (potion) effect(s). Omitted fields will be ignored.")
                     .add("effect", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the required mob/potion effect")
-                    .addOptional("min_duration", TYPE_VALUE, "Minimum duration in ticks the effect should have left. For this field, -1 is explicitly infinite duration.")
-                    .addOptional("max_duration", TYPE_VALUE, "Maximum duration in ticks the effect should have left.")
-                    .addOptional("min_amplifier", TYPE_VALUE, "Minimum amplifier the effect should have.")
-                    .addOptional("max_amplifier", TYPE_VALUE, "Maximum amplifier the effect should have.")
-                    .addOptional("hidden_particles", TYPE_VALUE, "If true, the effect must have particles hidden.")
-                    .addOptional("match_all", TYPE_VALUE, "If true, the \"effect\" field will act as an AND instead of an OR.")
+                    .addOptional("min_duration", TYPE_INT_VALUE, "Minimum duration in ticks the effect should have left. For this field, -1 is explicitly infinite duration.")
+                    .addOptional("max_duration", TYPE_INT_VALUE, "Maximum duration in ticks the effect should have left.")
+                    .addOptional("min_amplifier", TYPE_INT_VALUE, "Minimum amplifier the effect should have.")
+                    .addOptional("max_amplifier", TYPE_INT_VALUE, "Maximum amplifier the effect should have.")
+                    .addOptional("hidden_particles", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the effect must have particles hidden.")
+                    .addOptional("match_all", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"effect\" field will act as an AND instead of an OR.")
                     .addExampleObject(new HasEffectCondition(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
                     .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
                     .addExampleObject(new HasEffectCondition(Optional.of(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))), Optional.of(new StaticValue(30)), Optional.empty(), Optional.of(new StaticValue(1)), Optional.of(new StaticValue(3)), Optional.of(new StaticValue(true)), Optional.empty()));

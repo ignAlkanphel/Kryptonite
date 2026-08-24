@@ -53,7 +53,7 @@ public record ExplosionResistanceBlockCondition(NumberComparator comparator, Val
             builder.setName("Explosion Resistance")
                     .setDescription("Checks and compares the explosion resistance value of the block.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", TYPE_FLOAT_VALUE, "Value that is being compared against")
                     .addExampleObject(new ExplosionResistanceBlockCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(1200)));
         }
     }

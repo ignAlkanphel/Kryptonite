@@ -74,9 +74,9 @@ public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offset
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockCollisionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block Collision")
                     .setDescription("Checks whether the bounding box of the entity collides with a block.")
-                    .addOptional("offset_x", TYPE_FLOAT, "The bounding box size should the box be offset in the X direction (e.g.: 0 = no offset, 1 = offset of exact width, 2 = offset of twice the width of the bounding box)")
-                    .addOptional("offset_y", TYPE_FLOAT, "The bounding box size should the box be offset in the Y direction (e.g.: 0 = no offset, 1 = offset of exact height, 2 = offset of twice the height of the bounding box)")
-                    .addOptional("offset_z", TYPE_FLOAT, "The bounding box size offset in the Z direction (e.g.: 0 = no offset, 1 = offset of exact depth, 2 = offset of twice the depth of the bounding box)")
+                    .addOptional("offset_x", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the X direction (e.g.: 0 = no offset, 1 = offset of exact width, 2 = offset of twice the width of the bounding box)")
+                    .addOptional("offset_y", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the Y direction (e.g.: 0 = no offset, 1 = offset of exact height, 2 = offset of twice the height of the bounding box)")
+                    .addOptional("offset_z", TYPE_FLOAT_VALUE, "The bounding box size offset in the Z direction (e.g.: 0 = no offset, 1 = offset of exact depth, 2 = offset of twice the depth of the bounding box)")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the colliding block.")
                     .addExampleObject(new BlockCollisionCondition(new StaticValue(0.1), new StaticValue(0), new StaticValue(0.1), List.of()));
         }

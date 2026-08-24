@@ -34,6 +34,8 @@ public interface KryptoniteDocumented<T, R extends T> {
     SettingType TYPE_VECTOR3_VALUE = SettingType.simple("(Dynamic) Vector3d Value");
     SettingType TYPE_VECTOR3i_VALUE = SettingType.simple("(Dynamic) Vector3i Value");
     SettingType TYPE_VECTOR3f_VALUE = SettingType.simple("(Dynamic) Vector3f Value");
+    SettingType TYPE_BOOLEAN_VALUE = SettingType.simple("Boolean / Value");
+    SettingType TYPE_DOUBLE_VALUE = SettingType.simple("Double / Value");
     SettingType TYPE_DATA_COMPONENT = SettingType.simple("Data Component");
     SettingType TYPE_JSON_OBJECT = SettingType.simple("JSON Object");
 

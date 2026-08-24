@@ -82,7 +82,7 @@ public class AreaOfEffectAction extends Action {
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the entities must fulfill these conditions for the actions to run on them.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", KryptoniteSettingType.doubleValueRange(0, Integer.MAX_VALUE), "The radius of the area.", 16)
-                    .addOptional("include_actor", TYPE_VALUE, "If the \"actor\" entity should be included as a target.", false)
+                    .addOptional("include_actor", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the \"actor\" entity should be included as a target.", false)
                     .addExampleObject(new AreaOfEffectAction(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say I am affected by the area of effect action!"))))), Optional.empty(), Shape.CUBE, new StaticValue(5), new StaticValue(false)));
         }
     }

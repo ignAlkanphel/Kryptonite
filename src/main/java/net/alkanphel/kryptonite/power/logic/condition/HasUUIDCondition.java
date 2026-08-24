@@ -49,7 +49,7 @@ public record HasUUIDCondition(Value uuid) implements Condition {
         public void addDocumentation(CodecDocumentationBuilder<Condition, HasUUIDCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has UUID")
                     .setDescription("Checks if the entity has the specified UUID.")
-                    .add("uuid", TYPE_VALUE, "The uuid to check as a string value.")
+                    .add("uuid", TYPE_STRING_VALUE, "The uuid to check as a string value.")
                     .addExampleObject(new HasUUIDCondition(new StaticValue("8667ba71-b85a-4004-af54-457a9734eed7")));
         }
     }

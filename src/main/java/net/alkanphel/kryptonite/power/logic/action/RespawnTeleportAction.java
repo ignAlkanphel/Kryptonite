@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerPlayer;
@@ -61,8 +62,8 @@ public class RespawnTeleportAction extends Action {
             builder.setName("Respawn Teleport")
                     .setDescription("Teleports the player to either their \"local\" spawn (e.g. bed/respawn anchor), or \"global\" spawn (where you spawn if no local spawn exists).")
                     .addOptional("mode", SettingType.enumList(Mode.values()), "The respawn mode to use.", Mode.LOCAL)
-                    .addOptional("use_charge", TYPE_VALUE, "If to consume a charge on the player's respawn anchor if applicable.", false)
-                    .addOptional("keep_rotation", TYPE_VALUE, "If true, the teleport will NOT reset the player's rotation.", true)
+                    .addOptional("use_charge", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If to consume a charge on the player's respawn anchor if applicable.", false)
+                    .addOptional("keep_rotation", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the teleport will NOT reset the player's rotation.", true)
                     .addExampleObject(new RespawnTeleportAction(Mode.LOCAL, new StaticValue(false), new StaticValue(true)));
 
         }

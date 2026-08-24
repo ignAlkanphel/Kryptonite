@@ -53,7 +53,7 @@ public record DurabilityItemCondition(NumberComparator comparator, Value compare
             builder.setName("Durability")
                     .setDescription("Checks and compares the current durability of the item.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", TYPE_INT_VALUE, "Value that is being compared against")
                     .addExampleObject(new DurabilityItemCondition(NumberComparator.LESS_OR_EQUAL, new StaticValue(100)));
         }
     }

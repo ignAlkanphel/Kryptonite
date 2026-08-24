@@ -53,7 +53,7 @@ public record AirCondition(NumberComparator comparator, Value compareTo) impleme
             builder.setName("Air")
                     .setDescription("Checks and compares the current air supply of the entity.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against")
+                    .add("compare_to", TYPE_INT_VALUE, "Value that is being compared against")
                     .addExampleObject(new AirCondition(NumberComparator.GREATER_THAN, new StaticValue(11.0)));
         }
     }

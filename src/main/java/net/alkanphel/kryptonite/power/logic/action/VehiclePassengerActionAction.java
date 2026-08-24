@@ -79,7 +79,7 @@ public class VehiclePassengerActionAction extends Action {
                     .addOptional("actions", TYPE_ACTION_LIST, "If specified, runs the actions on the passenger of the entity/entities being ridden.")
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, runs these actions on the passenger of the entity/entities being ridden.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the actions if these conditions are fulfilled.")
-                    .addOptional("recursive", TYPE_VALUE, "If set to true, the specified actions will run on all entities that are passengers.", false)
+                    .addOptional("recursive", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If set to true, the specified actions will run on all entities that are passengers.", false)
                     .addExampleObject(new VehiclePassengerActionAction(List.of(), List.of(), Optional.empty(), new StaticValue(false)));
         }
     }

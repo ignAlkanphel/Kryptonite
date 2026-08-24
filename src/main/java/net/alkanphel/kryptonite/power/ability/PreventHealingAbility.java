@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -47,7 +48,7 @@ public class PreventHealingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventHealingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from healing via \"natural\" means (e.g. the \"minecraft:natural_health_regeneration\" game rule).")
-                    .addOptional("full_prevention", TYPE_VALUE, "If true, healing from things like potion effects will also be prevented.", false)
+                    .addOptional("full_prevention", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, healing from things like potion effects will also be prevented.", false)
                     .addExampleObject(new PreventHealingAbility(new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventHealingAbility(new StaticValue(true), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

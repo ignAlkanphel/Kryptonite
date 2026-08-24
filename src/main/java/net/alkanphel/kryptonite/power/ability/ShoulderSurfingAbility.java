@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
@@ -44,7 +45,7 @@ public class ShoulderSurfingAbility extends Ability { // TODO Expand
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ShoulderSurfingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows to force the \"Shoulder Surfing\" mod camera to be coupled. Does nothing without the mod installed.")
-                    .addOptional("camera_coupling", TYPE_VALUE, "If true, the Shoulder Surfing camera will be forced to be coupled (camera locked to your facing direction like vanilla).", false)
+                    .addOptional("camera_coupling", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the Shoulder Surfing camera will be forced to be coupled (camera locked to your facing direction like vanilla).", false)
                     .addExampleObject(new ShoulderSurfingAbility(new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

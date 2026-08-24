@@ -62,7 +62,7 @@ public record LightLevelBlockCondition(Optional<LightType> lightType, NumberComp
                     .setDescription("Checks and compares the light level at the block's position.")
                     .addOptional("light_type", SettingType.enumList(LightType.values()), "If specified, checks and compares a specific type of light.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
-                    .add("compare_to", TYPE_INT, "Value that is being compared against")
+                    .add("compare_to", TYPE_INT_VALUE, "Value that is being compared against")
                     .addExampleObject(new LightLevelBlockCondition(Optional.of(LightType.BLOCK), NumberComparator.GREATER_THAN, new StaticValue(10)));
         }
     }

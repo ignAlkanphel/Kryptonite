@@ -77,7 +77,7 @@ public record EntityInRadiusCondition(List<BiCondition> biCondition, Shape shape
                     .add("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only target entities that fulfill these conditions will be counted.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "Shape of the area to search.", Shape.CUBE)
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_THAN)
-                    .addOptional("compare_to", TYPE_VALUE, "Value that is being compared against", 1)
+                    .addOptional("compare_to", TYPE_INT_VALUE, "Value that is being compared against", 1)
                     .add("radius", KryptoniteSettingType.doubleValueRange(0.0, Double.MAX_VALUE), "The radius to search within.")
                     .addExampleObject(new EntityInRadiusCondition(List.of(), Shape.CUBE, NumberComparator.GREATER_THAN, new StaticValue(0), new StaticValue(16)));
         }

@@ -82,7 +82,7 @@ public class AddVelocityBiAction extends BiAction {
                     .setDescription("Adds or sets the velocity of the target entity, based on the direction from the actor entity to the target entity.")
                     .addOptional("velocity", KryptoniteDocumented.TYPE_VECTOR3f_VALUE, "The amount of velocity to apply to the xyz axis.", Vec3.ZERO)
                     .addOptional("reference", SettingType.enumList(Reference.values()), "Determines whether to use the target entity's 'position' or 'rotation' when calculating the velocity that will be applied to the target entity.", Reference.POSITION)
-                    .addOptional("set", TYPE_VALUE, "If true, replaces velocity instead of adding to it.", false)
+                    .addOptional("set", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
                     .addExampleObject(new AddVelocityBiAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Reference.POSITION, new StaticValue(false)));
         }
     }

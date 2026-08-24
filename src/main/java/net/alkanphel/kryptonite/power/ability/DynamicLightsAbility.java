@@ -59,8 +59,8 @@ public class DynamicLightsAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, DynamicLightsAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows the player to emit light.")
-                    .addOptional("luminance", TYPE_VALUE, "The value (int) of the light level to emit at the location of the entity. This field requires the LambDynamicLights mod to function.", 0)
-                    .addOptional("model_light", TYPE_VALUE, "The value (int) of the light for the entity model itself without emitting light to your surroundings).", 0)
+                    .addOptional("luminance", TYPE_INT_VALUE, "The value (int) of the light level to emit at the location of the entity. This field requires the LambDynamicLights mod to function.", 0)
+                    .addOptional("model_light", TYPE_INT_VALUE, "The value (int) of the light for the entity model itself without emitting light to your surroundings).", 0)
                     .addExampleObject(new DynamicLightsAbility(new StaticValue(7),new StaticValue(0), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new DynamicLightsAbility(new StaticValue(15), new StaticValue(0), new AbilityProperties().animationTimer(new AnimationTimerSetting(0, 15, AnimationTimerSetting.Behaviour.FOLLOW, Easing.INOUTCUBIC)), AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new DynamicLightsAbility(new IntegerDataAttachmentValue(ResourceKey.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Identifier.fromNamespaceAndPath("test", "luminance")), 0, ""), new StaticValue(0), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
@@ -47,8 +48,8 @@ public class ShakingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ShakingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes you shake like a cold strider, curing zombie villager, overworld piglin, etc. Higher values take priority if multiple of this ability type are enabled.")
-                    .addOptional("frequency", TYPE_VALUE, "Speed of the shaking.", 3.25D)
-                    .addOptional("amplitude", TYPE_VALUE, "Strength of the shaking.", 1.0D)
+                    .addOptional("frequency", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "Speed of the shaking.", 3.25D)
+                    .addOptional("amplitude", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "Strength of the shaking.", 1.0D)
                     .addExampleObject(new ShakingAbility(new StaticValue(3.25D), new StaticValue(0.4D), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

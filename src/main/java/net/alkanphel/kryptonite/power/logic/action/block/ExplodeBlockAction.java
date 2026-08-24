@@ -91,9 +91,9 @@ public class ExplodeBlockAction extends BlockAction {
                     .addOptional("destructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks that fulfill these conditions CAN be destroyed by the explosion.")
                     .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks that fulfill these conditions can NOT be destroyed by the explosion.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
-                    .addOptional("create_fire", TYPE_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
-                    .add("power", TYPE_VALUE, "The strength/radius of the explosion.")
-                    .addOptional("indestructible_resistance", TYPE_VALUE, "The explosion resistance value used for indestructible blocks.", 10.0F)
+                    .addOptional("create_fire", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
+                    .add("power", TYPE_FLOAT_VALUE, "The strength/radius of the explosion.")
+                    .addOptional("indestructible_resistance", TYPE_FLOAT_VALUE, "The explosion resistance value used for indestructible blocks.", 10.0F)
                     .addExampleObject(new ExplodeBlockAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, new StaticValue(false), new StaticValue(4), new StaticValue(10)));
         }
     }

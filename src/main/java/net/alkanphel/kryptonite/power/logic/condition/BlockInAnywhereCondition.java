@@ -93,7 +93,7 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
                     .setDescription("Checks how many blocks are overlapping with the entity's eyes or feet.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the overlapping blocks.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_OR_EQUAL)
-                    .addOptional("compare_to", TYPE_VALUE, "Value that is being compared against", 1)
+                    .addOptional("compare_to", TYPE_INT_VALUE, "Value that is being compared against", 1)
                     .addExampleObject(new BlockInAnywhereCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS)))), NumberComparator.GREATER_THAN, new StaticValue(1)));
         }
     }

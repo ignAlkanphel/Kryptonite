@@ -70,7 +70,7 @@ public class AddVelocityAction extends Action {
                     .setDescription("Adds or sets velocity to the entity.")
                     .addOptional("velocity", KryptoniteDocumented.TYPE_VECTOR3f_VALUE, "The amount of velocity to apply to the xyz axis.", Vec3.ZERO)
                     .addOptional("space", KryptoniteDocumented.TYPE_SPACE, "How the direction of the velocity to add/set will be calculated.", Space.WORLD)
-                    .addOptional("set", TYPE_VALUE, "If true, replaces velocity instead of adding to it.", false)
+                    .addOptional("set", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
                     .addExampleObject(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Space.LOCAL, new StaticValue(false)));
         }
     }

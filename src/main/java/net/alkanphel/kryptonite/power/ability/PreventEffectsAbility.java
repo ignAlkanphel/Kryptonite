@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -59,7 +60,7 @@ public class PreventEffectsAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEffectsAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from being able to gain OR only be able to gain the specified effects. Does NOT clear effects.")
-                    .addOptional("inverted", TYPE_VALUE, "If true, the entity will be immune to all BUT the specified effects.", false)
+                    .addOptional("inverted", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the entity will be immune to all BUT the specified effects.", false)
                     .add("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "The effects that you will be immune to.")
                     .addExampleObject(new PreventEffectsAbility(new StaticValue(false), PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("poison"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("weakness"))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
