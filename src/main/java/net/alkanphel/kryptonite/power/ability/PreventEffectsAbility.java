@@ -21,7 +21,6 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 
-@Deprecated(forRemoval = true)
 public class PreventEffectsAbility extends Ability {
 
     public static final MapCodec<PreventEffectsAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

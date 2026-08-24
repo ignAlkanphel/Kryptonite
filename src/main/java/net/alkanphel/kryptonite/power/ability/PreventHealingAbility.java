@@ -14,7 +14,6 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
 import java.util.List;
 
-@Deprecated(forRemoval = true)
 public class PreventHealingAbility extends Ability {
 
     public static final MapCodec<PreventHealingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
