@@ -13,7 +13,6 @@
     "common.EntityPowerHandlerMixin",
     "common.EntitySuperpowerHandlerMixin",
     "common.EntityTypeMixin",
-    "common.FoodDataMixin",
     "common.HolderReferenceMixin",
     "common.ItemEntityAccessor",
     "common.ItemEntityMixin",

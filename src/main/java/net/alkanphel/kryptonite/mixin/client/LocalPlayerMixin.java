@@ -1,7 +1,6 @@
 package net.alkanphel.kryptonite.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.PreventEntitySelectionAbility;
@@ -60,18 +59,6 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (!(mc.getCameraEntity() instanceof LivingEntity viewer)) return original;
 
         return entity -> original.test(entity) && !PreventEntitySelectionAbility.shouldPreventSelection(viewer, entity);
-    }
-
-    // Prevent Sprinting ability
-    @ModifyReturnValue(method = "canStartSprinting", at = @At("RETURN"))
-    private boolean kryptonite$preventSprinting(boolean original) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-
-        if (original && AbilityUtil.isTypeEnabled(player, KryptoniteAbilitySerializers.PREVENT_SPRINTING.get())) {
-            return false;
-        }
-
-        return original;
     }
 
     // Prevent Slowdown (water) ability

@@ -330,17 +330,6 @@ public class KryptoniteAbilityEventHandler {
         e.setAmount(Math.max(0F, newAmount));
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    static void onLivingHealPrevent(LivingHealEvent e) { // Prevent Healing ability
-        for (AbilityInstance<PreventHealingAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_HEALING.get())) {
-            if (PreventHealingAbility.isFullPrevention(e.getEntity(), instance)) {
-                e.setAmount(0);
-                e.setCanceled(true);
-                return;
-            }
-        }
-    }
-
 
     // ------------------------------------------------------------------------------------------------------------------------
 
@@ -681,16 +670,6 @@ public class KryptoniteAbilityEventHandler {
                     instance.getAbility().runActions(living);
                     e.setCanceled(true);
                 });
-    }
-
-    @SubscribeEvent // Prevent Effect ability
-    public static void onEffect(MobEffectEvent.Applicable e) {
-        for (AbilityInstance<PreventEffectsAbility> instance : AbilityUtil.getEnabledInstances(e.getEntity(), KryptoniteAbilitySerializers.PREVENT_EFFECTS.get())) {
-            if (PreventEffectsAbility.isImmuneTo(e.getEntity(), instance, e.getEffectInstance().getEffect())) {
-                e.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
-                return;
-            }
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST) // Prevent Game Event ability
