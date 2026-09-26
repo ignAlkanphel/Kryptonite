@@ -15,6 +15,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.SlotRange;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -33,8 +34,8 @@ public class InventoryCondition implements Condition {
     public static final MapCodec<InventoryCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             InventoryUtil.ProcessMode.CODEC.optionalFieldOf("process_mode", InventoryUtil.ProcessMode.ITEMS).forGetter(a -> a.processMode),
             ItemCondition.CODEC.optionalFieldOf("item_conditions").forGetter(a -> a.itemConditions),
-            KryptoniteCodecs.SLOT_RANGE_CODEC.listOf().optionalFieldOf("slots").forGetter(a -> a.slotRanges),
-            Codec.STRING.listOf().optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
+            KryptoniteCodecs.SLOT_RANGES_CODEC.optionalFieldOf("slots").forGetter(a -> a.slotRanges),
+            ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(a -> a.comparator),
             Codec.INT.optionalFieldOf("compare_to", 0).forGetter(a -> a.compareTo)
     ).apply(instance, InventoryCondition::new));

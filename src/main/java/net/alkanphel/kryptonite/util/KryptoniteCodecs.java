@@ -26,6 +26,7 @@ public class KryptoniteCodecs {
     public static final Codec<ClipContext.Fluid> CLIP_CONTEXT_FLUID_CODEC = Codec.STRING.xmap(string -> ClipContext.Fluid.valueOf(string.toUpperCase()), fluid -> fluid.name().toLowerCase());
     public static final Codec<EnumSet<Direction.Axis>> DIRECTION_AXIS_CODEC = ExtraCodecs.compactListCodec(Direction.Axis.CODEC).xmap(list -> list.isEmpty() ? EnumSet.allOf(Direction.Axis.class) : EnumSet.copyOf(list), List::copyOf);
     public static final Codec<SlotRange> SLOT_RANGE_CODEC = Codec.STRING.comapFlatMap(name -> SlotRanges.nameToIds(name) != null ? DataResult.success(SlotRanges.nameToIds(name)) : DataResult.error(() -> "Unknown slot range: " + name), SlotRange::getSerializedName);
+    public static final Codec<List<SlotRange>> SLOT_RANGES_CODEC = ExtraCodecs.compactListCodec(SLOT_RANGE_CODEC);
 
     public record Vec3Value(Value x, Value y, Value z) {
         public static final Codec<Vec3Value> CODEC = RecordCodecBuilder.create(instance -> instance.group(

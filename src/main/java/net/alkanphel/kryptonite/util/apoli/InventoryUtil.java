@@ -55,9 +55,15 @@ public class InventoryUtil {
 
     public static int checkInventory(Entity entity, IntCollection slots, Optional<ItemCondition> itemCondition, ProcessMode processMode) {
         IntSet preppedSlots = prepSlots(slots, entity);
+        OptionalInt slotToSkip = getSelectedHotBarSlot(entity);
         int matches = 0;
 
         for (int preppedSlot : preppedSlots) {
+
+            if (slotToSkip.isPresent() && slotToSkip.getAsInt() == preppedSlot) {
+                continue;
+            }
+
             SlotAccess slotAccess = getStackReference(entity, preppedSlot);
 
             ItemStack stack = slotAccess.get();

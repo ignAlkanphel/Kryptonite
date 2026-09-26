@@ -30,6 +30,18 @@
           "compare_to": 16
         }
       }
+    },
+    "holding_2_dirt_mainhand": {
+      "type": "palladium:command",
+      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"You are holding exactly 2 items in your mainhand!\"}"],
+      "state": {
+        "enabling": {
+          "type": "kryptonite:inventory",
+          "comparator": "=",
+          "compare_to": 2,
+          "slots": "weapon.mainhand"
+        }
+      }
     }
   }
 }

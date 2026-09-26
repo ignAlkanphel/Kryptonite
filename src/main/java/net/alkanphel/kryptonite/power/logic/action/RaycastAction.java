@@ -121,7 +121,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
                 .orElseGet(() -> entity.getViewVector(1.0F));
 
         Vec3 origin = MiscUtil.getPoseDependentEyePos(entity);
-        Vec3 destination = this.distance.map(directionVec::scale).orElse(null);
+        Vec3 destination = this.distance.map(directionVec::scale).map(origin::add).orElse(null);
 
         if (this.includeEntities.getAsBoolean(context)) {
             destination = origin.add(directionVec.scale(this.getEntityReach(entity)));

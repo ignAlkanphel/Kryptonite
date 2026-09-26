@@ -2,7 +2,6 @@ package net.alkanphel.kryptonite.power.logic.condition;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.mixin.client.ClientAdvancementsAccessor;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.minecraft.advancements.AdvancementHolder;
@@ -14,6 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Player;
@@ -43,17 +43,12 @@ public record AdvancementCondition(List<Identifier> advancements) implements Con
         if (!(context.getEntity() instanceof Player player)) return false;
 
         if (player instanceof ServerPlayer serverPlayer) {
-            var server = serverPlayer.level().getServer();
+            MinecraftServer server = serverPlayer.level().getServer();
 
             for (Identifier advancement : advancements) {
                 AdvancementHolder advancementHolder = server.getAdvancements().get(advancement);
 
-                if (advancementHolder == null) {
-                    Kryptonite.LOGGER.warn("Advancement \"{}\" did not exist, but was referenced in an \"advancement\" condition!", advancement);
-                    return false;
-                }
-
-                if (!serverPlayer.getAdvancements().getOrStartProgress(advancementHolder).isDone()) {
+                if (advancementHolder == null || !serverPlayer.getAdvancements().getOrStartProgress(advancementHolder).isDone()) {
                     return false;
                 }
             }
@@ -96,7 +91,7 @@ public record AdvancementCondition(List<Identifier> advancements) implements Con
         public void addDocumentation(CodecDocumentationBuilder<Condition, AdvancementCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Advancement")
                     .setDescription("Checks if the player has completed a specific advancement.")
-                    .add("advancement", SettingType.listOrPrimitive(TYPE_IDENTIFIER), "The namespace and ID(s) of the advancement(s) to check. May be a single identifier or a list. All listed advancements must be completed.")
+                    .add("advancement", SettingType.listOrPrimitive(TYPE_IDENTIFIER), "The namespace and ID(s) of the advancement(s) to check. All listed advancements must be completed.")
                     .addExampleObject(new AdvancementCondition(List.of(Identifier.withDefaultNamespace("story/mine_stone"))))
                     .addExampleObject(new AdvancementCondition(List.of(Identifier.withDefaultNamespace("story/mine_stone"), Identifier.withDefaultNamespace("story/smelt_iron"))));
         }
