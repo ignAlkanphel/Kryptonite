@@ -31,7 +31,6 @@
   "client": [
     "client.BlockMixin",
     "client.CameraMixin",
-    "client.ClientAdvancementsAccessor",
     "client.EntityMixin",
     "client.EntityRenderDispatcherMixin",
     "client.EntityRendererMixin",
