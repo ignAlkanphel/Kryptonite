@@ -11,8 +11,6 @@ public class KryptoniteConditionSerializers {
 
     public static final DeferredRegister<ConditionSerializer<?>> CONDITIONS_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.CONDITION_SERIALIZER, Kryptonite.MOD_ID);
 
-    public static final DeferredHolder<ConditionSerializer<?>, AdvancementCondition.Serializer> ADVANCEMENT = CONDITIONS_SERIALIZERS.register("advancement", AdvancementCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, AttributeCondition.Serializer> ATTRIBUTE = CONDITIONS_SERIALIZERS.register("attribute", AttributeCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, AirCondition.Serializer> AIR = CONDITIONS_SERIALIZERS.register("air", AirCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockBreakingCondition.Serializer> BLOCK_BREAKING = CONDITIONS_SERIALIZERS.register("block_breaking", BlockBreakingCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, BlockCollisionCondition.Serializer> BLOCK_COLLISION = CONDITIONS_SERIALIZERS.register("block_collision", BlockCollisionCondition.Serializer::new);
