@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.condition.bi;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
@@ -102,7 +101,7 @@ public record RelativeRotationBiCondition(RotationType actorRotationType, Rotati
                     .addOptional("target_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the target.", RotationType.BODY)
                     .addOptional("axes", SettingType.enumList(Direction.Axis.values()), "The axes to get the angle values to calculate, and compare to.", EnumSet.allOf(Direction.Axis.class))
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Determines how the calculated angle value should be compared to the specified value.")
-                    .add("compare_to", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "The value at which the calculated angle value will be compared to.")
+                    .add("compare_to", TYPE_DOUBLE_VALUE, "The value at which the calculated angle value will be compared to.")
                     .addExampleObject(new RelativeRotationBiCondition(RotationType.HEAD, RotationType.BODY, EnumSet.allOf(Direction.Axis.class), NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.0D)));
         }
     }

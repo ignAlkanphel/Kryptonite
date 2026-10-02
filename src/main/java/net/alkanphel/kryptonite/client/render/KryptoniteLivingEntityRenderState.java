@@ -12,4 +12,7 @@ public interface KryptoniteLivingEntityRenderState {
 
     void kryptonite$setShakingAmplitude(float amplitude);
     float kryptonite$getShakingAmplitude();
+
+    void kryptonite$setModelDepth(double depth);
+    double kryptonite$getModelDepth();
 }

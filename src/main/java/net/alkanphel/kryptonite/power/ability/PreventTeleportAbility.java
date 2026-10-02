@@ -143,8 +143,8 @@ public class PreventTeleportAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon teleportation being prevented.")
                     .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting from the dimension.")
                     .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting to the dimension.")
-                    .addOptional("min_distance", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "The minimum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
-                    .addOptional("max_distance", KryptoniteDocumented.TYPE_DOUBLE_VALUE, "The maximum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+                    .addOptional("min_distance", TYPE_DOUBLE_VALUE, "The minimum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+                    .addOptional("max_distance", TYPE_DOUBLE_VALUE, "The maximum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
                     .add("source", SettingType.enumList(Source.values()), "The teleportation source to prevent.")
                     .addExampleObject(new PreventTeleportAbility(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Source.ENDER_PEARL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventTeleportAbility(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"))), List.of(new DimensionDimensionCondition(Level.OVERWORLD)), List.of(new DimensionDimensionCondition(Level.NETHER)), Optional.empty(), Optional.empty(), Source.DIMENSION_TRAVEL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

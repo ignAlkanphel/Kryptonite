@@ -38,6 +38,7 @@
     "client.GameRendererMixin",
     "client.KeyMappingAccessor",
     "client.LivingEntityRendererMixin",
+    "client.LivingEntityRendererPriorityMixin",
     "client.LivingEntityRenderStateMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",

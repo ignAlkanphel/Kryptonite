@@ -111,6 +111,9 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.SHOULDER_SURFING, "Shoulder Surfing");
             this.addAbility(KryptoniteAbilitySerializers.STEP_DOWN, "Step Down");
 
+            // Attributes
+            this.add("attribute.kryptonite.name.model_depth", "Model Depth");
+
             // Datapack
         }
     }
