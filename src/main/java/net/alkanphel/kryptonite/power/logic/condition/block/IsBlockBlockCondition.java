@@ -17,6 +17,8 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 public record IsBlockBlockCondition(Type type) implements BlockCondition {
 
     public static final MapCodec<IsBlockBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -82,7 +84,7 @@ public record IsBlockBlockCondition(Type type) implements BlockCondition {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
+import java.util.Locale;
+
 public enum Space implements StringRepresentable {
     WORLD,
     LOCAL, LOCAL_HORIZONTAL, LOCAL_HORIZONTAL_NORMALIZED,
@@ -18,7 +20,7 @@ public enum Space implements StringRepresentable {
 
     @Override
     public @NotNull String getSerializedName() {
-        return name().toLowerCase();
+        return name().toLowerCase(Locale.ROOT);
     }
 
     /**

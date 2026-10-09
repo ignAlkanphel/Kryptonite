@@ -13,6 +13,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 public class PreventSlowdownAbility extends Ability {
 
@@ -61,42 +62,32 @@ public class PreventSlowdownAbility extends Ability {
     }
 
     public enum Mode implements StringRepresentable {
-        BLOCK("block"),
-        ITEM("item"),
-        WATER("water"),
-        CROUCHING("crouching"),
-        HUNGER("hunger");
+        BLOCK,
+        ITEM,
+        WATER,
+        CROUCHING,
+        HUNGER;
 
         public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
-        private final String name;
-
-        Mode(String name) {
-            this.name = name;
-        }
 
         @Override
         public @NotNull String getSerializedName() {
-            return name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 
     public enum ModeBlocks implements StringRepresentable {
-        HONEY_BLOCK("honey_block"),
-        SOUL_SAND("soul_sand"),
-        SLIME_BLOCK("slime_block"),
-        COBWEB("cobweb"),
-        SWEET_BERRY_BUSH("sweet_berry_bush");
+        HONEY_BLOCK,
+        SOUL_SAND,
+        SLIME_BLOCK,
+        COBWEB,
+        SWEET_BERRY_BUSH;
 
         public static final Codec<ModeBlocks> CODEC = StringRepresentable.fromEnum(ModeBlocks::values);
-        private final String name;
-
-        ModeBlocks(String name) {
-            this.name = name;
-        }
 
         @Override
         public @NotNull String getSerializedName() {
-            return name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

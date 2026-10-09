@@ -23,6 +23,7 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public class ModifyEffectsAbility extends Ability {
@@ -85,7 +86,7 @@ public class ModifyEffectsAbility extends Ability {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

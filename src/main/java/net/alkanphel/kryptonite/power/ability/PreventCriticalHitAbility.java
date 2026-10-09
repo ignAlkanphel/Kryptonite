@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class PreventCriticalHitAbility extends Ability {
 
@@ -115,7 +116,7 @@ public class PreventCriticalHitAbility extends Ability {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

@@ -25,6 +25,7 @@ import net.threetag.palladium.util.NumberComparator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.Locale;
 import java.util.function.Function;
 
 public record RelativeRotationBiCondition(RotationType actorRotationType, RotationType targetRotationType, EnumSet<Direction.Axis> axes, NumberComparator comparator, Value compareTo) implements BiCondition {
@@ -123,7 +124,7 @@ public record RelativeRotationBiCondition(RotationType actorRotationType, Rotati
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

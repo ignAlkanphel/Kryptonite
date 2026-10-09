@@ -24,6 +24,8 @@ import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 public record IsEntityCondition(Type type) implements Condition {
 
     public static final MapCodec<IsEntityCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -105,7 +107,7 @@ public record IsEntityCondition(Type type) implements Condition {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

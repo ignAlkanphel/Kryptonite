@@ -28,6 +28,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ModifyBlockRenderAbility extends Ability {
 
@@ -95,19 +96,13 @@ public class ModifyBlockRenderAbility extends Ability {
     }
 
     public enum Mode implements StringRepresentable {
-        REFRESH_ALL("refresh_all"),
-        REFRESH_VISIBLE("refresh_visible");
+        REFRESH_ALL, REFRESH_VISIBLE;
 
         public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
-        private final String name;
-
-        Mode(String name) {
-            this.name = name;
-        }
 
         @Override
         public String getSerializedName() {
-            return this.name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

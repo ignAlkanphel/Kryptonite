@@ -21,6 +21,7 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -129,19 +130,13 @@ public class ModifyBlockStateBlockAction extends BlockAction {
     }
 
     public enum ResourceOperation implements StringRepresentable {
-        ADD("add"),
-        SET("set");
+        ADD, SET;
 
         public static final Codec<ResourceOperation> CODEC = StringRepresentable.fromEnum(ResourceOperation::values);
-        private final String name;
-
-        ResourceOperation(String name) {
-            this.name = name;
-        }
 
         @Override
         public @NotNull String getSerializedName() {
-            return name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

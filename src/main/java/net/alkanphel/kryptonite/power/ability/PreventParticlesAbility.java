@@ -17,6 +17,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 // TODO More functionality
 public class PreventParticlesAbility extends Ability {
@@ -59,25 +60,20 @@ public class PreventParticlesAbility extends Ability {
     }
 
     public enum EventParticle implements StringRepresentable {
-        DEATH("death"),
-        LANDING("landing"),
-        SPRINTING("sprinting"),
-        DROWNING("drowning"),
-        SWEEP_ATTACK("sweep_attack"),
-        CRITICAL_HIT("critical_hit"),
-        MAGIC_CRITICAL_HIT("magical_critical_hit"),
-        DAMAGE_INDICATOR("damage_indicator");
+        DEATH,
+        LANDING,
+        SPRINTING,
+        DROWNING,
+        SWEEP_ATTACK,
+        CRITICAL_HIT,
+        MAGIC_CRITICAL_HIT,
+        DAMAGE_INDICATOR;
 
         public static final Codec<EventParticle> CODEC = StringRepresentable.fromEnum(EventParticle::values);
-        private final String name;
-
-        EventParticle(String name) {
-            this.name = name;
-        }
 
         @Override
         public @NotNull String getSerializedName() {
-            return name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

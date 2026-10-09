@@ -24,6 +24,7 @@ import org.apache.commons.lang3.function.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+import java.util.Locale;
 import java.util.function.BiFunction;
 
 public class AddVelocityBiAction extends BiAction {
@@ -116,7 +117,7 @@ public class AddVelocityBiAction extends BiAction {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

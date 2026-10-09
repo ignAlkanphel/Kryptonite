@@ -18,6 +18,8 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 public class RespawnTeleportAction extends Action {
 
     public static final MapCodec<RespawnTeleportAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -76,7 +78,7 @@ public class RespawnTeleportAction extends Action {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

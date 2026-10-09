@@ -19,6 +19,7 @@ import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public record LightLevelBlockCondition(Optional<LightType> lightType, NumberComparator comparator, Value compareTo) implements BlockCondition {
@@ -68,19 +69,13 @@ public record LightLevelBlockCondition(Optional<LightType> lightType, NumberComp
     }
 
     public enum LightType implements StringRepresentable {
-        SKY("sky"),
-        BLOCK("block");
+        SKY, BLOCK;
 
         public static final Codec<LightType> CODEC = StringRepresentable.fromEnum(LightType::values);
-        private final String name;
-
-        LightType(String name) {
-            this.name = name;
-        }
 
         @Override
         public @NotNull String getSerializedName() {
-            return name;
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

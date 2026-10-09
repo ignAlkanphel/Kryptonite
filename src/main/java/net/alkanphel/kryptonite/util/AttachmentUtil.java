@@ -21,18 +21,15 @@ public final class AttachmentUtil {
         if (raw == null) return;
 
         AttachmentType<T> type = (AttachmentType<T>) raw;
-
         entity.setData(type, value);
     }
 
     public static String getString(Entity entity, Identifier id, String fallback) {
-        Object value = get(entity, id);
-        return value instanceof String s ? s : fallback;
+        return get(entity, id) instanceof String s ? s : fallback;
     }
 
     public static @Nullable String getString(Entity entity, Identifier id) {
-        Object value = get(entity, id);
-        return value instanceof String s ? s : null;
+        return get(entity, id) instanceof String s ? s : null;
     }
 
     public static boolean getBoolean(Entity entity, Identifier id) {

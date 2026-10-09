@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class ProjectileImpactAbility extends Ability {
 
@@ -129,7 +130,7 @@ public class ProjectileImpactAbility extends Ability {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

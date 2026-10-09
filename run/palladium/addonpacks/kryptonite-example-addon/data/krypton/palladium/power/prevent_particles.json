@@ -11,7 +11,7 @@
         "drowning",
         "sweep_attack",
         "critical_hit",
-        "magical_critical_hit",
+        "magic_critical_hit",
         "damage_indicator"
       ],
       "state": {

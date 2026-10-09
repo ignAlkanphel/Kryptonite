@@ -32,6 +32,7 @@ import net.threetag.palladium.util.ParsedCommands;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ActionOnItemSwapAbility extends Ability {
 
@@ -112,7 +113,7 @@ public class ActionOnItemSwapAbility extends Ability {
 
         @Override
         public @NotNull String getSerializedName() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 

@@ -24,6 +24,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ModifyKnockbackAbility extends Ability {
 
@@ -125,7 +126,7 @@ public class ModifyKnockbackAbility extends Ability {
 
         @Override
         public @NotNull String getSerializedName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 

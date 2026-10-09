@@ -80,7 +80,7 @@ public class InteractionAbility extends Ability {
             ItemAction.runList(heldItemActions, level, heldStackReference);
         }
 
-        ItemStack resultStack = this.resultStack.isPresent() ? this.resultStack.get().copy() : heldStackReference.get().copy();
+        ItemStack resultStack = this.resultStack.map(ItemStack::copy).orElseGet(() -> heldStackReference.get().copy());
         SlotAccess resultStackReference = InventoryUtil.createStackReference(resultStack);
 
         boolean modified = this.resultStack.isPresent() || !resultItemActions.isEmpty();

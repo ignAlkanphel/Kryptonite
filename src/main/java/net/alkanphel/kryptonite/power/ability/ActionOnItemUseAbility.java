@@ -35,6 +35,7 @@ import net.threetag.palladium.util.ParsedCommands;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 public class ActionOnItemUseAbility extends Ability implements Prioritized {
 
@@ -132,7 +133,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
 
         @Override
         public String getSerializedName() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 

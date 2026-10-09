@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Locale;
 
 public enum Shape implements StringRepresentable {
     CUBE, STAR, SPHERE;
@@ -77,7 +78,7 @@ public enum Shape implements StringRepresentable {
 
     @Override
     public @NotNull String getSerializedName() {
-        return name().toLowerCase();
+        return name().toLowerCase(Locale.ROOT);
     }
 
 }
