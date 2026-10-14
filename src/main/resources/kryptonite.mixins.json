@@ -47,7 +47,8 @@
     "client.ScreenEffectRendererMixin",
     "client.SlimeBlockMixin",
     "client.SweetBerryBushBlockMixin",
-    "client.WebBlockMixin"
+    "client.WebBlockMixin",
+    "client.PlayerCustomizationScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
