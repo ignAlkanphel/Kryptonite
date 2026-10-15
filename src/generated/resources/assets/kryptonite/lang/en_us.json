@@ -1,5 +1,5 @@
 {
-  "palladium.ability.kryptonite.action_on_being_used": "Action On Being Used",
+  "attribute.kryptonite.name.model_depth": "Model Depth",
   "palladium.ability.kryptonite.action_on_block_break": "Action On Block Break",
   "palladium.ability.kryptonite.action_on_block_place": "Action On Block Place",
   "palladium.ability.kryptonite.action_on_block_use": "Action On Block Use",

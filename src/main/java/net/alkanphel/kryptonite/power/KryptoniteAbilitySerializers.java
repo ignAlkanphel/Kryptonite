@@ -11,7 +11,6 @@ public class KryptoniteAbilitySerializers {
 
     public static final DeferredRegister<AbilitySerializer<?>> ABILITIES_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ABILITY_SERIALIZER, Kryptonite.MOD_ID);
 
-    public static final DeferredHolder<AbilitySerializer<?>, ActionOnBeingUsedAbility.Serializer> ACTION_ON_BEING_USED = ABILITIES_SERIALIZERS.register("action_on_being_used", ActionOnBeingUsedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockUseAbility.Serializer> ACTION_ON_BLOCK_USE = ABILITIES_SERIALIZERS.register("action_on_block_use", ActionOnBlockUseAbility.Serializer::new);

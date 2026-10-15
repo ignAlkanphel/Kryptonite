@@ -1,70 +1,82 @@
 package net.alkanphel.kryptonite.power.ability;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
+import net.alkanphel.kryptonite.power.logic.action.bi.meta.ActorActionBiAction;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.documentation.SettingType;
+import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.power.ability.Ability;
 import net.threetag.palladium.power.ability.AbilityProperties;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.power.ability.AbilityStateManager;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
+import net.threetag.palladium.util.ParsedCommands;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<ActionOnEntityUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            TargetUsed.CODEC.optionalFieldOf("target_used", TargetUsed.ACTOR).forGetter(a -> a.targetUsed),
             BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
             BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
             InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemActions, a.heldItemConditions, a.resultItemActions, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, (biEntityActions, biEntityConditions, activeFields, properties, state, energyBarUsages) -> {
+    ).apply(instance, (targetUsed, biEntityActions, biEntityConditions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new ActionOnEntityUseAbility(biEntityActions, biEntityConditions, interaction.heldItemActions(), interaction.heldItemConditions(), interaction.resultItemActions(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new ActionOnEntityUseAbility(targetUsed, biEntityActions, biEntityConditions, interaction.heldItemActions(), interaction.heldItemConditions(), interaction.resultItemActions(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
+    public final TargetUsed targetUsed;
     public final List<BiAction> biEntityActions;
     public final List<BiCondition> biEntityConditions;
 
-    public ActionOnEntityUseAbility(List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnEntityUseAbility(TargetUsed targetUsed, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(heldItemActions, heldItemConditions, resultItemActions, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+        this.targetUsed = targetUsed;
         this.biEntityActions = biEntityActions;
         this.biEntityConditions = biEntityConditions;
     }
 
-    public boolean shouldRun(Entity holder, Entity other, InteractionHand hand, ItemStack heldStack, PriorityPhase priorityPhase) {
-        if (!priorityPhase.test(this.getPriority()) || !super.shouldRun(hand, heldStack)) {
+    public boolean shouldRun(TargetUsed role, Player actor, Entity target, InteractionHand hand, ItemStack heldStack, PriorityPhase priorityPhase) {
+        if (this.targetUsed != role || !priorityPhase.test(this.getPriority()) || !super.shouldRun(hand, heldStack)) {
             return false;
         }
 
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, other)) {
+        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, actor, target)) {
             return false;
         }
 
         return true;
     }
 
-    public InteractionResult runActions(Entity holder, Entity other, InteractionHand hand) {
+    public InteractionResult runActions(Player actor, Entity target, InteractionHand hand) {
         if (!biEntityActions.isEmpty()) {
-            BiAction.runList(biEntityActions, holder, other);
-            performActorItemStuff((Player) holder, hand);
+            BiAction.runList(biEntityActions, actor, target);
         }
+
+        performActorItemStuff(actor, hand);
 
         return this.getActionResult();
     }
@@ -84,17 +96,31 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityUseAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Entity Use")
-                    .setDescription("Runs actions when the player that has this ability \"uses\" (right-clicks) an entity. In the context of this ability, the \"actor\" is the entity that has the ability & the 'target' is the entity that was \"used\" (right-clicked).")
+                    .setDescription("Runs actions when a player \"uses\" (right-clicks) an entity. In the context of this ability, the \"actor\" is the entity that did the \"usage\" action & the \"target\" is the entity that was \"used\". Which one of them needs to have this ability is determined by \"target_used\".")
+                    .addOptional("target_used", SettingType.enumList(TargetUsed.values()), "Determines which entity needs to have this ability. If \"actor\", the actions run when the entity with this ability \"uses\" an entity. If \"target\", the actions run when the entity with this ability is \"used\" by an entity.", TargetUsed.ACTOR)
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both the \"actor\" & \"target\" entities.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the specified actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
-                    .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the item used by the \"actor\" entity for right-clicking the \"target\" entity.")
-                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the specified actions will only be run if these conditions are fulfilled by the item used by the \"actor\" entity for right-clicking the \"target\" entity.")
+                    .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the item used by the \"actor\" entity for using the \"target\" entity.")
+                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the specified actions will only be run if these conditions are fulfilled by the item used by the \"actor\" entity for using the \"target\" entity.")
                     .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the item that is given to the \"actor\" entity.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "If specified, this item stack will be given to the \"actor\" entity.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the ability should be enabled if the \"actor\" entity used the specified hands.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnEntityUseAbility(List.of(), List.of(), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.ACTOR, List.of(), List.of(), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.TARGET, List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Action (actor_action) on interacted with entity with this ability!\", \"color\": \"red\"}"))))), List.of(), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+
+        }
+    }
+
+    public enum TargetUsed implements StringRepresentable {
+        ACTOR, TARGET;
+
+        public static final Codec<TargetUsed> CODEC = StringRepresentable.fromEnum(TargetUsed::values);
+
+        @Override
+        public @NotNull String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 
