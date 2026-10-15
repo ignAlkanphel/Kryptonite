@@ -114,7 +114,8 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
     }
 
     public enum TargetUsed implements StringRepresentable {
-        ACTOR, TARGET;
+        ACTOR, // action on entity use
+        TARGET; // action on being used
 
         public static final Codec<TargetUsed> CODEC = StringRepresentable.fromEnum(TargetUsed::values);
 

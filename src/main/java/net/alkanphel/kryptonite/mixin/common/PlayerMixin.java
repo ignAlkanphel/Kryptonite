@@ -70,25 +70,25 @@ public abstract class PlayerMixin extends LivingEntity {
         return original || AttachmentUtil.getBoolean((Player) (Object) this, KryptoniteAttachments.Addon.KEEP_INVENTORY);
     }
 
-    // Action On Entity Use & Prevent Entity Use & Prevent Being Used ability
+    // Action On Entity Use & Prevent Entity Use ability
     @WrapOperation(method = "interactOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/InteractionResult;"))
     private InteractionResult kryptonite$beforeEntityUse(Entity entity, Player player, InteractionHand hand, Vec3 location, Operation<InteractionResult> original, @Share("zeroPriority$onEntity") LocalRef<InteractionResult> sharedZeroPriority$onEntity) {
         ItemStack stackInHand = player.getItemInHand(hand);
 
-        // Prevent Entity Use ability
+        // Prevent Entity Use ability (actor)
         for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(this, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
-            PreventEntityUseAbility preventEntityUse = instance.getAbility();
-            if (preventEntityUse.doesApply(player, entity, hand, stackInHand)) {
-                return preventEntityUse.runActions(player, entity, hand);
+            PreventEntityUseAbility preventUse = instance.getAbility();
+            if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.ACTOR, player, entity, hand, stackInHand)) {
+                return preventUse.runActions(player, entity, hand);
             }
         }
 
-        // Prevent Being Used ability
+        // Prevent Entity Use ability (target)
         if (entity instanceof LivingEntity living) {
-            for (AbilityInstance<PreventBeingUsedAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_BEING_USED.get())) {
-                PreventBeingUsedAbility preventBeingUsed = instance.getAbility();
-                if (preventBeingUsed.doesApply(player, entity, hand, stackInHand)) {
-                    return preventBeingUsed.runActions(player, entity, hand);
+            for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
+                PreventEntityUseAbility preventUse = instance.getAbility();
+                if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand)) {
+                    return preventUse.runActions(player, entity, hand);
                 }
             }
         }

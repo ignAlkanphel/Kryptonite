@@ -83,7 +83,6 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_HEALING, "Modify Healing");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS, "Modify Invulnerability Ticks");
             this.addAbility(KryptoniteAbilitySerializers.MODIFY_KNOCKBACK, "Modify Knockback");
-            this.addAbility(KryptoniteAbilitySerializers.PREVENT_BEING_USED, "Prevent Being Used");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_PLACE, "Prevent Block Place");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION, "Prevent Block Selection");
             this.addAbility(KryptoniteAbilitySerializers.PREVENT_BLOCK_USE, "Prevent Block Use");

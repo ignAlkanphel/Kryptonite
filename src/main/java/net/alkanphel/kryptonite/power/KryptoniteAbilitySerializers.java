@@ -57,7 +57,6 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ModifyHealingAbility.Serializer> MODIFY_HEALING = ABILITIES_SERIALIZERS.register("modify_healing", ModifyHealingAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyInvulnerabilityTicksAbility.Serializer> MODIFY_INVULNERABILITY_TICKS = ABILITIES_SERIALIZERS.register("modify_invulnerability_ticks", ModifyInvulnerabilityTicksAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyKnockbackAbility.Serializer> MODIFY_KNOCKBACK = ABILITIES_SERIALIZERS.register("modify_knockback", ModifyKnockbackAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, PreventBeingUsedAbility.Serializer> PREVENT_BEING_USED = ABILITIES_SERIALIZERS.register("prevent_being_used", PreventBeingUsedAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBlockPlaceAbility.Serializer> PREVENT_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("prevent_block_place", PreventBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBlockSelectionAbility.Serializer> PREVENT_BLOCK_SELECTION = ABILITIES_SERIALIZERS.register("prevent_block_selection", PreventBlockSelectionAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, PreventBlockUseAbility.Serializer> PREVENT_BLOCK_USE = ABILITIES_SERIALIZERS.register("prevent_block_use", PreventBlockUseAbility.Serializer::new);
