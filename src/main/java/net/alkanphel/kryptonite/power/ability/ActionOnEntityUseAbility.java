@@ -96,7 +96,7 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityUseAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Entity Use")
-                    .setDescription("Runs actions when a player \"uses\" (right-clicks) an entity. In the context of this ability, the \"actor\" is the entity that did the \"usage\" action & the \"target\" is the entity that was \"used\". Which one of them needs to have this ability is determined by \"target_used\".")
+                    .setDescription("Runs actions when a player \"uses\" (right-clicks) an entity. In the context of this ability, the \"actor\" is the player that did the \"usage\" action & the \"target\" is the entity that was \"used\". Which one of them needs to have this ability is determined by \"target_used\".")
                     .addOptional("target_used", SettingType.enumList(TargetUsed.values()), "Determines which entity needs to have this ability. If \"actor\", the actions run when the entity with this ability \"uses\" an entity. If \"target\", the actions run when the entity with this ability is \"used\" by an entity.", TargetUsed.ACTOR)
                     .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both the \"actor\" & \"target\" entities.")
                     .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the specified actions will only be run if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
