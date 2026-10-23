@@ -2,8 +2,8 @@ package net.alkanphel.kryptonite.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.alkanphel.kryptonite.client.render.KryptoniteLivingEntityRenderState;
-import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributeUtil;
-import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributeUtilClient;
+import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributesUtil;
+import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributesUtilClient;
 import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributes;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -22,12 +22,12 @@ public abstract class LivingEntityRendererPriorityMixin<T extends LivingEntity, 
     @ModifyArgs(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", ordinal = 1))
     private void kryptonite$applyModelDepth(Args args, @Local(argsOnly = true, name = "state") LivingEntityRenderState state) {
         float z = state.scale;
-        if (z != 0.0F) args.set(2, (float) (KryptoniteAttributeUtilClient.getModelDepth(state, z) / z));
+        if (z != 0.0F) args.set(2, (float) (KryptoniteAttributesUtilClient.getModelDepth(state, z) / z));
     }
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("TAIL"))
     private void kryptonite$storeModelDepth(T entity, S state, float partialTicks, CallbackInfo ci) {
-        ((KryptoniteLivingEntityRenderState) state).kryptonite$setModelDepth(KryptoniteAttributeUtil.getScaleAttributeModifierValue(entity, KryptoniteAttributes.MODEL_DEPTH));
+        ((KryptoniteLivingEntityRenderState) state).kryptonite$setModelDepth(KryptoniteAttributesUtil.getScaleAttributeModifierValue(entity, KryptoniteAttributes.MODEL_DEPTH));
     }
 
 }

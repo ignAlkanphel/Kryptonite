@@ -48,7 +48,7 @@
     "client.SlimeBlockMixin",
     "client.SweetBerryBushBlockMixin",
     "client.WebBlockMixin",
-    "client.PlayerCustomizationScreenMixin"
+    "client.GuiEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

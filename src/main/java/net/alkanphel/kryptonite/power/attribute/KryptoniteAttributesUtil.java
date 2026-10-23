@@ -6,13 +6,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
-public class KryptoniteAttributeUtil {
+public class KryptoniteAttributesUtil {
 
-	public static final double MIN_SCALE = 0.0625;
-	public static final double MAX_SCALE = 16.0;
+	public static final double SCALE_MIN = 0.0625;
+	public static final double SCALE_MAX = 16.0;
 
     public static double getModelDepth(LivingEntity entity, double original) {
-        return Mth.clamp(original * getScaleAttributeModifierValue(entity, KryptoniteAttributes.MODEL_DEPTH), MIN_SCALE, MAX_SCALE);
+        return Mth.clamp(original * getScaleAttributeModifierValue(entity, KryptoniteAttributes.MODEL_DEPTH), SCALE_MIN, SCALE_MAX);
     }
 
     public static double getScaleAttributeModifierValue(LivingEntity entity, Holder<Attribute> attribute) {
@@ -23,7 +23,7 @@ public class KryptoniteAttributeUtil {
         AttributeInstance instance = entity.getAttribute(attribute);
         if (instance != null) value = instance.getValue();
 
-        return Mth.clamp(value, MIN_SCALE, MAX_SCALE);
+        return Mth.clamp(value, SCALE_MIN, SCALE_MAX);
     }
 
 }
