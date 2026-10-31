@@ -20,10 +20,10 @@
     "common.LivingEntityMixin",
     "common.MobMixin",
     "common.PlayerMixin",
-    "common.ServerPlayerMixin",
     "common.PowerInstanceMixin",
     "common.ServerPlayerGameModeAccessor",
     "common.ServerPlayerGameModeMixin",
+    "common.ServerPlayerMixin",
     "common.SlotRangesAccessor",
     "common.TagLoaderMixin",
     "common.UseOnContextAccessor"
@@ -36,6 +36,7 @@
     "client.EntityRendererMixin",
     "client.FoodDataMixin",
     "client.GameRendererMixin",
+    "client.GuiEntityRendererMixin",
     "client.KeyMappingAccessor",
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRendererPriorityMixin",
@@ -47,8 +48,7 @@
     "client.ScreenEffectRendererMixin",
     "client.SlimeBlockMixin",
     "client.SweetBerryBushBlockMixin",
-    "client.WebBlockMixin",
-    "client.GuiEntityRendererMixin"
+    "client.WebBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
