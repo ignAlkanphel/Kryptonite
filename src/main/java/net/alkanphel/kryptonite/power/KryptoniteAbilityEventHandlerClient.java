@@ -87,14 +87,14 @@ public class KryptoniteAbilityEventHandlerClient {
         }
     }
 
-    @SubscribeEvent // Immediate Respawn ability & attachment
+    @SubscribeEvent // Immediate Respawn attachment
     public static void onScreenOpening(ScreenEvent.Opening e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return;
 
         if (!(e.getNewScreen() instanceof DeathScreen)) return;
 
-        if (AbilityUtil.isTypeEnabled(mc.player, KryptoniteAbilitySerializers.IMMEDIATE_RESPAWN.get()) || AttachmentUtil.getBoolean(mc.player, KryptoniteAttachments.Addon.IMMEDIATE_RESPAWN)) {
+        if (AttachmentUtil.getBoolean(mc.player, KryptoniteAttachments.Addon.IMMEDIATE_RESPAWN)) {
             mc.player.respawn();
             e.setNewScreen(null);
         }

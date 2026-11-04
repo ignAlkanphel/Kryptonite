@@ -1,9 +1,0 @@
-{
-  "name": "Immediate Respawn", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "immediate_respawn": {
-      "type": "kryptonite:immediate_respawn"
-    }
-  }
-}

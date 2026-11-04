@@ -41,7 +41,6 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, FreezeAbility.Serializer> FREEZE = ABILITIES_SERIALIZERS.register("freeze", FreezeAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, GameEventListenerAbility.Serializer> GAME_EVENT_LISTENER = ABILITIES_SERIALIZERS.register("game_event_listener", GameEventListenerAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, GlowingAbility.Serializer> GLOWING = ABILITIES_SERIALIZERS.register("glowing", GlowingAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, ImmediateRespawnAbility.Serializer> IMMEDIATE_RESPAWN = ABILITIES_SERIALIZERS.register("immediate_respawn", ImmediateRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, IntangibilityAbility.Serializer> INTANGIBILITY = ABILITIES_SERIALIZERS.register("intangibility", IntangibilityAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, KeepInventoryAbility.Serializer> KEEP_INVENTORY = ABILITIES_SERIALIZERS.register("keep_inventory", KeepInventoryAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ModifyBlockDestroySpeedAbility.Serializer> MODIFY_BLOCK_DESTROY_SPEED = ABILITIES_SERIALIZERS.register("modify_block_destroy_speed", ModifyBlockDestroySpeedAbility.Serializer::new);
