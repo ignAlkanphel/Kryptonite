@@ -1,5 +1,7 @@
 {
   "addonpack": {
+    "id": "kryptonite_test_pack",
+    "version": "1.0",
     "description": "Kryptonite Test Pack",
     "min_format": [2, 0],
     "max_format": [2, 0]
@@ -10,10 +12,14 @@
       "palladium:mechanic/multiversal_variants",
       "palladium:customization/eye_selection",
       "palladium:worldgen/meteorite_biome",
+      "palladium:worldgen/ruined_multiverse_portals",
       "palladium:material/circuits",
       "palladium:material/lead",
       "palladium:material/titanium",
-      "palladium:material/vibranium"
+      "palladium:material/vibranium",
+      "palladium:material/redstone_flux_crystals",
+      "palladium:item/vials",
+      "palladium:block/heart_shaped_herb"
     ]
   }
 }
