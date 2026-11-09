@@ -5,8 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +15,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.action.Action;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
@@ -34,28 +34,27 @@ public class ModifyKnockbackAbility extends Ability {
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("ratio_x_modifiers", List.of()).forGetter(a -> a.ratioXModifiers),
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("ratio_z_modifiers", List.of()).forGetter(a -> a.ratioZModifiers),
             Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.targetActions),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyKnockbackAbility::new));
 
     public final ApplyTo applyTo;
     public final List<KryptoniteModifiers.ValueModifier> strengthModifiers, ratioXModifiers, ratioZModifiers;
-    public final List<Action> targetActions;
-    public final List<BiAction> biEntityActions;
-    public final List<BiCondition> biEntityConditions;
+    public final List<Action> targetActions, entityActions;
+    public final Condition entityConditions;
     public final List<DamageCondition> damageConditions;
 
-    public ModifyKnockbackAbility(ApplyTo applyTo, List<KryptoniteModifiers.ValueModifier> strengthModifiers, List<KryptoniteModifiers.ValueModifier> ratioXModifiers, List<KryptoniteModifiers.ValueModifier> ratioZModifiers, List<Action> targetActions, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyKnockbackAbility(ApplyTo applyTo, List<KryptoniteModifiers.ValueModifier> strengthModifiers, List<KryptoniteModifiers.ValueModifier> ratioXModifiers, List<KryptoniteModifiers.ValueModifier> ratioZModifiers, List<Action> targetActions, List<Action> entityActions, Condition entityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.applyTo = applyTo;
         this.strengthModifiers = strengthModifiers;
         this.ratioXModifiers = ratioXModifiers;
         this.ratioZModifiers = ratioZModifiers;
         this.targetActions = targetActions;
-        this.biEntityActions = biEntityActions;
-        this.biEntityConditions = biEntityConditions;
+        this.entityActions = entityActions;
+        this.entityConditions = entityConditions;
         this.damageConditions = damageConditions;
     }
 
@@ -63,11 +62,10 @@ public class ModifyKnockbackAbility extends Ability {
         return applyTo == ApplyTo.SELF;
     }
 
-    public boolean doesApplyToTarget(LivingEntity attacker, LivingEntity target, DamageSource source, float amount) {
+    public boolean doesApplyToTarget(LivingEntity attacker, LivingEntity target, DamageSource source, float amount, AbilityInstance<?> instance) {
         if (this.applyTo != ApplyTo.OTHER) return false;
         if (!damageConditions.isEmpty() && !DamageCondition.checkConditions(damageConditions, source, amount)) return false;
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, attacker, target)) return false;
-        return true;
+        return entityConditions.test(DataContext.forAffected(target, attacker, instance));
     }
 
     public float applyStrength(float value, LivingEntity owner, AbilityInstance<?> instance) {
@@ -82,12 +80,16 @@ public class ModifyKnockbackAbility extends Ability {
         return KryptoniteModifiers.applyModifiers((float) value, ratioZModifiers, DataContext.forAbility(owner, instance));
     }
 
-    public void runActions(LivingEntity entity) {
-        if (!targetActions.isEmpty()) Action.runList(targetActions, DataContext.forEntity(entity));
+    public void runTargetActions(Entity source, LivingEntity target, AbilityInstance<?> instance) {
+        if (!targetActions.isEmpty()) {
+            Action.runList(targetActions, DataContext.forAffected(target, source, instance));
+        }
     }
 
-    public void runBiActions(Entity attacker, LivingEntity target) {
-        if (attacker != null && !biEntityActions.isEmpty()) BiAction.runList(biEntityActions, attacker, target);
+    public void runEntityActions(Entity source, LivingEntity target, AbilityInstance<?> instance) {
+        if (!entityActions.isEmpty()) {
+            Action.runList(entityActions, DataContext.forAffected(target, source, instance));
+        }
     }
 
     @Override
@@ -105,17 +107,17 @@ public class ModifyKnockbackAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyKnockbackAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Knockback")
-                    .setDescription("Modifies knockback dealt or received. In the context of this ability, the \"actor\" is the entity that deals knockback & the \"target\" is the entity that receives knockback. For the \"apply_to\" field, \"self\" and \"other\" refer to the entity that has this ability.")
-                    .addOptional("apply_to", SettingType.enumList(ApplyTo.values()), "Whether this ability modifies knockback received to your \"self\" or knockback dealt to the \"other\" entity.", ApplyTo.OTHER)
-                    .addOptional("strength_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, the modifiers applied to knockback strength.")
-                    .addOptional("ratio_x_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, the modifiers applied to knockback X ratio.")
-                    .addOptional("ratio_z_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, the modifiers applied to knockback Z ratio.")
-                    .addOptional("target_actions", TYPE_ACTION_LIST, "If specified, these actions will run on the \"target\" entity upon being knocked back.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both the \"actor\" & \"target\" entities. Only used with \"other\".")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only applies when these conditions are fulfilled by the \"actor\" & \"target\" entities. Only used with \"other\".")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only applies when the damage matches these damage conditions. Only used with \"other\".")
-                    .addExampleObject(new ModifyKnockbackAbility(ApplyTo.OTHER, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-1), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyKnockbackAbility(ApplyTo.OTHER, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.75), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .setDescription("Modifies knockback dealt or received. For this ability, the \"source\" is the entity that deals knockback & the \"target\" is the entity that receives knockback. For the \"apply_to\" field, \"self\" and \"other\" refer to the entity that has this ability.")
+                    .addOptional("apply_to", SettingType.enumList(ApplyTo.values()), "Whether this ability modifies knockback received by the target or knockback dealt to another entity.", ApplyTo.OTHER)
+                    .addOptional("strength_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to knockback strength.")
+                    .addOptional("ratio_x_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to knockback X ratio.")
+                    .addOptional("ratio_z_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to knockback Z ratio.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target when it receives knockback.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target when it receives knockback from the source. Only used with \"other\".")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that must be met by the source and target for the modifiers and actions to apply. Only used with \"other\".")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the incoming damage must meet for the modifiers and actions to apply. Only used with \"other\".")
+                    .addExampleObject(new ModifyKnockbackAbility(ApplyTo.OTHER, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-1), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ModifyKnockbackAbility(ApplyTo.OTHER, List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.75), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

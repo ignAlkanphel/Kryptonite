@@ -4,9 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.client.render.OpacityRenderChanging;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
-import net.alkanphel.kryptonite.power.logic.condition.bi.meta.TargetConditionBiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -18,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.EntityTypeCondition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
@@ -28,7 +26,6 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class PreventEntityRenderAbility extends Ability implements OpacityRenderChanging<PreventEntityRenderAbility> {
@@ -37,32 +34,21 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
 
     public static final MapCodec<PreventEntityRenderAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Value.CODEC.optionalFieldOf("target_opacity", new StaticValue(0.0F)).forGetter(a -> a.targetOpacity),
-            Condition.CODEC.optionalFieldOf("entity_conditions").forGetter(ab -> ab.entityConditions),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventEntityRenderAbility::new));
 
     public final Value targetOpacity;
-    public final Optional<Condition> entityConditions;
-    private final List<BiCondition> biEntityConditions;
+    public final Condition entityConditions;
 
-    public PreventEntityRenderAbility(Value targetOpacity, Optional<Condition> entityConditions, List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventEntityRenderAbility(Value targetOpacity, Condition entityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.targetOpacity = targetOpacity;
         this.entityConditions = entityConditions;
-        this.biEntityConditions = biEntityConditions;
     }
 
-    public boolean doesApply(LivingEntity holder, Entity target) {
-        if (entityConditions.isPresent() && !entityConditions.get().test(DataContext.forEntity(target))) {
-            return false;
-        }
-
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, holder, target)) {
-            return false;
-        }
-
-        return true;
+    public boolean doesApply(LivingEntity viewer, Entity target) {
+        return entityConditions.test(DataContext.forAffected(target, viewer, null));
     }
 
     @Override
@@ -109,13 +95,12 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityRenderAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Entity Render")
-                    .setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. Warning that these condition fields evaluate client-side. In the context of this ability, the \"actor\" is the player/viewer that has the ability & the \"target\" is the entities whose rendering have been modified.")
+                    .setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. For this ability, the \"source\" is the player/viewer that has the ability & the \"target\" is the entity whose rendering is being modified.")
                     .addOptional("target_opacity", TYPE_FLOAT_VALUE, "The opacity value that the entities will render with. A value of 0 will explicitly cause entities to no longer render rather than have their opacity change.", 0)
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, only entities that fulfill these conditions will be affected.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, these conditions must be fulfilled by either or both \"actor\" & \"target\" entities.")
-                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), Optional.empty(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), Optional.empty(), List.of(), new AbilityProperties().animationTimer(new AnimationTimerSetting(0, 10, AnimationTimerSetting.Behaviour.FOLLOW, Easing.INEXPO)), AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), Optional.empty(), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to have its rendering modified. Use 'palladium:as_source' to check conditions against the viewer instead. Evaluates client-side.")
+                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), TrueCondition.INSTANCE, new AbilityProperties().animationTimer(new AnimationTimerSetting(0, 10, AnimationTimerSetting.Behaviour.FOLLOW, Easing.INEXPO)), AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

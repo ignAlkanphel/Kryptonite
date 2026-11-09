@@ -3,11 +3,6 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.SetInLoveBiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
-import net.alkanphel.kryptonite.power.logic.condition.bi.meta.TargetConditionBiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -17,13 +12,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
+import net.threetag.palladium.logic.action.AsSourceAction;
 import net.threetag.palladium.logic.action.RunCommandAction;
+import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.EntityTypeCondition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.power.ability.Ability;
-import net.threetag.palladium.power.ability.AbilityProperties;
-import net.threetag.palladium.power.ability.AbilitySerializer;
-import net.threetag.palladium.power.ability.AbilityStateManager;
+import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
@@ -34,29 +29,25 @@ public class ActionOnTameAbility extends Ability {
 
     public static final MapCodec<ActionOnTameAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnTameAbility::new));
 
     public final List<Action> entityActions;
-    public final List<BiAction> biEntityActions;
-    public final List<BiCondition> biEntityConditions;
+    public final Condition entityConditions;
 
-    public ActionOnTameAbility(List<Action> entityActions, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnTameAbility(List<Action> entityActions, Condition entityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.biEntityActions = biEntityActions;
-        this.biEntityConditions = biEntityConditions;
+        this.entityConditions = entityConditions;
     }
 
-    public boolean doesApply(Player tamer, Animal animal) {
-        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, tamer, animal);
+    public boolean doesApply(Player source, Animal target, AbilityInstance<?> abilityInstance) {
+        return entityConditions.test(DataContext.forAffected(target, source, abilityInstance));
     }
 
-    public void runActions(Player tamer, Animal animal) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(tamer));
-        if (!biEntityActions.isEmpty()) BiAction.runList(biEntityActions, tamer, animal);
+    public void runActions(Player source, Animal target, AbilityInstance<?> abilityInstance) {
+        Action.runList(entityActions, DataContext.forAffected(target, source, abilityInstance));
     }
 
     @Override
@@ -74,11 +65,11 @@ public class ActionOnTameAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTameAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Tame")
-                    .setDescription("Runs actions when the player tames an animal. In the context of this ability, the \"actor\" is the player taming the animal & \"target\" the animal being tamed.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the player that tamed the animal.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only be run if these conditions are fulfilled by either or both the \"actor\" & \"target\" entities.")
-                    .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on tame!"))), List.of(new SetInLoveBiAction()), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("wolf")))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .setDescription("Performs actions when a player tames an animal. For this ability, the \"source\" is the player taming the animal & the \"target\" is the animal being tamed.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed. Use 'palladium:as_source' to run actions on the player instead.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the animal must meet to trigger the actions.")
+                    .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!")), new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say You tamed them"))))), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("wolf")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

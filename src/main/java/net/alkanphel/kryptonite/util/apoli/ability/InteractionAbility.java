@@ -72,7 +72,7 @@ public class InteractionAbility extends Ability {
         return actionResult;
     }
 
-    protected void performActorItemStuff(Player actor, InteractionHand hand) {
+    protected void performSourceItemStuff(Player actor, InteractionHand hand) {
         SlotAccess heldStackReference = getHeldStackReference(actor, hand);
         Level level = actor.level();
 

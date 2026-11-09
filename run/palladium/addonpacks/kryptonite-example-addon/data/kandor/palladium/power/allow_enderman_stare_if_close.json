@@ -4,8 +4,8 @@
   "abilities": {
     "allow_enderman_stare": {
       "type": "kryptonite:allow_enderman_stare",
-      "bientity_conditions": {
-        "type": "kryptonite:distance",
+      "entity_conditions": {
+        "type": "kryptonite:distance_from_entity",
         "comparator": "<=",
         "compare_to": 5
       }

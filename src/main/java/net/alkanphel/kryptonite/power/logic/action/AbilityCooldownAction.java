@@ -31,7 +31,7 @@ public class AbilityCooldownAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         LivingEntity living = context.getLivingEntity();
         PowerInstance power = context.getPowerInstance();
 

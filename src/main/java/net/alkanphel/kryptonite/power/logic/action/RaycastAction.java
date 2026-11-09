@@ -5,9 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.alkanphel.kryptonite.util.apoli.Space;
@@ -24,6 +22,7 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.action.RunCommandAction;
+import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.context.DataContextKeys;
 import net.threetag.palladium.logic.value.StaticValue;
@@ -53,8 +52,8 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
             Action.LIST_CODEC.optionalFieldOf("pre_actions", List.of()).forGetter(a -> a.preActions),
             Action.LIST_CODEC.optionalFieldOf("hit_actions", List.of()).forGetter(a -> a.hitActions),
             Action.LIST_CODEC.optionalFieldOf("miss_actions", List.of()).forGetter(a -> a.missActions),
-            BiCondition.CODEC.optionalFieldOf("bientity_conditions").forGetter(ab -> ab.biEntityConditions),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
+            Condition.CODEC.optionalFieldOf("entity_conditions").forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             KryptoniteCodecs.CLIP_CONTEXT_BLOCK_CODEC.optionalFieldOf("shape_type", ClipContext.Block.OUTLINE).forGetter(a -> a.shapeType),
             KryptoniteCodecs.CLIP_CONTEXT_FLUID_CODEC.optionalFieldOf("fluid_handling", ClipContext.Fluid.ANY).forGetter(a -> a.fluidHandling),
@@ -66,12 +65,12 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
             ActionOptions.CODEC.forGetter(a -> new ActionOptions(a.actionAtHit, a.actionAlongRay, a.actionHitOffset, a.actionStep, a.actionAlongRayOnlyOnHit)),
             Value.CODEC.optionalFieldOf("include_entities", new StaticValue(true)).forGetter(a -> a.includeEntities),
             Value.CODEC.optionalFieldOf("include_blocks", new StaticValue(true)).forGetter(a -> a.includeBlocks)
-    ).apply(instance, (preActions, hitActions, missActions, biEntityConditions, biEntityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts, includeEntities, includeBlocks) ->
-            new RaycastAction(preActions, hitActions, missActions, biEntityConditions, biEntityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts.actionAtHit(), actOpts.actionAlongRay(), actOpts.actionHitOffset(), actOpts.actionStep(), actOpts.actionAlongRayOnlyOnHit(), includeEntities, includeBlocks)));
+    ).apply(instance, (preActions, hitActions, missActions, entityConditions, entityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts, includeEntities, includeBlocks) ->
+            new RaycastAction(preActions, hitActions, missActions, entityConditions, entityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts.actionAtHit(), actOpts.actionAlongRay(), actOpts.actionHitOffset(), actOpts.actionStep(), actOpts.actionAlongRayOnlyOnHit(), includeEntities, includeBlocks)));
 
     private final List<Action> preActions, hitActions, missActions;
-    private final Optional<BiCondition> biEntityConditions;
-    private final List<BiAction> biEntityActions;
+    private final Optional<Condition> entityConditions;
+    private final List<Action> entityActions;
     private final List<BlockAction> blockActions;
     private final ClipContext.Block shapeType;
     private final ClipContext.Fluid fluidHandling;
@@ -83,12 +82,12 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
     private final double actionStep;
     private final Value actionAlongRayOnlyOnHit, includeEntities, includeBlocks;
 
-    public RaycastAction(List<Action> preActions, List<Action> hitActions, List<Action> missActions, Optional<BiCondition> biEntityConditions, List<BiAction> biEntityActions, List<BlockAction> blockActions, ClipContext.Block shapeType, ClipContext.Fluid fluidHandling, Optional<Vec3> direction, Space space, Optional<Double> entityDistance, Optional<Double> blockDistance, Optional<Double> distance, List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, Value actionAlongRayOnlyOnHit, Value includeEntities, Value includeBlocks) {
+    public RaycastAction(List<Action> preActions, List<Action> hitActions, List<Action> missActions, Optional<Condition> entityConditions, List<Action> entityActions, List<BlockAction> blockActions, ClipContext.Block shapeType, ClipContext.Fluid fluidHandling, Optional<Vec3> direction, Space space, Optional<Double> entityDistance, Optional<Double> blockDistance, Optional<Double> distance, List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, Value actionAlongRayOnlyOnHit, Value includeEntities, Value includeBlocks) {
         this.preActions = preActions;
         this.hitActions = hitActions;
         this.missActions = missActions;
-        this.biEntityConditions = biEntityConditions;
-        this.biEntityActions = biEntityActions;
+        this.entityConditions = entityConditions;
+        this.entityActions = entityActions;
         this.blockActions = blockActions;
         this.shapeType = shapeType;
         this.fluidHandling = fluidHandling;
@@ -107,7 +106,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         Entity entity = context.getEntity();
         if (entity == null) return false;
 
@@ -159,7 +158,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
                     if (!blockActions.isEmpty()) BlockAction.runList(blockActions, entity.level(), blockResult.getBlockPos(), Optional.of(blockResult.getDirection()));
                 }
                 case EntityHitResult entityResult -> {
-                    if (!biEntityActions.isEmpty()) BiAction.runList(biEntityActions, entity, entityResult.getEntity());
+                    if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(entityResult.getEntity(), entity, null));
                 }
                 default -> {
                     //  No-op; unsupported
@@ -189,7 +188,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
         AABB box = caster.getBoundingBox().expandTowards(ray).inflate(1.0D);
 
         Predicate<Entity> intersectPredicate = EntitySelector.NO_SPECTATORS
-                .and(intersected -> biEntityConditions.map(condition -> condition.test(caster, intersected)).orElse(true));
+                .and(intersected -> entityConditions.map(condition -> condition.test(DataContext.forAffected(intersected, caster, null))).orElse(true));
 
         return ProjectileUtil.getEntityHitResult(caster, origin, destination, box, intersectPredicate, ray.lengthSqr());
     }
@@ -294,12 +293,12 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, RaycastAction> builder, HolderLookup.Provider provider) {
             builder.setName("Raycast")
-                    .setDescription("Performs a raycast in the direction the entity is looking. In the context of this action, the \"actor\" is the entity that ran this action & the \"target\" is the entity hit by the raycast.")
+                    .setDescription("Performs a raycast in the direction the entity is looking. For this action, the \"source\" is the entity that ran this action & the \"target\" is the entity hit by the raycast.")
                     .addOptional("pre_actions", TYPE_ACTION_LIST, "The actions to run before the raycast is performed.")
                     .addOptional("hit_actions", TYPE_ACTION_LIST, "The actions to run when the raycast hits something.")
                     .addOptional("miss_actions", TYPE_ACTION_LIST, "The actions to run when the raycast misses.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only entities fulfilling these conditions will be considered as valid raycast targets.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both the \"actor\" or \"target\" entities.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, only entities fulfilling these conditions will be considered as valid raycast targets.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the entity hit by the raycast.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "If specified, these action will be run on the block the raycast has hit.")
                     .addOptional("shape_type", KryptoniteDocumented.TYPE_CLIP_CONTEXT_BLOCK, "How the raycast handles blocks.", ClipContext.Block.OUTLINE)
                     .addOptional("fluid_handling", KryptoniteDocumented.TYPE_CLIP_CONTEXT_FLUID, "How the raycast handles fluids.", ClipContext.Fluid.ANY)

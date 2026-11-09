@@ -4,55 +4,50 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.context.DataContextKeys;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
 import java.util.List;
-import java.util.Optional;
 
 public class VehicleRidingActionAction extends Action {
 
     public static final MapCodec<VehicleRidingActionAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.actions),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.CODEC.optionalFieldOf("bientity_conditions").forGetter(a -> a.biEntityConditions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             Value.CODEC.optionalFieldOf("recursive", new StaticValue(false)).forGetter(a -> a.recursive)
     ).apply(instance, VehicleRidingActionAction::new));
 
-    private final List<Action> actions;
-    private final List<BiAction> biEntityActions;
-    private final Optional<BiCondition> biEntityConditions;
+    private final List<Action> entityActions;
+    private final Condition entityConditions;
     private final Value recursive;
 
-    public VehicleRidingActionAction(List<Action> actions, List<BiAction> biEntityActions, Optional<BiCondition> biEntityConditions, Value recursive) {
-        this.actions = actions;
-        this.biEntityActions = biEntityActions;
-        this.biEntityConditions = biEntityConditions;
+    public VehicleRidingActionAction(List<Action> entityActions, Condition entityConditions, Value recursive) {
+        this.entityActions = entityActions;
+        this.entityConditions = entityConditions;
         this.recursive = recursive;
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         Entity entity = context.get(DataContextKeys.ENTITY);
         if (entity == null) return false;
 
         Entity vehicle = entity.getVehicle();
 
         while (vehicle != null) {
-            Entity finalVehicle = vehicle;
+            DataContext vehicleContext = DataContext.forAffected(vehicle, entity, null);
 
-            if (biEntityConditions.map(c -> c.test(entity, finalVehicle)).orElse(true)) {
-                if (!actions.isEmpty()) Action.runList(actions, DataContext.forEntity(finalVehicle));
-                if (!biEntityActions.isEmpty()) BiAction.runList(biEntityActions, entity, finalVehicle);
+            if (entityConditions.test(vehicleContext)) {
+                Action.runList(entityActions, vehicleContext);
             }
 
             if (!recursive.getAsBoolean(context)) break;
@@ -77,12 +72,11 @@ public class VehicleRidingActionAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, VehicleRidingActionAction> builder, HolderLookup.Provider provider) {
             builder.setName("Vehicle Riding Action")
-                    .setDescription("Runs actions on the entity/entities being ridden by said entity.")
-                    .addOptional("actions", TYPE_ACTION_LIST, "If specified, runs the actions on the entity/entities being ridden.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, runs these actions on the entity/entities being ridden.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the actions if these conditions are fulfilled.")
-                    .addOptional("recursive", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If set to true, the specified actions will run on all entities that are being ridden.", false)
-                    .addExampleObject(new VehicleRidingActionAction(List.of(), List.of(), Optional.empty(), new StaticValue(false)));
+                    .setDescription("Performs actions on the vehicles being ridden by the entity. For this action, the \"source\" is the rider and the \"target\" is each vehicle.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on each vehicle.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that each vehicle must meet for the actions to perform.")
+                    .addOptional("recursive", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "Whether to perform the actions on vehicles further up the riding chain.", false)
+                    .addExampleObject(new VehicleRidingActionAction(List.of(), TrueCondition.INSTANCE, new StaticValue(false)));
         }
     }
 

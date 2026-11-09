@@ -4,12 +4,9 @@
   "abilities": {
     "action_on_item_pickup": {
       "type": "kryptonite:action_on_item_pickup",
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say AHHH!!! PICKED UP PICKED UP!!!"
-        }
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say AHHH!!! PICKED UP PICKED UP!!!"
       }
     },
     "action_on_item_pickup_not": {
@@ -22,19 +19,13 @@
             "item": "minecraft:cod"
           }
       },
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say You got speed? Pick me up, baby!"
-        }
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say You got speed? Pick me up, baby!"
       },
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:has_effect",
-          "effect": "minecraft:speed"
-        }
+      "entity_conditions": {
+        "type": "palladium:has_effect",
+        "effect": "minecraft:speed"
       }
     }
   }

@@ -36,7 +36,8 @@ public class AddVelocityAction extends Action {
         this.set = set;
     }
 
-    public boolean execute(DataContext context) {
+    @Override
+    protected boolean execute(DataContext context) {
         Entity entity = context.getEntity();
         if (entity == null) return false;
 

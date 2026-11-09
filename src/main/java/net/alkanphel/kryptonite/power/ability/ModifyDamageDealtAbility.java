@@ -4,9 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.OwnerBiCondition;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.HolderLookup;
@@ -28,43 +25,41 @@ public class ModifyDamageDealtAbility extends Ability {
 
     public static final MapCodec<ModifyDamageDealtAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("modifiers", List.of()).forGetter(a -> a.modifiers),
-            Action.LIST_CODEC.optionalFieldOf("self_actions", List.of()).forGetter(a -> a.selfAction),
-            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.targetAction),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityAction),
-            Condition.CODEC.optionalFieldOf("target_conditions").forGetter(a -> a.targetCondition),
-            BiCondition.CODEC.optionalFieldOf("bientity_conditions").forGetter(a -> a.biEntityCondition),
-            DamageCondition.CODEC.optionalFieldOf("damage_conditions").forGetter(a -> a.damageCondition),
+            Action.LIST_CODEC.optionalFieldOf("self_actions", List.of()).forGetter(a -> a.selfActions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.targetActions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("target_conditions").forGetter(a -> a.targetConditions),
+            Condition.CODEC.optionalFieldOf("entity_conditions").forGetter(a -> a.entityConditions),
+            DamageCondition.CODEC.optionalFieldOf("damage_conditions").forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyDamageDealtAbility::new));
 
     public final List<KryptoniteModifiers.ValueModifier> modifiers;
-    public final List<Action> selfAction, targetAction;
-    public final List<BiAction> biEntityAction;
-    public final Optional<Condition> targetCondition;
-    public final Optional<BiCondition> biEntityCondition;
-    public final Optional<DamageCondition> damageCondition;
+    public final List<Action> selfActions, targetActions, entityActions;
+    public final Optional<Condition> targetConditions, entityConditions;
+    public final Optional<DamageCondition> damageConditions;
 
-    public ModifyDamageDealtAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfAction, List<Action> targetAction, List<BiAction> biEntityAction, Optional<Condition> targetCondition, Optional<BiCondition> biEntityCondition, Optional<DamageCondition> damageCondition, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyDamageDealtAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfActions, List<Action> targetActions, List<Action> entityActions, Optional<Condition> targetConditions, Optional<Condition> entityConditions, Optional<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.modifiers = modifiers;
-        this.selfAction = selfAction;
-        this.targetAction = targetAction;
-        this.biEntityAction = biEntityAction;
-        this.targetCondition = targetCondition;
-        this.biEntityCondition = biEntityCondition;
-        this.damageCondition = damageCondition;
+        this.selfActions = selfActions;
+        this.targetActions = targetActions;
+        this.entityActions = entityActions;
+        this.targetConditions = targetConditions;
+        this.entityConditions = entityConditions;
+        this.damageConditions = damageConditions;
     }
 
-    public boolean doesApply(DamageSource source, float damageAmount, Entity attacker, Entity target) {
-        return damageCondition.map(condition -> condition.test(source, damageAmount)).orElse(true)
-                && targetCondition.map(condition -> condition.test(DataContext.forEntity(target))).orElse(true)
-                && biEntityCondition.map(condition -> condition.test(attacker, target)).orElse(true);
+    public boolean doesApply(DamageSource source, float damageAmount, Entity attacker, Entity target, AbilityInstance<?> instance) {
+        return damageConditions.map(condition -> condition.test(source, damageAmount)).orElse(true)
+                && targetConditions.map(condition -> condition.test(DataContext.forAffected(target, attacker, instance))).orElse(true)
+                && entityConditions.map(condition -> condition.test(DataContext.forAffected(target, attacker, instance))).orElse(true);
     }
 
-    public void runActions(Entity attacker, Entity target) {
-        if (!selfAction.isEmpty()) Action.runList(selfAction, DataContext.forEntity(attacker));
-        if (!targetAction.isEmpty()) Action.runList(targetAction, DataContext.forEntity(target));
-        if (!biEntityAction.isEmpty()) BiAction.runList(biEntityAction, attacker, target);
+    public void runActions(Entity attacker, Entity target, AbilityInstance<?> instance) {
+        if (!selfActions.isEmpty()) Action.runList(selfActions, DataContext.forAffected(attacker, target, instance));
+        if (!targetActions.isEmpty()) Action.runList(targetActions, DataContext.forAffected(target, attacker, instance));
+        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(target, attacker, instance));
     }
 
     public float applyModifiers(float damage, AbilityInstance<?> instance, LivingEntity entity) {
@@ -88,16 +83,15 @@ public class ModifyDamageDealtAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageDealtAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Damage Dealt")
-                    .setDescription("Modifies the amount of damage the entity that has this ability deals. In the context of this ability, the \"actor\" is the entity that has this ability & the \"target\" is the entity that was hit.")
-                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the damage dealt by the \"actor\" entity.")
-                    .addOptional("self_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the \"actor\" entity whenever the modifiers apply.")
-                    .addOptional("target_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the \"target\" entity whenever the modifiers apply.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "If specified, these actions will be run on either or both \"actor\" & \"target\" entities whenever the modifiers apply.")
-                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "If specified, the specified actions/modifiers will only be run/applied if these conditions are fulfilled by the \"target\" entity.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the specified actions/modifiers will only be run/applied if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, the specified actions/modifiers will only be run/applied if these conditions are fulfilled by the damage dealt by the \"actor\" entity.")
-                    .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(4.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-1.0), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), List.of(), Optional.empty(), Optional.of(new OwnerBiCondition()), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .setDescription("Modifies the amount of damage the entity that has this ability deals. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that was hit.")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the damage dealt by the \"source\" entity.")
+                    .addOptional("self_actions", TYPE_ACTION_LIST, "Action(s) performed on the source.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target, with the source available in the context.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for the modifiers and actions to apply.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) evaluated with the source and target available in the context.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the dealt damage must meet for the modifiers and actions to apply.")
+                    .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(4.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

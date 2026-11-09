@@ -4,11 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
-import net.alkanphel.kryptonite.power.logic.condition.bi.meta.TargetConditionBiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -22,7 +17,9 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.RunCommandAction;
+import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.EntityTypeCondition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
@@ -30,69 +27,54 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class ProjectileImpactAbility extends Ability {
 
     public static final MapCodec<ProjectileImpactAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
-            BiAction.LIST_CODEC.optionalFieldOf("projectile_actions", List.of()).forGetter(a -> a.projectileActions),
-            BiCondition.LIST_CODEC.optionalFieldOf("projectile_conditions", List.of()).forGetter(a -> a.projectileConditions),
+            Action.LIST_CODEC.optionalFieldOf("shooter_actions", List.of()).forGetter(a -> a.shooterActions),
+            Condition.CODEC.optionalFieldOf("shooter_conditions", TrueCondition.INSTANCE).forGetter(a -> a.shooterConditions),
+            Action.LIST_CODEC.optionalFieldOf("projectile_actions", List.of()).forGetter(a -> a.projectileActions),
+            Condition.CODEC.optionalFieldOf("projectile_conditions", TrueCondition.INSTANCE).forGetter(a -> a.projectileConditions),
             ImpactResult.CODEC.optionalFieldOf("impact_result", ImpactResult.DEFAULT).forGetter(a -> a.impactResult),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ProjectileImpactAbility::new));
 
-    public final List<Action> entityActions;
-    public final List<BiAction> biEntityActions, projectileActions;
-    public final List<BiCondition> biEntityConditions, projectileConditions;
+    public final List<Action> shooterActions;
+    public final Condition shooterConditions;
+    public final List<Action> projectileActions;
+    public final Condition projectileConditions;
     public final ImpactResult impactResult;
 
-    public ProjectileImpactAbility(List<Action> entityActions, List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<BiAction> projectileActions, List<BiCondition> projectileConditions, ImpactResult impactResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ProjectileImpactAbility(List<Action> shooterActions, Condition shooterConditions, List<Action> projectileActions, Condition projectileConditions, ImpactResult impactResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.biEntityActions = biEntityActions;
-        this.biEntityConditions = biEntityConditions;
+        this.shooterActions = shooterActions;
+        this.shooterConditions = shooterConditions;
         this.projectileActions = projectileActions;
         this.projectileConditions = projectileConditions;
         this.impactResult = impactResult;
     }
 
-    public boolean doesApply(LivingEntity holder, Projectile projectile) {
+    public boolean doesApply(LivingEntity holder, Projectile projectile, AbilityInstance<?> abilityInstance) {
         Entity shooter = projectile.getOwner();
+        if (shooter == null) return false;
 
-        if (!projectileConditions.isEmpty() && !BiCondition.checkConditions(projectileConditions, holder, projectile)) {
+        if (!shooterConditions.test(DataContext.forAffected(shooter, holder, abilityInstance))) {
             return false;
         }
 
-        if (!biEntityConditions.isEmpty()) {
-            if (shooter == null) return false;
-
-            if (!BiCondition.checkConditions(biEntityConditions, holder, shooter)) {
-                return false;
-            }
-        }
-
-        return true;
+        return projectileConditions.test(DataContext.forAffected(projectile, holder, abilityInstance));
     }
 
-    public void runActions(LivingEntity holder, Projectile projectile) {
+    public void runActions(LivingEntity holder, Projectile projectile, AbilityInstance<?> abilityInstance) {
         Entity shooter = projectile.getOwner();
 
-        if (!entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forEntity(holder));
+        if (shooter != null) {
+            Action.runList(shooterActions, DataContext.forAffected(shooter, holder, abilityInstance));
         }
 
-        if (!biEntityActions.isEmpty() && shooter != null) {
-            BiAction.runList(biEntityActions,  holder, shooter);
-        }
-
-        if (!projectileActions.isEmpty()) {
-            BiAction.runList(projectileActions, holder, projectile);
-        }
+        Action.runList(projectileActions, DataContext.forAffected(projectile, holder, abilityInstance));
     }
 
     @Override
@@ -110,21 +92,18 @@ public class ProjectileImpactAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ProjectileImpactAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Projectile Impact")
-                    .setDescription("Runs actions when a projectile impacts the entity. In the context of this ability, the \"actor\" is the ability holder & \"target\" the projectile/shooter.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "These actions will run on the entity being hit.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will run on the entity being hit AND the projectile's shooter.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only enables when these conditions are fulfilled.")
-                    .addOptional("projectile_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will run on the projectile itself.")
-                    .addOptional("projectile_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only enables when these conditions are fulfilled by the projectile itself.")
+                    .setDescription("Performs actions when a projectile impacts the entity. For this ability, the \"source\" is the entity being hit & the \"target\" is the projectile or its shooter.")
+                    .addOptional("shooter_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile's shooter. Use 'palladium:as_source' to run actions on the entity being hit instead.")
+                    .addOptional("shooter_conditions", TYPE_CONDITION_LIST, "Condition(s) that the projectile's shooter must meet for the ability to be triggered.")
+                    .addOptional("projectile_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile. Use 'palladium:as_source' to run actions on the entity being hit instead.")
+                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "Condition(s) that the projectile must meet for the ability to be triggered.")
                     .addOptional("impact_result", SettingType.enumList(ImpactResult.values()), "How the projectile is processed upon impact. \"default\" is vanilla, \"ignore\" will make the projectile phase through you, & \"discard\" will destroy the projectile upon hitting you.", ImpactResult.DEFAULT)
-                    .addExampleObject(new ProjectileImpactAbility(List.of(new RunCommandAction(new ParsedCommands(Collections.singletonList("say Entity Actions!")))), List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say Bi-Entity Actions!")))))), List.of(), List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say Projectile Actions!")))))), List.of(new TargetConditionBiCondition(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))))), ImpactResult.IGNORE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ProjectileImpactAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Shooter actions!")))), TrueCondition.INSTANCE, List.of(new RunCommandAction(new ParsedCommands(List.of("say Projectile actions!")))), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))), ImpactResult.IGNORE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
     public enum ImpactResult implements StringRepresentable {
-        DEFAULT, // vanilla
-        IGNORE, // cancel (pass-through)
-        DISCARD; // cancel + discard
+        DEFAULT, IGNORE, DISCARD;
 
         public static final Codec<ImpactResult> CODEC = StringRepresentable.fromEnum(ImpactResult::values);
 

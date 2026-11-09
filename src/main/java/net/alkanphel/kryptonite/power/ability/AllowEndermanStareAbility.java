@@ -3,11 +3,12 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
+import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
@@ -16,19 +17,19 @@ import java.util.List;
 public class AllowEndermanStareAbility extends Ability {
 
     public static final MapCodec<AllowEndermanStareAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(ab -> ab.biEntityConditions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(ab -> ab.entityCondition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, AllowEndermanStareAbility::new));
 
-    public final List<BiCondition> biEntityConditions;
+    public final Condition entityCondition;
 
-    public AllowEndermanStareAbility(List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public AllowEndermanStareAbility(Condition entityCondition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.biEntityConditions = biEntityConditions;
+        this.entityCondition = entityCondition;
     }
 
-    public boolean appliesTo(Entity actor, Entity target) {
-        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, actor, target);
+    public boolean appliesTo(Entity source, Entity target, AbilityInstance<?> abilityInstance) {
+        return this.entityCondition.test(DataContext.forAffected(target, source, abilityInstance));
     }
 
     @Override
@@ -45,9 +46,9 @@ public class AllowEndermanStareAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, AllowEndermanStareAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Allows looking into the eyes of an enderman without angering it. In the context of this ability, the \"actor\" is the ability holder & \"target\" the enderman.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actor is only allowed to stare if the target fulfills these conditions.")
-                    .addExampleObject(new AllowEndermanStareAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+            builder.setDescription("Allows looking into the eyes of endermen without angering them. For this ability, the \"source\" is the entity looking at the enderman & the \"target\" is the enderman.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the enderman must meet to be affected.")
+                    .addExampleObject(new AllowEndermanStareAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

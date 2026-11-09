@@ -8,9 +8,6 @@
         "operation": "multiply_base_additive",
         "amount": -1
       },
-      "bientity_conditions": {
-        "type": "kryptonite:owner"
-      },
       "state": {
         "enabling": {
           "type": "palladium:key_bind",
@@ -18,7 +15,7 @@
         }
       },
       "properties": {
-        "title": "No Damage To Pets",
+        "title": "No Damage",
         "icon": "minecraft:wooden_sword",
         "list_index": 0
       }

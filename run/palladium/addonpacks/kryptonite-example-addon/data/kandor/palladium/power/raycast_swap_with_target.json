@@ -11,8 +11,8 @@
         "include_entities": true,
         "shape_type": "outline",
         "fluid_handling": "any",
-        "bientity_actions": {
-          "type": "kryptonite:target_action",
+        "entity_actions": {
+          "type": "palladium:as_source",
           "actions": [
             {
               "type": "palladium:run_command",

@@ -23,7 +23,7 @@
           "type": "palladium:run_command",
           "command": "say miss action!"
         },
-        "bientity_actions": {
+        "entity_actions": {
           "type": "kryptonite:tame"
         },
         "block_actions": {

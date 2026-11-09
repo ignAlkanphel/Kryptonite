@@ -13,7 +13,7 @@ public class KryptoniteActionSerializers {
 
     public static final DeferredHolder<ActionSerializer<?>, AbilityCooldownAction.Serializer> ABILITY_COOLDOWN = ACTION_SERIALIZERS.register("ability_cooldown", AbilityCooldownAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AddVelocityAction.Serializer> ADD_VELOCITY = ACTION_SERIALIZERS.register("add_velocity", AddVelocityAction.Serializer::new);
-    public static final DeferredHolder<ActionSerializer<?>, AreaOfEffectAction.Serializer> AREA_OF_EFFECT = ACTION_SERIALIZERS.register("area_of_effect", AreaOfEffectAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, AddVelocityRelativeAction.Serializer> ADD_VELOCITY_RELATIVE = ACTION_SERIALIZERS.register("add_velocity_relative", AddVelocityRelativeAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, BlockActionAtAction.Serializer> BLOCK_ACTION_AT = ACTION_SERIALIZERS.register("block_action_at", BlockActionAtAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DisplayItemActivationAction.Serializer> DISPLAY_ITEM_ACTIVATION = ACTION_SERIALIZERS.register("display_item_activation", DisplayItemActivationAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, EquipmentAction.Serializer> EQUIPMENT = ACTION_SERIALIZERS.register("equipment", EquipmentAction.Serializer::new);
@@ -26,7 +26,9 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, RaycastAction.Serializer> RAYCAST = ACTION_SERIALIZERS.register("raycast", RaycastAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, RespawnResetAction.Serializer> RESPAWN_RESET = ACTION_SERIALIZERS.register("respawn_reset", RespawnResetAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, RespawnTeleportAction.Serializer> RESPAWN_TELEPORT = ACTION_SERIALIZERS.register("respawn_teleport", RespawnTeleportAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, SetInLoveAction.Serializer> SET_IN_LOVE = ACTION_SERIALIZERS.register("set_in_love", SetInLoveAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SwitchHotbarSlotAction.Serializer> SWITCH_HOTBAR_SLOT = ACTION_SERIALIZERS.register("switch_hotbar_slot", SwitchHotbarSlotAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, TameAction.Serializer> TAME = ACTION_SERIALIZERS.register("tame", TameAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehicleDismountAction.Serializer> VEHICLE_DISMOUNT = ACTION_SERIALIZERS.register("vehicle_dismount", VehicleDismountAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehiclePassengerActionAction.Serializer> VEHICLE_PASSENGER_ACTION = ACTION_SERIALIZERS.register("vehicle_passenger_action", VehiclePassengerActionAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, VehicleRidingActionAction.Serializer> VEHICLE_RIDING_ACTION = ACTION_SERIALIZERS.register("vehicle_riding_action", VehicleRidingActionAction.Serializer::new);

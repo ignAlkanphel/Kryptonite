@@ -9,12 +9,9 @@
         "power": 2,
         "destruction_type": "mob",
         "damage_self": false,
-        "damage_bientity_conditions": {
-          "type": "kryptonite:target_condition",
-          "conditions": {
-            "type": "palladium:entity_type",
-            "entity_type": "minecraft:villager"
-          }
+        "damage_entity_conditions": {
+          "type": "palladium:entity_type",
+          "entity_type": "minecraft:villager"
         }
       },
       "state": {

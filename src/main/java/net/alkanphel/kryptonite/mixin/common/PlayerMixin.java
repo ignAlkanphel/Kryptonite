@@ -75,11 +75,11 @@ public abstract class PlayerMixin extends LivingEntity {
     private InteractionResult kryptonite$beforeEntityUse(Entity entity, Player player, InteractionHand hand, Vec3 location, Operation<InteractionResult> original, @Share("zeroPriority$onEntity") LocalRef<InteractionResult> sharedZeroPriority$onEntity) {
         ItemStack stackInHand = player.getItemInHand(hand);
 
-        // Prevent Entity Use ability (actor)
+        // Prevent Entity Use ability (source)
         for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(this, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
             PreventEntityUseAbility preventUse = instance.getAbility();
-            if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.ACTOR, player, entity, hand, stackInHand)) {
-                return preventUse.runActions(player, entity, hand);
+            if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, instance)) {
+                return preventUse.runActions(player, entity, hand, instance);
             }
         }
 
@@ -87,15 +87,15 @@ public abstract class PlayerMixin extends LivingEntity {
         if (entity instanceof LivingEntity living) {
             for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
                 PreventEntityUseAbility preventUse = instance.getAbility();
-                if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand)) {
-                    return preventUse.runActions(player, entity, hand);
+                if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, instance)) {
+                    return preventUse.runActions(player, entity, hand, instance);
                 }
             }
         }
 
         // Action On Entity Use ability
         Prioritized.CallInstance<InteractionPrioritizedAbility> callInstance = new Prioritized.CallInstance<>();
-        callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.ACTOR, player, entity, hand, stackInHand, PriorityPhase.BEFORE));
+        callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.BEFORE));
 
         if (entity instanceof LivingEntity livingEntity) {
             callInstance.add(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.BEFORE));
@@ -157,7 +157,7 @@ public abstract class PlayerMixin extends LivingEntity {
             Player player = (Player) (Object) this;
 
             Prioritized.CallInstance<InteractionPrioritizedAbility> callInstance = new Prioritized.CallInstance<>();
-            callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.ACTOR, player, entity, hand, stackInHand, PriorityPhase.AFTER));
+            callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.AFTER));
 
             if (entity instanceof LivingEntity livingEntity) {
                 callInstance.add(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.AFTER));

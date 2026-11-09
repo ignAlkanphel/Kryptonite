@@ -5,30 +5,39 @@
     "projectile_impact": {
       "type": "kryptonite:projectile_impact",
       "impact_result": "ignore",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say Entity Actions!"
-      },
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
+      "shooter_actions": [
+        {
           "type": "palladium:run_command",
-          "command": "say Bi-Entity Actions!"
+          "command": "say Shooter Actions!"
+        },
+        {
+          "type": "palladium:as_source",
+          "actions": [
+            {
+              "type": "palladium:run_command",
+              "command": "say Hit entity actions!"
+            }
+          ]
         }
-      },
-      "projectile_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
+      ],
+      "projectile_actions": [
+        {
           "type": "palladium:run_command",
           "command": "say Projectile Actions!"
+        },
+        {
+          "type": "palladium:as_source",
+          "actions": [
+            {
+              "type": "palladium:run_command",
+              "command": "say Hit entity actions!"
+            }
+          ]
         }
-      },
+      ],
       "projectile_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:arrow"
-        }
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:arrow"
       },
       "state": {
         "enabling": {

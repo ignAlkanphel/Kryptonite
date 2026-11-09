@@ -1,5 +1,6 @@
 {
-  "name": "Modify Knockback", "icon": "minecraft:ice",
+  "name": "Modify Knockback",
+  "icon": "minecraft:ice",
 
   "abilities": {
     "modify_knockback_self": {
@@ -19,14 +20,7 @@
       },
       "target_actions": {
         "type": "palladium:run_command",
-        "command": "say Modify Knockback SELF target actions!"
-      },
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say Modify Knockback SELF (target_action)!"
-        }
+        "command": "say I received increased knockback!"
       },
       "state": {
         "enabling": {
@@ -57,13 +51,13 @@
       },
       "target_actions": {
         "type": "palladium:run_command",
-        "command": "say Modify Knockback OTHER target actions!"
+        "command": "say ER: I received increased knockback from another entity!"
       },
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
+      "entity_actions": {
+        "type": "palladium:as_source",
         "actions": {
           "type": "palladium:run_command",
-          "command": "say Modify Knockback OTHER (target_action)!"
+          "command": "say I dealt increased knockback to another entity!"
         }
       },
       "state": {

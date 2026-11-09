@@ -4,7 +4,9 @@
   "abilities": {
     "entity_in_radius": {
       "type": "palladium:command",
-      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"The count of entity within a radius of 10 is greater or equal to 5!\"}"],
+      "commands": [
+        "tellraw @s {\"color\":\"green\",\"text\":\"The count of entity within a radius of 10 is greater or equal to 5!\"}"
+      ],
       "state": {
         "enabling": {
           "type": "kryptonite:entity_in_radius",
@@ -16,19 +18,18 @@
     },
     "entity_in_radius_sheep": {
       "type": "palladium:command",
-      "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"The count of sheep within a radius of 10 is greater or equal to 5!\"}"],
+      "commands": [
+        "tellraw @s {\"color\":\"green\",\"text\":\"The count of sheep within a radius of 10 is greater or equal to 5!\"}"
+      ],
       "state": {
         "enabling": {
           "type": "kryptonite:entity_in_radius",
           "radius": 10.0,
           "comparator": ">=",
           "compare_to": 5,
-          "bientity_conditions": {
-            "type": "kryptonite:target_condition",
-            "conditions": {
-              "type": "palladium:entity_type",
-              "entity_type": "minecraft:sheep"
-            }
+          "entity_conditions": {
+            "type": "palladium:entity_type",
+            "entity_type": "minecraft:sheep"
           }
         }
       }

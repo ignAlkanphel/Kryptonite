@@ -4,16 +4,22 @@
   "abilities": {
     "action_on_critical_hit": {
       "type": "kryptonite:action_on_critical_hit",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say Action on Critical Hit!"
-      },
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:villager"
+      "entity_actions": [
+        {
+          "type": "palladium:run_command",
+          "command": "say I got hit with a crit!"
+        },
+        {
+          "type": "palladium:as_source",
+          "actions": {
+            "type": "palladium:run_command",
+            "command": "say I dealt that crit!"
+          }
         }
+      ],
+      "entity_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:villager"
       }
     }
   }

@@ -93,7 +93,7 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
 
     public void runItemActions(DataContext context, InteractionHand hand) {
         if (context.getLivingEntity() instanceof Player player) {
-            this.performActorItemStuff(player, hand);
+            this.performSourceItemStuff(player, hand);
         }
     }
 

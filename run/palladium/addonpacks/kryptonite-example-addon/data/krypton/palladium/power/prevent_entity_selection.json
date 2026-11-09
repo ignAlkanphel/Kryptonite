@@ -2,8 +2,37 @@
   "name": "Prevent Entity Selection", "icon": "minecraft:barrier",
 
   "abilities": {
-    "prevent_entity_selection_simple": {
-      "type": "kryptonite:prevent_entity_selection"
+    "prevent_entity_selection": {
+      "type": "kryptonite:prevent_entity_selection",
+      "properties": {
+        "icon": "minecraft:barrier",
+        "title": "Prevent Entity Selection",
+        "list_index": 0
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
+    },
+    "prevent_entity_selection_zombies": {
+      "type": "kryptonite:prevent_entity_selection",
+      "entity_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "#minecraft:zombies"
+      },
+      "properties": {
+        "icon": "minecraft:zombie_head",
+        "title": "Prevent Entity Selection (Zombies)",
+        "list_index": 1
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "toggle"
+        }
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ public class RespawnResetAction extends Action {
     public RespawnResetAction() {}
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof ServerPlayer player)) return false;
 
         MiscUtil.clearLocalVanillaRespawnPosition(player, false);

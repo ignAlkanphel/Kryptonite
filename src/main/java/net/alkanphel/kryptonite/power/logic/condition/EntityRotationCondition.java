@@ -1,12 +1,9 @@
-package net.alkanphel.kryptonite.power.logic.condition.bi;
+package net.alkanphel.kryptonite.power.logic.condition;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiContext;
+import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.context.DataContextKeys;
 import net.threetag.palladium.logic.value.StaticValue;
@@ -28,29 +27,32 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.function.Function;
 
-public record RelativeRotationBiCondition(RotationType actorRotationType, RotationType targetRotationType, EnumSet<Direction.Axis> axes, NumberComparator comparator, Value compareTo) implements BiCondition {
+public record EntityRotationCondition(RotationType sourceRotationType, RotationType targetRotationType, EnumSet<Direction.Axis> axes, NumberComparator comparator, Value compareTo) implements Condition {
 
-    public static final MapCodec<RelativeRotationBiCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RotationType.CODEC.optionalFieldOf("actor_rotation", RotationType.HEAD).forGetter(RelativeRotationBiCondition::actorRotationType),
-            RotationType.CODEC.optionalFieldOf("target_rotation", RotationType.BODY).forGetter(RelativeRotationBiCondition::targetRotationType),
-            KryptoniteCodecs.DIRECTION_AXIS_CODEC.optionalFieldOf("axes", EnumSet.allOf(Direction.Axis.class)).forGetter(RelativeRotationBiCondition::axes),
-            NumberComparator.CODEC.fieldOf("comparator").forGetter(RelativeRotationBiCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(RelativeRotationBiCondition::compareTo)
-    ).apply(instance, RelativeRotationBiCondition::new));
+    public static final MapCodec<EntityRotationCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            RotationType.CODEC.optionalFieldOf("source_rotation", RotationType.HEAD).forGetter(EntityRotationCondition::sourceRotationType),
+            RotationType.CODEC.optionalFieldOf("target_rotation", RotationType.BODY).forGetter(EntityRotationCondition::targetRotationType),
+            KryptoniteCodecs.DIRECTION_AXIS_CODEC.optionalFieldOf("axes", EnumSet.allOf(Direction.Axis.class)).forGetter(EntityRotationCondition::axes),
+            NumberComparator.CODEC.fieldOf("comparator").forGetter(EntityRotationCondition::comparator),
+            Value.CODEC.fieldOf("compare_to").forGetter(EntityRotationCondition::compareTo)
+    ).apply(instance, EntityRotationCondition::new));
 
     @Override
-    public boolean test(BiContext context) {
-        if (context.actor() == null || context.target() == null) return false;
+    public boolean test(DataContext context) {
+        Entity source = context.getSource();
+        Entity target = context.getTarget();
 
-        Vec3 actorRotation = actorRotationType.getRotation(context.actor());
-        Vec3 targetRotation = targetRotationType.getRotation(context.target());
+        if (source == null || target == null) return false;
 
-        actorRotation = reduceAxes(actorRotation, axes);
+        Vec3 sourceRotation = sourceRotationType.getRotation(source);
+        Vec3 targetRotation = targetRotationType.getRotation(target);
+
+        sourceRotation = reduceAxes(sourceRotation, axes);
         targetRotation = reduceAxes(targetRotation, axes);
 
-        var dataContext = DataContext.forEntity(context.actor()).with(DataContextKeys.ENTITY, context.target());
+        DataContext valueContext = DataContext.forEntity(source).with(DataContextKeys.ENTITY, target);
 
-        return comparator.compare(getAngleBetween(actorRotation, targetRotation), compareTo.getAsDouble(dataContext));
+        return comparator.compare(getAngleBetween(sourceRotation, targetRotation), compareTo.getAsDouble(valueContext));
     }
 
     private static double getAngleBetween(Vec3 a, Vec3 b) {
@@ -83,33 +85,33 @@ public record RelativeRotationBiCondition(RotationType actorRotationType, Rotati
     }
 
     @Override
-    public BiConditionSerializer<RelativeRotationBiCondition> getSerializer() {
-        return BiConditionSerializers.RELATIVE_ROTATION.get();
+    public ConditionSerializer<?> getSerializer() {
+        return KryptoniteConditionSerializers.ENTITY_ROTATION.get();
     }
 
-    public static class Serializer extends BiConditionSerializer<RelativeRotationBiCondition> {
+    public static class Serializer extends ConditionSerializer<EntityRotationCondition> {
 
         @Override
-        public MapCodec<RelativeRotationBiCondition> codec() {
+        public MapCodec<EntityRotationCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BiCondition, RelativeRotationBiCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Relative Rotation")
-                    .setDescription("Compares the rotation angle of the actor entity to the target entity.")
-                    .addOptional("actor_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the actor.", RotationType.HEAD)
+        public void addDocumentation(CodecDocumentationBuilder<Condition, EntityRotationCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Entity Rotation")
+                    .setDescription("Compares the rotation angle of the source entity to the target entity.")
+                    .addOptional("source_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the source.", RotationType.HEAD)
                     .addOptional("target_rotation", SettingType.enumList(RotationType.values()), "Determines the initial point of the rotation for the target.", RotationType.BODY)
                     .addOptional("axes", SettingType.enumList(Direction.Axis.values()), "The axes to get the angle values to calculate, and compare to.", EnumSet.allOf(Direction.Axis.class))
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Determines how the calculated angle value should be compared to the specified value.")
                     .add("compare_to", TYPE_DOUBLE_VALUE, "The value at which the calculated angle value will be compared to.")
-                    .addExampleObject(new RelativeRotationBiCondition(RotationType.HEAD, RotationType.BODY, EnumSet.allOf(Direction.Axis.class), NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.0D)));
+                    .addExampleObject(new EntityRotationCondition(RotationType.HEAD, RotationType.BODY, EnumSet.allOf(Direction.Axis.class), NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.0D)));
         }
     }
 
     public enum RotationType implements StringRepresentable {
         HEAD(e -> e.getViewVector(1.0f)),
-        BODY(RelativeRotationBiCondition::getBodyRotationVector);
+        BODY(EntityRotationCondition::getBodyRotationVector);
 
         public static final Codec<RotationType> CODEC = StringRepresentable.fromEnum(RotationType::values);
         private final Function<Entity, Vec3> function;

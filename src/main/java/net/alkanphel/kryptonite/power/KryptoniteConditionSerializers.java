@@ -22,8 +22,14 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, DamageImmunityCondition.Serializer> DAMAGE_IMMUNITY = CONDITIONS_SERIALIZERS.register("damage_immunity", DamageImmunityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, DimensionWrapperCondition.Serializer> DIMENSION = CONDITIONS_SERIALIZERS.register("dimension", DimensionWrapperCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, DistanceFromCoordinatesCondition.Serializer> DISTANCE_FROM_COORDINATES = CONDITIONS_SERIALIZERS.register("distance_from_coordinates", DistanceFromCoordinatesCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, DistanceFromEntityCondition.Serializer> DISTANCE_FROM_ENTITY = CONDITIONS_SERIALIZERS.register("distance_from_entity", DistanceFromEntityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, KeyBindCondition.Serializer> KEY_BIND = CONDITIONS_SERIALIZERS.register("key_bind", KeyBindCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityAttackedLastCondition.Serializer> ENTITY_ATTACKED_LAST = CONDITIONS_SERIALIZERS.register("entity_attacked_last", EntityAttackedLastCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityAttackTargetCondition.Serializer> ENTITY_ATTACK_TARGET = CONDITIONS_SERIALIZERS.register("entity_attack_target", EntityAttackTargetCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityCollisionCondition.Serializer> ENTITY_COLLISION = CONDITIONS_SERIALIZERS.register("entity_collision", EntityCollisionCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EntityInRadiusCondition.Serializer> ENTITY_IN_RADIUS = CONDITIONS_SERIALIZERS.register("entity_in_radius", EntityInRadiusCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityInSightCondition.Serializer> ENTITY_IN_SIGHT = CONDITIONS_SERIALIZERS.register("entity_in_sight", EntityInSightCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityRotationCondition.Serializer> ENTITY_ROTATION = CONDITIONS_SERIALIZERS.register("entity_rotation", EntityRotationCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EquipmentCondition.Serializer> EQUIPMENT = CONDITIONS_SERIALIZERS.register("equipment", EquipmentCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectCondition.Serializer> HAS_EFFECT = CONDITIONS_SERIALIZERS.register("has_effect", HasEffectCondition.Serializer::new);
@@ -33,6 +39,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsEffectPossibleCondition.Serializer> IS_EFFECT_POSSIBLE = CONDITIONS_SERIALIZERS.register("is_effect_possible", IsEffectPossibleCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsEntityCondition.Serializer> IS_ENTITY = CONDITIONS_SERIALIZERS.register("is_entity", IsEntityCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsGlowingCondition.Serializer> IS_GLOWING = CONDITIONS_SERIALIZERS.register("is_glowing", IsGlowingCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, IsOwnedCondition.Serializer> IS_OWNED = CONDITIONS_SERIALIZERS.register("is_owned", IsOwnedCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsTamedCondition.Serializer> IS_TAMED = CONDITIONS_SERIALIZERS.register("is_tamed", IsTamedCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsInSnowCondition.Serializer> IS_IN_SNOW = CONDITIONS_SERIALIZERS.register("is_in_snow", IsInSnowCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsInThunderCondition.Serializer> IS_IN_THUNDER = CONDITIONS_SERIALIZERS.register("is_in_thunder", IsInThunderCondition.Serializer::new);
@@ -40,10 +47,5 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, PredicateCondition.Serializer> PREDICATE = CONDITIONS_SERIALIZERS.register("predicate", PredicateCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, VehiclePassengerCondition.Serializer> VEHICLE_PASSENGER = CONDITIONS_SERIALIZERS.register("vehicle_passenger", VehiclePassengerCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, VehiclePassengerRecursiveCondition.Serializer> VEHICLE_PASSENGER_RECURSIVE = CONDITIONS_SERIALIZERS.register("vehicle_passenger_recursive", VehiclePassengerRecursiveCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, VehicleRidingCondition.Serializer> VEHICLE_RIDING = CONDITIONS_SERIALIZERS.register("vehicle_riding", VehicleRidingCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, VehicleRidingRecursiveCondition.Serializer> VEHICLE_RIDING_RECURSIVE = CONDITIONS_SERIALIZERS.register("vehicle_riding_recursive", VehicleRidingRecursiveCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, VehicleRidingRootCondition.Serializer> VEHICLE_RIDING_ROOT = CONDITIONS_SERIALIZERS.register("vehicle_riding_root", VehicleRidingRootCondition.Serializer::new);
 
 }

@@ -86,7 +86,7 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
         }
 
         if (entity instanceof Player player) {
-            performActorItemStuff(player, hand);
+            performSourceItemStuff(player, hand);
         }
 
         return getActionResult();

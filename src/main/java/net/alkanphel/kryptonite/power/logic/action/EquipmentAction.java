@@ -35,7 +35,7 @@ public class EquipmentAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof LivingEntity livingEntity)) return false;
 
         boolean result = false;

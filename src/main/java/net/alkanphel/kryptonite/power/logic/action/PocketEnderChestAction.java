@@ -39,7 +39,7 @@ public class PocketEnderChestAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         Entity entity = context.getEntity();
         if (!(entity instanceof Player player)) return false;
 

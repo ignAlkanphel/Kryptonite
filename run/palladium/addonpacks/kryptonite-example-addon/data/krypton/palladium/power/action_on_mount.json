@@ -8,12 +8,9 @@
         "type": "palladium:run_command",
         "command": "say Action on Mount"
       },
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:oak_boat"
-        }
+      "vehicle_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:oak_boat"
       }
     },
     "action_on_dismount": {
@@ -23,12 +20,9 @@
         "type": "palladium:run_command",
         "command": "say Action on Dismount"
       },
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:oak_boat"
-        }
+      "vehicle_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:oak_boat"
       }
     }
   }

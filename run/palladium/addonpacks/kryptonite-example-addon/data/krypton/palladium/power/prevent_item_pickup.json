@@ -8,12 +8,14 @@
         "type": "kryptonite:item",
         "item": "minecraft:apple"
       },
-      "bientity_conditions": {
-        "type": "kryptonite:actor_condition",
-        "conditions": {
-          "type": "palladium:has_effect",
-          "effect": "minecraft:speed"
-        }
+      "entity_conditions": {
+        "type": "palladium:as_source",
+        "conditions": [
+          {
+            "type": "palladium:has_effect",
+            "effect": "minecraft:speed"
+          }
+        ]
       }
     }
   }

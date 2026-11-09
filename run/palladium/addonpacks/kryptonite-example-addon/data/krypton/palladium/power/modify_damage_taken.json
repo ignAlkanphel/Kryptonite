@@ -8,8 +8,8 @@
         "operation": "multiply_base_additive",
         "amount": -1
       },
-      "bientity_conditions": {
-        "type": "kryptonite:actor_condition",
+      "entity_conditions": {
+        "type": "palladium:as_source",
         "conditions": [
           {
             "type": "palladium:item_in_slot",

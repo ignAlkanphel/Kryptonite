@@ -37,8 +37,8 @@
     "glowing_other": {
       "type": "kryptonite:glowing", "mode": "other",
       "color": {"red": 0.2, "green": 0.8, "blue": 1.0}, "use_teams": true,
-      "bientity_conditions": {
-        "type": "kryptonite:distance",
+      "entity_conditions": {
+        "type": "kryptonite:distance_from_entity",
         "comparator": "<=",
         "compare_to": 10
       },

@@ -29,7 +29,7 @@ public class SwitchHotbarSlotAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof Player player)) return false;
 
         int slot = Math.clamp(this.slot.getAsInt(context), 0, Inventory.SELECTION_SIZE - 1);

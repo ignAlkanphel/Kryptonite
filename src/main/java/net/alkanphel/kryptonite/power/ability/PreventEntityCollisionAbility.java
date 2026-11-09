@@ -3,12 +3,13 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
+import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
@@ -18,31 +19,31 @@ import java.util.List;
 public class PreventEntityCollisionAbility extends Ability {
 
     public static final MapCodec<PreventEntityCollisionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(ab -> ab.biEntityConditions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(ab -> ab.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventEntityCollisionAbility::new));
 
-    public final List<BiCondition> biEntityConditions;
+    public final Condition entityConditions;
 
-    public PreventEntityCollisionAbility(List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventEntityCollisionAbility(Condition entityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.biEntityConditions = biEntityConditions;
+        this.entityConditions = entityConditions;
     }
 
-    public boolean appliesTo(Entity holder, Entity target) {
-        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, target);
+    public boolean appliesTo(Entity source, Entity target, AbilityInstance<?> abilityInstance) {
+        return entityConditions.test(DataContext.forAffected(target, source, abilityInstance));
     }
 
-    public static boolean doesApply(Entity fromEntity, Entity collidingEntity) {
-        boolean fromPrevents = fromEntity instanceof LivingEntity living &&
+    public static boolean doesApply(Entity source, Entity target) {
+        boolean sourcePrevents = source instanceof LivingEntity living &&
                 AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_ENTITY_COLLISION.get())
-                .stream().anyMatch(instance -> instance.getAbility().appliesTo(fromEntity, collidingEntity));
+                        .stream().anyMatch(instance -> instance.getAbility().appliesTo(source, target, instance));
 
-        boolean collidingPrevents = collidingEntity instanceof LivingEntity livingColliding &&
-                AbilityUtil.getEnabledInstances(livingColliding, KryptoniteAbilitySerializers.PREVENT_ENTITY_COLLISION.get())
-                .stream().anyMatch(instance -> instance.getAbility().appliesTo(collidingEntity, fromEntity));
+        boolean targetPrevents = target instanceof LivingEntity living &&
+                AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_ENTITY_COLLISION.get())
+                        .stream().anyMatch(instance -> instance.getAbility().appliesTo(target, source, instance));
 
-        return fromPrevents || collidingPrevents;
+        return sourcePrevents || targetPrevents;
     }
 
     @Override
@@ -59,9 +60,9 @@ public class PreventEntityCollisionAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityCollisionAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents the entity from colliding with other entities. In the context of this ability, the \"actor\" is the entity that has this ability & \"target\" is the colliding entity.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only prevents entity collision when these conditions are fulfilled.")
-                    .addExampleObject(new PreventEntityCollisionAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+            builder.setDescription("Prevents the entity with this ability from colliding with other entities. For this ability, the \"source\" is the entity with this ability & the \"target\" is the entity being collided with.")
+                    .addOptional("entity_condition", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for collision to be prevented.")
+                    .addExampleObject(new PreventEntityCollisionAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

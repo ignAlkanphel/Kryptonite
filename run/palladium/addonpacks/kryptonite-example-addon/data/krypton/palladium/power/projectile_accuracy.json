@@ -4,12 +4,14 @@
   "abilities": {
     "projectile_accuracy_arrow": {
       "type": "kryptonite:projectile_accuracy",
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:arrow"
-        }
+      "entity_conditions": {
+        "type": "palladium:as_target",
+        "conditions": [
+          {
+            "type": "palladium:entity_type",
+            "entity_type": "minecraft:arrow"
+          }
+        ]
       },
       "state": {
         "enabling": {
@@ -24,12 +26,14 @@
     },
     "projectile_accuracy_snowball": {
       "type": "kryptonite:projectile_accuracy",
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:snowball"
-        }
+      "entity_conditions": {
+        "type": "palladium:as_target",
+        "conditions": [
+          {
+            "type": "palladium:entity_type",
+            "entity_type": "minecraft:snowball"
+          }
+        ]
       },
       "state": {
         "enabling": {

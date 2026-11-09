@@ -4,22 +4,19 @@
   "abilities": {
     "action_when_hit": {
       "type": "kryptonite:action_when_hit",
-      "bientity_actions": {
-        "type": "kryptonite:actor_action",
+      "entity_actions": {
+        "type": "palladium:as_source",
         "actions": {
           "type": "palladium:run_command",
-          "command": "say Action when hit (actor_action)!"
+          "command": "say I hit someone!"
         }
       }
     },
     "action_when_hit2": {
       "type": "kryptonite:action_when_hit",
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say Action when hit (target_action)!"
-        }
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say I was hit!"
       }
     }
   }

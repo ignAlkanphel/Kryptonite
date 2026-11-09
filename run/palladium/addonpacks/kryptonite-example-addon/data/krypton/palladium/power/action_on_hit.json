@@ -4,29 +4,23 @@
   "abilities": {
     "action_on_hit": {
       "type": "kryptonite:action_on_hit",
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:silverfish"
-        }
+      "entity_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:silverfish"
       },
-      "bientity_actions": {
-        "type": "kryptonite:actor_action",
+      "entity_actions": {
+        "type": "palladium:as_source",
         "actions": {
           "type": "palladium:run_command",
-          "command": "say Action on hit (actor_action)!"
+          "command": "say I hit a silverfish!"
         }
       }
     },
     "action_on_hit2": {
       "type": "kryptonite:action_on_hit",
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say Action on hit (target_action)!"
-        }
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say I got hit an entity!"
       }
     }
   }

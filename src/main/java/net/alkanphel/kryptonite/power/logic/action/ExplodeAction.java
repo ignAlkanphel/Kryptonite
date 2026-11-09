@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
@@ -17,11 +16,12 @@ import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -31,7 +31,7 @@ public class ExplodeAction extends Action {
             BlockCondition.CODEC.optionalFieldOf("destructible").forGetter(ab -> ab.destructibleConditions),
             BlockCondition.CODEC.optionalFieldOf("indestructible").forGetter(ab -> ab.indestructibleConditions),
             Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(a -> a.destructionType),
-            BiCondition.LIST_CODEC.optionalFieldOf("damage_bientity_conditions", List.of()).forGetter(a -> a.damageBiEntityConditions),
+            Condition.CODEC.optionalFieldOf("damage_entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageEntityConditions),
             Value.CODEC.optionalFieldOf("damage_self", new StaticValue(true)).forGetter(a -> a.damageSelf),
             Value.CODEC.optionalFieldOf("create_fire", new StaticValue(false)).forGetter(a -> a.createFire),
             Value.CODEC.fieldOf("power").forGetter(a -> a.power),
@@ -40,14 +40,14 @@ public class ExplodeAction extends Action {
 
     public final Optional<BlockCondition> destructibleConditions, indestructibleConditions;
     public final Level.ExplosionInteraction destructionType;
-    public final List<BiCondition> damageBiEntityConditions;
+    public final Condition damageEntityConditions;
     public final Value damageSelf, createFire, power, indestructibleResistance;
 
-    public ExplodeAction(Optional<BlockCondition> destructibleConditions, Optional<BlockCondition> indestructibleConditions, Level.ExplosionInteraction destructionType, List<BiCondition> damageBiEntityConditions, Value damageSelf, Value createFire, Value power, Value indestructibleResistance) {
+    public ExplodeAction(Optional<BlockCondition> destructibleConditions, Optional<BlockCondition> indestructibleConditions, Level.ExplosionInteraction destructionType, Condition damageEntityConditions, Value damageSelf, Value createFire, Value power, Value indestructibleResistance) {
         this.destructibleConditions = destructibleConditions;
         this.indestructibleConditions = indestructibleConditions;
         this.destructionType = destructionType;
-        this.damageBiEntityConditions = damageBiEntityConditions;
+        this.damageEntityConditions = damageEntityConditions;
         this.damageSelf = damageSelf;
         this.createFire = createFire;
         this.power = power;
@@ -55,7 +55,7 @@ public class ExplodeAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         var entity = context.getEntity();
         if (entity == null) return false;
 
@@ -77,10 +77,9 @@ public class ExplodeAction extends Action {
 
         boolean damageSelf = this.damageSelf.getAsBoolean(context);
 
-        Predicate<Entity> damageBiEntityCondition = target -> {
+        Predicate<Entity> damageEntityCondition = target -> {
             if (target == entity) return damageSelf;
-            if (!damageBiEntityConditions.isEmpty()) return BiCondition.checkConditions(damageBiEntityConditions, entity, target);
-            return true;
+            return damageEntityConditions.test(DataContext.forAffected(target, entity, context.getAbility()));
         };
 
         MiscUtil.createExplosion(
@@ -93,7 +92,7 @@ public class ExplodeAction extends Action {
                 Math.max(0, power.getAsFloat(context)),
                 createFire.getAsBoolean(context),
                 destructionType,
-                MiscUtil.createExplosionDamageCalculator(behaviorCondition, Math.max(0, indestructibleResistance.getAsFloat(context)), damageBiEntityCondition)
+                MiscUtil.createExplosionDamageCalculator(behaviorCondition, Math.max(0, indestructibleResistance.getAsFloat(context)), damageEntityCondition)
         );
 
         return true;
@@ -116,14 +115,14 @@ public class ExplodeAction extends Action {
             builder.setName("Explode")
                     .setDescription("Creates an explosion.")
                     .addOptional("destructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks that fulfill these conditions CAN be destroyed by the explosion.")
-                    .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks fulfill the conditions can NOT be destroyed by the explosion.")
+                    .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, the blocks that fulfill the conditions can NOT be destroyed by the explosion.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
-                    .addOptional("damage_bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, determines if an entity will be damaged by the explosion if these conditions are fulfilled. In the context of this field, the \"actor\" is the entity who ran this action & the \"target\" is the entity in the explosion radius.")
+                    .addOptional("damage_entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that an entity must meet to take damage from the explosion.")
                     .addOptional("damage_self", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the entity that triggered the explosion also takes damage from it.", true)
                     .addOptional("create_fire", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If the explosion creates fire (e.g. a ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")
                     .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
-                    .addExampleObject(new ExplodeAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, List.of(), new StaticValue(false), new StaticValue(false), new StaticValue(4), new StaticValue(10)));
+                    .addExampleObject(new ExplodeAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, new StaticValue(false), new StaticValue(false), new StaticValue(4), new StaticValue(10)));
         }
     }
 

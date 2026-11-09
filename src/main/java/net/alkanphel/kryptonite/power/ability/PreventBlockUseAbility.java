@@ -75,7 +75,7 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
 
         if (holder instanceof Player player) {
-            this.performActorItemStuff(player, hand);
+            this.performSourceItemStuff(player, hand);
         }
     }
 

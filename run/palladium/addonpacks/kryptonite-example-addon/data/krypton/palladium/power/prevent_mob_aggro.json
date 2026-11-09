@@ -26,10 +26,20 @@
       "type": "kryptonite:prevent_mob_aggro",
       "mob_aggro_on_attack": false,
       "mob_aggro_reset": true,
-      "mob_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "#minecraft:zombies"
-      },
+      "mob_conditions": [
+        {
+          "type": "palladium:entity_type",
+          "entity_type": "#minecraft:zombies"
+        },
+        {
+          "type": "palladium:as_source",
+          "conditions": [
+            {
+              "type": "palladium:crouching"
+            }
+          ]
+        }
+      ],
       "properties": {
         "icon": "minecraft:zombie_head",
         "title": "Zombies Ignore",

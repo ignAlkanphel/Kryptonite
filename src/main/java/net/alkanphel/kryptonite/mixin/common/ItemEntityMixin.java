@@ -49,7 +49,7 @@ public abstract class ItemEntityMixin extends Entity {
 
             boolean result = original.call(playerInventory, this.getItem());
             if (result) {
-                ActionOnItemPickupAbility.runBiActions(callInstance, thrower, player);
+                ActionOnItemPickupAbility.runEntityActions(callInstance, thrower, player);
             }
 
             return result;

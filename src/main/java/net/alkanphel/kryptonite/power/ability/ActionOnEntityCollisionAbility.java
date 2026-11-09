@@ -3,16 +3,16 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.meta.ActorActionBiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.action.Action;
+import net.threetag.palladium.logic.action.AsSourceAction;
 import net.threetag.palladium.logic.action.RunCommandAction;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
+import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
@@ -22,28 +22,28 @@ import java.util.*;
 public class ActionOnEntityCollisionAbility extends Ability {
 
     public static final MapCodec<ActionOnEntityCollisionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions_on_first_tick", List.of()).forGetter(a -> a.biEntityActionsFirstTick),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions_on_tick", List.of()).forGetter(a -> a.biEntityActionsTick),
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions_on_last_tick", List.of()).forGetter(a -> a.biEntityActionsTick),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_first_tick", List.of()).forGetter(a -> a.entityActionsFirstTick),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_tick", List.of()).forGetter(a -> a.entityActionsTick),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_last_tick", List.of()).forGetter(a -> a.entityActionsLastTick),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnEntityCollisionAbility::new));
 
-    public final List<BiAction> biEntityActionsFirstTick, biEntityActionsTick, biEntityActionsLastTick;
-    public final List<BiCondition> biEntityConditions;
+    public final List<Action> entityActionsFirstTick, entityActionsTick, entityActionsLastTick;
+    public final Condition entityConditions;
 
     private final Set<UUID> currentlyColliding = new HashSet<>();
 
-    public ActionOnEntityCollisionAbility(List<BiAction> biEntityActionsFirstTick, List<BiAction> biEntityActionsTick, List<BiAction> biEntityActionsLastTick, List<BiCondition> biEntityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnEntityCollisionAbility(List<Action> entityActionsFirstTick, List<Action> entityActionsTick, List<Action> entityActionsLastTick, Condition entityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.biEntityActionsFirstTick = biEntityActionsFirstTick;
-        this.biEntityActionsTick = biEntityActionsTick;
-        this.biEntityActionsLastTick = biEntityActionsLastTick;
-        this.biEntityConditions = biEntityConditions;
+        this.entityActionsFirstTick = entityActionsFirstTick;
+        this.entityActionsTick = entityActionsTick;
+        this.entityActionsLastTick = entityActionsLastTick;
+        this.entityConditions = entityConditions;
     }
 
-    public boolean doesApply(LivingEntity holder, Entity target) {
-        return biEntityConditions.isEmpty() || BiCondition.checkConditions(biEntityConditions, holder, target);
+    public boolean doesApply(LivingEntity holder, Entity target, AbilityInstance<?> abilityInstance) {
+        return entityConditions.test(DataContext.forAffected(target, holder, abilityInstance));
     }
 
     @Override
@@ -52,26 +52,28 @@ public class ActionOnEntityCollisionAbility extends Ability {
             Set<UUID> nowColliding = new HashSet<>();
 
             for (Entity target : entity.level().getEntities(entity, entity.getBoundingBox(), e -> e != entity)) {
-                if (!doesApply(entity, target)) continue;
+                if (!doesApply(entity, target, abilityInstance)) continue;
 
                 UUID targetUUID = target.getUUID();
                 nowColliding.add(targetUUID);
 
-                if (!currentlyColliding.contains(targetUUID) && !biEntityActionsFirstTick.isEmpty()) {
-                    BiAction.runList(biEntityActionsFirstTick, entity, target);
+                DataContext context = DataContext.forAffected(target, entity, abilityInstance);
+
+                if (!currentlyColliding.contains(targetUUID) && !entityActionsFirstTick.isEmpty()) {
+                    Action.runList(entityActionsFirstTick, context);
                 }
 
-                if (!biEntityActionsTick.isEmpty()) {
-                    BiAction.runList(biEntityActionsTick, entity, target);
+                if (!entityActionsTick.isEmpty()) {
+                    Action.runList(entityActionsTick, context);
                 }
             }
 
-            if (!biEntityActionsLastTick.isEmpty()) {
+            if (!entityActionsLastTick.isEmpty()) {
                 for (UUID previousUUID : currentlyColliding) {
                     if (!nowColliding.contains(previousUUID)) {
                         Entity previous = entity.level().getEntity(previousUUID);
                         if (previous != null) {
-                            BiAction.runList(biEntityActionsLastTick, entity, previous);
+                            Action.runList(entityActionsLastTick, DataContext.forAffected(previous, entity, abilityInstance));
                         }
                     }
                 }
@@ -91,11 +93,11 @@ public class ActionOnEntityCollisionAbility extends Ability {
 
     @Override
     public void lastTick(LivingEntity entity, AbilityInstance<?> abilityInstance) {
-        if (!biEntityActionsLastTick.isEmpty() && !entity.level().isClientSide()) {
+        if (!entityActionsLastTick.isEmpty() && !entity.level().isClientSide()) {
             for (UUID uuid : currentlyColliding) {
                 Entity previous = entity.level().getEntity(uuid);
                 if (previous != null) {
-                    BiAction.runList(biEntityActionsLastTick, entity, previous);
+                    Action.runList(entityActionsLastTick, DataContext.forAffected(previous, entity, abilityInstance));
                 }
             }
         }
@@ -118,13 +120,13 @@ public class ActionOnEntityCollisionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityCollisionAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Entity Collision")
-                    .setDescription("Runs actions when the entity collides with another entity. In the context of this ability, the \"actor\" is the entity that has this ability & the \"target\" is the entity being collided with.")
-                    .addOptional("bientity_actions_on_first_tick", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run on first tick while collision with an entity.")
-                    .addOptional("bientity_actions_on_tick", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run every tick while colliding with an entity.")
-                    .addOptional("bientity_actions_on_last_tick", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run on last tick while colliding with an entity.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, the actions will only run if these conditions are fulfilled by either or both the \"actor\" & \"target\" entities.")
-                    .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (actor_action)!"))))), List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (actor_action)!"))))), List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (actor_action)!"))))), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (target_action)!"))))), List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (target_action)!"))))), List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (target_action)!"))))), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .setDescription("Performs actions when the entity collides with another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being collided with.")
+                    .addOptional("entity_actions_on_first_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target on first tick of collision.")
+                    .addOptional("entity_actions_on_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target every tick while colliding with an entity.")
+                    .addOptional("entity_actions_on_last_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target the last tick of collision.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to perform the actions.")
+                    .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (source)!"))))), List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (source)!"))))), List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (source)!"))))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (target)!"))), List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (target)!"))), List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (target)!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

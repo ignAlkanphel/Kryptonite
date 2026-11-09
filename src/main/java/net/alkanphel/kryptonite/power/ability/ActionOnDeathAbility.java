@@ -4,18 +4,20 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.meta.ActorActionBiAction;
-import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
-import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.action.Action;
+import net.threetag.palladium.logic.action.AsSourceAction;
 import net.threetag.palladium.logic.action.RunCommandAction;
+import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
+import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.Ability;
+import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityProperties;
 import net.threetag.palladium.power.ability.AbilitySerializer;
 import net.threetag.palladium.power.ability.AbilityStateManager;
@@ -27,37 +29,35 @@ import java.util.List;
 public class ActionOnDeathAbility extends Ability {
 
     public static final MapCodec<ActionOnDeathAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BiAction.LIST_CODEC.optionalFieldOf("bientity_actions", List.of()).forGetter(a -> a.biEntityActions),
-            BiCondition.LIST_CODEC.optionalFieldOf("bientity_conditions", List.of()).forGetter(a -> a.biEntityConditions),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnDeathAbility::new));
 
-    public final List<BiAction> biEntityActions;
-    public final List<BiCondition> biEntityConditions;
+    public final List<Action> entityActions;
+    public final Condition entityConditions;
     public final List<DamageCondition> damageConditions;
 
-    public ActionOnDeathAbility(List<BiAction> biEntityActions, List<BiCondition> biEntityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnDeathAbility(List<Action> entityActions, Condition entityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.biEntityActions = biEntityActions;
-        this.biEntityConditions = biEntityConditions;
+        this.entityActions = entityActions;
+        this.entityConditions = entityConditions;
         this.damageConditions = damageConditions;
     }
 
-    public boolean doesApply(Entity attacker, LivingEntity holder, DamageSource source, float amount) {
-        if (!damageConditions.isEmpty() && !DamageCondition.checkConditions(damageConditions, source, amount)) {
+    public boolean doesApply(Entity source, LivingEntity target, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
+        if (!damageConditions.isEmpty() && !DamageCondition.checkConditions(damageConditions, damageSource, amount)) {
             return false;
         }
 
-        if (!biEntityConditions.isEmpty() && !BiCondition.checkConditions(biEntityConditions, attacker, holder)) {
-            return false;
-        }
-
-        return true;
+        return entityConditions.test(DataContext.forAffected(target, source, instance));
     }
 
-    public void onDeath(Entity attacker, LivingEntity holder) {
-        if (!biEntityActions.isEmpty()) BiAction.runList(biEntityActions, attacker, holder);
+    public void onDeath(Entity source, LivingEntity target, AbilityInstance<?> instance) {
+        if (!entityActions.isEmpty()) {
+            Action.runList(entityActions, DataContext.forAffected(target, source, instance));
+        }
     }
 
     @Override
@@ -75,12 +75,12 @@ public class ActionOnDeathAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnDeathAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Death")
-                    .setDescription("Runs actions when the entity that has this ability dies. In the context of this ability, the \"actor\" is the killer & the \"target\" is the entity that died.")
-                    .addOptional("bientity_actions", KryptoniteDocumented.TYPE_BI_ACTION_LIST, "These actions will be run on either or both \"actor\" & \"target\" entities.")
-                    .addOptional("bientity_conditions", KryptoniteDocumented.TYPE_BI_CONDITION_LIST, "If specified, only runs the actions if these conditions are fulfilled by either or both \"actor\" & \"target\" entities.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, only runs the actions if the killing damage of the \"actor\" entity matches these damage conditions.")
-                    .addExampleObject(new ActionOnDeathAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on death (target_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnDeathAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on death (actor_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .setDescription("Performs actions when the entity that has this ability dies. For this ability, the \"source\" is the entity responsible for the damage & the \"target\" is the entity that died.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for the actions to perform.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the killing damage must meet for the actions to perform.")
+                    .addExampleObject(new ActionOnDeathAbility(List.of(new RunCommandAction(new ParsedCommands("say I was killed!"))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnDeathAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I killed something!"))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

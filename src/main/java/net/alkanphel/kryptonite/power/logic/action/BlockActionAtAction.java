@@ -30,7 +30,7 @@ public class BlockActionAtAction extends Action {
     }
 
     @Override
-    public boolean execute(DataContext context) {
+    protected boolean execute(DataContext context) {
         var entity = context.getEntity();
         if (entity == null || !(entity.level() instanceof ServerLevel level)) return false;
 

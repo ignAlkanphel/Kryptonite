@@ -4,19 +4,22 @@
   "abilities": {
     "action_on_tame": {
       "type": "kryptonite:action_on_tame",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say Action on tame"
-      },
-      "bientity_actions": {
-        "type": "kryptonite:set_in_love"
-      },
-      "bientity_conditions": {
-        "type": "kryptonite:target_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:wolf"
+      "entity_actions": [
+        {
+          "type": "palladium:run_command",
+          "command": "say You tamed me!"
+        },
+        {
+          "type": "palladium:as_source",
+          "actions": {
+            "type": "palladium:run_command",
+            "command": "say You tamed them"
+          }
         }
+      ],
+      "entity_conditions": {
+        "type": "palladium:entity_type",
+        "entity_type": "minecraft:wolf"
       }
     }
   }

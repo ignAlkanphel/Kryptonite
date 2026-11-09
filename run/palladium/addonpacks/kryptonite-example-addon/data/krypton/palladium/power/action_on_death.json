@@ -4,21 +4,18 @@
   "abilities": {
     "action_on_death": {
       "type": "kryptonite:action_on_death",
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say Action On Death (target_action)!"
-        }
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say I was killed!"
       }
     },
     "action_on_death2": {
       "type": "kryptonite:action_on_death",
-      "bientity_actions": {
-        "type": "kryptonite:actor_action",
+      "entity_actions": {
+        "type": "palladium:as_source",
         "actions": {
           "type": "palladium:run_command",
-          "command": "say Action On Death (actor_action)!"
+          "command": "say I killed something!"
         }
       }
     }

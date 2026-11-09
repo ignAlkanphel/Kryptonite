@@ -4,21 +4,20 @@
   "abilities": {
     "game_event_listener": {
       "type": "kryptonite:game_event_listener",
-      "range": 5,
       "delivery_mode": "by_distance",
-      "bientity_actions": {
-        "type": "kryptonite:target_action",
-        "actions": {
-          "type": "palladium:run_command",
-          "command": "say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"
-        }
+      "range": 5,
+      "entity_actions": {
+        "type": "palladium:run_command",
+        "command": "say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"
       },
-      "bientity_conditions": {
-        "type": "kryptonite:actor_condition",
-        "conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:villager"
-        }
+      "entity_conditions": {
+        "type": "palladium:as_source",
+        "conditions": [
+          {
+            "type": "palladium:entity_type",
+            "entity_type": "minecraft:villager"
+          }
+        ]
       },
       "block_conditions": {
         "type": "kryptonite:block",

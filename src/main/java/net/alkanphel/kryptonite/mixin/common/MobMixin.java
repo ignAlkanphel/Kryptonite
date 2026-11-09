@@ -42,7 +42,7 @@ public abstract class MobMixin extends LivingEntity {
         itemEntity.setItem(stackReference.get());
 
         original.call(mobEntity, level, itemEntity);
-        ActionOnItemPickupAbility.runBiActions(callInstance, thrower, this);
+        ActionOnItemPickupAbility.runEntityActions(callInstance, thrower, this);
     }
 
 }

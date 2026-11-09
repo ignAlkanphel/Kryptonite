@@ -1,21 +1,21 @@
 {
-  "name": "Bi-Entity Collision Glow", "icon": "minecraft:stone",
+  "name": "Entity Collision Glow", "icon": "minecraft:stone",
 
   "abilities": {
     "collision": {
       "type": "kryptonite:glowing", "mode": "other",
       "color": {"red": 1.0, "green": 0.0, "blue": 0.5}, "use_teams": false,
-      "bientity_conditions": {
-        "type": "kryptonite:or",
+      "entity_conditions": {
+        "type": "palladium:or",
         "conditions": [
           {
-            "type": "kryptonite:collision",
+            "type": "kryptonite:entity_collision",
             "offset": {
               "x": 0.5, "y": 0.0, "z": 0.5
             }
           },
           {
-            "type": "kryptonite:collision",
+            "type": "kryptonite:entity_collision",
             "offset": {
               "x": -0.5, "y": 0.0, "z": -0.5
             }
