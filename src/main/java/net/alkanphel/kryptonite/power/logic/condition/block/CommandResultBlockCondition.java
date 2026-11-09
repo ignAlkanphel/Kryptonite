@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.alkanphel.kryptonite.power.logic.BlockLogicEnvironment;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializers;
@@ -81,6 +82,11 @@ public record CommandResultBlockCondition(String command, NumberComparator compa
         @Override
         public MapCodec<CommandResultBlockCondition> codec() {
             return CODEC;
+        }
+
+        @Override
+        public BlockLogicEnvironment getEnvironment() {
+            return BlockLogicEnvironment.SERVER;
         }
 
         @Override

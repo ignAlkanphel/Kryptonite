@@ -10,6 +10,7 @@ import net.alkanphel.kryptonite.util.apoli.keybind.KeyBindReference;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.player.Player;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.LogicEnvironment;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
@@ -41,6 +42,11 @@ public record KeyBindCondition(KeyBindReference key) implements Condition {
         @Override
         public MapCodec<KeyBindCondition> codec() {
             return CODEC;
+        }
+
+        @Override
+        public LogicEnvironment getEnvironment() {
+            return LogicEnvironment.SERVER_OR_LOCAL_PLAYER;
         }
 
         @Override

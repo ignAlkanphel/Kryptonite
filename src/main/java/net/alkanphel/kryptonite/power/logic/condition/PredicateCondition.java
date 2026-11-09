@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.LogicEnvironment;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
@@ -67,6 +68,11 @@ public record PredicateCondition(ResourceKey<LootItemCondition> predicate) imple
         @Override
         public MapCodec<PredicateCondition> codec() {
             return CODEC;
+        }
+
+        @Override
+        public LogicEnvironment getEnvironment() {
+            return LogicEnvironment.SERVER;
         }
 
         @Override

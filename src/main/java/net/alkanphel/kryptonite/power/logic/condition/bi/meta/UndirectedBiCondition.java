@@ -7,7 +7,7 @@ import net.alkanphel.kryptonite.power.logic.condition.bi.OwnerBiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -26,7 +26,7 @@ public record UndirectedBiCondition(BiCondition biEntityCondition) implements Bi
     );
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         return biEntityCondition.test(context) || biEntityCondition.test(context.target(), context.actor());
     }
 

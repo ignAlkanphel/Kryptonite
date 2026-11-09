@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiActionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -40,7 +40,7 @@ public class ActorActionBiAction extends BiAction {
     }
 
     @Override
-    public boolean run(BiActionContext context) {
+    public boolean execute(BiContext context) {
         if (context.actor() == null) return false;
         return Action.runList(actions, DataContext.forEntity(context.actor()));
     }

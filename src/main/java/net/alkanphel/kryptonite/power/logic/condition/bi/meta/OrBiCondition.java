@@ -6,7 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.ExtraCodecs;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -26,7 +26,7 @@ public record OrBiCondition(List<BiCondition> biConditions) implements BiConditi
     ));
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         for (BiCondition biCondition : this.biConditions) {
             if (biCondition.test(context)) {
                 return true;

@@ -25,7 +25,7 @@ public class ConsumeItemAction extends ItemAction {
     }
 
     @Override
-    protected boolean run(ItemActionContext context) {
+    protected boolean execute(ItemActionContext context) {
         var slot = context.slotAccess();
         if (slot == null || slot.get().isEmpty()) return false;
 

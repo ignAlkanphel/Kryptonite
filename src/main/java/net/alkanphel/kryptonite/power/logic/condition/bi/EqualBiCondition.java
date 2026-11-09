@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,7 +18,7 @@ public record EqualBiCondition() implements BiCondition {
     public static final StreamCodec<RegistryFriendlyByteBuf, EqualBiCondition> STREAM_CODEC = StreamCodec.unit(new EqualBiCondition());
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         return Objects.equals(context.actor(), context.target());
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.logic.LogicEnvironment;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
@@ -39,9 +40,14 @@ public class HasRespawnCondition implements Condition {
         }
 
         @Override
+        public LogicEnvironment getEnvironment() {
+            return LogicEnvironment.SERVER;
+        }
+
+        @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, HasRespawnCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Respawn")
-                    .setDescription("Checks if the (server) player has a respawn point set (e.g. bed/respawn anchor).")
+                    .setDescription("Checks if the player has a respawn point set (e.g. bed/respawn anchor). Only available on the server side.")
                     .addExampleObject(INSTANCE);
         }
     }

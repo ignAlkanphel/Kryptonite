@@ -17,7 +17,7 @@ public class FallingBlockBlockAction extends BlockAction {
     public static final MapCodec<FallingBlockBlockAction> CODEC = MapCodec.unit(FallingBlockBlockAction::new);
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         ServerLevel level = context.level();
         BlockState state = level.getBlockState(context.pos());
         if (state.isAir()) return false;

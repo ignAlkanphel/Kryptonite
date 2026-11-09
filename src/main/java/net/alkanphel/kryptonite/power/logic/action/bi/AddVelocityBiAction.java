@@ -7,7 +7,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiActionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.alkanphel.kryptonite.util.apoli.Space;
 import net.minecraft.core.HolderLookup;
@@ -46,7 +46,7 @@ public class AddVelocityBiAction extends BiAction {
     }
 
     @Override
-    public boolean run(BiActionContext context) {
+    public boolean execute(BiContext context) {
         Entity actor = context.actor();
         Entity target = context.target();
 

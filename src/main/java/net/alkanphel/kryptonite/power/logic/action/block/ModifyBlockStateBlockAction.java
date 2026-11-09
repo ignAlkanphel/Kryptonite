@@ -54,7 +54,7 @@ public class ModifyBlockStateBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         Level level = context.level();
         BlockPos pos = context.pos();
 

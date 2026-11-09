@@ -20,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.condition.HealthCondition;
+import net.threetag.palladium.logic.condition.NumberRange;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
@@ -86,7 +87,7 @@ public class ActionOnHitAbility extends Ability {
                     .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new RunCommandAction(new ParsedCommands("say Action on hit (actor_action)!"))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0F), new StaticValue(0.5F)), Space.LOCAL_HORIZONTAL_NORMALIZED, new StaticValue(true))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new ActorActionBiAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(-0.1F), new StaticValue(-0.5F)), Space.LOCAL, new StaticValue(true))))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("execute as @s at @s run summon minecraft:zombie"))))), List.of(new TargetConditionBiCondition(new HealthCondition(0F, 0F))), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnHitAbility(List.of(new TargetActionBiAction(List.of(new RunCommandAction(new ParsedCommands("execute as @s at @s run summon minecraft:zombie"))))), List.of(new TargetConditionBiCondition(new HealthCondition(new NumberRange(0F, 0F)))), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

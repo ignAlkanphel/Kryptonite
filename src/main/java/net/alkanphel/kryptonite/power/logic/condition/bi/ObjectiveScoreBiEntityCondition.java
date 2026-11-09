@@ -3,10 +3,11 @@ package net.alkanphel.kryptonite.power.logic.condition.bi;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.alkanphel.kryptonite.power.logic.BiLogicEnvironment;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,7 +31,7 @@ public record ObjectiveScoreBiEntityCondition(String actorObjective, String targ
     );
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         var actor = context.actor();
         var target = context.target();
         if (actor == null || target == null) return false;
@@ -59,6 +60,11 @@ public record ObjectiveScoreBiEntityCondition(String actorObjective, String targ
         @Override
         public MapCodec<ObjectiveScoreBiEntityCondition> codec() {
             return CODEC;
+        }
+
+        @Override
+        public BiLogicEnvironment getEnvironment() {
+            return BiLogicEnvironment.SERVER;
         }
 
         @Override

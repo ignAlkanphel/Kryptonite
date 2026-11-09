@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface DamageCondition {
 
-    Codec<DamageCondition> DIRECT_CODEC = KryptoniteRegistries.DAMAGE_CONDITION_SERIALIZER.byNameCodec().dispatch(DamageCondition::getSerializer, DamageConditionSerializer::codec);
+    Codec<DamageCondition> DIRECT_CODEC = KryptoniteRegistries.DAMAGE_CONDITION_SERIALIZER.byNameCodec().<DamageCondition>dispatch(DamageCondition::getSerializer, DamageConditionSerializer::codec).xmap(SidedDamageCondition::wrap, SidedDamageCondition::unwrap);
     Codec<List<DamageCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
     Codec<DamageCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndDamageCondition::new, condition -> condition instanceof AndDamageCondition(List<DamageCondition> conditions) ? conditions : Collections.singletonList(condition));
 

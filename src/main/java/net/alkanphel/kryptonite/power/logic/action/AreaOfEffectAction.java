@@ -8,7 +8,7 @@ import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.meta.TargetActionBiAction;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
-import net.alkanphel.kryptonite.power.logic.context.BiActionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -48,7 +48,7 @@ public class AreaOfEffectAction extends Action {
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         var actor = context.getEntity();
         if (actor == null) return false;
 
@@ -56,7 +56,7 @@ public class AreaOfEffectAction extends Action {
                 .stream()
                 .filter(target -> includeActor.getAsBoolean(context) || !Objects.equals(actor, target))
                 .filter(target -> biConditions.map(c -> c.test(actor, target)).orElse(true))
-                .map(target -> new BiActionContext(actor, target))
+                .map(target -> new BiContext(actor, target))
                 .forEach(biCtx -> BiAction.runList(biActions, biCtx));
 
         return true;

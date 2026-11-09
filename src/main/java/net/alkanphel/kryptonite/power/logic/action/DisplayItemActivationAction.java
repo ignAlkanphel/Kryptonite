@@ -30,7 +30,7 @@ public class DisplayItemActivationAction extends Action {
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof ServerPlayer player)) return false;
 
         PacketDistributor.sendToPlayer(player, new S2CDisplayItemActivation(new ItemStack(item.value())));

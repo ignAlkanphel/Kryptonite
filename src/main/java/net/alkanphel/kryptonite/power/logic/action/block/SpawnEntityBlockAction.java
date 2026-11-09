@@ -45,7 +45,7 @@ public class SpawnEntityBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         var level = context.level();
 
         for (var holder : entityType) {

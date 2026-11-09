@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface BlockCondition {
 
-    Codec<BlockCondition> DIRECT_CODEC = KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER.byNameCodec().dispatch(BlockCondition::getSerializer, BlockConditionSerializer::codec);
+    Codec<BlockCondition> DIRECT_CODEC = KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER.byNameCodec().<BlockCondition>dispatch(BlockCondition::getSerializer, BlockConditionSerializer::codec).xmap(SidedBlockCondition::wrap, SidedBlockCondition::unwrap);
     Codec<List<BlockCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
     Codec<BlockCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndBlockCondition::new, condition -> condition instanceof AndBlockCondition(List<BlockCondition> conditions) ? conditions : Collections.singletonList(condition));
 

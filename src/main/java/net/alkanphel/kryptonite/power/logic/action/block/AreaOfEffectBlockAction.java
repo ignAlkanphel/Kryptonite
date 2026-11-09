@@ -39,7 +39,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         var level = context.level();
 
         shape.getBlockPositions(context.pos(), radius.getAsInt(null))

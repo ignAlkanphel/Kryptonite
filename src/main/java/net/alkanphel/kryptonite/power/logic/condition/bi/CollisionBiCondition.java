@@ -6,7 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.phys.Vec3;
@@ -21,7 +21,7 @@ public record CollisionBiCondition(KryptoniteCodecs.Vec3Value offset) implements
     ).apply(instance, CollisionBiCondition::new));
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         var actor = context.actor();
         var target = context.target();
         if (actor == null || target == null) return false;

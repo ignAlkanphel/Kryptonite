@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.condition.damage.internal;
 
 import com.mojang.serialization.MapCodec;
+import net.alkanphel.kryptonite.power.logic.DamageLogicEnvironment;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.Documented;
@@ -17,4 +18,9 @@ public abstract class DamageConditionSerializer<T extends DamageCondition> imple
     }
 
     public abstract void addDocumentation(CodecDocumentationBuilder<DamageCondition, T> builder, HolderLookup.Provider provider);
+
+    public DamageLogicEnvironment getEnvironment() {
+        return DamageLogicEnvironment.SERVER;
+    }
+
 }

@@ -6,7 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiActionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
@@ -25,7 +25,7 @@ public class InvertBiAction extends BiAction {
     }
 
     @Override
-    public boolean run(BiActionContext context) {
+    public boolean execute(BiContext context) {
         return BiAction.runList(actions, context.target(), context.actor());
     }
 

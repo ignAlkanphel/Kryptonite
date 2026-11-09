@@ -38,7 +38,7 @@ public class PocketCraftingTableAction extends Action {
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         var entity = context.getEntity();
         if (!(entity instanceof Player player)) return false;
 

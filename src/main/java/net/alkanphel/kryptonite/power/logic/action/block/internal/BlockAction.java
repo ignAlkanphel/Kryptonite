@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.action.block.internal;
 
 import com.mojang.serialization.Codec;
+import net.alkanphel.kryptonite.power.logic.BlockLogicEnvironment;
 import net.alkanphel.kryptonite.power.logic.context.BlockActionContext;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,15 @@ public abstract class BlockAction {
     public static final Codec<BlockAction> CODEC = KryptoniteRegistries.BLOCK_ACTION_SERIALIZER.byNameCodec().dispatch(BlockAction::getSerializer, BlockActionSerializer::codec);
     public static final Codec<List<BlockAction>> LIST_CODEC = ExtraCodecs.compactListCodec(CODEC);
 
-    public abstract boolean run(BlockActionContext context);
+    public final boolean run(BlockActionContext context) {
+        return getEnvironment().matches(context.level()) && this.execute(context);
+    }
+
+    protected abstract boolean execute(BlockActionContext context);
+
+    public BlockLogicEnvironment getEnvironment() {
+        return getSerializer().getEnvironment();
+    }
 
     public void run(Level level, BlockPos pos) {
         this.run(level, pos, Optional.empty());

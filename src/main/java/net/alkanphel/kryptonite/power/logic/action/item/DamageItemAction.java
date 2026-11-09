@@ -30,7 +30,7 @@ public class DamageItemAction extends ItemAction {
     }
 
     @Override
-    protected boolean run(ItemActionContext context) {
+    protected boolean execute(ItemActionContext context) {
         var slot = context.slotAccess();
         if (slot == null) return false;
 

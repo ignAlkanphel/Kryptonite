@@ -24,7 +24,7 @@ public class AddBlockBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         return context.direction().map(dir -> {
             context.level().setBlockAndUpdate(context.pos().relative(dir), blockState);
             return true;

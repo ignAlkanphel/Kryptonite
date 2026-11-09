@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,7 +19,7 @@ public record VehicleRidingRecursiveBiCondition() implements BiCondition {
     public static final StreamCodec<RegistryFriendlyByteBuf, VehicleRidingRecursiveBiCondition> STREAM_CODEC = StreamCodec.unit(new VehicleRidingRecursiveBiCondition());
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         Entity vehicle = context.actor().getVehicle();
 
         while (vehicle != null) {

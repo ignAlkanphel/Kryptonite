@@ -107,7 +107,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         Entity entity = context.getEntity();
         if (entity == null) return false;
 

@@ -45,7 +45,7 @@ public class ExplodeBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         ServerLevel level = context.level();
         if (level.isClientSide()) return false;
 

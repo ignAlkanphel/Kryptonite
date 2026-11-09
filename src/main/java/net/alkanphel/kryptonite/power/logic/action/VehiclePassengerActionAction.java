@@ -41,7 +41,7 @@ public class VehiclePassengerActionAction extends Action {
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         Entity entity = context.get(DataContextKeys.ENTITY);
         if (entity == null || !entity.isVehicle()) return false;
 

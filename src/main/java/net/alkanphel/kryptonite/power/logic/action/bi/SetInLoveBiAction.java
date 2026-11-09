@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiAction;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.bi.internal.BiActionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiActionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,7 +21,7 @@ public class SetInLoveBiAction extends BiAction {
     public SetInLoveBiAction() {}
 
     @Override
-    public boolean run(BiActionContext context) {
+    public boolean execute(BiContext context) {
         Entity actor = context.actor();
         Entity target = context.target();
 

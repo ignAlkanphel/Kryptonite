@@ -1,6 +1,6 @@
 {
   "addonpack": {
-    "id": "kryptonite_test_pack",
+    "id": "kryptonite_example_pack",
     "version": "1.0",
     "description": "Kryptonite Test Pack",
     "min_format": [2, 0],

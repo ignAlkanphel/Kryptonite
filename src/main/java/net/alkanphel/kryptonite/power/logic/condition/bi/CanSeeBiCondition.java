@@ -6,7 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -32,7 +32,7 @@ public record CanSeeBiCondition(ClipContext.Block shapeType, ClipContext.Fluid f
     );
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         Entity actor = context.actor();
         Entity target = context.target();
 

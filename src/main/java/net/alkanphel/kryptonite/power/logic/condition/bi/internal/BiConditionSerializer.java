@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.condition.bi.internal;
 
 import com.mojang.serialization.MapCodec;
+import net.alkanphel.kryptonite.power.logic.BiLogicEnvironment;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.Documented;
@@ -17,4 +18,9 @@ public abstract class BiConditionSerializer<T extends BiCondition> implements Do
     }
 
     public abstract void addDocumentation(CodecDocumentationBuilder<BiCondition, T> builder, HolderLookup.Provider provider);
+
+    public BiLogicEnvironment getEnvironment() {
+        return BiLogicEnvironment.BOTH;
+    }
+
 }

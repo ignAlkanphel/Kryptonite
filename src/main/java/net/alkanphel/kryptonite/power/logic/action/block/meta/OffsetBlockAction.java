@@ -35,7 +35,7 @@ public class OffsetBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         BlockPos offsetPos = context.pos().offset(x.getAsInt(null), y.getAsInt(null), z.getAsInt(null));
         BlockAction.runList(blockActions, context.level(), offsetPos, context.direction());
         return true;

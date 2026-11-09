@@ -36,7 +36,7 @@ public class RunCommandBlockAction extends BlockAction implements CommandSource 
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         if (!(context.level() instanceof ServerLevel serverLevel)) return false;
 
         BlockPos pos = context.pos();

@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface DimensionCondition {
 
-    Codec<DimensionCondition> DIRECT_CODEC = KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER.byNameCodec().dispatch(DimensionCondition::getSerializer, DimensionConditionSerializer::codec);
+    Codec<DimensionCondition> DIRECT_CODEC = KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER.byNameCodec().<DimensionCondition>dispatch(DimensionCondition::getSerializer, DimensionConditionSerializer::codec).xmap(SidedDimensionCondition::wrap, SidedDimensionCondition::unwrap);
     Codec<List<DimensionCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
     Codec<DimensionCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndDimensionCondition::new, condition -> condition instanceof AndDimensionCondition(List<DimensionCondition> conditions) ? conditions : Collections.singletonList(condition));
 

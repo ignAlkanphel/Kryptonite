@@ -1,6 +1,7 @@
 package net.alkanphel.kryptonite.power.logic.condition.block.internal;
 
 import com.mojang.serialization.MapCodec;
+import net.alkanphel.kryptonite.power.logic.BlockLogicEnvironment;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.Documented;
@@ -17,4 +18,9 @@ public abstract class BlockConditionSerializer<T extends BlockCondition> impleme
     }
 
     public abstract void addDocumentation(CodecDocumentationBuilder<BlockCondition, T> builder, HolderLookup.Provider provider);
+
+    public BlockLogicEnvironment getEnvironment() {
+        return BlockLogicEnvironment.BOTH;
+    }
+
 }

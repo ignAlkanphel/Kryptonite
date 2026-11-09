@@ -28,7 +28,7 @@ public class BoneMealBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         ServerLevel level = context.level();
         BlockPos pos = context.pos();
 

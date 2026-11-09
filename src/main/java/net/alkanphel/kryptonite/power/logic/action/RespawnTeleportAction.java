@@ -38,7 +38,7 @@ public class RespawnTeleportAction extends Action {
     }
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof ServerPlayer player)) return false;
 
         return switch (this.mode) {

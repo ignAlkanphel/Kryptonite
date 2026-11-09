@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiCondition;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializer;
 import net.alkanphel.kryptonite.power.logic.condition.bi.internal.BiConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.BiConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BiContext;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -39,7 +39,7 @@ public record RelativeRotationBiCondition(RotationType actorRotationType, Rotati
     ).apply(instance, RelativeRotationBiCondition::new));
 
     @Override
-    public boolean test(BiConditionContext context) {
+    public boolean test(BiContext context) {
         if (context.actor() == null || context.target() == null) return false;
 
         Vec3 actorRotation = actorRotationType.getRotation(context.actor());

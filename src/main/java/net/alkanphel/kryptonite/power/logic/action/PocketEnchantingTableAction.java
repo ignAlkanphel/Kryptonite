@@ -29,7 +29,7 @@ public class PocketEnchantingTableAction extends Action {
     public PocketEnchantingTableAction() {}
 
     @Override
-    public boolean run(DataContext context) {
+    public boolean execute(DataContext context) {
         var entity = context.getEntity();
         if (!(entity instanceof Player player)) return false;
 

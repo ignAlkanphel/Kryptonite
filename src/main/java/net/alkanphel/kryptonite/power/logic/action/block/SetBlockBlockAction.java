@@ -24,7 +24,7 @@ public class SetBlockBlockAction extends BlockAction {
     }
 
     @Override
-    public boolean run(BlockActionContext context) {
+    public boolean execute(BlockActionContext context) {
         context.level().setBlockAndUpdate(context.pos(), blockState);
         return true;
     }
