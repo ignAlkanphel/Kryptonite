@@ -85,7 +85,7 @@ public record EntityRotationCondition(RotationType sourceRotationType, RotationT
     }
 
     @Override
-    public ConditionSerializer<?> getSerializer() {
+    public ConditionSerializer<EntityRotationCondition> getSerializer() {
         return KryptoniteConditionSerializers.ENTITY_ROTATION.get();
     }
 

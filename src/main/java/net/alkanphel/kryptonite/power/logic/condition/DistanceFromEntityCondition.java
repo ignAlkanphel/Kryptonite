@@ -32,7 +32,7 @@ public record DistanceFromEntityCondition(NumberComparator comparator, Value com
     }
 
     @Override
-    public ConditionSerializer<?> getSerializer() {
+    public ConditionSerializer<DistanceFromEntityCondition> getSerializer() {
         return KryptoniteConditionSerializers.DISTANCE_FROM_ENTITY.get();
     }
 

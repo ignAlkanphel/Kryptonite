@@ -47,7 +47,7 @@ public record EntityInSightCondition(ClipContext.Block shapeType, ClipContext.Fl
     }
 
     @Override
-    public ConditionSerializer<?> getSerializer() {
+    public ConditionSerializer<EntityInSightCondition> getSerializer() {
         return KryptoniteConditionSerializers.ENTITY_IN_SIGHT.get();
     }
 

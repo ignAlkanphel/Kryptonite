@@ -26,7 +26,7 @@ public record EntityAttackedLastCondition() implements Condition {
     }
 
     @Override
-    public ConditionSerializer<?> getSerializer() {
+    public ConditionSerializer<EntityAttackedLastCondition> getSerializer() {
         return KryptoniteConditionSerializers.ENTITY_ATTACKED_LAST.get();
     }
 

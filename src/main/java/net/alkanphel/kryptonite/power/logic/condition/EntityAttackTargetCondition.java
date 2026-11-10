@@ -27,7 +27,7 @@ public record EntityAttackTargetCondition() implements Condition {
     }
 
     @Override
-    public ConditionSerializer<?> getSerializer() {
+    public ConditionSerializer<EntityAttackTargetCondition> getSerializer() {
         return KryptoniteConditionSerializers.ENTITY_ATTACK_TARGET.get();
     }
 
