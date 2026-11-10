@@ -4,7 +4,7 @@
   "abilities": {
     "no_fall_damage_on_wool": {
       "type": "palladium:damage_immunity",
-      "damage_type": "minecraft:fall",
+      "damage_types": "minecraft:fall",
       "state": {
         "enabling": {
           "type": "kryptonite:block_in",

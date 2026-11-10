@@ -8,8 +8,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
-import net.threetag.palladium.logic.condition.IsUnderWaterCondition;
 import net.threetag.palladium.logic.condition.TrueCondition;
+import net.threetag.palladium.logic.condition.UnderWaterCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.ability.AbilityInstance;
@@ -57,7 +57,7 @@ public class PreventEntitySelectionAbility extends Ability {
             builder.setDescription("Prevents entities from being selected/targeted by the crosshair. For this ability, the \"source\" is the player that has the ability & the \"target\" is the selected entity.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to prevent entity selection.")
                     .addExampleObject(new PreventEntitySelectionAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventEntitySelectionAbility(new IsUnderWaterCondition(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventEntitySelectionAbility(new UnderWaterCondition(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

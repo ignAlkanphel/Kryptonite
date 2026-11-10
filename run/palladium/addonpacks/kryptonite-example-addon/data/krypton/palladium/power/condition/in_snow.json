@@ -1,13 +1,13 @@
 {
-  "name": "Is In Snow", "icon": "minecraft:barrier",
+  "name": "In Snow", "icon": "minecraft:barrier",
 
   "abilities": {
-    "is_in_snow": {
+    "in_snow": {
       "type": "palladium:command",
       "commands": ["tellraw @s {\"color\":\"green\",\"text\":\"In snow!\"}"],
       "state": {
         "enabling": {
-          "type": "kryptonite:is_in_snow"
+          "type": "kryptonite:in_snow"
         }
       }
     }
