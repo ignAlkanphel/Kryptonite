@@ -42,7 +42,7 @@ public class ModifyFogTypeAbility extends Ability {
     }
 
     @Override
-    public AbilitySerializer<ModifyFogTypeAbility> getSerializer() {
+    public AbilitySerializer<?> getSerializer() {
         return KryptoniteAbilitySerializers.MODIFY_FOG_TYPE.get();
     }
 

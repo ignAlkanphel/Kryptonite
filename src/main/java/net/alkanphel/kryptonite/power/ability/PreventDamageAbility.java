@@ -44,12 +44,7 @@ public class PreventDamageAbility extends Ability {
         if (!ability.isEnabled()) return false;
 
         var damageConditions = ability.getAbility().damageConditions;
-
-        if (!damageConditions.isEmpty() && !DamageCondition.checkConditions(damageConditions, source, amount)) {
-            return false;
-        }
-
-        return true;
+        return damageConditions.isEmpty() || DamageCondition.checkConditions(damageConditions, source, amount);
     }
 
     public static boolean preventsFire(LivingEntity entity) {

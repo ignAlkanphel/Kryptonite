@@ -74,9 +74,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
     }
 
     public void runEntityActions(Entity thrower, Entity holder) {
-        if (!entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forAffected(holder, thrower, null));
-        }
+        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(holder, thrower, null));
     }
 
     public void runItemActions(Entity holder, SlotAccess stackReference) {

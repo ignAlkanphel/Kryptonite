@@ -47,7 +47,7 @@ public class PreventGameEventAbility extends Ability {
     }
 
     @Override
-    public AbilitySerializer<PreventGameEventAbility> getSerializer() {
+    public AbilitySerializer<?> getSerializer() {
         return KryptoniteAbilitySerializers.PREVENT_GAME_EVENT.get();
     }
 

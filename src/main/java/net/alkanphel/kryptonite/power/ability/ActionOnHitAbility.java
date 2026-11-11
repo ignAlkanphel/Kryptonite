@@ -57,10 +57,8 @@ public class ActionOnHitAbility extends Ability {
         return entityConditions.test(DataContext.forAffected(target, source, instance));
     }
 
-    public void onHit(LivingEntity source, Entity target, AbilityInstance<?> instance) {
-        if (!entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forAffected(target, source, instance));
-        }
+    public void runActions(LivingEntity source, Entity target, AbilityInstance<?> instance) {
+        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(target, source, instance));
     }
 
     @Override

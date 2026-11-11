@@ -97,16 +97,14 @@ public class PreventTeleportAbility extends Ability {
             if (originLevel instanceof ServerLevel serverLevel) {
                 ServerLevel destinationLevel = serverLevel.getServer().getLevel(destination);
                 if (destinationLevel == null) return false;
-                if (!DimensionCondition.checkConditions(destinationDimensionConditions, destinationLevel.dimensionType(), destinationLevel, null)) {
-                    return false;
-                }
+                return DimensionCondition.checkConditions(destinationDimensionConditions, destinationLevel.dimensionType(), destinationLevel, null);
             }
         }
 
         return true;
     }
 
-    public static boolean doesPreventDimensionTravel(LivingEntity entity, ResourceKey<Level> destination) {
+    public static boolean shouldPreventDimensionTravel(LivingEntity entity, ResourceKey<Level> destination) {
         boolean prevented = false;
 
         for (AbilityInstance<PreventTeleportAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_TELEPORT.get())) {

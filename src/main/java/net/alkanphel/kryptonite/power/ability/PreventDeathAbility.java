@@ -49,7 +49,7 @@ public class PreventDeathAbility extends Ability {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
     }
 
-    public static boolean doesPrevent(LivingEntity entity, DamageSource source, float amount) {
+    public static boolean tryPreventDeath(LivingEntity entity, DamageSource source, float amount) {
         boolean prevented = false;
 
         for (AbilityInstance<PreventDeathAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_DEATH.get())) {

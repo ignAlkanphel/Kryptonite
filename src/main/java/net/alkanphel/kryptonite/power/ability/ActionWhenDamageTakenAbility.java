@@ -43,7 +43,7 @@ public class ActionWhenDamageTakenAbility extends Ability {
         return damageConditions.isEmpty() || DamageCondition.checkConditions(damageConditions, source, amount);
     }
 
-    public void whenHit(LivingEntity holder) {
+    public void runActions(LivingEntity holder) {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
     }
 

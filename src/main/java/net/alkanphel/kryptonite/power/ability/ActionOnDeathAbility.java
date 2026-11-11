@@ -54,10 +54,8 @@ public class ActionOnDeathAbility extends Ability {
         return entityConditions.test(DataContext.forAffected(target, source, instance));
     }
 
-    public void onDeath(Entity source, LivingEntity target, AbilityInstance<?> instance) {
-        if (!entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forAffected(target, source, instance));
-        }
+    public void runActions(Entity source, LivingEntity target, AbilityInstance<?> instance) {
+        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(target, source, instance));
     }
 
     @Override

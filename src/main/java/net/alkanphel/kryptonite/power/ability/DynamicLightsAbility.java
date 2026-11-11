@@ -36,17 +36,17 @@ public class DynamicLightsAbility extends Ability {
     }
 
     @Override
-    public AbilitySerializer<?> getSerializer() {
-        return KryptoniteAbilitySerializers.DYNAMIC_LIGHTS.get();
-    }
-
-    @Override
     public boolean tick(LivingEntity entity, AbilityInstance<?> abilityInstance, boolean enabled) {
         if (enabled && entity.level().isClientSide()) {
             DynLightsCompat.ABILITY_HANDLER.triggerLight(entity, abilityInstance, luminance);
         }
 
         return super.tick(entity, abilityInstance, enabled);
+    }
+
+    @Override
+    public AbilitySerializer<?> getSerializer() {
+        return KryptoniteAbilitySerializers.DYNAMIC_LIGHTS.get();
     }
 
     public static class Serializer extends AbilitySerializer<DynamicLightsAbility> {

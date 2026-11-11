@@ -74,11 +74,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
             return false;
         }
 
-        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
-            return false;
-        }
-
-        return true;
+        return itemConditions.isEmpty() || ItemCondition.checkConditions(itemConditions, holder.level(), stack);
     }
 
     public void runActions(DataContext context, SlotAccess stackReference) {
@@ -89,7 +85,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
     }
 
-    public static void run(LivingEntity user, ItemStack stack, EnumSet<TriggerType> trigger, PriorityPhase phase) {
+    public static void apply(LivingEntity user, ItemStack stack, EnumSet<TriggerType> trigger, PriorityPhase phase) {
         if (user.level().isClientSide()) return;
 
         Prioritized.CallInstance<ActionOnItemUseAbility> call = new Prioritized.CallInstance<>();

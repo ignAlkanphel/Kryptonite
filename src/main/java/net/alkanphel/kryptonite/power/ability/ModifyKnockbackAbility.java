@@ -81,15 +81,11 @@ public class ModifyKnockbackAbility extends Ability {
     }
 
     public void runTargetActions(Entity source, LivingEntity target, AbilityInstance<?> instance) {
-        if (!targetActions.isEmpty()) {
-            Action.runList(targetActions, DataContext.forAffected(target, source, instance));
-        }
+        if (!targetActions.isEmpty()) Action.runList(targetActions, DataContext.forAffected(target, source, instance));
     }
 
     public void runEntityActions(Entity source, LivingEntity target, AbilityInstance<?> instance) {
-        if (!entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forAffected(target, source, instance));
-        }
+        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(target, source, instance));
     }
 
     @Override

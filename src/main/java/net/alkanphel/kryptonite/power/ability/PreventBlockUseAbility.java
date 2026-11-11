@@ -82,11 +82,7 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
     public boolean doesPrevent(LivingEntity holder, BlockUsagePhase usePhase, BlockHitResult hitResult, ItemStack heldStack, InteractionHand hand) {
         if (!usePhases.contains(usePhase) || !directions.contains(hitResult.getDirection()) || !super.shouldRun(hand, heldStack)) return false;
 
-        if (!blockConditions.isEmpty() && !BlockCondition.checkConditions(blockConditions, holder.level(), hitResult.getBlockPos())) {
-            return false;
-        }
-
-        return true;
+        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, holder.level(), hitResult.getBlockPos());
     }
 
     @Override

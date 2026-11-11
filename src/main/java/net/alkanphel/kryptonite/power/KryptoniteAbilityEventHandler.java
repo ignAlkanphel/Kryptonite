@@ -67,10 +67,11 @@ public class KryptoniteAbilityEventHandler {
         List<KryptoniteAttachments.PendingKnockbackModifier> pending = new ArrayList<>();
 
         if (attacker instanceof LivingEntity livingAttacker) {
-            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get())
-                    .stream()
-                    .filter(instance -> instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), e.getAmount(), instance))
-                    .forEach(instance -> pending.add(new KryptoniteAttachments.PendingKnockbackModifier(livingAttacker, instance)));
+            for (AbilityInstance<ModifyKnockbackAbility> instance : AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_KNOCKBACK.get())) {
+                if (!instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), e.getAmount(), instance)) continue;
+
+                pending.add(new KryptoniteAttachments.PendingKnockbackModifier(livingAttacker, instance));
+            }
         }
 
         target.setData(KryptoniteAttachments.PENDING_KNOCKBACK_MODIFIER.get(), pending);
@@ -129,11 +130,7 @@ public class KryptoniteAbilityEventHandler {
         LivingEntity target = e.getEntity();
         float damage = e.getAmount();
 
-        var instances = AbilityUtil.getEnabledInstances(attacker, KryptoniteAbilitySerializers.MODIFY_DAMAGE_DEALT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(source, damage, attacker, target, instance))
-                .toList();
-
+        var instances = AbilityUtil.getEnabledInstances(attacker, KryptoniteAbilitySerializers.MODIFY_DAMAGE_DEALT.get()).stream().filter(instance -> instance.getAbility().doesApply(source, damage, attacker, target, instance)).toList();
         if (instances.isEmpty()) return;
 
         float newDamage = damage;
@@ -162,11 +159,7 @@ public class KryptoniteAbilityEventHandler {
         }
 
         // Modify Damage Taken ability
-        var modifyDamageTakenInstances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(source, amount, target, instance))
-                .toList();
-
+        var modifyDamageTakenInstances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get()).stream().filter(instance -> instance.getAbility().doesApply(source, amount, target, instance)).toList();
         if (modifyDamageTakenInstances.isEmpty()) return;
 
         float newDamage = amount;
@@ -184,11 +177,7 @@ public class KryptoniteAbilityEventHandler {
     public static void onArmorHurt(ArmorHurtEvent e) {
         LivingEntity target = e.getEntity();
 
-        var instances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get())
-                .stream()
-                .filter(instance -> instance.getAbility().modifiesArmorDamaging())
-                .toList();
-
+        var instances = AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_DAMAGE_TAKEN.get()).stream().filter(instance -> instance.getAbility().modifiesArmorDamaging()).toList();
         if (instances.isEmpty()) return;
 
         long wantDamage = instances.stream().filter(instance -> instance.getAbility().shouldDamageArmor(target)).count();
@@ -209,17 +198,18 @@ public class KryptoniteAbilityEventHandler {
         float damage = target.getMaxHealth();
 
         // Prevent Death ability
-        if (PreventDeathAbility.doesPrevent(target, source, damage)) {
+        if (PreventDeathAbility.tryPreventDeath(target, source, damage)) {
             target.setHealth(1.0F);
             e.setCanceled(true);
             return; // stops actions running for 'Action On Death'
         }
 
         // Action On Death ability
-        AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DEATH.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(attacker, target, source, damage, instance))
-                .forEach(instance -> instance.getAbility().onDeath(attacker, target, instance));
+        for (AbilityInstance<ActionOnDeathAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DEATH.get())) {
+            if (!instance.getAbility().doesApply(attacker, target, source, damage, instance)) continue;
+
+            instance.getAbility().runActions(attacker, target, instance);
+        }
     }
 
     @SubscribeEvent
@@ -230,25 +220,28 @@ public class KryptoniteAbilityEventHandler {
 
         // Action On Hit ability (source has the ability)
         if (attacker instanceof LivingEntity livingAttacker) {
-            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.ACTION_ON_HIT.get())
-                    .stream()
-                    .filter(instance -> instance.getAbility().doesApply(livingAttacker, target, e.getSource(), amount, instance))
-                    .forEach(instance -> instance.getAbility().onHit(livingAttacker, target, instance));
+            for (AbilityInstance<ActionOnHitAbility> instance : AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.ACTION_ON_HIT.get())) {
+                if (!instance.getAbility().doesApply(livingAttacker, target, e.getSource(), amount, instance)) continue;
+
+                instance.getAbility().runActions(livingAttacker, target, instance);
+            }
         }
 
         // Action When Hit ability (target has the ability)
         if (attacker != null) {
-            AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_HIT.get())
-                    .stream()
-                    .filter(instance -> instance.getAbility().doesApply(attacker, target, e.getSource(), amount, instance))
-                    .forEach(instance -> instance.getAbility().whenHit(attacker, target, instance));
+            for (AbilityInstance<ActionWhenHitAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_HIT.get())) {
+                if (!instance.getAbility().doesApply(attacker, target, e.getSource(), amount, instance)) continue;
+
+                instance.getAbility().runActions(attacker, target, instance);
+            }
         }
 
         // Action When Damage Taken ability (target has the ability, no specified attacker)
-        AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(e.getSource(), amount))
-                .forEach(instance -> instance.getAbility().whenHit(target));
+        for (AbilityInstance<ActionWhenDamageTakenAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN.get())) {
+            if (!instance.getAbility().doesApply(e.getSource(), amount)) continue;
+
+            instance.getAbility().runActions(target);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -265,10 +258,11 @@ public class KryptoniteAbilityEventHandler {
 
         // Action On Critical Hit
         if (!(player instanceof ServerPlayer serverPlayer) || !e.isCriticalHit()) return;
-        AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(serverPlayer, target, instance))
-                .forEach(instance -> instance.getAbility().runActions(serverPlayer, target, instance));
+        for (AbilityInstance<ActionOnCriticalHitAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT.get())) {
+            if (instance.getAbility().doesApply(serverPlayer, target, instance)) {
+                instance.getAbility().runActions(serverPlayer, target, instance);
+            }
+        }
     }
 
     @SubscribeEvent // Modify Invulnerability Ticks ability
@@ -278,23 +272,21 @@ public class KryptoniteAbilityEventHandler {
         float amount = e.getAmount();
 
         // Modify Invulnerability Ticks ability (SELF)
-        AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApplyToSelf(e.getSource(), amount))
-                .forEach(instance -> {
-                    instance.getAbility().applyModifiers(e, DataContext.forAbility(target, instance));
-                    instance.getAbility().runActions(attacker, target, instance);
-                });
+        for (AbilityInstance<ModifyInvulnerabilityTicksAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())) {
+            if (!instance.getAbility().doesApplyToSelf(e.getSource(), amount)) continue;
+
+            instance.getAbility().applyModifiers(e, DataContext.forAbility(target, instance));
+            instance.getAbility().runActions(attacker, target, instance);
+        }
 
         // Modify Invulnerability Ticks ability (OTHER)
         if (attacker instanceof LivingEntity livingAttacker) {
-            AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())
-                    .stream()
-                    .filter(instance -> instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), amount, instance))
-                    .forEach(instance -> {
-                        instance.getAbility().applyModifiers(e, DataContext.forAbility(livingAttacker, instance));
-                        instance.getAbility().runActions(livingAttacker, target, instance);
-                    });
+            for (AbilityInstance<ModifyInvulnerabilityTicksAbility> instance : AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.MODIFY_INVULNERABILITY_TICKS.get())) {
+                if (!instance.getAbility().doesApplyToTarget(livingAttacker, target, e.getSource(), amount, instance)) continue;
+
+                instance.getAbility().applyModifiers(e, DataContext.forAbility(livingAttacker, instance));
+                instance.getAbility().runActions(livingAttacker, target, instance);
+            }
         }
     }
 
@@ -312,10 +304,11 @@ public class KryptoniteAbilityEventHandler {
         }
 
         // Action On Totem Use ability
-        AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(source, damage, hand))
-                .forEach(instance -> instance.getAbility().runActions(entity));
+        for (AbilityInstance<ActionOnTotemUseAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE.get())) {
+            if (instance.getAbility().doesApply(source, damage, hand)) {
+                instance.getAbility().runActions(entity);
+            }
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW) // Modify Healing ability
@@ -328,7 +321,7 @@ public class KryptoniteAbilityEventHandler {
 
         float newAmount = amount;
 
-        for (var instance : instances) {
+        for (AbilityInstance<ModifyHealingAbility> instance : instances) {
             newAmount = instance.getAbility().applyModifiers(newAmount, instance, entity);
         }
 
@@ -347,10 +340,11 @@ public class KryptoniteAbilityEventHandler {
         ItemStack stack = e.getEntity().getItem();
         SlotAccess slotAccess = SlotAccess.of(() -> stack, s -> e.getEntity().setItem(s));
 
-        AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(living, stack))
-                .forEach(instance -> instance.getAbility().runActions(living, slotAccess));
+        for (AbilityInstance<ActionOnItemDropAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP.get())) {
+            if (instance.getAbility().doesApply(living, stack)) {
+                instance.getAbility().runActions(living, slotAccess);
+            }
+        }
     }
 
     @SubscribeEvent // Action On Item Swap ability
@@ -364,11 +358,11 @@ public class KryptoniteAbilityEventHandler {
         SlotAccess mainReference = SlotAccess.of(e::getItemSwappedToMainHand, e::setItemSwappedToMainHand);
         SlotAccess offReference = SlotAccess.of(e::getItemSwappedToOffHand, e::setItemSwappedToOffHand);
 
-        AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.ACTION_ON_ITEM_SWAP.get())
-                .stream()
-                .map(AbilityInstance::getAbility)
-                .filter(ability -> ability.doesApply(holder, mainStack, offStack))
-                .forEach(ability -> ability.runActions(holder, mainReference, offReference));
+        for (AbilityInstance<ActionOnItemSwapAbility> instance : AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.ACTION_ON_ITEM_SWAP.get())) {
+            if (!instance.getAbility().doesApply(holder, mainStack, offStack)) continue;
+
+            instance.getAbility().runActions(holder, mainReference, offReference);
+        }
     }
 
     @SubscribeEvent // Action On Item Fished ability
@@ -376,15 +370,18 @@ public class KryptoniteAbilityEventHandler {
         Player player = e.getEntity();
         NonNullList<@NotNull ItemStack> drops = e.getDrops();
 
+        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED.get());
+        if (instances.isEmpty()) return;
+
         for (int i = 0; i < drops.size(); i++) {
             ItemStack stack = drops.get(i);
             SlotAccess slotAccess = SlotAccess.forListElement(drops, i);
 
-            AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED.get())
-                    .stream()
-                    .map(AbilityInstance::getAbility)
-                    .filter(ability -> ability.doesApply(player, stack))
-                    .forEach(ability -> ability.runActions(player, slotAccess));
+            for (AbilityInstance<ActionOnItemFishedAbility> instance : instances) {
+                if (!instance.getAbility().doesApply(player, stack)) continue;
+
+                instance.getAbility().runActions(player, slotAccess);
+            }
         }
     }
 
@@ -394,7 +391,7 @@ public class KryptoniteAbilityEventHandler {
         ItemStack stack = e.getItemStack();
 
         if (stack.getUseDuration(holder) == 0) {
-            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.INSTANT), PriorityPhase.BEFORE);
+            ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.INSTANT), PriorityPhase.BEFORE);
         }
     }
 
@@ -403,10 +400,10 @@ public class KryptoniteAbilityEventHandler {
         LivingEntity holder = e.getEntity();
         ItemStack stack = e.getItem();
 
-        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.BEFORE);
+        ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.BEFORE);
 
         if (!e.isCanceled() && e.getDuration() > 0) {
-            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.AFTER);
+            ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.START), PriorityPhase.AFTER);
         }
     }
 
@@ -415,10 +412,10 @@ public class KryptoniteAbilityEventHandler {
         LivingEntity holder = e.getEntity();
         ItemStack stack = e.getItem();
 
-        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.BEFORE);
+        ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.BEFORE);
 
         if (!e.isCanceled() && e.getDuration() > 0) {
-            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.AFTER);
+            ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.TICK), PriorityPhase.AFTER);
         }
     }
 
@@ -427,10 +424,10 @@ public class KryptoniteAbilityEventHandler {
         LivingEntity holder = e.getEntity();
         ItemStack stack = e.getItem();
 
-        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.BEFORE);
+        ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.BEFORE);
 
         if (!e.isCanceled()) {
-            ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.AFTER);
+            ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.STOP), PriorityPhase.AFTER);
         }
     }
 
@@ -439,8 +436,8 @@ public class KryptoniteAbilityEventHandler {
         LivingEntity holder = e.getEntity();
         ItemStack stack = e.getItem();
 
-        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.BEFORE);
-        ActionOnItemUseAbility.run(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.AFTER);
+        ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.BEFORE);
+        ActionOnItemUseAbility.apply(holder, stack, EnumSet.of(ActionOnItemUseAbility.TriggerType.FINISH), PriorityPhase.AFTER);
     }
 
 
@@ -518,11 +515,13 @@ public class KryptoniteAbilityEventHandler {
         Player player = e.getPlayer();
         if (!(e.getLevel() instanceof Level level)) return;
 
+        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK.get());
+        if (instances.isEmpty()) return;
+
         BlockPos pos = e.getPos();
         BlockState state = e.getState();
 
         SavedBlockPosition saved = new SavedBlockPosition(level, pos, state, level.getBlockEntity(pos));
-
         boolean harvested = state.canHarvestBlock(level, pos, player);
         Direction direction = Direction.UP; // fallback
 
@@ -531,12 +530,11 @@ public class KryptoniteAbilityEventHandler {
             if (captured != null) direction = captured;
         }
 
-        Direction finalDirection = direction;
+        for (AbilityInstance<ActionOnBlockBreakAbility> instance : instances) {
+            if (!instance.getAbility().doesApply(saved, harvested)) continue;
 
-        AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(saved, harvested))
-                .forEach(instance -> instance.getAbility().runActions(player, pos, finalDirection));
+            instance.getAbility().runActions(player, pos, direction);
+        }
     }
 
     @SubscribeEvent
@@ -585,11 +583,7 @@ public class KryptoniteAbilityEventHandler {
 
         Projectile projectile = e.getProjectile();
 
-        var instances = AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.PROJECTILE_IMPACT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(holder, projectile, instance))
-                .toList();
-
+        var instances = AbilityUtil.getEnabledInstances(holder, KryptoniteAbilitySerializers.PROJECTILE_IMPACT.get()).stream().filter(instance -> instance.getAbility().doesApply(holder, projectile, instance)).toList();
         if (instances.isEmpty()) return;
 
         for (AbilityInstance<ProjectileImpactAbility> instance : instances) {
@@ -645,7 +639,7 @@ public class KryptoniteAbilityEventHandler {
     public static void onEntityTravelToDimension(EntityTravelToDimensionEvent e) {
         if (!(e.getEntity() instanceof LivingEntity living)) return;
 
-        if (PreventTeleportAbility.doesPreventDimensionTravel(living, e.getDimension())) {
+        if (PreventTeleportAbility.shouldPreventDimensionTravel(living, e.getDimension())) {
             e.setCanceled(true);
         }
     }
@@ -666,14 +660,13 @@ public class KryptoniteAbilityEventHandler {
             }
         }
 
-        AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_TELEPORT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().source == source)
-                .filter(instance -> instance.getAbility().doesApply(living, instance, e.getTargetLevel(), e.getTarget()))
-                .forEach(instance -> {
-                    instance.getAbility().runActions(living);
-                    e.setCanceled(true);
-                });
+        for (AbilityInstance<PreventTeleportAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_TELEPORT.get())) {
+            if (instance.getAbility().source != source) continue;
+            if (!instance.getAbility().doesApply(living, instance, e.getTargetLevel(), e.getTarget())) continue;
+
+            instance.getAbility().runActions(living);
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST) // Prevent Game Event ability
@@ -749,11 +742,12 @@ public class KryptoniteAbilityEventHandler {
 
         Entity vehicle = e.getEntityBeingMounted();
 
-        AbilityUtil.getEnabledInstances(rider, KryptoniteAbilitySerializers.ACTION_ON_MOUNT.get())
-                .stream()
-                .filter(instance -> instance.getAbility().switchToDismount == e.isDismounting())
-                .filter(instance -> instance.getAbility().doesApply(rider, vehicle, instance))
-                .forEach(instance -> instance.getAbility().runActions(rider, vehicle, instance));
+        for (AbilityInstance<ActionOnMountAbility> instance : AbilityUtil.getEnabledInstances(rider, KryptoniteAbilitySerializers.ACTION_ON_MOUNT.get())) {
+            if (instance.getAbility().switchToDismount != e.isDismounting()) continue;
+            if (!instance.getAbility().doesApply(rider, vehicle, instance)) continue;
+
+            instance.getAbility().runActions(rider, vehicle, instance);
+        }
     }
 
     @SubscribeEvent // Action On Tame ability
@@ -761,22 +755,28 @@ public class KryptoniteAbilityEventHandler {
         Player tamer = e.getTamer();
         Animal animal = e.getAnimal();
 
-        AbilityUtil.getEnabledInstances(tamer, KryptoniteAbilitySerializers.ACTION_ON_TAME.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(tamer, animal, instance))
-                .forEach(instance -> instance.getAbility().runActions(tamer, animal, instance));
+        for (AbilityInstance<ActionOnTameAbility> instance : AbilityUtil.getEnabledInstances(tamer, KryptoniteAbilitySerializers.ACTION_ON_TAME.get())) {
+            if (instance.getAbility().doesApply(tamer, animal, instance)) {
+                instance.getAbility().runActions(tamer, animal, instance);
+            }
+        }
     }
 
     @SubscribeEvent // Action On Wake Up ability
     public static void onPlayerWakeUp(PlayerWakeUpEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer player)) return;
-        if (e.wakeImmediately() || e.updateLevel()) return;
+        if (!(e.wakeImmediately() || e.updateLevel())) return;
 
-        player.getSleepingPos().ifPresent(pos -> AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(pos, player))
-                .forEach(instance -> instance.getAbility().runActions(pos, Direction.DOWN, player))
-        );
+        var sleepingPos = player.getSleepingPos();
+        if (sleepingPos.isEmpty()) return;
+
+        BlockPos pos = sleepingPos.get();
+
+        for (AbilityInstance<ActionOnWakeUpAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP.get())) {
+            if (!instance.getAbility().doesApply(pos, player)) continue;
+
+            instance.getAbility().runActions(pos, Direction.DOWN, player);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH) // Allow Enderman Stare ability

@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Locale;
 
-// TODO More functionality
 public class PreventParticlesAbility extends Ability {
 
     public static final MapCodec<PreventParticlesAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

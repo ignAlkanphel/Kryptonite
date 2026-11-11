@@ -89,7 +89,7 @@ public class IntangibilityAbility extends Ability {
     }
 
     @Override
-    public AbilitySerializer<IntangibilityAbility> getSerializer() {
+    public AbilitySerializer<?> getSerializer() {
         return KryptoniteAbilitySerializers.INTANGIBILITY.get();
     }
 

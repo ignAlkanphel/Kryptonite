@@ -38,11 +38,6 @@ public class StepDownAbility extends Ability {
     }
 
     @Override
-    public AbilitySerializer<?> getSerializer() {
-        return KryptoniteAbilitySerializers.STEP_DOWN.get();
-    }
-
-    @Override
     public boolean tick(LivingEntity entity, AbilityInstance<?> abilityInstance, boolean enabled) {
         if (enabled) {
             DataContext context = DataContext.forAbility(entity, abilityInstance);
@@ -75,6 +70,11 @@ public class StepDownAbility extends Ability {
         }
 
         return super.tick(entity, abilityInstance, enabled);
+    }
+
+    @Override
+    public AbilitySerializer<?> getSerializer() {
+        return KryptoniteAbilitySerializers.STEP_DOWN.get();
     }
 
     public static class Serializer extends AbilitySerializer<StepDownAbility> {
