@@ -51,7 +51,7 @@ public class KryptoniteAbilityEventHandlerClient {
         ModifyBlockRenderAbility.Cache.set(abilities);
     }
 
-    @SubscribeEvent // Prevent Intangibility ability
+    @SubscribeEvent // Intangibility ability
     static void renderFog(ViewportEvent.RenderFog e) {
         if (!(e.getCamera().entity() instanceof LivingEntity living)) return;
 

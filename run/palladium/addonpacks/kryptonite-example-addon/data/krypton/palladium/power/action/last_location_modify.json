@@ -1,0 +1,42 @@
+{
+  "name": "Last Location Modify", "icon": "minecraft:barrier",
+
+  "abilities": {
+    "last_location_save": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:last_location_modify",
+        "operation": "save"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Last Location (Save)",
+        "icon": "minecraft:ender_eye",
+        "list_index": 0
+      }
+    },
+    "last_location_wipe": {
+      "type": "palladium:action",
+      "first_tick_action": {
+        "type": "kryptonite:last_location_modify",
+        "operation": "wipe"
+      },
+      "state": {
+        "enabling": {
+          "type": "palladium:key_bind",
+          "behaviour": "activation"
+        }
+      },
+      "properties": {
+        "title": "Last Location (Wipe)",
+        "icon": "minecraft:barrier",
+        "list_index": 1
+      }
+    }
+  }
+}
