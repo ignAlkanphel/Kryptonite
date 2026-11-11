@@ -23,7 +23,6 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PreventDeathAbility extends Ability {
 
@@ -83,7 +82,7 @@ public class PreventDeathAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed every time a death is prevented.")
                     .addOptional("damage_conditions", TYPE_CONDITION_LIST, "Damage condition(s) the damage source must meet for death to be prevented.")
                     .addExampleObject(new PreventDeathAbility(List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), List.of(new AttackerDamageCondition(Optional.of(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), List.of(new AttackerDamageCondition((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
