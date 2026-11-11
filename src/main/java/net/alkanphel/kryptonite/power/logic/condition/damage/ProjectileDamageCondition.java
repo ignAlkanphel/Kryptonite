@@ -14,16 +14,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.Optional;
 
-public record ProjectileDamageCondition(Optional<PalladiumHolderSet<EntityType<?>>> projectile, Optional<Condition> projectileCondition) implements DamageCondition {
+public record ProjectileDamageCondition(Optional<PalladiumHolderSet<EntityType<?>>> projectile, Condition projectileCondition) implements DamageCondition {
 
     public static final MapCodec<ProjectileDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             PalladiumHolderSet.codec(Registries.ENTITY_TYPE).optionalFieldOf("projectile").forGetter(ProjectileDamageCondition::projectile),
-            Condition.CODEC.optionalFieldOf("projectile_conditions").forGetter(ProjectileDamageCondition::projectileCondition)
+            Condition.CODEC.optionalFieldOf("projectile_conditions", TrueCondition.INSTANCE).forGetter(ProjectileDamageCondition::projectileCondition)
     ).apply(instance, ProjectileDamageCondition::new));
 
     @Override
@@ -34,7 +35,7 @@ public record ProjectileDamageCondition(Optional<PalladiumHolderSet<EntityType<?
         return damageSource.is(DamageTypeTags.IS_PROJECTILE)
                 && entitySource != null
                 && projectile.map(set -> set.contains(entitySource.getType().builtInRegistryHolder())).orElse(true)
-                && projectileCondition.map(condition -> condition.test(DataContext.forEntity(entitySource))).orElse(true);
+                && projectileCondition.test(DataContext.forEntity(entitySource));
     }
 
     @Override
@@ -55,7 +56,7 @@ public record ProjectileDamageCondition(Optional<PalladiumHolderSet<EntityType<?
                     .setDescription("Checks if the damage source was projectile damage, and optionally the type of projectile it was (if specified).")
                     .addOptional("projectile", TYPE_ENTITY_TYPE_HOLDER_SET, "If specified, the check will only pass if the projectile was of the specified entity type.")
                     .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "If specified, the check will only pass if the projectile entity fulfills these conditions.")
-                    .addExampleObject(new ProjectileDamageCondition(Optional.empty(), Optional.empty()));
+                    .addExampleObject(new ProjectileDamageCondition(Optional.empty(), TrueCondition.INSTANCE));
         }
     }
 

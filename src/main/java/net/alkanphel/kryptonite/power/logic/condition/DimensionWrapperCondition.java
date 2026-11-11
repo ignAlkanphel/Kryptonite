@@ -14,26 +14,27 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-import java.util.Optional;
+import java.util.List;
 
-public record DimensionWrapperCondition(Optional<DimensionCondition> dimensionCondition) implements Condition {
+public record DimensionWrapperCondition(List<DimensionCondition> dimensionConditions) implements Condition {
 
     public static final MapCodec<DimensionWrapperCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            DimensionCondition.CODEC.optionalFieldOf("dimension_conditions").forGetter(DimensionWrapperCondition::dimensionCondition)
+            DimensionCondition.LIST_CODEC.optionalFieldOf("dimension_conditions", List.of()).forGetter(DimensionWrapperCondition::dimensionConditions)
     ).apply(instance, DimensionWrapperCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DimensionWrapperCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(DimensionCondition.CODEC)),
-            DimensionWrapperCondition::dimensionCondition,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(DimensionCondition.LIST_CODEC),
+            DimensionWrapperCondition::dimensionConditions,
             DimensionWrapperCondition::new
     );
 
     @Override
     public boolean test(DataContext context) {
         var level = context.getLevel();
-        if (level == null || context.getEntity() == null) return false;
+        var entity = context.getEntity();
+        if (level == null || entity == null) return false;
 
-        return dimensionCondition.map(ctx -> ctx.test(level.dimensionType(), level, context.getEntity())).orElse(true);
+        return DimensionCondition.checkConditions(dimensionConditions, level.dimensionType(), level, entity);
     }
 
     @Override

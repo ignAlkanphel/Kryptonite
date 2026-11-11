@@ -23,14 +23,14 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ExplodeAction extends Action {
 
     public static final MapCodec<ExplodeAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.CODEC.optionalFieldOf("destructible").forGetter(ab -> ab.destructibleConditions),
-            BlockCondition.CODEC.optionalFieldOf("indestructible").forGetter(ab -> ab.indestructibleConditions),
+            BlockCondition.LIST_CODEC.optionalFieldOf("destructible", List.of()).forGetter(ab -> ab.destructibleConditions),
+            BlockCondition.LIST_CODEC.optionalFieldOf("indestructible", List.of()).forGetter(ab -> ab.indestructibleConditions),
             Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(a -> a.destructionType),
             Condition.CODEC.optionalFieldOf("damage_entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageEntityConditions),
             BooleanValueHolder.CODEC.optionalFieldOf("damage_self", BooleanValueHolder.TRUE).forGetter(a -> a.damageSelf),
@@ -39,13 +39,13 @@ public class ExplodeAction extends Action {
             Value.NUMBER_CODEC.optionalFieldOf("indestructible_resistance", new StaticValue(10)).forGetter(a -> a.indestructibleResistance)
     ).apply(instance, ExplodeAction::new));
 
-    public final Optional<BlockCondition> destructibleConditions, indestructibleConditions;
+    public final List<BlockCondition> destructibleConditions, indestructibleConditions;
     public final Level.ExplosionInteraction destructionType;
     public final Condition damageEntityConditions;
     public final BooleanValueHolder damageSelf, createFire;
     public final Value power, indestructibleResistance;
 
-    public ExplodeAction(Optional<BlockCondition> destructibleConditions, Optional<BlockCondition> indestructibleConditions, Level.ExplosionInteraction destructionType, Condition damageEntityConditions, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
+    public ExplodeAction(List<BlockCondition> destructibleConditions, List<BlockCondition> indestructibleConditions, Level.ExplosionInteraction destructionType, Condition damageEntityConditions, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
         this.destructibleConditions = destructibleConditions;
         this.indestructibleConditions = indestructibleConditions;
         this.destructionType = destructionType;
@@ -66,12 +66,12 @@ public class ExplodeAction extends Action {
 
         Predicate<BlockConditionContext> behaviorCondition = ctx -> false;
 
-        if (indestructibleConditions.isPresent()) {
-            behaviorCondition = indestructibleConditions.get()::test;
+        if (!indestructibleConditions.isEmpty()) {
+            behaviorCondition = ctx -> BlockCondition.checkConditions(indestructibleConditions, ctx);
         }
 
-        if (destructibleConditions.isPresent()) {
-            Predicate<BlockConditionContext> destructible = destructibleConditions.get()::test;
+        if (!destructibleConditions.isEmpty()) {
+            Predicate<BlockConditionContext> destructible = ctx -> BlockCondition.checkConditions(destructibleConditions, ctx);
             behaviorCondition = MiscUtil.combineOr(destructible.negate(), behaviorCondition);
         }
 
@@ -124,7 +124,7 @@ public class ExplodeAction extends Action {
                     .addOptional("create_fire", TYPE_BOOLEAN_VALUE, "If true, the explosion will create fire (e.g. ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")
                     .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
-                    .addExampleObject(new ExplodeAction(Optional.empty(), Optional.empty(), Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, new StaticValue(4), new StaticValue(10)));
+                    .addExampleObject(new ExplodeAction(List.of(), List.of(), Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, new StaticValue(4), new StaticValue(10)));
         }
     }
 

@@ -79,7 +79,7 @@ public class PreventMobAggroAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventMobAggroAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Mob Aggro")
                     .setDescription("Prevents mobs from targeting the entity with this ability. For this ability, the \"source\" is the the entity with this ability & the \"target\" is the mob.\"")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the mobs must meet to be affected.")
+                    .addOptional("mob_conditions", TYPE_CONDITION_LIST, "Condition(s) the mobs must meet to be affected.")
                     .addOptional("mob_aggro_on_attack", TYPE_BOOLEAN, "If true, mobs that are attacked will be able to fight back.", true)
                     .addOptional("mob_aggro_reset", TYPE_BOOLEAN, "If true, mobs will have their aggro reset.", false)
                     .addExampleObject(new PreventMobAggroAbility(TrueCondition.INSTANCE, BooleanValueHolder.TRUE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

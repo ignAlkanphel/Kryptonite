@@ -34,7 +34,7 @@ public class InventoryCondition implements Condition {
 
     public static final MapCodec<InventoryCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             InventoryUtil.ProcessMode.CODEC.optionalFieldOf("process_mode", InventoryUtil.ProcessMode.ITEMS).forGetter(a -> a.processMode),
-            ItemCondition.CODEC.optionalFieldOf("item_conditions").forGetter(a -> a.itemConditions),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             KryptoniteCodecs.SLOT_RANGES_CODEC.optionalFieldOf("slots").forGetter(a -> a.slotRanges),
             ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(a -> a.comparator),
@@ -42,7 +42,7 @@ public class InventoryCondition implements Condition {
     ).apply(instance, InventoryCondition::new));
 
     private final InventoryUtil.ProcessMode processMode;
-    private final Optional<ItemCondition> itemConditions;
+    private final List<ItemCondition> itemConditions;
 
     private final Optional<List<SlotRange>> slotRanges;
     private final IntSet slots;
@@ -52,7 +52,7 @@ public class InventoryCondition implements Condition {
     private final NumberComparator comparator;
     private final IntValueHolder compareTo;
 
-    public InventoryCondition(InventoryUtil.ProcessMode processMode, Optional<ItemCondition> itemConditions, Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, NumberComparator comparator, IntValueHolder compareTo) {
+    public InventoryCondition(InventoryUtil.ProcessMode processMode, List<ItemCondition> itemConditions, Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, NumberComparator comparator, IntValueHolder compareTo) {
         this.processMode = processMode;
         this.itemConditions = itemConditions;
         this.slotRanges = slotRanges;
@@ -100,9 +100,9 @@ public class InventoryCondition implements Condition {
                     .addOptional("curios_slots", TYPE_STRING, "If specified, these slots from the Curios mod are also evaluated (independently from the \"slots\" field). An empty list evaluates all Curios slots. If this field is not specified at all, Curios slots are not evaluated.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Determines how the amount of items/stacks that were evaluated should be compared to the specified value.", NumberComparator.GREATER_THAN)
                     .addOptional("compare_to", TYPE_INT_VALUE, "The value at which the amount of items/stacks that were evaluated will be compared to.", 0)
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, Optional.empty(), Optional.empty(), Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, Optional.empty(), Optional.empty(), Optional.of(List.of()), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, Optional.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, new IntValueHolder(16)));
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, List.of(), Optional.empty(), Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, List.of(), Optional.empty(), Optional.of(List.of()), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, new IntValueHolder(16)));
         }
     }
 

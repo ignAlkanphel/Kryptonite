@@ -42,18 +42,18 @@ public class KeepInventoryAbility extends Ability {
     public static final MapCodec<KeepInventoryAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             KryptoniteCodecs.SLOT_RANGE_CODEC.listOf().optionalFieldOf("slots").forGetter(a -> a.slotRanges),
             Codec.STRING.listOf().optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
-            ItemCondition.CODEC.optionalFieldOf("item_conditions").forGetter(a -> a.itemConditions),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, KeepInventoryAbility::new));
 
     public final Optional<List<SlotRange>> slotRanges;
     private final Optional<List<String>> curiosSlots;
-    private final Optional<ItemCondition> itemConditions;
+    private final List<ItemCondition> itemConditions;
 
     private final ObjectOpenHashSet<Integer> slots;
     private final Int2ObjectOpenHashMap<ItemStack> cachedStacks;
 
-    public KeepInventoryAbility(Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, Optional<ItemCondition> itemConditions, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
+    public KeepInventoryAbility(Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, List<ItemCondition> itemConditions, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
         super(properties, stateManager, energyBarUsages);
 
         this.slotRanges = slotRanges;
@@ -84,7 +84,7 @@ public class KeepInventoryAbility extends Ability {
 
             ItemStack stack = slotAccess.get();
 
-            if (!stack.isEmpty() && itemConditions.map(condition -> condition.test(player.level(), stack)).orElse(true)) {
+            if (!stack.isEmpty() && ItemCondition.checkConditions(itemConditions, player.level(), stack)) {
                 cachedStacks.put(slot, stack);
                 slotAccess.set(ItemStack.EMPTY);
             }
@@ -117,7 +117,7 @@ public class KeepInventoryAbility extends Ability {
 
     private void preventCuriosFromDropping(Player player) {
         List<String> slots = curiosSlots.orElseGet(() -> KryptoniteCuriosCompat.INSTANCE.getSlots(player.level()));
-        KryptoniteCuriosCompat.INSTANCE.preventDropping(player, slots, stack -> itemConditions.map(condition -> condition.test(player.level(), stack)).orElse(true));
+        KryptoniteCuriosCompat.INSTANCE.preventDropping(player, slots, stack -> ItemCondition.checkConditions(itemConditions, player.level(), stack));
     }
 
     @Override
@@ -138,8 +138,8 @@ public class KeepInventoryAbility extends Ability {
                     .addOptional("slots", KryptoniteDocumented.TYPE_SLOT_RANGES, "If specified, only these slots are affected.")
                     .addOptional("curios_slots", TYPE_STRING, "If specified, only these slots from the Curios mod are affected (independently from the \"slots\" field).")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the items must meet to be affected.")
-                    .addExampleObject(new KeepInventoryAbility(Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new KeepInventoryAbility(Optional.of(List.of(Objects.requireNonNull(SlotRanges.nameToIds("hotbar.*")))), Optional.of(List.of("rings")), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new KeepInventoryAbility(Optional.empty(), Optional.empty(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new KeepInventoryAbility(Optional.of(List.of(Objects.requireNonNull(SlotRanges.nameToIds("hotbar.*")))), Optional.of(List.of("rings")), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

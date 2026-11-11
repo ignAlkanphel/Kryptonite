@@ -15,23 +15,22 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
 import java.util.List;
-import java.util.Optional;
 
 public class AreaOfEffectBlockAction extends BlockAction {
 
     public static final MapCodec<AreaOfEffectBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockAction.LIST_CODEC.fieldOf("block_actions").forGetter(a -> a.blockActions),
-            BlockCondition.CODEC.optionalFieldOf("block_conditions").forGetter(a -> a.blockConditions),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(a -> a.shape),
             Value.NUMBER_CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(a -> a.radius)
     ).apply(instance, AreaOfEffectBlockAction::new));
 
     private final List<BlockAction> blockActions;
-    private final Optional<BlockCondition> blockConditions;
+    private final List<BlockCondition> blockConditions;
     private final Shape shape;
     private final Value radius;
 
-    public AreaOfEffectBlockAction(List<BlockAction> blockActions, Optional<BlockCondition> blockConditions, Shape shape, Value radius) {
+    public AreaOfEffectBlockAction(List<BlockAction> blockActions, List<BlockCondition> blockConditions, Shape shape, Value radius) {
         this.blockActions = blockActions;
         this.blockConditions = blockConditions;
         this.shape = shape;
@@ -44,7 +43,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
 
         shape.getBlockPositions(context.pos(), radius.getAsInt(null))
                 .stream()
-                .filter(pos -> blockConditions.map(c -> c.test(level, pos)).orElse(true))
+                .filter(pos -> BlockCondition.checkConditions(blockConditions, level, pos))
                 .forEach(pos -> BlockAction.runList(blockActions, level, pos, context.direction()));
 
         return true;
@@ -70,7 +69,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks in range must meet for the actions to perform.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", TYPE_INT_VALUE, "The radius of the area.", 16)
-                    .addExampleObject(new AreaOfEffectBlockAction(List.of(), Optional.empty(), Shape.CUBE, new StaticValue(16)));
+                    .addExampleObject(new AreaOfEffectBlockAction(List.of(), List.of(), Shape.CUBE, new StaticValue(16)));
         }
     }
 

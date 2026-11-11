@@ -31,7 +31,6 @@ import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 
 public class ActionOnTotemUseAbility extends Ability {
 
@@ -83,7 +82,7 @@ public class ActionOnTotemUseAbility extends Ability {
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source that activated the totem must meet for the actions to perform.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
                     .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on totem use!"))), List.of(), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on Totem Use if death via Iron Golem!"))), List.of(new AttackerDamageCondition(Optional.of(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on Totem Use if death via Iron Golem!"))), List.of(new AttackerDamageCondition((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

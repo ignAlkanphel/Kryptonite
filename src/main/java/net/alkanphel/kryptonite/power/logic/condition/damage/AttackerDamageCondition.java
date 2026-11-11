@@ -10,22 +10,19 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 
-import java.util.Optional;
-
-public record AttackerDamageCondition(Optional<Condition> condition) implements DamageCondition {
+public record AttackerDamageCondition(Condition condition) implements DamageCondition {
 
     public static final MapCodec<AttackerDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Condition.CODEC.optionalFieldOf("conditions").forGetter(AttackerDamageCondition::condition)
+            Condition.CODEC.optionalFieldOf("conditions", TrueCondition.INSTANCE).forGetter(AttackerDamageCondition::condition)
     ).apply(instance, AttackerDamageCondition::new));
 
     @Override
     public boolean test(DamageConditionContext context) {
         Entity attacker = context.source().getEntity();
-        return attacker != null && condition
-                .map(condition -> condition.test(DataContext.forEntity(attacker)))
-                .orElse(true);
+        return attacker != null && condition.test(DataContext.forEntity(attacker));
     }
 
     @Override
@@ -45,7 +42,7 @@ public record AttackerDamageCondition(Optional<Condition> condition) implements 
             builder.setName("Attacker")
                     .setDescription("Checks whether the damage source is from an entity.")
                     .addOptional("conditions", TYPE_CONDITION_LIST, "Condition(s) the attacker entity must meet.")
-                    .addExampleObject(new AttackerDamageCondition(Optional.empty()));
+                    .addExampleObject(new AttackerDamageCondition(TrueCondition.INSTANCE));
         }
     }
 
