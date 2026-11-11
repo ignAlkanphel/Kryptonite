@@ -49,7 +49,7 @@ public class ConsumeItemAction extends ItemAction {
         public void addDocumentation(CodecDocumentationBuilder<ItemAction, ConsumeItemAction> builder, HolderLookup.Provider provider) {
             builder.setName("Consume")
                     .setDescription("Removes items from the item stack.")
-                    .addOptional("amount", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Amount of items to remove.", new StaticValue(1))
+                    .addOptional("amount", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Amount of items to remove.", 1)
                     .addExampleObject(new ConsumeItemAction(new StaticValue(7)));
 
         }
