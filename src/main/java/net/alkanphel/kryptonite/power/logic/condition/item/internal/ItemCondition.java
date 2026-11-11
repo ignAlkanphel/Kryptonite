@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.condition.item.internal;
 import com.mojang.serialization.Codec;
 import net.alkanphel.kryptonite.power.logic.condition.item.meta.AndItemCondition;
 import net.alkanphel.kryptonite.power.logic.context.ItemConditionContext;
-import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -14,9 +13,9 @@ import java.util.List;
 
 public interface ItemCondition {
 
-    Codec<ItemCondition> DIRECT_CODEC = KryptoniteRegistries.ITEM_CONDITION_SERIALIZER.byNameCodec().<ItemCondition>dispatch(ItemCondition::getSerializer, ItemConditionSerializer::codec).xmap(SidedItemCondition::wrap, SidedItemCondition::unwrap);
+    Codec<ItemCondition> DIRECT_CODEC = ItemConditionSerializers.TYPE_CODEC.<ItemCondition>dispatch(ItemCondition::getSerializer, ItemConditionSerializer::codec).xmap(SidedItemCondition::wrap, SidedItemCondition::unwrap);
     Codec<List<ItemCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
-    Codec<ItemCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndItemCondition::new, condition -> condition instanceof AndItemCondition(List<ItemCondition> conditions) ? conditions : Collections.singletonList(condition));
+    Codec<ItemCondition> CODEC = LIST_CODEC.xmap(AndItemCondition::new, condition -> condition instanceof AndItemCondition(List<ItemCondition> conditions) ? conditions : Collections.singletonList(condition));
 
     boolean test(ItemConditionContext context);
 

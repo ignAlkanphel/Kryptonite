@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.condition.block.internal;
 import com.mojang.serialization.Codec;
 import net.alkanphel.kryptonite.power.logic.condition.block.meta.AndBlockCondition;
 import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
-import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;
@@ -15,9 +14,9 @@ import java.util.List;
 
 public interface BlockCondition {
 
-    Codec<BlockCondition> DIRECT_CODEC = KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER.byNameCodec().<BlockCondition>dispatch(BlockCondition::getSerializer, BlockConditionSerializer::codec).xmap(SidedBlockCondition::wrap, SidedBlockCondition::unwrap);
+    Codec<BlockCondition> DIRECT_CODEC = BlockConditionSerializers.TYPE_CODEC.<BlockCondition>dispatch(BlockCondition::getSerializer, BlockConditionSerializer::codec).xmap(SidedBlockCondition::wrap, SidedBlockCondition::unwrap);
     Codec<List<BlockCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
-    Codec<BlockCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndBlockCondition::new, condition -> condition instanceof AndBlockCondition(List<BlockCondition> conditions) ? conditions : Collections.singletonList(condition));
+    Codec<BlockCondition> CODEC = LIST_CODEC.xmap(AndBlockCondition::new, condition -> condition instanceof AndBlockCondition(List<BlockCondition> conditions) ? conditions : Collections.singletonList(condition));
 
     boolean test(BlockConditionContext context);
 

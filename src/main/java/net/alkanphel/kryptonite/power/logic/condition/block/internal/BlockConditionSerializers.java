@@ -1,8 +1,11 @@
 package net.alkanphel.kryptonite.power.logic.condition.block.internal;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.condition.block.*;
 import net.alkanphel.kryptonite.power.logic.condition.block.meta.*;
+import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -12,6 +15,7 @@ import net.threetag.palladium.Palladium;
 public class BlockConditionSerializers {
 
     public static final DeferredRegister<BlockConditionSerializer<?>> BLOCK_CONDITION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.BLOCK_CONDITION_SERIALIZER, Kryptonite.MOD_ID);
+    public static final Codec<BlockConditionSerializer<?>> TYPE_CODEC = Identifier.CODEC.comapFlatMap(BlockConditionSerializers::read, KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER::getKey);
 
     public static final DeferredHolder<BlockConditionSerializer<?>, AndBlockCondition.Serializer> AND = BLOCK_CONDITION_SERIALIZERS.register("and", AndBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, OrBlockCondition.Serializer> OR = BLOCK_CONDITION_SERIALIZERS.register("or", OrBlockCondition.Serializer::new);
@@ -47,5 +51,10 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, OffsetBlockCondition.Serializer> OFFSET = BLOCK_CONDITION_SERIALIZERS.register("offset", OffsetBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, ReplaceableBlockCondition.Serializer> REPLACEABLE = BLOCK_CONDITION_SERIALIZERS.register("replaceable", ReplaceableBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, WaterLoggableBlockCondition.Serializer> WATER_LOGGABLE = BLOCK_CONDITION_SERIALIZERS.register("water_loggable", WaterLoggableBlockCondition.Serializer::new);
+
+    private static DataResult<BlockConditionSerializer<?>> read(Identifier id) {
+        var serializer = KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER.getValue(id);
+        return serializer != null ? DataResult.success(serializer) : DataResult.error(() -> "Unknown condition type: " + id);
+    }
 
 }

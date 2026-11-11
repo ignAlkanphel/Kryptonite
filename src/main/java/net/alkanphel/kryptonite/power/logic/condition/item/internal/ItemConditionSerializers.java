@@ -1,8 +1,11 @@
 package net.alkanphel.kryptonite.power.logic.condition.item.internal;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.logic.condition.item.*;
 import net.alkanphel.kryptonite.power.logic.condition.item.meta.*;
+import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -12,6 +15,7 @@ import net.threetag.palladium.Palladium;
 public class ItemConditionSerializers {
 
     public static final DeferredRegister<ItemConditionSerializer<?>> ITEM_CONDITION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.ITEM_CONDITION_SERIALIZER, Kryptonite.MOD_ID);
+    public static final Codec<ItemConditionSerializer<?>> TYPE_CODEC = Identifier.CODEC.comapFlatMap(ItemConditionSerializers::read, KryptoniteRegistries.ITEM_CONDITION_SERIALIZER::getKey);
 
     public static final DeferredHolder<ItemConditionSerializer<?>, AndItemCondition.Serializer> AND = ITEM_CONDITION_SERIALIZERS.register("and", AndItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, NotItemCondition.Serializer> NOT = ITEM_CONDITION_SERIALIZERS.register("not", NotItemCondition.Serializer::new);
@@ -42,5 +46,10 @@ public class ItemConditionSerializers {
     public static final DeferredHolder<ItemConditionSerializer<?>, OnCooldownItemCondition.Serializer> ON_COOLDOWN = ITEM_CONDITION_SERIALIZERS.register("on_cooldown", OnCooldownItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, RepairableItemCondition.Serializer> REPAIRABLE = ITEM_CONDITION_SERIALIZERS.register("repairable", RepairableItemCondition.Serializer::new);
     public static final DeferredHolder<ItemConditionSerializer<?>, SmeltableItemCondition.Serializer> SMELTABLE = ITEM_CONDITION_SERIALIZERS.register("smeltable", SmeltableItemCondition.Serializer::new);
+
+    private static DataResult<ItemConditionSerializer<?>> read(Identifier id) {
+        var serializer = KryptoniteRegistries.ITEM_CONDITION_SERIALIZER.getValue(id);
+        return serializer != null ? DataResult.success(serializer) : DataResult.error(() -> "Unknown condition type: " + id);
+    }
 
 }

@@ -1,6 +1,9 @@
 package net.alkanphel.kryptonite.power.logic.condition.dimension.internal;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.*;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.meta.*;
@@ -12,6 +15,7 @@ import net.threetag.palladium.Palladium;
 public class DimensionConditionSerializers {
 
     public static final DeferredRegister<DimensionConditionSerializer<?>> DIMENSION_CONDITION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.DIMENSION_CONDITION_SERIALIZER, Kryptonite.MOD_ID);
+    public static final Codec<DimensionConditionSerializer<?>> TYPE_CODEC = Identifier.CODEC.comapFlatMap(DimensionConditionSerializers::read, KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER::getKey);
 
     public static final DeferredHolder<DimensionConditionSerializer<?>, NotDimensionCondition.Serializer> NOT = DIMENSION_CONDITION_SERIALIZERS.register("not", NotDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, OrDimensionCondition.Serializer> OR = DIMENSION_CONDITION_SERIALIZERS.register("or", OrDimensionCondition.Serializer::new);
@@ -40,5 +44,10 @@ public class DimensionConditionSerializers {
     public static final DeferredHolder<DimensionConditionSerializer<?>, MonsterSettingsDimensionCondition.Serializer> MONSTER_SETTINGS = DIMENSION_CONDITION_SERIALIZERS.register("monster_settings", MonsterSettingsDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, SkyboxDimensionCondition.Serializer> SKYBOX = DIMENSION_CONDITION_SERIALIZERS.register("skybox", SkyboxDimensionCondition.Serializer::new);
     public static final DeferredHolder<DimensionConditionSerializer<?>, TimelinesDimensionCondition.Serializer> TIMELINES = DIMENSION_CONDITION_SERIALIZERS.register("timelines", TimelinesDimensionCondition.Serializer::new);
+
+    private static DataResult<DimensionConditionSerializer<?>> read(Identifier id) {
+        var serializer = KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER.getValue(id);
+        return serializer != null ? DataResult.success(serializer) : DataResult.error(() -> "Unknown condition type: " + id);
+    }
 
 }

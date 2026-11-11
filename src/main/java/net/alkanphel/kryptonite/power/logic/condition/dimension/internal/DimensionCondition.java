@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.condition.dimension.internal;
 import com.mojang.serialization.Codec;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.meta.AndDimensionCondition;
 import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
-import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -16,9 +15,9 @@ import java.util.List;
 
 public interface DimensionCondition {
 
-    Codec<DimensionCondition> DIRECT_CODEC = KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER.byNameCodec().<DimensionCondition>dispatch(DimensionCondition::getSerializer, DimensionConditionSerializer::codec).xmap(SidedDimensionCondition::wrap, SidedDimensionCondition::unwrap);
+    Codec<DimensionCondition> DIRECT_CODEC = DimensionConditionSerializers.TYPE_CODEC.<DimensionCondition>dispatch(DimensionCondition::getSerializer, DimensionConditionSerializer::codec).xmap(SidedDimensionCondition::wrap, SidedDimensionCondition::unwrap);
     Codec<List<DimensionCondition>> LIST_CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC);
-    Codec<DimensionCondition> CODEC = ExtraCodecs.compactListCodec(DIRECT_CODEC).xmap(AndDimensionCondition::new, condition -> condition instanceof AndDimensionCondition(List<DimensionCondition> conditions) ? conditions : Collections.singletonList(condition));
+    Codec<DimensionCondition> CODEC = LIST_CODEC.xmap(AndDimensionCondition::new, condition -> condition instanceof AndDimensionCondition(List<DimensionCondition> conditions) ? conditions : Collections.singletonList(condition));
 
     boolean test(DimensionConditionContext context);
 
