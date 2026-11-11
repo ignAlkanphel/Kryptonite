@@ -34,7 +34,6 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectCondition.Serializer> HAS_EFFECT = CONDITIONS_SERIALIZERS.register("has_effect", HasEffectCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasRespawnCondition.Serializer> HAS_RESPAWN = CONDITIONS_SERIALIZERS.register("has_respawn", HasRespawnCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, HasUUIDCondition.Serializer> HAS_UUID = CONDITIONS_SERIALIZERS.register("has_uuid", HasUUIDCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, InSnowCondition.Serializer> IN_SNOW = CONDITIONS_SERIALIZERS.register("in_snow", InSnowCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, InThunderCondition.Serializer> IN_THUNDER = CONDITIONS_SERIALIZERS.register("in_thunder", InThunderCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, InventoryCondition.Serializer> INVENTORY = CONDITIONS_SERIALIZERS.register("inventory", InventoryCondition.Serializer::new);
@@ -47,5 +46,6 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, PredicateCondition.Serializer> PREDICATE = CONDITIONS_SERIALIZERS.register("predicate", PredicateCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, UUIDCondition.Serializer> UUID = CONDITIONS_SERIALIZERS.register("uuid", UUIDCondition.Serializer::new);
 
 }

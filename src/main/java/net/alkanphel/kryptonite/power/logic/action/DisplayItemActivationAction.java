@@ -53,7 +53,7 @@ public class DisplayItemActivationAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, DisplayItemActivationAction> builder, HolderLookup.Provider provider) {
             builder.setName("Display Item Activation")
                     .setDescription("Triggers an item to animate on the screen like when a Totem of Undying is activated.")
-                    .add("item", SettingType.simple("Item"), "The item to use for the animation.")
+                    .add("item", SettingType.simple("Item"), "The item used for the animation.")
                     .addExampleObject(new DisplayItemActivationAction(Items.BOOK.builtInRegistryHolder()));
         }
     }

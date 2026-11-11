@@ -55,7 +55,7 @@ public record EquipableItemCondition(Optional<EquipmentSlotGroup> equipmentSlot)
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, EquipableItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Equipable")
                     .setDescription("Checks whether the item is able to be equipped.")
-                    .addOptional("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "If specified, checks if the item is equipable in the specified equipment slot.")
+                    .addOptional("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "Checks if the item is equipable in the specified equipment slot.")
                     .addExampleObject(new EquipableItemCondition(Optional.empty()))
                     .addExampleObject(new EquipableItemCondition(Optional.of(EquipmentSlotGroup.CHEST)));
         }

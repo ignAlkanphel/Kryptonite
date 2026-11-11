@@ -1,10 +1,8 @@
 package net.alkanphel.kryptonite.power.logic.action;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,19 +19,20 @@ import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
 public class PocketEnderChestAction extends Action {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.enderchest");
 
     public static final MapCodec<PocketEnderChestAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("increment_stat", new StaticValue(true)).forGetter(a -> a.incrementStat),
-            Value.CODEC.optionalFieldOf("anger_piglins", new StaticValue(true)).forGetter(a -> a.angerPiglins)
+            BooleanValueHolder.CODEC.optionalFieldOf("increment_stat", BooleanValueHolder.TRUE).forGetter(a -> a.incrementStat),
+            BooleanValueHolder.CODEC.optionalFieldOf("anger_piglins", BooleanValueHolder.TRUE).forGetter(a -> a.angerPiglins)
     ).apply(instance, PocketEnderChestAction::new));
 
-    public final Value incrementStat, angerPiglins;
+    public final BooleanValueHolder incrementStat, angerPiglins;
 
-    public PocketEnderChestAction(Value incrementStat, Value angerPiglins) {
+    public PocketEnderChestAction(BooleanValueHolder incrementStat, BooleanValueHolder angerPiglins) {
         this.incrementStat = incrementStat;
         this.angerPiglins = angerPiglins;
     }
@@ -50,11 +49,11 @@ public class PocketEnderChestAction extends Action {
                 CONTAINER_TITLE
         ));
 
-        if (incrementStat.getAsBoolean(context)) {
+        if (incrementStat.get(context)) {
             player.awardStat(Stats.OPEN_ENDERCHEST, 1);
         }
 
-        if (angerPiglins.getAsBoolean(context) && player.level() instanceof ServerLevel serverLevel) {
+        if (angerPiglins.get(context) && player.level() instanceof ServerLevel serverLevel) {
             PiglinAi.angerNearbyPiglins(serverLevel, player, true);
         }
 
@@ -77,9 +76,9 @@ public class PocketEnderChestAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketEnderChestAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Ender Chest")
                     .setDescription("Allows the player to open an instance of the Ender Chest GUI at their location.")
-                    .addOptional("increment_stat", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"Ender Chests Opened\" stat will be incremented.", true)
-                    .addOptional("anger_piglins", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, nearby Piglins will be angered. This is default game behaviour and also happens opening Shulker Boxes.", true)
-                    .addExampleObject(new PocketEnderChestAction(new StaticValue(true), new StaticValue(false)));
+                    .addOptional("increment_stat", TYPE_BOOLEAN_VALUE, "If true, the \"Ender Chests Opened\" stat will be incremented.", true)
+                    .addOptional("anger_piglins", TYPE_BOOLEAN_VALUE, "If true, nearby Piglins will be angered. This is default game behaviour and also happens opening Shulker Boxes.", true)
+                    .addExampleObject(new PocketEnderChestAction(BooleanValueHolder.TRUE, BooleanValueHolder.FALSE));
         }
     }
 

@@ -64,9 +64,9 @@ public class EquipmentAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, EquipmentAction> builder, HolderLookup.Provider provider) {
             builder.setName("Equipment")
-                    .setDescription("Runs item actions on an item stack in the specified equipment slot.")
-                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to run the actions on.")
-                    .add("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "These actions will be run on the item stack in the specified equipment slot.")
+                    .setDescription("Performs item actions on an item stack in the specified equipment slot.")
+                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to perform the item actions on.")
+                    .add("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack in the specified equipment slot.")
                     .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, List.of(new ConsumeItemAction(new StaticValue(1)))));
         }
     }

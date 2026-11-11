@@ -24,12 +24,12 @@ public record CooldownItemCondition(NumberComparator comparator, Value compareTo
 
     public static final MapCodec<CooldownItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(CooldownItemCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(CooldownItemCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(CooldownItemCondition::compareTo)
     ).apply(instance, CooldownItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CooldownItemCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, CooldownItemCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), CooldownItemCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), CooldownItemCondition::compareTo,
             CooldownItemCondition::new
     );
 

@@ -134,10 +134,10 @@ public class KeepInventoryAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, KeepInventoryAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents specific items in specific slots from dropping upon the player dying.")
+            builder.setDescription("Prevents items from dropping when the player dies.")
                     .addOptional("slots", KryptoniteDocumented.TYPE_SLOT_RANGES, "If specified, only these slots are affected.")
                     .addOptional("curios_slots", TYPE_STRING, "If specified, only these slots from the Curios mod are affected (independently from the \"slots\" field).")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, only items that fulfill these conditions are affected.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the items must meet to be affected.")
                     .addExampleObject(new KeepInventoryAbility(Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new KeepInventoryAbility(Optional.of(List.of(Objects.requireNonNull(SlotRanges.nameToIds("hotbar.*")))), Optional.of(List.of("rings")), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

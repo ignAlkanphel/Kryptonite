@@ -77,8 +77,8 @@ public class ActionWhenHitAbility extends Ability {
             builder.setName("Action When Hit")
                     .setDescription("Performs actions when the entity that has this ability is hit by another entity. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that has this ability.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for the actions to perform.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the hit must meet for the actions to perform.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the hit must meet for the actions to perform.")
                     .addExampleObject(new ActionWhenHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionWhenHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

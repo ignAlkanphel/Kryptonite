@@ -35,7 +35,7 @@ public class BoneMealBlockAction extends BlockAction {
         Optional<Direction> directionOpt = context.direction();
         ItemStack stack = ItemStack.EMPTY;
 
-        if (BoneMealItem.growCrop(stack, level, pos)) {
+        if (growCrop(stack, level, pos)) {
             boneMealEvent(level, pos);
             return true;
         }
@@ -53,6 +53,10 @@ public class BoneMealBlockAction extends BlockAction {
         }
 
         return false;
+    }
+
+    private static boolean growCrop(ItemStack stack, ServerLevel level, BlockPos pos) {
+        return BoneMealItem.applyBonemeal(stack, level, pos, null);
     }
 
     private void boneMealEvent(ServerLevel level, BlockPos pos) {

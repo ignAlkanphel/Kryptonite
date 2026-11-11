@@ -35,8 +35,8 @@ public class PreventTeleportAbility extends Ability {
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("from_dimension_conditions", List.of()).forGetter(a -> a.originDimensionConditions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("to_dimension_conditions", List.of()).forGetter(a -> a.destinationDimensionConditions),
-            Value.CODEC.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
-            Value.CODEC.optionalFieldOf("max_distance").forGetter(a -> a.maxDistance),
+            Value.NUMBER_CODEC.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
+            Value.NUMBER_CODEC.optionalFieldOf("max_distance").forGetter(a -> a.maxDistance),
             Source.CODEC.fieldOf("source").forGetter(a -> a.source),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventTeleportAbility::new));
@@ -140,12 +140,12 @@ public class PreventTeleportAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventTeleportAbility> builder, HolderLookup.Provider provider) {
 
-            builder.setDescription("Prevents teleporting by the specified sources for the entity that has this ability.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon teleportation being prevented.")
-                    .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting from the dimension.")
-                    .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "If specified, these conditions must be fulfilled for when the entity is teleporting to the dimension.")
-                    .addOptional("min_distance", TYPE_DOUBLE_VALUE, "The minimum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
-                    .addOptional("max_distance", TYPE_DOUBLE_VALUE, "The maximum teleport distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+            builder.setDescription("Prevents the entity that has this ability from teleporting by the specified sources.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon teleportation being prevented.")
+                    .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting from.")
+                    .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting to.")
+                    .addOptional("min_distance", TYPE_DOUBLE_VALUE, "Minimum distance required for prevention. Doesn't work for the 'dimension_travel' source.")
+                    .addOptional("max_distance", TYPE_DOUBLE_VALUE, "Maximum distance required for prevention. Doesn't work for the 'dimension_travel' source.")
                     .add("source", SettingType.enumList(Source.values()), "The teleportation source to prevent.")
                     .addExampleObject(new PreventTeleportAbility(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Source.ENDER_PEARL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventTeleportAbility(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"))), List.of(new DimensionDimensionCondition(Level.OVERWORLD)), List.of(new DimensionDimensionCondition(Level.NETHER)), Optional.empty(), Optional.empty(), Source.DIMENSION_TRAVEL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

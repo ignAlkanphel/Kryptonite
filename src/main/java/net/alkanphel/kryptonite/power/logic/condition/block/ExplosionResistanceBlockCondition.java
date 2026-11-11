@@ -19,12 +19,12 @@ public record ExplosionResistanceBlockCondition(NumberComparator comparator, Val
 
     public static final MapCodec<ExplosionResistanceBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(ExplosionResistanceBlockCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(ExplosionResistanceBlockCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(ExplosionResistanceBlockCondition::compareTo)
     ).apply(instance, ExplosionResistanceBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ExplosionResistanceBlockCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, ExplosionResistanceBlockCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), ExplosionResistanceBlockCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), ExplosionResistanceBlockCondition::compareTo,
             ExplosionResistanceBlockCondition::new
     );
 

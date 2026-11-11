@@ -25,8 +25,7 @@ import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.context.DataContextKeys;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.util.ParsedCommands;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -38,13 +37,13 @@ import java.util.function.UnaryOperator;
 
 public class RaycastAction extends Action { // TODO Raycast offset? Also this needs an entire field revamp because dear god...
 
-    private record ActionOptions(List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, Value actionAlongRayOnlyOnHit) {
+    private record ActionOptions(List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, BooleanValueHolder actionAlongRayOnlyOnHit) {
         static final MapCodec<ActionOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Action.LIST_CODEC.optionalFieldOf("action_at_hit", List.of()).forGetter(ActionOptions::actionAtHit),
                 Action.LIST_CODEC.optionalFieldOf("action_along_ray", List.of()).forGetter(ActionOptions::actionAlongRay),
                 Codec.DOUBLE.optionalFieldOf("action_hit_offset").forGetter(ActionOptions::actionHitOffset),
                 Codec.DOUBLE.optionalFieldOf("action_step", 1.0D).forGetter(ActionOptions::actionStep),
-                Value.CODEC.optionalFieldOf("action_along_ray_only_on_hit", new StaticValue(false)).forGetter(ActionOptions::actionAlongRayOnlyOnHit)
+                BooleanValueHolder.CODEC.optionalFieldOf("action_along_ray_only_on_hit", BooleanValueHolder.FALSE).forGetter(ActionOptions::actionAlongRayOnlyOnHit)
         ).apply(instance, ActionOptions::new));
     }
 
@@ -63,8 +62,8 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
             Codec.DOUBLE.optionalFieldOf("block_distance").forGetter(a -> a.blockDistance),
             Codec.DOUBLE.optionalFieldOf("distance").forGetter(a -> a.distance),
             ActionOptions.CODEC.forGetter(a -> new ActionOptions(a.actionAtHit, a.actionAlongRay, a.actionHitOffset, a.actionStep, a.actionAlongRayOnlyOnHit)),
-            Value.CODEC.optionalFieldOf("include_entities", new StaticValue(true)).forGetter(a -> a.includeEntities),
-            Value.CODEC.optionalFieldOf("include_blocks", new StaticValue(true)).forGetter(a -> a.includeBlocks)
+            BooleanValueHolder.CODEC.optionalFieldOf("include_entities", BooleanValueHolder.TRUE).forGetter(a -> a.includeEntities),
+            BooleanValueHolder.CODEC.optionalFieldOf("include_blocks", BooleanValueHolder.TRUE).forGetter(a -> a.includeBlocks)
     ).apply(instance, (preActions, hitActions, missActions, entityConditions, entityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts, includeEntities, includeBlocks) ->
             new RaycastAction(preActions, hitActions, missActions, entityConditions, entityActions, blockActions, shapeType, fluidHandling, direction, space, entityDistance, blockDistance, distance, actOpts.actionAtHit(), actOpts.actionAlongRay(), actOpts.actionHitOffset(), actOpts.actionStep(), actOpts.actionAlongRayOnlyOnHit(), includeEntities, includeBlocks)));
 
@@ -80,9 +79,9 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
     private final List<Action> actionAtHit, actionAlongRay;
     private final Optional<Double> actionHitOffset;
     private final double actionStep;
-    private final Value actionAlongRayOnlyOnHit, includeEntities, includeBlocks;
+    private final BooleanValueHolder actionAlongRayOnlyOnHit, includeEntities, includeBlocks;
 
-    public RaycastAction(List<Action> preActions, List<Action> hitActions, List<Action> missActions, Optional<Condition> entityConditions, List<Action> entityActions, List<BlockAction> blockActions, ClipContext.Block shapeType, ClipContext.Fluid fluidHandling, Optional<Vec3> direction, Space space, Optional<Double> entityDistance, Optional<Double> blockDistance, Optional<Double> distance, List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, Value actionAlongRayOnlyOnHit, Value includeEntities, Value includeBlocks) {
+    public RaycastAction(List<Action> preActions, List<Action> hitActions, List<Action> missActions, Optional<Condition> entityConditions, List<Action> entityActions, List<BlockAction> blockActions, ClipContext.Block shapeType, ClipContext.Fluid fluidHandling, Optional<Vec3> direction, Space space, Optional<Double> entityDistance, Optional<Double> blockDistance, Optional<Double> distance, List<Action> actionAtHit, List<Action> actionAlongRay, Optional<Double> actionHitOffset, double actionStep, BooleanValueHolder actionAlongRayOnlyOnHit, BooleanValueHolder includeEntities, BooleanValueHolder includeBlocks) {
         this.preActions = preActions;
         this.hitActions = hitActions;
         this.missActions = missActions;
@@ -122,12 +121,12 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
         Vec3 origin = MiscUtil.getPoseDependentEyePos(entity);
         Vec3 destination = this.distance.map(directionVec::scale).map(origin::add).orElse(null);
 
-        if (this.includeEntities.getAsBoolean(context)) {
+        if (this.includeEntities.get(context)) {
             destination = origin.add(directionVec.scale(this.getEntityReach(entity)));
             result = this.entityRaycast(entity, origin, destination);
         }
 
-        if (this.includeBlocks.getAsBoolean(context)) {
+        if (this.includeBlocks.get(context)) {
             Vec3 blockDestination = origin.add(directionVec.scale(this.getBlockReach(entity)));
             BlockHitResult blockResult = this.blockRaycast(entity, origin, blockDestination);
 
@@ -148,7 +147,7 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
             }
         }
 
-        if (destination != null && !actionAlongRay.isEmpty() && (!actionAlongRayOnlyOnHit.getAsBoolean(context) || success)) {
+        if (destination != null && !actionAlongRay.isEmpty() && (!actionAlongRayOnlyOnHit.get(context) || success)) {
             this.executeActionsAlongRay(entity, origin, success ? result.getLocation() : destination);
         }
 
@@ -293,28 +292,28 @@ public class RaycastAction extends Action { // TODO Raycast offset? Also this ne
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, RaycastAction> builder, HolderLookup.Provider provider) {
             builder.setName("Raycast")
-                    .setDescription("Performs a raycast in the direction the entity is looking. For this action, the \"source\" is the entity that ran this action & the \"target\" is the entity hit by the raycast.")
-                    .addOptional("pre_actions", TYPE_ACTION_LIST, "The actions to run before the raycast is performed.")
-                    .addOptional("hit_actions", TYPE_ACTION_LIST, "The actions to run when the raycast hits something.")
-                    .addOptional("miss_actions", TYPE_ACTION_LIST, "The actions to run when the raycast misses.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "If specified, only entities fulfilling these conditions will be considered as valid raycast targets.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the entity hit by the raycast.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "If specified, these action will be run on the block the raycast has hit.")
+                    .setDescription("Performs a raycast in the direction the entity is looking. For this action, the \"source\" is the entity that performed this action & the \"target\" is the entity hit by the raycast.")
+                    .addOptional("pre_actions", TYPE_ACTION_LIST, "Action(s) performed before the raycast is performed.")
+                    .addOptional("hit_actions", TYPE_ACTION_LIST, "Action(s) performed when the raycast hits something.")
+                    .addOptional("miss_actions", TYPE_ACTION_LIST, "Action(s) performed when the raycast misses.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the entities must meet to be considered as valid raycast targets.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity hit by the raycast.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the raycast has hit.")
                     .addOptional("shape_type", KryptoniteDocumented.TYPE_CLIP_CONTEXT_BLOCK, "How the raycast handles blocks.", ClipContext.Block.OUTLINE)
                     .addOptional("fluid_handling", KryptoniteDocumented.TYPE_CLIP_CONTEXT_FLUID, "How the raycast handles fluids.", ClipContext.Fluid.ANY)
-                    .addOptional("direction", TYPE_VECTOR3, "If specified, determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (basically \"local\").")
+                    .addOptional("direction", TYPE_VECTOR3, "Determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (basically \"local\").")
                     .addOptional("space", KryptoniteDocumented.TYPE_SPACE, "How the direction will be calculated. Only used if direction is specified.", Space.WORLD)
                     .addOptional("entity_distance", TYPE_DOUBLE, "The raycast distance for entities when the \"entity\" field is true. If this field is omitted, uses the \"distance\" field & ENTITY_INTERACTION_RANGE attribute.")
                     .addOptional("block_distance", TYPE_DOUBLE, "The raycast distance for blocks when the 'blocks' field is true. If this field is omitted, uses the \"distance\" field & BLOCK_INTERACTION_RANGE attribute.")
                     .addOptional("distance", TYPE_DOUBLE, "The maximum distance the raycast will travel.")
-                    .addOptional("action_at_hit", TYPE_ACTION_LIST, "The actions to run upon the block/entity the raycast has hit.")
+                    .addOptional("action_at_hit", TYPE_ACTION_LIST, "Action(s) performed on the block/entity the raycast has hit.")
                     .addOptional("action_hit_offset", TYPE_DOUBLE, "The offset of the actions specified in the \"action_at_hit\" field.")
-                    .addOptional("action_along_ray", TYPE_ACTION_LIST, "The actions to run for each step of the raycast.")
+                    .addOptional("action_along_ray", TYPE_ACTION_LIST, "Action(s) performed for each step of the raycast.")
                     .addOptional("action_step", TYPE_DOUBLE, "The step size of the raycast (in blocks).", 1.0D)
-                    .addOptional("action_along_ray_only_on_hit", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"action_along_ray\" field will run those actions ONLY if the raycast hits blocks/entities.", false)
-                    .addOptional("include_entities", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the raycast will include entities.", true)
-                    .addOptional("include_blocks", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the raycast will include blocks.", true)
-                    .addExampleObject(new RaycastAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say pre action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say hit action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say miss action!")))), Optional.empty(), List.of(), List.of(), ClipContext.Block.VISUAL, ClipContext.Fluid.ANY, Optional.empty(), Space.WORLD, Optional.empty(), Optional.empty(), Optional.of(16.0D), List.of(new RunCommandAction(new ParsedCommands("summon pig"))), List.of(new RunCommandAction(new ParsedCommands("say COMMAND ALONG RAY"))), Optional.empty(), 1.0D, new StaticValue(true), new StaticValue(true), new StaticValue(true)));
+                    .addOptional("action_along_ray_only_on_hit", TYPE_BOOLEAN_VALUE, "If true, the \"action_along_ray\" field will perform those actions ONLY if the raycast hits blocks/entities.", false)
+                    .addOptional("include_entities", TYPE_BOOLEAN_VALUE, "If true, the raycast will include entities.", true)
+                    .addOptional("include_blocks", TYPE_BOOLEAN_VALUE, "If true, the raycast will include blocks.", true)
+                    .addExampleObject(new RaycastAction(List.of(new RunCommandAction(new ParsedCommands(List.of("say pre action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say hit action!")))), List.of(new RunCommandAction(new ParsedCommands(List.of("say miss action!")))), Optional.empty(), List.of(), List.of(), ClipContext.Block.VISUAL, ClipContext.Fluid.ANY, Optional.empty(), Space.WORLD, Optional.empty(), Optional.empty(), Optional.of(16.0D), List.of(new RunCommandAction(new ParsedCommands("summon pig"))), List.of(new RunCommandAction(new ParsedCommands("say COMMAND ALONG RAY"))), Optional.empty(), 1.0D, BooleanValueHolder.TRUE, BooleanValueHolder.TRUE,BooleanValueHolder.TRUE));
         }
     }
 

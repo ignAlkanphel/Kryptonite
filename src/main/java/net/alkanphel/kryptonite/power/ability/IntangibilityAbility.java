@@ -103,8 +103,8 @@ public class IntangibilityAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, IntangibilityAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes the entity intangible to certain blocks.")
-                    .addOptional("vertical_conditions", TYPE_CONDITION_LIST, "If specified, the entity will only phase downward (vertically) through blocks if these conditions are fulfilled.", FalseCondition.INSTANCE)
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only blocks fulfilling these conditions are phased through. If omitted, all blocks are phased through.")
+                    .addOptional("vertical_conditions", TYPE_CONDITION_LIST, "Condition(s) the entity must meet to phase downward (vertically).")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for the entity to phase through. If omitted, all blocks are phased through.")
                     .addOptional("render_type", SettingType.enumList(RenderType.values()), "How the environment is rendered while phasing through blocks.", RenderType.DEFAULT)
                     .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
                     .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, List.of(), RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

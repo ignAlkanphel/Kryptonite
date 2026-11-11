@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.action;
 import com.mojang.serialization.MapCodec;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;

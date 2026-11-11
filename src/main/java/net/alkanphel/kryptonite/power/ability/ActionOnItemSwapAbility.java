@@ -93,13 +93,13 @@ public class ActionOnItemSwapAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemSwapAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Swap")
-                    .setDescription("Runs actions when a player swaps items between their main hand & off hand.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the player when the swap conditions are fulfilled.")
-                    .addOptional("main_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the item swapped into the main hand.")
-                    .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these item actions will be run on the item swapped into the off hand.")
-                    .addOptional("main_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the main hand item after the swap must fulfill these conditions.")
-                    .addOptional("off_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the off hand item after the swap must fulfill these conditions.")
-                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "Which hands must fulfill their item conditions for the actions to run.", "both")
+                    .setDescription("Performs actions on the player upon swapping items between their main hand & off hand.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap conditions meet.")
+                    .addOptional("main_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the main hand.")
+                    .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the off hand.")
+                    .addOptional("main_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the post-swap main hand item must meet.")
+                    .addOptional("off_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the post-swap off hand item must meet.")
+                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "Hand(s) whose item conditions must meet for the actions to perform.", "both")
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in main hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), List.of(), TriggerType.MAIN, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in off hand!")))), List.of(), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), TriggerType.OFF, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Diamond in main hand + Coal in off hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("coal"))))))), TriggerType.BOTH, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

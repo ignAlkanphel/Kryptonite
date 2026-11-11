@@ -47,7 +47,7 @@ public class AllowEndermanStareAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, AllowEndermanStareAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows looking into the eyes of endermen without angering them. For this ability, the \"source\" is the entity looking at the enderman & the \"target\" is the enderman.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the enderman must meet to be affected.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the enderman must meet to be affected.")
                     .addExampleObject(new AllowEndermanStareAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

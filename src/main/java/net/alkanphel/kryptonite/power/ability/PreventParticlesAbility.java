@@ -53,7 +53,7 @@ public class PreventParticlesAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventParticlesAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity that has this ability from spawning certain particles created during certain vanilla events.")
-                    .addOptional("event_particles", SettingType.enumList(EventParticle.values()), "The particle events to prevent the spawning of.")
+                    .addOptional("event_particles", SettingType.enumList(EventParticle.values()), "The particle events to prevent.")
                     .addExampleObject(new PreventParticlesAbility(List.of(EventParticle.DEATH), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventParticlesAbility(List.of(EventParticle.SPRINTING, EventParticle.LANDING), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

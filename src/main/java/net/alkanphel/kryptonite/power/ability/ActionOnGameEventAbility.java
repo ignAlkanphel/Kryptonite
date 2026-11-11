@@ -61,9 +61,9 @@ public class ActionOnGameEventAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnGameEventAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Game Event")
-                    .setDescription("Runs actions upon the entity emitting game events.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when the game events are emitted.")
-                    .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "If specified, the actions will only run when these game events are emitted.")
+                    .setDescription("Performs actions when the entity that has this ability emits game events.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when game events are emitted.")
+                    .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events that must be emitted for the actions to perform.")
                     .addExampleObject(new ActionOnGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Action on game event!")))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

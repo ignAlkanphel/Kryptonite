@@ -54,8 +54,8 @@ public class BlockActionAtAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, BlockActionAtAction> builder, HolderLookup.Provider provider) {
             builder.setName("Block Action At")
-                    .setDescription("Runs block actions at the entity's position.")
-                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run.")
+                    .setDescription("Performs block actions at the entity's position.")
+                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the blocks.")
                     .addExampleObject(new BlockActionAtAction(List.of(new BoneMealBlockAction(false))));
         }
     }

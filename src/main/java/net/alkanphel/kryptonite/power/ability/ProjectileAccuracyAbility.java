@@ -54,7 +54,7 @@ public class ProjectileAccuracyAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ProjectileAccuracyAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes projectiles shot by the player more accurate by making their divergence less random. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the projectile.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the projectile must meet to be affected.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the projectile must meet to be affected.")
                     .addExampleObject(new ProjectileAccuracyAbility(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

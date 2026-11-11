@@ -20,12 +20,12 @@ public record DurabilityItemCondition(NumberComparator comparator, Value compare
 
     public static final MapCodec<DurabilityItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(DurabilityItemCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(DurabilityItemCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(DurabilityItemCondition::compareTo)
     ).apply(instance, DurabilityItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DurabilityItemCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, DurabilityItemCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), DurabilityItemCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), DurabilityItemCondition::compareTo,
             DurabilityItemCondition::new
     );
 

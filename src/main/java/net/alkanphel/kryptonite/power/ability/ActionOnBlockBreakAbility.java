@@ -93,11 +93,11 @@ public class ActionOnBlockBreakAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockBreakAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Block Break")
-                    .setDescription("Runs actions when the player that has this ability breaks a block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the player that broke the block.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run at the broken block position.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs if the broken block fulfills these block conditions.")
-                    .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only runs when the block was successfully harvested (using correct tool for drops).", false)
+                    .setDescription("Performs actions when the player that has this ability breaks a block.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon the player breaking a block.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the broken block position.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the broken block must meet for the actions to perform.")
+                    .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only performs the actions when the block was successfully harvested (using correct tool for drops).", false)
                     .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new SetBlockBlockAction(Blocks.LAVA.defaultBlockState())), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block"))))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

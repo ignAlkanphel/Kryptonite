@@ -130,9 +130,9 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
                     .setDescription("Prevents the entity that has this ability from picking up items. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity attempting to pick up the item.")
                     .addOptional("entity_actions_thrower", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("entity_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Action(s) performed on the item stack being picked up.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to prevent item pickup.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Condition(s) that the item being picked up must meet to prevent item pickup.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet to prevent item pickup.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

@@ -54,7 +54,7 @@ public record BlockOnCondition(List<BlockCondition> blockConditions) implements 
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockOnCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block On")
                     .setDescription("Checks if the entity is standing on a block.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the block underneath the entity's feet.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block underneath the entity's feet must meet.")
                     .addExampleObject(new BlockOnCondition(List.of()))
                     .addExampleObject(new BlockOnCondition(List.of(new FrictionBlockCondition(NumberComparator.GREATER_OR_EQUAL, new StaticValue(0.98)))));
         }

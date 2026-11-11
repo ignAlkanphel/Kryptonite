@@ -14,7 +14,7 @@ public class ShoulderSurfingCompat {
 
     public static boolean isCameraCoupled(Player player) {
         return AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.SHOULDER_SURFING.get())
-                .stream().anyMatch(instance -> instance.getAbility().cameraCoupling.getAsBoolean(DataContext.forAbility(player, instance)));
+                .stream().anyMatch(instance -> instance.getAbility().cameraCoupling.get(DataContext.forAbility(player, instance)));
     }
 
 }

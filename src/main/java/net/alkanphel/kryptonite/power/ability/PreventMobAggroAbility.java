@@ -1,6 +1,5 @@
 package net.alkanphel.kryptonite.power.ability;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
@@ -16,6 +15,7 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.EntityTypeCondition;
 import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
@@ -26,15 +26,15 @@ public class PreventMobAggroAbility extends Ability {
 
     public static final MapCodec<PreventMobAggroAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Condition.CODEC.optionalFieldOf("mob_conditions", TrueCondition.INSTANCE).forGetter(a -> a.mobConditions),
-            Codec.BOOL.optionalFieldOf("mob_aggro_on_attack", true).forGetter(a -> a.mobAggroOnAttack),
-            Codec.BOOL.optionalFieldOf("mob_aggro_reset", false).forGetter(a -> a.mobAggroReset),
+            BooleanValueHolder.CODEC.optionalFieldOf("mob_aggro_on_attack", BooleanValueHolder.TRUE).forGetter(a -> a.mobAggroOnAttack),
+            BooleanValueHolder.CODEC.optionalFieldOf("mob_aggro_reset", BooleanValueHolder.FALSE).forGetter(a -> a.mobAggroReset),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventMobAggroAbility::new));
 
     public final Condition mobConditions;
-    public final boolean mobAggroOnAttack, mobAggroReset;
+    public final BooleanValueHolder mobAggroOnAttack, mobAggroReset;
 
-    public PreventMobAggroAbility(Condition mobConditions, boolean mobAggroOnAttack, boolean mobAggroReset, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventMobAggroAbility(Condition mobConditions, BooleanValueHolder mobAggroOnAttack, BooleanValueHolder mobAggroReset, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.mobConditions = mobConditions;
         this.mobAggroOnAttack = mobAggroOnAttack;
@@ -42,11 +42,13 @@ public class PreventMobAggroAbility extends Ability {
     }
 
     public boolean doesApply(LivingEntity source, LivingEntity target, AbilityInstance<?> abilityInstance) {
-        if (mobAggroOnAttack && source instanceof Mob mob) {
+        DataContext context = DataContext.forAffected(source, target, abilityInstance);
+
+        if (mobAggroOnAttack.get(context) && source instanceof Mob mob) {
             if (mob.getLastHurtByMob() == target) return false;
         }
 
-        return mobConditions.test(DataContext.forAffected(source, target, abilityInstance));
+        return mobConditions.test(context);
     }
 
     public static boolean shouldIgnore(LivingEntity source, LivingEntity target) {
@@ -58,7 +60,7 @@ public class PreventMobAggroAbility extends Ability {
     public static boolean shouldAggroReset(LivingEntity source, LivingEntity target) {
         return AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.PREVENT_MOB_AGGRO.get())
                 .stream()
-                .anyMatch(instance -> instance.getAbility().mobAggroReset && instance.getAbility().doesApply(source, target, instance));
+                .anyMatch(instance -> instance.getAbility().mobAggroReset.get(DataContext.forAffected(source, target, instance)) && instance.getAbility().doesApply(source, target, instance));
     }
 
     @Override
@@ -77,11 +79,11 @@ public class PreventMobAggroAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventMobAggroAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Mob Aggro")
                     .setDescription("Prevents mobs from targeting the entity with this ability. For this ability, the \"source\" is the the entity with this ability & the \"target\" is the mob.\"")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the mobs must meet to be affected.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the mobs must meet to be affected.")
                     .addOptional("mob_aggro_on_attack", TYPE_BOOLEAN, "If true, mobs that are attacked will be able to fight back.", true)
                     .addOptional("mob_aggro_reset", TYPE_BOOLEAN, "If true, mobs will have their aggro reset.", false)
-                    .addExampleObject(new PreventMobAggroAbility(TrueCondition.INSTANCE, true, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventMobAggroAbility((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("bee"))))))), false, true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventMobAggroAbility(TrueCondition.INSTANCE, BooleanValueHolder.TRUE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventMobAggroAbility((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("bee"))))))), BooleanValueHolder.FALSE, BooleanValueHolder.TRUE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

@@ -48,8 +48,8 @@ public class ModifyHealingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyHealingAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Healing")
-                    .setDescription("Modifies the amount of health you get from all sources of healing (e.g natural regen, instant health effect, regeneration effect)")
-                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "The modifiers to apply to the healing.")
+                    .setDescription("Modifies the amount of health you get from healing (e.g natural regeneration, regeneration effect, instant health effect)")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) to apply to the healing.")
                     .addExampleObject(new ModifyHealingAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-0.5), KryptoniteModifiers.Operation.MULTIPLY_TOTAL_ADDITIVE)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

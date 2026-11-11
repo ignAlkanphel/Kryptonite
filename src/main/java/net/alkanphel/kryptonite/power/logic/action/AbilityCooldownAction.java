@@ -65,7 +65,7 @@ public class AbilityCooldownAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, AbilityCooldownAction> builder, HolderLookup.Provider provider) {
             builder.setName("Ability Cooldown")
-                    .setDescription("Triggers the cooldown of the specified ability if it has one.")
+                    .setDescription("Triggers the cooldown of an ability if it has one.")
                     .add("ability", TYPE_ABILITY_REFERENCE, "Ability to trigger its cooldown on.")
                     .addExampleObject(new AbilityCooldownAction(new AbilityReference(null, "ability_key")))
                     .addExampleObject(new AbilityCooldownAction(new AbilityReference(Identifier.fromNamespaceAndPath("example", "power"), "ability_key")));

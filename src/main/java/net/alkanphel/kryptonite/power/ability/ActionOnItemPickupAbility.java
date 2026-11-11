@@ -118,8 +118,8 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
                     .setDescription("Performs actions when an entity picks up an item. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity picking up the item.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Action(s) performed on the item stack being picked up.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to perform the actions.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Condition(s) that the item being picked up must meet to perform the actions.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet for actions to perform.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say AHHH!!! PICKED UP PICKED UP!!!"))), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say You got speed? Pick me up, baby!"))), List.of(), new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))), List.of(), 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

@@ -1,10 +1,8 @@
 package net.alkanphel.kryptonite.power.logic.action;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -20,20 +18,19 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
 public class PocketCraftingTableAction extends Action {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.crafting");
 
     public static final MapCodec<PocketCraftingTableAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("increment_stat", new StaticValue(true)).forGetter(a -> a.incrementStat)
+            BooleanValueHolder.CODEC.optionalFieldOf("increment_stat", BooleanValueHolder.TRUE).forGetter(a -> a.incrementStat)
     ).apply(instance, PocketCraftingTableAction::new));
 
-    public final Value incrementStat;
+    public final BooleanValueHolder incrementStat;
 
-    public PocketCraftingTableAction(Value incrementStat) {
+    public PocketCraftingTableAction(BooleanValueHolder incrementStat) {
         this.incrementStat = incrementStat;
     }
 
@@ -49,7 +46,7 @@ public class PocketCraftingTableAction extends Action {
         var blockPos = player.blockPosition();
         player.openMenu(menuProvider(level, blockPos));
 
-        if (incrementStat.getAsBoolean(context)) {
+        if (incrementStat.get(context)) {
             player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE, 1);
         }
 
@@ -76,8 +73,8 @@ public class PocketCraftingTableAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketCraftingTableAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Crafting Table")
                     .setDescription("Allows the player to open an instance of the Crafting Table GUI at their location.")
-                    .addOptional("increment_stat", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"Interactions with Crafting Table\" stat will be incremented.", true)
-                    .addExampleObject(new PocketCraftingTableAction(new StaticValue(true)));
+                    .addOptional("increment_stat", TYPE_BOOLEAN_VALUE, "If true, the \"Interactions with Crafting Table\" stat will be incremented.", true)
+                    .addExampleObject(new PocketCraftingTableAction(BooleanValueHolder.TRUE));
         }
     }
 

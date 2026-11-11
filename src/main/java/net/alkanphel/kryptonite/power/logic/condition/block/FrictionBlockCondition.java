@@ -19,12 +19,12 @@ public record FrictionBlockCondition(NumberComparator comparator, Value compareT
 
     public static final MapCodec<FrictionBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(FrictionBlockCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(FrictionBlockCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(FrictionBlockCondition::compareTo)
     ).apply(instance, FrictionBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FrictionBlockCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, FrictionBlockCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), FrictionBlockCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), FrictionBlockCondition::compareTo,
             FrictionBlockCondition::new
     );
 

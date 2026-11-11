@@ -88,10 +88,10 @@ public class PreventTotemUseAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventTotemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Totem Use")
-                    .setDescription("Prevents the entity from using a Totem of Undying.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when totem use is prevented.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "If specified, totem use is only prevented when these damage conditions are fulfilled.")
-                    .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Which hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
+                    .setDescription("Prevents the entity that has this ability from using a Totem of Undying.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is prevented.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the totem to be prevented.")
+                    .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
                     .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented the use of a totem!"))), List.of(), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented totem use because you died via by Iron Golem!"))), List.of(new AttackerDamageCondition(Optional.of(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

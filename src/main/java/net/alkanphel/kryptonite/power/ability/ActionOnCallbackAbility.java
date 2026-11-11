@@ -71,12 +71,12 @@ public class ActionOnCallbackAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnCallbackAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Callback")
-                    .setDescription("Runs actions on the entity with this ability & power based on the lifecycle of a power instance.")
-                    .addOptional("on_spawn", TYPE_ACTION_LIST, "Runs these actions right after the player respawns & this power is usable.")
-                    .addOptional("on_load", TYPE_ACTION_LIST, "Runs these actions when this power is loaded onto the player (e.g. on login & respawn).")
-                    .addOptional("on_unload", TYPE_ACTION_LIST, "Runs these actions when this power is unloaded from the player (e.g. on logout & death).")
-                    .addOptional("on_gain", TYPE_ACTION_LIST, "Runs these actions when this power is added to the player for the first time.")
-                    .addOptional("on_loss", TYPE_ACTION_LIST, "Runs these actions when this power is removed from the player for the last time.")
+                    .setDescription("Performs actions on the player with this ability & power based on the lifecycle of a power instance.")
+                    .addOptional("on_spawn", TYPE_ACTION_LIST, "Action(s) performed right after the player respawns & this power is usable.")
+                    .addOptional("on_load", TYPE_ACTION_LIST, "Action(s) performed when this power is loaded onto the player (e.g. on login & respawn).")
+                    .addOptional("on_unload", TYPE_ACTION_LIST, "Action(s) performed when this power is unloaded from the player (e.g. on logout & death).")
+                    .addOptional("on_gain", TYPE_ACTION_LIST, "Action(s) performed when this power is added to the player for the first time.")
+                    .addOptional("on_loss", TYPE_ACTION_LIST, "Action(s) performed when this power is removed from the player for the last time.")
                     .addExampleObject(new ActionOnCallbackAbility(List.of(), List.of(), List.of(), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

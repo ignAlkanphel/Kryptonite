@@ -48,8 +48,8 @@ public class ActionOnLandAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnLandAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Land")
-                    .setDescription("Run actions when the entity lands after being airborne.")
-                    .add("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity upon it landing.")
+                    .setDescription("Performs actions upon landing after being airborne.")
+                    .add("entity_actions", TYPE_ACTION_LIST, "Acton(s) performed upon landing.")
                     .addExampleObject(new ActionOnLandAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on land!"))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

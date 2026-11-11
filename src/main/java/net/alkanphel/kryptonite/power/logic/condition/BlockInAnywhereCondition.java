@@ -30,13 +30,13 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
     public static final MapCodec<BlockInAnywhereCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockInAnywhereCondition::blockConditions),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_OR_EQUAL).forGetter(BlockInAnywhereCondition::comparator),
-            Value.CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(BlockInAnywhereCondition::compareTo)
+            Value.NUMBER_CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(BlockInAnywhereCondition::compareTo)
     ).apply(instance, BlockInAnywhereCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockInAnywhereCondition> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockInAnywhereCondition::blockConditions,
             NumberComparator.STREAM_CODEC, BlockInAnywhereCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), BlockInAnywhereCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockInAnywhereCondition::compareTo,
             BlockInAnywhereCondition::new
     );
 
@@ -91,7 +91,7 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockInAnywhereCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block In Anywhere")
                     .setDescription("Checks how many blocks are overlapping with the entity's eyes or feet.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the overlapping blocks.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the overlapping blocks must meet.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_OR_EQUAL)
                     .addOptional("compare_to", TYPE_INT_VALUE, "Value that is being compared against", 1)
                     .addExampleObject(new BlockInAnywhereCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS)))), NumberComparator.GREATER_THAN, new StaticValue(1)));

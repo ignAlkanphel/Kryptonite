@@ -26,16 +26,16 @@ import java.util.Objects;
 public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offsetZ, List<BlockCondition> blockConditions) implements Condition {
 
     public static final MapCodec<BlockCollisionCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("offset_x", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetX),
-            Value.CODEC.optionalFieldOf("offset_y", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetY),
-            Value.CODEC.optionalFieldOf("offset_z", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetZ),
+            Value.NUMBER_CODEC.optionalFieldOf("offset_x", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetX),
+            Value.NUMBER_CODEC.optionalFieldOf("offset_y", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetY),
+            Value.NUMBER_CODEC.optionalFieldOf("offset_z", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetZ),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockCollisionCondition::blockConditions)
     ).apply(instance, BlockCollisionCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockCollisionCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), BlockCollisionCondition::offsetX,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), BlockCollisionCondition::offsetY,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), BlockCollisionCondition::offsetZ,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetX,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetY,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetZ,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockCollisionCondition::blockConditions,
             BlockCollisionCondition::new
     );
@@ -77,7 +77,7 @@ public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offset
                     .addOptional("offset_x", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the X direction (e.g.: 0 = no offset, 1 = offset of exact width, 2 = offset of twice the width of the bounding box)")
                     .addOptional("offset_y", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the Y direction (e.g.: 0 = no offset, 1 = offset of exact height, 2 = offset of twice the height of the bounding box)")
                     .addOptional("offset_z", TYPE_FLOAT_VALUE, "The bounding box size offset in the Z direction (e.g.: 0 = no offset, 1 = offset of exact depth, 2 = offset of twice the depth of the bounding box)")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled for the colliding block.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the colliding block must meet.")
                     .addExampleObject(new BlockCollisionCondition(new StaticValue(0.1), new StaticValue(0), new StaticValue(0.1), List.of()));
         }
     }

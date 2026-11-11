@@ -34,7 +34,7 @@ public record EntityRotationCondition(RotationType sourceRotationType, RotationT
             RotationType.CODEC.optionalFieldOf("target_rotation", RotationType.BODY).forGetter(EntityRotationCondition::targetRotationType),
             KryptoniteCodecs.DIRECTION_AXIS_CODEC.optionalFieldOf("axes", EnumSet.allOf(Direction.Axis.class)).forGetter(EntityRotationCondition::axes),
             NumberComparator.CODEC.fieldOf("comparator").forGetter(EntityRotationCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(EntityRotationCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(EntityRotationCondition::compareTo)
     ).apply(instance, EntityRotationCondition::new));
 
     @Override

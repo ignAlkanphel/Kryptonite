@@ -64,7 +64,7 @@ public class ActionOnCriticalHitAbility extends Ability {
             builder.setName("Action On Critical Hit")
                     .setDescription("Performs actions when the player with this ability lands a critical hit. For this ability, the \"source\" is the attacking player & the \"target\" is the entity being hit.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target when a critical hit is dealt.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to perform the actions.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addExampleObject(new ActionOnCriticalHitAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on critical hit!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

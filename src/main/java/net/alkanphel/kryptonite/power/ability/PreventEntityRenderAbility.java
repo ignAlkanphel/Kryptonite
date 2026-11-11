@@ -33,7 +33,7 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
     private final Map<Entity, AnimationTimer> ANIMATION_TIMER_CONDITIONED = new WeakHashMap<>();
 
     public static final MapCodec<PreventEntityRenderAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("target_opacity", new StaticValue(0.0F)).forGetter(a -> a.targetOpacity),
+            Value.NUMBER_CODEC.optionalFieldOf("target_opacity", new StaticValue(0.0F)).forGetter(a -> a.targetOpacity),
             Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventEntityRenderAbility::new));
@@ -97,7 +97,7 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
             builder.setName("Prevent Entity Render")
                     .setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. For this ability, the \"source\" is the player/viewer that has the ability & the \"target\" is the entity whose rendering is being modified.")
                     .addOptional("target_opacity", TYPE_FLOAT_VALUE, "The opacity value that the entities will render with. A value of 0 will explicitly cause entities to no longer render rather than have their opacity change.", 0)
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to have its rendering modified. Use 'palladium:as_source' to check conditions against the viewer instead. Evaluates client-side.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to have its rendering modified. Use 'palladium:as_source' to check conditions against the viewer instead. Evaluates client-side.")
                     .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), TrueCondition.INSTANCE, new AbilityProperties().animationTimer(new AnimationTimerSetting(0, 10, AnimationTimerSetting.Behaviour.FOLLOW, Easing.INEXPO)), AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

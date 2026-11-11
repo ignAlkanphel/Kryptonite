@@ -23,8 +23,8 @@ public record EntityInRadiusCondition(Condition entityConditions, Shape shape, N
             Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(EntityInRadiusCondition::entityConditions),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(EntityInRadiusCondition::shape),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(EntityInRadiusCondition::comparator),
-            Value.CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(EntityInRadiusCondition::compareTo),
-            Value.CODEC.fieldOf("radius").forGetter(EntityInRadiusCondition::radius)
+            Value.NUMBER_CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(EntityInRadiusCondition::compareTo),
+            Value.NUMBER_CODEC.fieldOf("radius").forGetter(EntityInRadiusCondition::radius)
     ).apply(instance, EntityInRadiusCondition::new));
 
     @Override
@@ -67,7 +67,7 @@ public record EntityInRadiusCondition(Condition entityConditions, Shape shape, N
         public void addDocumentation(CodecDocumentationBuilder<Condition, EntityInRadiusCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Entity In Radius")
                     .setDescription("Checks the number of entities within a radius. For this condition, the \"source\" is the entity at the center of the search & the \"target\" is each entity being counted.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to be counted.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to be counted.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "Shape of the area to search.", Shape.CUBE)
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_THAN)
                     .addOptional("compare_to", TYPE_INT_VALUE, "Value that is being compared against", 1)

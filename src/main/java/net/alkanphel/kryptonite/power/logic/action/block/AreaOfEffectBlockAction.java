@@ -23,7 +23,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
             BlockAction.LIST_CODEC.fieldOf("block_actions").forGetter(a -> a.blockActions),
             BlockCondition.CODEC.optionalFieldOf("block_conditions").forGetter(a -> a.blockConditions),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(a -> a.shape),
-            Value.CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(a -> a.radius)
+            Value.NUMBER_CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(a -> a.radius)
     ).apply(instance, AreaOfEffectBlockAction::new));
 
     private final List<BlockAction> blockActions;
@@ -65,9 +65,9 @@ public class AreaOfEffectBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, AreaOfEffectBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Area of Effect")
-                    .setDescription("Runs the specified block actions on all blocks within a radius.")
-                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run on each block in range.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled by the blocks in the radius.")
+                    .setDescription("Performs block actions on all blocks within a radius.")
+                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the blocks in range.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks in range must meet for the actions to perform.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", TYPE_INT_VALUE, "The radius of the area.", 16)
                     .addExampleObject(new AreaOfEffectBlockAction(List.of(), Optional.empty(), Shape.CUBE, new StaticValue(16)));

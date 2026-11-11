@@ -19,12 +19,12 @@ public record AmountDamageCondition(NumberComparator comparator, Value compareTo
 
     public static final MapCodec<AmountDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(AmountDamageCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(AmountDamageCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(AmountDamageCondition::compareTo)
     ).apply(instance, AmountDamageCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AmountDamageCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, AmountDamageCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), AmountDamageCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), AmountDamageCondition::compareTo,
             AmountDamageCondition::new
     );
 

@@ -26,23 +26,23 @@ import java.util.Optional;
 public record CalendarCondition(@Nullable Value year, @Nullable Value month, @Nullable Value day, @Nullable Value hour, @Nullable Value minute, @Nullable Value second) implements Condition {
 
     public static final MapCodec<CalendarCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("year").forGetter(c -> Optional.ofNullable(c.year())),
-            Value.CODEC.optionalFieldOf("month").forGetter(c -> Optional.ofNullable(c.month())),
-            Value.CODEC.optionalFieldOf("day").forGetter(c -> Optional.ofNullable(c.day())),
-            Value.CODEC.optionalFieldOf("hour").forGetter(c -> Optional.ofNullable(c.hour())),
-            Value.CODEC.optionalFieldOf("minute").forGetter(c -> Optional.ofNullable(c.minute())),
-            Value.CODEC.optionalFieldOf("second").forGetter(c -> Optional.ofNullable(c.second()))
+            Value.NUMBER_CODEC.optionalFieldOf("year").forGetter(c -> Optional.ofNullable(c.year())),
+            Value.NUMBER_CODEC.optionalFieldOf("month").forGetter(c -> Optional.ofNullable(c.month())),
+            Value.NUMBER_CODEC.optionalFieldOf("day").forGetter(c -> Optional.ofNullable(c.day())),
+            Value.NUMBER_CODEC.optionalFieldOf("hour").forGetter(c -> Optional.ofNullable(c.hour())),
+            Value.NUMBER_CODEC.optionalFieldOf("minute").forGetter(c -> Optional.ofNullable(c.minute())),
+            Value.NUMBER_CODEC.optionalFieldOf("second").forGetter(c -> Optional.ofNullable(c.second()))
     ).apply(instance, (year, month, day, hour, minute, second) -> new CalendarCondition(
             year.orElse(null), month.orElse(null), day.orElse(null), hour.orElse(null), minute.orElse(null), second.orElse(null)
     )));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CalendarCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.year()),
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.month()),
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.day()),
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.hour()),
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.minute()),
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), c -> Optional.ofNullable(c.second()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.year()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.month()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.day()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.hour()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.minute()),
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC)), c -> Optional.ofNullable(c.second()),
             (year, month, day, hour, minute, second) -> new CalendarCondition(year.orElse(null), month.orElse(null), day.orElse(null), hour.orElse(null), minute.orElse(null), second.orElse(null))
     );
 

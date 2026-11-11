@@ -108,14 +108,14 @@ public class ModifyDamageTakenAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageTakenAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Damage Taken")
                     .setDescription("Modifies the amount of damage the entity that has this ability takes. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that took the damage.")
-                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the damage taken by the target.")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the damage taken by the target.")
                     .addOptional("self_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("attacker_actions", TYPE_ACTION_LIST, "Action(s) performed on the source.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target, with the source available in the context.")
-                    .addOptional("apply_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for armor to be applied to the damage.")
-                    .addOptional("damage_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for its armor to be damaged.")
+                    .addOptional("apply_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for armor to be applied to the damage.")
+                    .addOptional("damage_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for its armor to be damaged.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) evaluated with the source and target available in the context.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the incoming damage must meet for the modifiers and actions to apply.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the incoming damage must meet for the modifiers and actions to apply.")
                     .addExampleObject(new ModifyDamageTakenAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-0.5), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

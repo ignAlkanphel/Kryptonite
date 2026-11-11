@@ -71,10 +71,10 @@ public class ActionOnWakeUpAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnWakeUpAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Wake Up")
-                    .setDescription("Run actions when the player wakes up from sleeping.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the player when waking up.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The actions to run on the block the player was sleeping on.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs the actions if the sleeping block fulfills these conditions.")
+                    .setDescription("Performs actions upon the player waking up after sleeping.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon waking up.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player was sleeping on.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the sleeping block must meet for the actions to perform.")
                     .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

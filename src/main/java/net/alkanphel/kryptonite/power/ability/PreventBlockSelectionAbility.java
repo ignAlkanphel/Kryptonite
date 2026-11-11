@@ -15,8 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
@@ -27,14 +26,14 @@ public class PreventBlockSelectionAbility extends Ability {
 
     public static final MapCodec<PreventBlockSelectionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockConditions),
-            Value.CODEC.optionalFieldOf("visual_only", new StaticValue(false)).forGetter(a -> a.visualOnly),
+            BooleanValueHolder.CODEC.optionalFieldOf("visual_only", BooleanValueHolder.FALSE).forGetter(a -> a.visualOnly),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventBlockSelectionAbility::new));
 
     public final List<BlockCondition> blockConditions;
-    public final Value visualOnly;
+    public final BooleanValueHolder visualOnly;
 
-    public PreventBlockSelectionAbility(List<BlockCondition> blockConditions, Value visualOnly, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventBlockSelectionAbility(List<BlockCondition> blockConditions, BooleanValueHolder visualOnly, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.blockConditions = blockConditions;
         this.visualOnly = visualOnly;
@@ -46,7 +45,7 @@ public class PreventBlockSelectionAbility extends Ability {
 
     public static boolean doesPrevent(LivingEntity living, BlockPos pos) {
         if (living == null) return false;
-        return AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION.get()).stream().anyMatch(instance -> !instance.getAbility().visualOnly.getAsBoolean(DataContext.forAbility(living, instance)) && instance.getAbility().doesPrevent(living.level(), pos));
+        return AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_BLOCK_SELECTION.get()).stream().anyMatch(instance -> !instance.getAbility().visualOnly.get(DataContext.forAbility(living, instance)) && instance.getAbility().doesPrevent(living.level(), pos));
     }
 
     public static boolean doesPreventOutline(Player player, BlockPos pos) {
@@ -69,10 +68,10 @@ public class PreventBlockSelectionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockSelectionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the selection of blocks. The player won't be able to mine or interact with said blocks; meaning actions will pass through to whatever is behind said blocks.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only prevents selection of blocks that fulfill these block conditions.")
-                    .addOptional("visual_only", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the ability will be purely visual.", false)
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES)))), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for selection to be prevented.")
+                    .addOptional("visual_only", TYPE_BOOLEAN_VALUE, "If true, the ability will be purely visual.", false)
+                    .addExampleObject(new PreventBlockSelectionAbility(List.of(), BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES)))), BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

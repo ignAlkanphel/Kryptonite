@@ -18,7 +18,7 @@ import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import org.apache.commons.lang3.function.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -31,14 +31,14 @@ public class AddVelocityRelativeAction extends Action {
     public static final MapCodec<AddVelocityRelativeAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             KryptoniteCodecs.Vec3fValue.CODEC.optionalFieldOf("velocity", KryptoniteCodecs.Vec3fValue.ZERO).forGetter(a -> a.velocity),
             Reference.CODEC.optionalFieldOf("reference", Reference.POSITION).forGetter(a -> a.reference),
-            Value.CODEC.optionalFieldOf("set", new StaticValue(false)).forGetter(a -> a.set)
+            BooleanValueHolder.CODEC.optionalFieldOf("set", BooleanValueHolder.FALSE).forGetter(a -> a.set)
     ).apply(instance, AddVelocityRelativeAction::new));
 
     private final KryptoniteCodecs.Vec3fValue velocity;
     private final Reference reference;
-    private final Value set;
+    private final BooleanValueHolder set;
 
-    public AddVelocityRelativeAction(KryptoniteCodecs.Vec3fValue velocity, Reference reference, Value set) {
+    public AddVelocityRelativeAction(KryptoniteCodecs.Vec3fValue velocity, Reference reference, BooleanValueHolder set) {
         this.velocity = velocity;
         this.reference = reference;
         this.set = set;
@@ -53,7 +53,7 @@ public class AddVelocityRelativeAction extends Action {
         DataContext sourceContext = DataContext.forEntity(source);
 
         Vector3f velocityCopy = this.velocity.get(sourceContext);
-        TriConsumer<Float, Float, Float> method = set.getAsBoolean(sourceContext)
+        TriConsumer<Float, Float, Float> method = set.get(sourceContext)
                 ? target::setDeltaMovement
                 : target::push;
 
@@ -83,8 +83,8 @@ public class AddVelocityRelativeAction extends Action {
                     .setDescription("Adds or sets the target entity's velocity relative to the source entity. For this action, the \"source\" is the entity used as the reference for calculating velocity, and the \"target\" is the entity receiving the velocity.")
                     .addOptional("velocity", KryptoniteDocumented.TYPE_VECTOR3f_VALUE, "The amount of velocity to apply to the xyz axis.", Vec3.ZERO)
                     .addOptional("reference", SettingType.enumList(Reference.values()), "Determines whether to use the direction from the source entity to the target entity's position or the source entity's rotation.", Reference.POSITION)
-                    .addOptional("set", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
-                    .addExampleObject(new AddVelocityRelativeAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Reference.POSITION, new StaticValue(false)));
+                    .addOptional("set", TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
+                    .addExampleObject(new AddVelocityRelativeAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Reference.POSITION, BooleanValueHolder.FALSE));
         }
     }
 

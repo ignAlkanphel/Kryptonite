@@ -15,7 +15,7 @@ import net.threetag.palladium.logic.value.Value;
 public class ConsumeItemAction extends ItemAction {
 
     public static final MapCodec<ConsumeItemAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("amount", new StaticValue(1)).forGetter(a -> a.amount)
+            Value.NUMBER_CODEC.optionalFieldOf("amount", new StaticValue(1)).forGetter(a -> a.amount)
     ).apply(instance, ConsumeItemAction::new));
 
     private final Value amount;

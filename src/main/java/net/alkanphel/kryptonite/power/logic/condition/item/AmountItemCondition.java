@@ -19,12 +19,12 @@ public record AmountItemCondition(NumberComparator comparator, Value compareTo) 
 
     public static final MapCodec<AmountItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(AmountItemCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(AmountItemCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(AmountItemCondition::compareTo)
     ).apply(instance, AmountItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AmountItemCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, AmountItemCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), AmountItemCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), AmountItemCondition::compareTo,
             AmountItemCondition::new
     );
 

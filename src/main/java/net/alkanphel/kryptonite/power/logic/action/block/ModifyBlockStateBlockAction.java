@@ -25,7 +25,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-// TODO Try converting to Value
 public class ModifyBlockStateBlockAction extends BlockAction {
 
     public static final MapCodec<ModifyBlockStateBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

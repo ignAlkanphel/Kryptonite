@@ -17,7 +17,7 @@ public class KryptoniteModifiers {
 
     public record ValueModifier(Value amount, Operation operation) {
         public static final Codec<ValueModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Value.CODEC.fieldOf("amount").forGetter(ValueModifier::amount),
+                Value.NUMBER_CODEC.fieldOf("amount").forGetter(ValueModifier::amount),
                 Operation.CODEC.fieldOf("operation").forGetter(ValueModifier::operation)
         ).apply(instance, ValueModifier::new));
     }

@@ -93,7 +93,7 @@ public class PreventCriticalHitAbility extends Ability {
             builder.setDescription("Prevents critical hits from being dealt. For this ability, the \"source\" is the attacking player & the \"target\" is the entity being hit.")
                     .add("apply_to", SettingType.enumList(ApplyTo.values()), "Whether to prevent critical hits when attacking (\"self\") or when being attacked (\"other\").")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when a critical hit is prevented.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to prevent critical hits.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent critical hits.")
                     .addExampleObject(new PreventCriticalHitAbility(ApplyTo.SELF, List.of(), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

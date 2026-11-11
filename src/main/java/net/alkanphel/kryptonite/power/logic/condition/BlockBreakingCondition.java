@@ -23,23 +23,22 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
 import java.util.List;
 import java.util.Optional;
 
-public record BlockBreakingCondition(List<BlockCondition> blockConditions, Optional<Value> usingCorrectTool) implements Condition {
+public record BlockBreakingCondition(List<BlockCondition> blockConditions, Optional<BooleanValueHolder> usingCorrectTool) implements Condition {
 
     public static final MapCodec<BlockBreakingCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockBreakingCondition::blockConditions),
-            Value.CODEC.optionalFieldOf("using_correct_tool").forGetter(BlockBreakingCondition::usingCorrectTool)
+            BooleanValueHolder.CODEC.optionalFieldOf("using_correct_tool").forGetter(BlockBreakingCondition::usingCorrectTool)
     ).apply(instance, BlockBreakingCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockBreakingCondition> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockBreakingCondition::blockConditions,
-            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC)), BlockBreakingCondition::usingCorrectTool,
+            ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(BooleanValueHolder.CODEC)), BlockBreakingCondition::usingCorrectTool,
             BlockBreakingCondition::new
     );
 
@@ -53,7 +52,7 @@ public record BlockBreakingCondition(List<BlockCondition> blockConditions, Optio
         if (usingCorrectTool.isPresent()) {
             boolean correctTool = player.hasCorrectToolForDrops(player.level().getBlockState(breakingPos), player.level(), breakingPos);
 
-            if (correctTool != usingCorrectTool.get().getAsBoolean(context)) return false;
+            if (correctTool != usingCorrectTool.get().get(context)) return false;
         }
 
         return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, player.level(), breakingPos);
@@ -84,10 +83,10 @@ public record BlockBreakingCondition(List<BlockCondition> blockConditions, Optio
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockBreakingCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block Breaking")
                     .setDescription("Checks if the player is currently breaking a block.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, these conditions must be fulfilled by the block that is breaking.")
-                    .addOptional("using_correct_tool", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If omitted, the tool is ignored. True requires using the correct tool to harvest, while false requires the incorrect one.", false)
-                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("gold_block"))))))), Optional.of(new StaticValue(false))))
-                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("diamond_block"))))))), Optional.of(new StaticValue(true))));
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block that is breaking must meet.")
+                    .addOptional("using_correct_tool", TYPE_BOOLEAN_VALUE, "If omitted, the tool is ignored. True requires using the correct tool to harvest, while false requires the incorrect one.", false)
+                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("gold_block"))))))), Optional.of(BooleanValueHolder.FALSE)))
+                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("diamond_block"))))))), Optional.of(BooleanValueHolder.TRUE)));
 
         }
     }

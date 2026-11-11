@@ -14,8 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
@@ -26,15 +25,15 @@ public class PreventDamageAbility extends Ability {
 
     public static final MapCodec<PreventDamageAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
-            Value.CODEC.optionalFieldOf("prevent_fire", new StaticValue(false)).forGetter(a -> a.preventFire),
-            Value.CODEC.optionalFieldOf("prevent_freeze", new StaticValue(false)).forGetter(a -> a.preventFreeze),
+            BooleanValueHolder.CODEC.optionalFieldOf("prevent_fire", BooleanValueHolder.FALSE).forGetter(a -> a.preventFire),
+            BooleanValueHolder.CODEC.optionalFieldOf("prevent_freeze", BooleanValueHolder.FALSE).forGetter(a -> a.preventFreeze),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventDamageAbility::new));
 
     public final List<DamageCondition> damageConditions;
-    public final Value preventFire, preventFreeze;
+    public final BooleanValueHolder preventFire, preventFreeze;
 
-    public PreventDamageAbility(List<DamageCondition> damageConditions, Value preventFire, Value preventFreeze, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public PreventDamageAbility(List<DamageCondition> damageConditions, BooleanValueHolder preventFire, BooleanValueHolder preventFreeze, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.damageConditions = damageConditions;
         this.preventFire = preventFire;
@@ -55,7 +54,7 @@ public class PreventDamageAbility extends Ability {
 
     public static boolean preventsFire(LivingEntity entity) {
         for (AbilityInstance<PreventDamageAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_DAMAGE.get())) {
-            if (instance.getAbility().preventFire.getAsBoolean(DataContext.forAbility(entity, instance))) {
+            if (instance.getAbility().preventFire.get(DataContext.forAbility(entity, instance))) {
                 return true;
             }
         }
@@ -65,7 +64,7 @@ public class PreventDamageAbility extends Ability {
 
     public static boolean preventsFreeze(LivingEntity entity) {
         for (AbilityInstance<PreventDamageAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_DAMAGE.get())) {
-            if (instance.getAbility().preventFreeze.getAsBoolean(DataContext.forAbility(entity, instance))) {
+            if (instance.getAbility().preventFreeze.get(DataContext.forAbility(entity, instance))) {
                 return true;
             }
         }
@@ -89,11 +88,11 @@ public class PreventDamageAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDamageAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Prevent Damage")
                     .setDescription("Makes the entity immune to certain damage types.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "The damage conditions that must be fulfilled for damage to be prevented.")
-                    .addOptional("prevent_fire", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to be set on fire.", false)
-                    .addOptional("prevent_freeze", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to freeze.", false)
-                    .addExampleObject(new PreventDamageAbility(List.of(), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION)))), new StaticValue(false), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for damage to be prevented.")
+                    .addOptional("prevent_fire", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to be set on fire.", false)
+                    .addOptional("prevent_freeze", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to freeze.", false)
+                    .addExampleObject(new PreventDamageAbility(List.of(), BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION)))), BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

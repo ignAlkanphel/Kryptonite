@@ -11,14 +11,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.condition.Condition;
+import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 
-import java.util.Optional;
-
-public record HolderConditionItemCondition(Optional<Condition> conditions) implements ItemCondition {
+public record HolderConditionItemCondition(Condition conditions) implements ItemCondition {
 
     public static final MapCodec<HolderConditionItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Condition.CODEC.optionalFieldOf("conditions").forGetter(HolderConditionItemCondition::conditions)
+            Condition.CODEC.optionalFieldOf("conditions", TrueCondition.INSTANCE).forGetter(HolderConditionItemCondition::conditions)
     ).apply(instance, HolderConditionItemCondition::new));
 
     @Override
@@ -28,7 +27,7 @@ public record HolderConditionItemCondition(Optional<Condition> conditions) imple
         Entity holder = ((EntityLinkedItemStack) (Object) context.stack()).kryptonite$getEntity();
         if (holder == null) return false;
 
-        return conditions.map(c -> c.test(DataContext.forEntity(holder))).orElse(true);
+        return conditions.test(DataContext.forEntity(holder));
     }
 
     @Override
@@ -46,8 +45,8 @@ public record HolderConditionItemCondition(Optional<Condition> conditions) imple
         @Override
         public void addDocumentation(CodecDocumentationBuilder<ItemCondition, HolderConditionItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Holder Condition")
-                    .setDescription("Checks whether the entity holding this item stack fulfills the specified conditions. Returns false if the item stack has no holder.")
-                    .addOptional("conditions", TYPE_CONDITION_LIST, "If specified, these condition must be fulfilled by the holding entity. If omitted, it returns true when a holder exists.");
+                    .setDescription("Checks whether the entity holding this item stack meets conditions. Returns false if the item stack has no holder.")
+                    .addOptional("conditions", TYPE_CONDITION_LIST, "Condition(s) the holding entity must meet. If empty, returns true when a holder exists.");
         }
     }
 

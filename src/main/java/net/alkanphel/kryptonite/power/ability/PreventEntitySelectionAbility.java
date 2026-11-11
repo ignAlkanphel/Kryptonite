@@ -55,7 +55,7 @@ public class PreventEntitySelectionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntitySelectionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents entities from being selected/targeted by the crosshair. For this ability, the \"source\" is the player that has the ability & the \"target\" is the selected entity.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to prevent entity selection.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent entity selection.")
                     .addExampleObject(new PreventEntitySelectionAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntitySelectionAbility(new UnderWaterCondition(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

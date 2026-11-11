@@ -14,7 +14,7 @@ import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import org.apache.commons.lang3.function.TriConsumer;
 import org.joml.Vector3f;
 
@@ -23,14 +23,14 @@ public class AddVelocityAction extends Action {
     public static final MapCodec<AddVelocityAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             KryptoniteCodecs.Vec3fValue.CODEC.optionalFieldOf("velocity", KryptoniteCodecs.Vec3fValue.ZERO).forGetter(a -> a.velocity),
             Space.CODEC.optionalFieldOf("space", Space.WORLD).forGetter(a -> a.space),
-            Value.CODEC.optionalFieldOf("set", new StaticValue(false)).forGetter(a -> a.set)
+            BooleanValueHolder.CODEC.optionalFieldOf("set", BooleanValueHolder.FALSE).forGetter(a -> a.set)
     ).apply(instance, AddVelocityAction::new));
 
     private final KryptoniteCodecs.Vec3fValue velocity;
     private final Space space;
-    private final Value set;
+    private final BooleanValueHolder set;
 
-    public AddVelocityAction(KryptoniteCodecs.Vec3fValue velocity, Space space, Value set) {
+    public AddVelocityAction(KryptoniteCodecs.Vec3fValue velocity, Space space, BooleanValueHolder set) {
         this.velocity = velocity;
         this.space = space;
         this.set = set;
@@ -42,7 +42,7 @@ public class AddVelocityAction extends Action {
         if (entity == null) return false;
 
         Vector3f velocityCopy = this.velocity.get(context);
-        TriConsumer<Float, Float, Float> method = set.getAsBoolean(context)
+        TriConsumer<Float, Float, Float> method = set.get(context)
                 ? entity::setDeltaMovement
                 : entity::push;
 
@@ -71,8 +71,8 @@ public class AddVelocityAction extends Action {
                     .setDescription("Adds or sets velocity to the entity.")
                     .addOptional("velocity", KryptoniteDocumented.TYPE_VECTOR3f_VALUE, "The amount of velocity to apply to the xyz axis.", Vec3.ZERO)
                     .addOptional("space", KryptoniteDocumented.TYPE_SPACE, "How the direction of the velocity to add/set will be calculated.", Space.WORLD)
-                    .addOptional("set", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
-                    .addExampleObject(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Space.LOCAL, new StaticValue(false)));
+                    .addOptional("set", TYPE_BOOLEAN_VALUE, "If true, replaces velocity instead of adding to it.", false)
+                    .addExampleObject(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0.9F), new StaticValue(0F)), Space.LOCAL, BooleanValueHolder.FALSE));
         }
     }
 

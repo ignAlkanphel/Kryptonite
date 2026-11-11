@@ -47,7 +47,7 @@ public class GameEventListenerAbility extends Ability {
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
             Codec.STRING.xmap(value -> GameEventListener.DeliveryMode.valueOf(value.toUpperCase(Locale.ROOT)), value -> value.name().toLowerCase(Locale.ROOT)).optionalFieldOf("delivery_mode", GameEventListener.DeliveryMode.BY_DISTANCE).forGetter(a -> a.deliveryMode),
-            Value.CODEC.optionalFieldOf("range", new StaticValue(16)).forGetter(a -> a.range),
+            Value.NUMBER_CODEC.optionalFieldOf("range", new StaticValue(16)).forGetter(a -> a.range),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, GameEventListenerAbility::new));
 
@@ -122,11 +122,11 @@ public class GameEventListenerAbility extends Ability {
             builder.setName("Game Event Listener")
                     .setDescription("Performs actions when entities emit game events. For this ability, the \"source\" is the entity that emitted the game event & the \"target\" is the entity listening for it.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet to perform the actions.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Action(s) performed on the block being stood on by the entity detecting the game events.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Condition(s) that the block being stood on must meet to perform the block actions.")
-                    .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "If specified, the actions will only perform when these game events are triggered.")
-                    .addOptional("delivery_mode", SettingType.enumList(GameEventListener.DeliveryMode.values()), "Whether game events trigger the actions to perform regardless of distance or only when they occur within the specified range.", GameEventListener.DeliveryMode.BY_DISTANCE)
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block being stood on by the entity detecting the game events.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block being stood on must meet for the block actions to perform.")
+                    .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events that must emit for the actions to perform.")
+                    .addOptional("delivery_mode", SettingType.enumList(GameEventListener.DeliveryMode.values()), "Whether game events cause the actions to perform regardless of distance or only when they occur within the specified range.", GameEventListener.DeliveryMode.BY_DISTANCE)
                     .addOptional("range", TYPE_INT_VALUE, "Range game events will be detected within.", 16)
                     .addExampleObject(new GameEventListenerAbility(List.of(new RunCommandAction(new ParsedCommands("say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"))), new AsSourceCondition(Collections.singletonList(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("villager")))))))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sand"))))))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND, GameEvent.STEP)), GameEventListener.DeliveryMode.BY_DISTANCE, new StaticValue(5), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

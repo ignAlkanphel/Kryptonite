@@ -40,7 +40,7 @@ public record EntityAttackedLastCondition() implements Condition {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Condition, EntityAttackedLastCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Entity Attacked Last")
-                    .setDescription("Checks if the source entity is the target entity's last attacker.")
+                    .setDescription("Checks if the source entity is the target entity's last recorded attacker.")
                     .addExampleObject(new EntityAttackedLastCondition());
         }
     }

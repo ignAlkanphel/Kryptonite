@@ -19,9 +19,9 @@ public class OffsetBlockAction extends BlockAction {
 
     public static final MapCodec<OffsetBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockAction.LIST_CODEC.fieldOf("block_actions").forGetter(a -> a.blockActions),
-            Value.CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(a -> a.x),
-            Value.CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(a -> a.y),
-            Value.CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(a -> a.z)
+            Value.NUMBER_CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(a -> a.x),
+            Value.NUMBER_CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(a -> a.y),
+            Value.NUMBER_CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(a -> a.z)
     ).apply(instance, OffsetBlockAction::new));
 
     private final List<BlockAction> blockActions;
@@ -56,8 +56,8 @@ public class OffsetBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, OffsetBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Offset")
-                    .setDescription("Runs block actions with an offset position relative to the original block.")
-                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run at the offset position.")
+                    .setDescription("Performs block actions with an offset position relative to the original block.")
+                    .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the offset position.")
                     .addOptional("x", TYPE_VALUE, "How much to offset the position on the x-axis.", 0)
                     .addOptional("y", TYPE_VALUE, "How much to offset the position on the y-axis.", 0)
                     .addOptional("z", TYPE_VALUE, "How much to offset the position on the z-axis.", 0)

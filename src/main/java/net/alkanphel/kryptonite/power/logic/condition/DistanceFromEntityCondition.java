@@ -16,7 +16,7 @@ public record DistanceFromEntityCondition(NumberComparator comparator, Value com
 
     public static final MapCodec<DistanceFromEntityCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(DistanceFromEntityCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(DistanceFromEntityCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(DistanceFromEntityCondition::compareTo)
     ).apply(instance, DistanceFromEntityCondition::new));
 
     @Override

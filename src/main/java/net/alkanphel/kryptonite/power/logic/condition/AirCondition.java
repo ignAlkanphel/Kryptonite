@@ -19,7 +19,7 @@ public record AirCondition(NumberComparator comparator, Value compareTo) impleme
 
     public static final MapCodec<AirCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(AirCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(AirCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(AirCondition::compareTo)
     ).apply(instance, AirCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AirCondition> STREAM_CODEC = StreamCodec.composite(

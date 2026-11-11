@@ -27,7 +27,7 @@ public record LightLevelBlockCondition(Optional<LightType> lightType, NumberComp
     public static final MapCodec<LightLevelBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             LightType.CODEC.optionalFieldOf("light_type").forGetter(LightLevelBlockCondition::lightType),
             NumberComparator.CODEC.fieldOf("comparator").forGetter(LightLevelBlockCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(LightLevelBlockCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(LightLevelBlockCondition::compareTo)
     ).apply(instance, LightLevelBlockCondition::new));
 
     @Override
@@ -61,7 +61,7 @@ public record LightLevelBlockCondition(Optional<LightType> lightType, NumberComp
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, LightLevelBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Light Level")
                     .setDescription("Checks and compares the light level at the block's position.")
-                    .addOptional("light_type", SettingType.enumList(LightType.values()), "If specified, checks and compares a specific type of light.")
+                    .addOptional("light_type", SettingType.enumList(LightType.values()), "Checks and compares a specific type of light.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
                     .add("compare_to", TYPE_INT_VALUE, "Value that is being compared against")
                     .addExampleObject(new LightLevelBlockCondition(Optional.of(LightType.BLOCK), NumberComparator.GREATER_THAN, new StaticValue(10)));

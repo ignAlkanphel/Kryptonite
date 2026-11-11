@@ -3,7 +3,6 @@ package net.alkanphel.kryptonite.power.logic.action;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -19,20 +18,19 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
 public class PocketAnvilAction extends Action {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.repair");
 
     public static final MapCodec<PocketAnvilAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("increment_stat", new StaticValue(true)).forGetter(a -> a.incrementStat)
+            BooleanValueHolder.CODEC.optionalFieldOf("increment_stat", BooleanValueHolder.TRUE).forGetter(a -> a.incrementStat)
     ).apply(instance, PocketAnvilAction::new));
 
-    public final Value incrementStat;
+    public final BooleanValueHolder incrementStat;
 
-    public PocketAnvilAction(Value incrementStat) {
+    public PocketAnvilAction(BooleanValueHolder incrementStat) {
         this.incrementStat = incrementStat;
     }
 
@@ -48,7 +46,7 @@ public class PocketAnvilAction extends Action {
         var blockPos = player.blockPosition();
         player.openMenu(menuProvider(level, blockPos));
 
-        if (incrementStat.getAsBoolean(context)) {
+        if (incrementStat.get(context)) {
             player.awardStat(Stats.INTERACT_WITH_ANVIL, 1);
         }
 
@@ -75,8 +73,8 @@ public class PocketAnvilAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, PocketAnvilAction> builder, HolderLookup.Provider provider) {
             builder.setName("Pocket Anvil")
                     .setDescription("Allows the player to open an instance of the Anvil GUI at their location.")
-                    .addOptional("increment_stat", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, the \"Interactions with Anvil\" stat will be incremented.", true)
-                    .addExampleObject(new PocketAnvilAction(new StaticValue(true)));
+                    .addOptional("increment_stat", TYPE_BOOLEAN_VALUE, "If true, the \"Interactions with Anvil\" stat will be incremented.", true)
+                    .addExampleObject(new PocketAnvilAction(BooleanValueHolder.TRUE));
         }
     }
 

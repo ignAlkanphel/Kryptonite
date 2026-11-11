@@ -19,12 +19,12 @@ public record HeightBlockCondition(NumberComparator comparator, Value compareTo)
 
     public static final MapCodec<HeightBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(HeightBlockCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(HeightBlockCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(HeightBlockCondition::compareTo)
     ).apply(instance, HeightBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HeightBlockCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, HeightBlockCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), HeightBlockCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), HeightBlockCondition::compareTo,
             HeightBlockCondition::new
     );
 

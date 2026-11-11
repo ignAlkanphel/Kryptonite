@@ -114,11 +114,11 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Use")
-                    .setDescription("Runs actions when the player uses an item (e.g. drawing a bow or eating food).")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "If specified, these actions will be run on the player after they use an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "If specified, these actions will be run on the remaining item.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only run if these conditions are fulfilled by the item before use.")
-                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions run.", TriggerType.FINISH)
+                    .setDescription("Performs actions when the player uses an item (e.g. drawing a bow or eating).")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player after using an item.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the remaining item.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the remaining item must meet for the actions to perform.")
+                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions perform.", TriggerType.FINISH)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

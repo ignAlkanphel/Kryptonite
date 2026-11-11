@@ -93,10 +93,10 @@ public class ProjectileImpactAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ProjectileImpactAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Projectile Impact")
                     .setDescription("Performs actions when a projectile impacts the entity. For this ability, the \"source\" is the entity being hit & the \"target\" is the projectile or its shooter.")
-                    .addOptional("shooter_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile's shooter. Use 'palladium:as_source' to run actions on the entity being hit instead.")
-                    .addOptional("shooter_conditions", TYPE_CONDITION_LIST, "Condition(s) that the projectile's shooter must meet for the ability to be triggered.")
-                    .addOptional("projectile_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile. Use 'palladium:as_source' to run actions on the entity being hit instead.")
-                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "Condition(s) that the projectile must meet for the ability to be triggered.")
+                    .addOptional("shooter_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile's shooter. Use 'palladium:as_source' to perform actions on the entity being hit instead.")
+                    .addOptional("shooter_conditions", TYPE_CONDITION_LIST, "Condition(s) the projectile's shooter must meet for the ability to run.")
+                    .addOptional("projectile_actions", TYPE_ACTION_LIST, "Action(s) that are performed on the projectile. Use 'palladium:as_source' to perform actions on the entity being hit instead.")
+                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "Condition(s) the projectile must meet for the ability to run.")
                     .addOptional("impact_result", SettingType.enumList(ImpactResult.values()), "How the projectile is processed upon impact. \"default\" is vanilla, \"ignore\" will make the projectile phase through you, & \"discard\" will destroy the projectile upon hitting you.", ImpactResult.DEFAULT)
                     .addExampleObject(new ProjectileImpactAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Shooter actions!")))), TrueCondition.INSTANCE, List.of(new RunCommandAction(new ParsedCommands(List.of("say Projectile actions!")))), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))), ImpactResult.IGNORE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

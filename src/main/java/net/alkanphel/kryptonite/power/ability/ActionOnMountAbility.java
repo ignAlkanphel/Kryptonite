@@ -84,7 +84,7 @@ public class ActionOnMountAbility extends Ability {
                     .setDescription("Performs actions when the entity that has this ability mounts or dismounts a vehicle. For this ability, the \"source\" is the entity mounting or dismounting & the \"target\" is the vehicle.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity mounting or dismounting.")
                     .addOptional("vehicle_actions", TYPE_ACTION_LIST, "Action(s) performed on the vehicle.")
-                    .addOptional("vehicle_conditions", TYPE_CONDITION_LIST, "Condition(s) that the vehicle must meet for the actions to perform.")
+                    .addOptional("vehicle_conditions", TYPE_CONDITION_LIST, "Condition(s) the vehicle must meet for the actions to perform.")
                     .addOptional("switch_to_dismount", TYPE_BOOLEAN, "If true, this ability will switch to dismount instead.", false)
                     .addExampleObject(new ActionOnMountAbility(List.of(new RunCommandAction(new ParsedCommands("say I mounted a vehicle!"))), List.of(), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("oak_boat")))))), false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnMountAbility(List.of(new RunCommandAction(new ParsedCommands("say I dismounted a vehicle!"))), List.of(), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("oak_boat")))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

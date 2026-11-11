@@ -84,13 +84,13 @@ public class ModifyDamageDealtAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageDealtAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Modify Damage Dealt")
                     .setDescription("Modifies the amount of damage the entity that has this ability deals. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that was hit.")
-                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "If specified, these modifiers will be applied to the damage dealt by the \"source\" entity.")
+                    .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the damage dealt by the \"source\" entity.")
                     .addOptional("self_actions", TYPE_ACTION_LIST, "Action(s) performed on the source.")
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target, with the source available in the context.")
-                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for the modifiers and actions to apply.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the modifiers and actions to apply.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) evaluated with the source and target available in the context.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the dealt damage must meet for the modifiers and actions to apply.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the dealt damage must meet for the modifiers and actions to apply.")
                     .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(4.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Optional.empty(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

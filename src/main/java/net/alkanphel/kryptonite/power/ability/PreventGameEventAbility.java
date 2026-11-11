@@ -60,8 +60,8 @@ public class PreventGameEventAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventGameEventAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents the entity from emitting game events.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity when the game events are prevented.")
+            builder.setDescription("Prevents the entity that has this ability from emitting game events.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) to perform when the game events are prevented.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events to prevent.")
                     .addExampleObject(new PreventGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say A game event was prevented!")))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventGameEventAbility(List.of(), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.TELEPORT, GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

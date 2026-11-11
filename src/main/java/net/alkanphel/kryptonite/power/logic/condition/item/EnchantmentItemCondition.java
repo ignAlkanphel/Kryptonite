@@ -30,13 +30,13 @@ public record EnchantmentItemCondition(Optional<Holder<Enchantment>> enchantment
     public static final MapCodec<EnchantmentItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Enchantment.CODEC.optionalFieldOf("enchantment").forGetter(EnchantmentItemCondition::enchantment),
             NumberComparator.CODEC.fieldOf("comparator").forGetter(EnchantmentItemCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(EnchantmentItemCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(EnchantmentItemCondition::compareTo)
     ).apply(instance, EnchantmentItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EnchantmentItemCondition> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(Enchantment.STREAM_CODEC), EnchantmentItemCondition::enchantment,
             NumberComparator.STREAM_CODEC, EnchantmentItemCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), EnchantmentItemCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), EnchantmentItemCondition::compareTo,
             EnchantmentItemCondition::new
     );
 

@@ -629,7 +629,6 @@ public class KryptoniteAbilityEventHandler {
     @SubscribeEvent // Prevent Mob Aggro ability
     public static void onLivingChangeTarget(LivingChangeTargetEvent e) {
         LivingEntity target = e.getNewAboutToBeSetTarget();
-
         if (target == null || !(e.getEntity() instanceof Mob source)) return;
 
         if (PreventMobAggroAbility.shouldIgnore(source, target)) {

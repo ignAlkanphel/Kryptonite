@@ -3,13 +3,12 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.logic.value.StaticValue;
-import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
+import net.threetag.palladium.logic.value.holder.FloatValueHolder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
@@ -18,19 +17,19 @@ import java.util.List;
 public class StepDownAbility extends Ability {
 
     public static final MapCodec<StepDownAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.fieldOf("fall_speed").forGetter(a -> a.fallSpeed),
-            Value.CODEC.fieldOf("fall_distance").forGetter(a -> a.fallDistance),
-            Value.CODEC.optionalFieldOf("safety_checks", new StaticValue(true)).forGetter(a -> a.safetyChecks),
-            Value.CODEC.optionalFieldOf("allow_vehicles", new StaticValue(false)).forGetter(a -> a.allowVehicles),
+            FloatValueHolder.CODEC.fieldOf("fall_speed").forGetter(ab -> ab.fallSpeed),
+            FloatValueHolder.CODEC.fieldOf("fall_distance").forGetter(ab -> ab.fallDistance),
+            BooleanValueHolder.CODEC.optionalFieldOf("safety_checks", BooleanValueHolder.TRUE).forGetter(a -> a.safetyChecks),
+            BooleanValueHolder.CODEC.optionalFieldOf("allow_vehicles", BooleanValueHolder.FALSE).forGetter(a -> a.allowVehicles),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, StepDownAbility::new));
 
-    public final Value fallSpeed;
-    public final Value fallDistance;
-    public final Value safetyChecks;
-    public final Value allowVehicles;
+    public final FloatValueHolder fallSpeed;
+    public final FloatValueHolder fallDistance;
+    public final BooleanValueHolder safetyChecks;
+    public final BooleanValueHolder allowVehicles;
 
-    public StepDownAbility(Value fallSpeed, Value fallDistance, Value safetyChecks, Value allowVehicles, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public StepDownAbility(FloatValueHolder fallSpeed, FloatValueHolder fallDistance, BooleanValueHolder safetyChecks, BooleanValueHolder allowVehicles, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.fallSpeed = fallSpeed;
         this.fallDistance = fallDistance;
@@ -49,11 +48,11 @@ public class StepDownAbility extends Ability {
             DataContext context = DataContext.forAbility(entity, abilityInstance);
 
             LivingEntity target = entity;
-            if (this.allowVehicles.getAsBoolean(context) && entity.getVehicle() instanceof LivingEntity livingVehicle) {
+            if (this.allowVehicles.get(context) && entity.getVehicle() instanceof LivingEntity livingVehicle) {
                 target = livingVehicle;
             }
 
-            if (this.safetyChecks.getAsBoolean(context)) {
+            if (this.safetyChecks.get(context)) {
                 if (!target.onGround() || target.isSwimming() || target.isSpectator() || target.isFallFlying()) {
                     return false;
                 }
@@ -61,12 +60,12 @@ public class StepDownAbility extends Ability {
 
             if (target.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4) return false;
 
-            float fallDistance = this.fallDistance.getAsFloat(context);
+            float fallDistance = this.fallDistance.get(DataContext.forAbility(entity, abilityInstance));
 
             boolean groundBelow = !target.level().noCollision(target.getBoundingBox().move(0.0, -(fallDistance + 0.01F), 0.0));
             boolean groundImmediatelyBelow = !target.level().noCollision(target.getBoundingBox().move(0.0, -0.01F, 0.0));
 
-            float fallSpeed = this.fallSpeed.getAsFloat(context);
+            float fallSpeed = this.fallSpeed.get(DataContext.forAbility(entity, abilityInstance));
 
             if (groundBelow && !groundImmediatelyBelow) {
                 target.setDeltaMovement(target.getDeltaMovement().x, -fallSpeed, target.getDeltaMovement().z);
@@ -90,9 +89,9 @@ public class StepDownAbility extends Ability {
             builder.setDescription("Allows for stepping down blocks fast.")
                     .add("fall_speed", TYPE_FLOAT_VALUE, "Speed at which you fall off the block.")
                     .add("fall_distance", TYPE_FLOAT_VALUE, "Fall distance it will enable at.")
-                    .addOptional("safety_checks", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If false, checks for if the ability SHOULD be enabled such as the entity being in spectator, fall flying, swimming, or on the ground will be disabled.", true)
-                    .addOptional("allow_vehicles", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, it will work for living vehicles.", false)
-                    .addExampleObject(new StepDownAbility(new StaticValue(1), new StaticValue(1), new StaticValue(true), new StaticValue(false), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("safety_checks", TYPE_BOOLEAN_VALUE, "If false, checks for if the ability SHOULD be enabled such as the entity being in spectator, fall flying, swimming, or on the ground will be disabled.", true)
+                    .addOptional("allow_vehicles", TYPE_BOOLEAN_VALUE, "If true, it will work for living vehicles.", false)
+                    .addExampleObject(new StepDownAbility(FloatValueHolder.ONE, FloatValueHolder.ONE, BooleanValueHolder.TRUE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

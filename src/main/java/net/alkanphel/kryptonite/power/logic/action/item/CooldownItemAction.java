@@ -18,7 +18,7 @@ import net.threetag.palladium.logic.value.Value;
 public class CooldownItemAction extends ItemAction {
 
     public static final MapCodec<CooldownItemAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("ticks", new StaticValue(20)).forGetter(a -> a.ticks)
+            Value.NUMBER_CODEC.optionalFieldOf("ticks", new StaticValue(20)).forGetter(a -> a.ticks)
     ).apply(instance, CooldownItemAction::new));
 
     private final Value ticks;

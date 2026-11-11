@@ -73,10 +73,10 @@ public class ActionOnFarmlandTrampleAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnFarmlandTrampleAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Farmland Trample")
-                    .setDescription("Runs actions when the entity tramples a farmland block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the entity that trampled the farmland.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "The block actions to run on the trampled farmland block.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "If specified, only runs the actions if the farmland block fulfills these conditions.")
+                    .setDescription("Performs actions when trampling a farmland block.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when trampling the farmland block.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the trampled farmland block.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the farmland block must meet for the actions to perform.")
                     .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample! Aw, man!"))), List.of(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SpawnEntityBlockAction.Serializer.addExampleNbt())), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

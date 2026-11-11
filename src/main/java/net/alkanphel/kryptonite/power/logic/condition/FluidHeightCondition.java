@@ -21,7 +21,7 @@ public record FluidHeightCondition(TagKey<Fluid> fluidTag, NumberComparator comp
     public static final MapCodec<FluidHeightCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TagKey.hashedCodec(Registries.FLUID).fieldOf("fluid_tag").forGetter(FluidHeightCondition::fluidTag),
             NumberComparator.CODEC.fieldOf("comparator").forGetter(FluidHeightCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(FluidHeightCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(FluidHeightCondition::compareTo)
     ).apply(instance, FluidHeightCondition::new));
 
     @Override

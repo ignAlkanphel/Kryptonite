@@ -73,10 +73,10 @@ public class ActionOnItemDropAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemDropAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Drop")
-                    .setDescription("Runs actions when the player throws/drops an item.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions to run on the player when they drop an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "The item actions to run on the dropped item.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, only enables if the dropped item fulfills these item conditions.")
+                    .setDescription("Performs actions when the player drops an item.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when they drop an item.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the dropped item.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the dropped item must meet for the actions to perform.")
                     .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped a diamond!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

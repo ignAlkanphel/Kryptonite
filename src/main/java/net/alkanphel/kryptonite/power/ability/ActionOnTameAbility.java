@@ -66,8 +66,8 @@ public class ActionOnTameAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTameAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Tame")
                     .setDescription("Performs actions when a player tames an animal. For this ability, the \"source\" is the player taming the animal & the \"target\" is the animal being tamed.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed. Use 'palladium:as_source' to run actions on the player instead.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the animal must meet to trigger the actions.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the animal must meet for the actions to perform.")
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!")), new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say You tamed them"))))), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("wolf")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

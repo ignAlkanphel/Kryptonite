@@ -70,10 +70,10 @@ public class ActionOnItemFishedAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemFishedAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Item Fished")
-                    .setDescription("Runs actions when the player reels in an item with a fishing rod.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "The actions that will be run on the player after they reeled an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "The item actions that will be run on the reeled item.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "If specified, the actions will only run if these item conditions are fulfilled by the reeled item.")
+                    .setDescription("Performs actions when the player reels in an item while fishing.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player after reeling in an item.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the reeled item.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the reeled item must meet for the actions to perform.")
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

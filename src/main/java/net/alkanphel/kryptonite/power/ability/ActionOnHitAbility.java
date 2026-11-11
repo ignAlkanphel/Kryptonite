@@ -22,6 +22,7 @@ import net.threetag.palladium.logic.condition.NumberRange;
 import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
@@ -79,12 +80,12 @@ public class ActionOnHitAbility extends Ability {
             builder.setName("Action On Hit")
                     .setDescription("Performs actions when the entity that has this ability hits another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being hit.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) that the target must meet for the actions to perform.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) that the hit must meet for the actions to perform.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the hit must meet for the actions to perform.")
                     .addExampleObject(new ActionOnHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit something!"))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0F), new StaticValue(0.5F)), Space.LOCAL_HORIZONTAL_NORMALIZED, new StaticValue(true))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(-0.1F), new StaticValue(-0.5F)), Space.LOCAL, new StaticValue(true))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(0F), new StaticValue(0.5F)), Space.LOCAL_HORIZONTAL_NORMALIZED, BooleanValueHolder.TRUE)))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new AddVelocityAction(new KryptoniteCodecs.Vec3fValue(new StaticValue(0F), new StaticValue(-0.1F), new StaticValue(-0.5F)), Space.LOCAL, BooleanValueHolder.TRUE)))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new RunCommandAction(new ParsedCommands("execute as @s at @s run summon minecraft:zombie"))), new HealthCondition(new NumberRange(0F, 0F)), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

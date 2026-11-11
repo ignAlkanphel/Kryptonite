@@ -19,12 +19,12 @@ public record DestroySpeedBlockCondition(NumberComparator comparator, Value comp
 
     public static final MapCodec<DestroySpeedBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.fieldOf("comparator").forGetter(DestroySpeedBlockCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(DestroySpeedBlockCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(DestroySpeedBlockCondition::compareTo)
     ).apply(instance, DestroySpeedBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, DestroySpeedBlockCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, DestroySpeedBlockCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), DestroySpeedBlockCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), DestroySpeedBlockCondition::compareTo,
             DestroySpeedBlockCondition::new
     );
 

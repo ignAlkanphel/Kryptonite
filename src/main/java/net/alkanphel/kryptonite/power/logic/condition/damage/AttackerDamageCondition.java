@@ -44,7 +44,7 @@ public record AttackerDamageCondition(Optional<Condition> condition) implements 
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, AttackerDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Attacker")
                     .setDescription("Checks whether the damage source is from an entity.")
-                    .addOptional("conditions", TYPE_CONDITION_LIST, "If specified, the attacker entity must fulfill these conditions.")
+                    .addOptional("conditions", TYPE_CONDITION_LIST, "Condition(s) the attacker entity must meet.")
                     .addExampleObject(new AttackerDamageCondition(Optional.empty()));
         }
     }

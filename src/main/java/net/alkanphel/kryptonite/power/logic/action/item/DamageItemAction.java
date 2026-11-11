@@ -2,7 +2,6 @@ package net.alkanphel.kryptonite.power.logic.action.item;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
@@ -13,18 +12,19 @@ import net.minecraft.world.item.ItemStack;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
+import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
 public class DamageItemAction extends ItemAction {
 
     public static final MapCodec<DamageItemAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.optionalFieldOf("amount", new StaticValue(1)).forGetter(a -> a.amount),
-            Value.CODEC.optionalFieldOf("ignore_unbreaking", new StaticValue(false)).forGetter(a -> a.ignoreUnbreaking)
+            Value.NUMBER_CODEC.optionalFieldOf("amount", new StaticValue(1)).forGetter(a -> a.amount),
+            BooleanValueHolder.CODEC.optionalFieldOf("ignore_unbreaking", BooleanValueHolder.FALSE).forGetter(a -> a.ignoreUnbreaking)
     ).apply(instance, DamageItemAction::new));
 
     private final Value amount;
-    private final Value ignoreUnbreaking;
+    private final BooleanValueHolder ignoreUnbreaking;
 
-    public DamageItemAction(Value amount, Value ignoreUnbreaking) {
+    public DamageItemAction(Value amount, BooleanValueHolder ignoreUnbreaking) {
         this.amount = amount;
         this.ignoreUnbreaking = ignoreUnbreaking;
     }
@@ -38,7 +38,7 @@ public class DamageItemAction extends ItemAction {
         if (stack.isEmpty()) return false;
 
         int amount = Math.max(0, this.amount.getAsInt(null));
-        boolean ignoreUnbreaking = this.ignoreUnbreaking.getAsBoolean(null);
+        boolean ignoreUnbreaking = this.ignoreUnbreaking.get(null);
 
         if (ignoreUnbreaking) {
             if (amount >= stack.getMaxDamage()) {
@@ -74,8 +74,8 @@ public class DamageItemAction extends ItemAction {
             builder.setName("Damage")
                     .setDescription("Damages the item stack.")
                     .addOptional("amount", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Amount of damage to apply to the item stack.", 1)
-                    .addOptional("ignore_unbreaking", KryptoniteDocumented.TYPE_BOOLEAN_VALUE, "If true, it will ignore the \"minecraft:unbreaking\" enchantment.", false)
-                    .addExampleObject(new DamageItemAction(new StaticValue(7), new StaticValue(true)));
+                    .addOptional("ignore_unbreaking", TYPE_BOOLEAN_VALUE, "If true, it will ignore the \"minecraft:unbreaking\" enchantment.", false)
+                    .addExampleObject(new DamageItemAction(new StaticValue(7), BooleanValueHolder.TRUE));
         }
     }
 

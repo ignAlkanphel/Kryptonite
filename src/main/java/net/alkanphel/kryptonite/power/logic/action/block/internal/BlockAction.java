@@ -56,17 +56,6 @@ public abstract class BlockAction {
         return result;
     }
 
-    // original
-    public static boolean runList(List<BlockAction> actions, BlockActionContext context) {
-        boolean result = false;
-
-        for (BlockAction action : actions) {
-            result |= action.run(context);
-        }
-
-        return result;
-    }
-
     public abstract BlockActionSerializer<?> getSerializer();
 
 }

@@ -14,15 +14,15 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
-public record HasUUIDCondition(Value uuid) implements Condition {
+public record UUIDCondition(Value uuid) implements Condition {
 
-    public static final MapCodec<HasUUIDCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Value.CODEC.fieldOf("uuid").forGetter(HasUUIDCondition::uuid)
-    ).apply(instance, HasUUIDCondition::new));
+    public static final MapCodec<UUIDCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Value.CODEC.fieldOf("uuid").forGetter(UUIDCondition::uuid)
+    ).apply(instance, UUIDCondition::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, HasUUIDCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), HasUUIDCondition::uuid,
-            HasUUIDCondition::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, UUIDCondition> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), UUIDCondition::uuid,
+            UUIDCondition::new
     );
 
     @Override
@@ -34,23 +34,23 @@ public record HasUUIDCondition(Value uuid) implements Condition {
     }
 
     @Override
-    public ConditionSerializer<HasUUIDCondition> getSerializer() {
-        return KryptoniteConditionSerializers.HAS_UUID.get();
+    public ConditionSerializer<UUIDCondition> getSerializer() {
+        return KryptoniteConditionSerializers.UUID.get();
     }
 
-    public static class Serializer extends ConditionSerializer<HasUUIDCondition> {
+    public static class Serializer extends ConditionSerializer<UUIDCondition> {
 
         @Override
-        public MapCodec<HasUUIDCondition> codec() {
+        public MapCodec<UUIDCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, HasUUIDCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Has UUID")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, UUIDCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("UUID")
                     .setDescription("Checks if the entity has the specified UUID.")
                     .add("uuid", TYPE_STRING_VALUE, "The uuid to check as a string value.")
-                    .addExampleObject(new HasUUIDCondition(new StaticValue("8667ba71-b85a-4004-af54-457a9734eed7")));
+                    .addExampleObject(new UUIDCondition(new StaticValue("8667ba71-b85a-4004-af54-457a9734eed7")));
         }
     }
 

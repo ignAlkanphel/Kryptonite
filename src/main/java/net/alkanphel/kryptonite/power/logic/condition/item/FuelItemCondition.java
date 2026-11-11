@@ -22,12 +22,12 @@ public record FuelItemCondition(NumberComparator comparator, Value compareTo) im
 
     public static final MapCodec<FuelItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(FuelItemCondition::comparator),
-            Value.CODEC.fieldOf("compare_to").forGetter(FuelItemCondition::compareTo)
+            Value.NUMBER_CODEC.fieldOf("compare_to").forGetter(FuelItemCondition::compareTo)
     ).apply(instance, FuelItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FuelItemCondition> STREAM_CODEC = StreamCodec.composite(
             NumberComparator.STREAM_CODEC, FuelItemCondition::comparator,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), FuelItemCondition::compareTo,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), FuelItemCondition::compareTo,
             FuelItemCondition::new
     );
 

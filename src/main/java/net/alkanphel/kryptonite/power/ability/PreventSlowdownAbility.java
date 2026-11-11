@@ -54,7 +54,7 @@ public class PreventSlowdownAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventSlowdownAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Prevents the player that has this ability from moving slower because of various things.")
+            builder.setDescription("Prevents slower movement because of various things.")
                     .addOptional("modes", SettingType.enumList(Mode.values()), "What is prevented from slowing you down.")
                     .addOptional("blocks", SettingType.enumList(ModeBlocks.values()), "The blocks to prevent from slowing you down if \"mode\" contains \"block\".")
                     .addExampleObject(new PreventSlowdownAbility(List.of(Mode.ITEM), List.of(ModeBlocks.COBWEB), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

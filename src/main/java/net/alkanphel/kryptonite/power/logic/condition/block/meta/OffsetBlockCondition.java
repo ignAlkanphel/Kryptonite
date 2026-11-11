@@ -21,16 +21,16 @@ public record OffsetBlockCondition(BlockCondition blockConditions, Value x, Valu
 
     public static final MapCodec<OffsetBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.CODEC.fieldOf("block_conditions").forGetter(OffsetBlockCondition::blockConditions),
-            Value.CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetBlockCondition::x),
-            Value.CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetBlockCondition::y),
-            Value.CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetBlockCondition::z)
+            Value.NUMBER_CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetBlockCondition::x),
+            Value.NUMBER_CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetBlockCondition::y),
+            Value.NUMBER_CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetBlockCondition::z)
     ).apply(instance, OffsetBlockCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, OffsetBlockCondition> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.CODEC), OffsetBlockCondition::blockConditions,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::x,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::y,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.CODEC), OffsetBlockCondition::z,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), OffsetBlockCondition::x,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), OffsetBlockCondition::y,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), OffsetBlockCondition::z,
             OffsetBlockCondition::new
     );
 
