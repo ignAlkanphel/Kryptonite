@@ -20,7 +20,7 @@
     "common.LivingEntityMixin",
     "common.MobMixin",
     "common.PlayerMixin",
-    "common.PowerInstanceMixin",
+    "common.PowerDampeningSourceMixin",
     "common.ServerPlayerGameModeAccessor",
     "common.ServerPlayerGameModeMixin",
     "common.ServerPlayerMixin",

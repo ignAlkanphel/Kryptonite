@@ -1,4 +1,4 @@
-package net.alkanphel.kryptonite.power.logic.condition.block.meta;
+package net.alkanphel.kryptonite.power.logic.condition.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -29,11 +29,11 @@ public class EntitySuperpowerHandlerMixin {
             return;
         }
 
-        if (power.getParentId() == null) {
+        if (power.getDependsOn() == null) {
 
             long count = superpowers
                     .stream()
-                    .filter(holder -> holder.value().getParentId() == null)
+                    .filter(holder -> holder.value().getDependsOn() == null)
                     .filter(holder -> !holder.is(KryptoniteTags.Powers.IGNORES_MAX_SUPERPOWER_SETS))
                     .count();
 
