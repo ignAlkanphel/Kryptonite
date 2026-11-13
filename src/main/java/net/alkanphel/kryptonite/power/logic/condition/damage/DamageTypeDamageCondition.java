@@ -16,7 +16,7 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 public record DamageTypeDamageCondition(PalladiumHolderSet<DamageType> damageType) implements DamageCondition {
 
     public static final MapCodec<DamageTypeDamageCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            PalladiumHolderSet.codec(Registries.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageTypeDamageCondition::damageType)
+            PalladiumHolderSet.codec(Registries.DAMAGE_TYPE).fieldOf("damage_types").forGetter(DamageTypeDamageCondition::damageType)
     ).apply(instance, DamageTypeDamageCondition::new));
 
     @Override
@@ -40,7 +40,7 @@ public record DamageTypeDamageCondition(PalladiumHolderSet<DamageType> damageTyp
         public void addDocumentation(CodecDocumentationBuilder<DamageCondition, DamageTypeDamageCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Damage Type")
                     .setDescription("Checks whether the damage source is of a certain damage type.")
-                    .addOptional("damage_type", TYPE_DAMAGE_TYPE_HOLDER_SET, "Damage types or tags to check against.")
+                    .addOptional("damage_types", TYPE_DAMAGE_TYPE_HOLDER_SET, "Damage types or tags to check against.")
                     .addExampleObject(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FALL))));
         }
     }
