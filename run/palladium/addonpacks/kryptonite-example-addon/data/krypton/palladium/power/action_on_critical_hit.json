@@ -1,26 +1,26 @@
 {
-  "name": "Action On Critical Hit", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "action_on_critical_hit": {
-      "type": "kryptonite:action_on_critical_hit",
-      "entity_actions": [
-        {
-          "type": "palladium:run_command",
-          "command": "say I got hit with a crit!"
-        },
-        {
-          "type": "palladium:as_source",
-          "actions": {
-            "type": "palladium:run_command",
-            "command": "say I dealt that crit!"
-          }
+    "name": "Action On Critical Hit",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "action_on_critical_hit": {
+            "type": "kryptonite:action_on_critical_hit",
+            "entity_actions": [
+                {
+                    "type": "palladium:run_command",
+                    "command": "say I got hit with a crit!"
+                },
+                {
+                    "type": "palladium:as_source",
+                    "actions": {
+                        "type": "palladium:run_command",
+                        "command": "say I dealt that crit!"
+                    }
+                }
+            ],
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:villager"
+            }
         }
-      ],
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:villager"
-      }
     }
-  }
 }

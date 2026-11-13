@@ -25,7 +25,7 @@ public record S2CSyncEntityTypeTagCache(Map<Identifier, Collection<Identifier>> 
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<S2CSyncEntityTypeTagCache> type() {
         return TYPE;
     }
 

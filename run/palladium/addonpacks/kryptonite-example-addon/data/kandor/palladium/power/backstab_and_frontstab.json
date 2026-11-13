@@ -1,24 +1,62 @@
 {
-  "name": "Detect Backstab & Frontstab", "icon": "minecraft:diamond_sword",
-
-  "abilities": {
-    "detect_backstab": {
-      "type": "kryptonite:glowing", "mode": "other",
-      "color": {"red": 1.0, "green": 0.0, "blue": 0.5}, "use_teams": false,
-      "entity_conditions": [
-        { "type": "kryptonite:distance_from_entity", "comparator": "<=", "compare_to": 2.5 },
-        { "type": "kryptonite:entity_rotation", "source_rotation": "head", "target_rotation": "body", "comparator": ">", "compare_to": 0.85 },
-        { "type": "kryptonite:entity_in_sight", "shape_type": "visual" }
-      ]
-    },
-    "detect_frontstab": {
-      "type": "kryptonite:glowing", "mode": "other",
-      "color": {"red": 0.1, "green": 0.75, "blue": 0.5}, "use_teams": false,
-      "entity_conditions": [
-        { "type": "kryptonite:distance_from_entity", "comparator": "<=", "compare_to": 2.5 },
-        { "type": "kryptonite:entity_rotation", "source_rotation": "head", "target_rotation": "body", "comparator": "<", "compare_to": -0.85 },
-        { "type": "kryptonite:entity_in_sight", "shape_type": "visual" }
-      ]
+    "name": "Detect Backstab & Frontstab",
+    "icon": "minecraft:diamond_sword",
+    "abilities": {
+        "detect_backstab": {
+            "type": "kryptonite:glowing",
+            "mode": "other",
+            "color": {
+                "red": 1.0,
+                "green": 0.0,
+                "blue": 0.5
+            },
+            "use_teams": false,
+            "entity_conditions": [
+                {
+                    "type": "kryptonite:distance_from_entity",
+                    "comparator": "<=",
+                    "compare_to": 2.5
+                },
+                {
+                    "type": "kryptonite:entity_rotation",
+                    "source_rotation": "head",
+                    "target_rotation": "body",
+                    "comparator": ">",
+                    "compare_to": 0.85
+                },
+                {
+                    "type": "kryptonite:entity_in_sight",
+                    "shape_type": "visual"
+                }
+            ]
+        },
+        "detect_frontstab": {
+            "type": "kryptonite:glowing",
+            "mode": "other",
+            "color": {
+                "red": 0.1,
+                "green": 0.75,
+                "blue": 0.5
+            },
+            "use_teams": false,
+            "entity_conditions": [
+                {
+                    "type": "kryptonite:distance_from_entity",
+                    "comparator": "<=",
+                    "compare_to": 2.5
+                },
+                {
+                    "type": "kryptonite:entity_rotation",
+                    "source_rotation": "head",
+                    "target_rotation": "body",
+                    "comparator": "<",
+                    "compare_to": -0.85
+                },
+                {
+                    "type": "kryptonite:entity_in_sight",
+                    "shape_type": "visual"
+                }
+            ]
+        }
     }
-  }
 }

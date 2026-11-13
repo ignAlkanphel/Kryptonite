@@ -18,7 +18,7 @@ public record S2CModifyBlockRender(ModifyBlockRenderAbility.Mode mode) implement
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<S2CModifyBlockRender> type() {
         return TYPE;
     }
 

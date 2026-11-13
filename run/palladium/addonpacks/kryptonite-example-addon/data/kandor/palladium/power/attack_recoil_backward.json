@@ -1,23 +1,23 @@
 {
-  "name": "Attack Recoil Backward", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "attack_recoil": {
-      "type": "kryptonite:action_on_hit",
-      "entity_actions": {
-        "type": "palladium:as_source",
-        "actions": [
-          {
-            "type": "kryptonite:add_velocity",
-            "velocity": {
-              "y": -0.1,
-              "z": -0.5
-            },
-            "space": "local",
-            "set": true
-          }
-        ]
-      }
+    "name": "Attack Recoil Backward",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "attack_recoil": {
+            "type": "kryptonite:action_on_hit",
+            "entity_actions": {
+                "type": "palladium:as_source",
+                "actions": [
+                    {
+                        "type": "kryptonite:add_velocity",
+                        "velocity": {
+                            "y": -0.1,
+                            "z": -0.5
+                        },
+                        "space": "local",
+                        "set": true
+                    }
+                ]
+            }
+        }
     }
-  }
 }

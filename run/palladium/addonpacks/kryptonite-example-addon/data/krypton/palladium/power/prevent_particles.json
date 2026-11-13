@@ -1,30 +1,30 @@
 {
-  "name": "Prevent Particles", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "prevent_particles": {
-      "type": "kryptonite:prevent_particles",
-      "event_particles": [
-        "death",
-        "landing",
-        "sprinting",
-        "drowning",
-        "sweep_attack",
-        "critical_hit",
-        "magic_critical_hit",
-        "damage_indicator"
-      ],
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "toggle"
+    "name": "Prevent Particles",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "prevent_particles": {
+            "type": "kryptonite:prevent_particles",
+            "event_particles": [
+                "death",
+                "landing",
+                "sprinting",
+                "drowning",
+                "sweep_attack",
+                "critical_hit",
+                "magic_critical_hit",
+                "damage_indicator"
+            ],
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "toggle"
+                }
+            },
+            "properties": {
+                "icon": "minecraft:barrier",
+                "title": "Prevent Particles",
+                "list_index": 0
+            }
         }
-      },
-      "properties": {
-        "icon": "minecraft:barrier",
-        "title": "Prevent Particles",
-        "list_index": 0
-      }
     }
-  }
 }

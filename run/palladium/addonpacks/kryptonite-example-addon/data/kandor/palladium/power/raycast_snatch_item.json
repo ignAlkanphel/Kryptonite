@@ -1,50 +1,50 @@
 {
-  "name": "Raycast (Snatch Item)", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "snatch_raycast": {
-      "type": "palladium:action",
-      "first_tick_action": {
-        "type": "kryptonite:raycast",
-        "distance": 64,
-        "include_blocks": true,
-        "entity_conditions": {
-          "type": "palladium:entity_type",
-          "entity_type": "minecraft:item"
-        },
-        "entity_actions": [
-          {
-            "type": "palladium:run_command",
-            "command": [
-              "tag @s add GrabEntity",
-              "data modify entity @e[tag=GrabEntity,sort=nearest,limit=1] PickupDelay set value 0",
-              "particle dust{color:[0.7,0.5,1.0],scale:1} ~ ~1 ~ 0 0 0 0 1 normal @p[distance=..25]"
-            ]
-          },
-          {
-            "type": "palladium:as_source",
-            "actions": {
-              "type": "palladium:run_command",
-              "command": "tp @e[tag=GrabEntity,sort=nearest,limit=1] @s"
+    "name": "Raycast (Snatch Item)",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "snatch_raycast": {
+            "type": "palladium:action",
+            "first_tick_action": {
+                "type": "kryptonite:raycast",
+                "distance": 64,
+                "include_blocks": true,
+                "entity_conditions": {
+                    "type": "palladium:entity_type",
+                    "entity_types": "minecraft:item"
+                },
+                "entity_actions": [
+                    {
+                        "type": "palladium:run_command",
+                        "command": [
+                            "tag @s add GrabEntity",
+                            "data modify entity @e[tag=GrabEntity,sort=nearest,limit=1] PickupDelay set value 0",
+                            "particle dust{color:[0.7,0.5,1.0],scale:1} ~ ~1 ~ 0 0 0 0 1 normal @p[distance=..25]"
+                        ]
+                    },
+                    {
+                        "type": "palladium:as_source",
+                        "actions": {
+                            "type": "palladium:run_command",
+                            "command": "tp @e[tag=GrabEntity,sort=nearest,limit=1] @s"
+                        }
+                    },
+                    {
+                        "type": "palladium:run_command",
+                        "command": "tag @s remove GrabEntity"
+                    }
+                ]
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "activation"
+                }
+            },
+            "properties": {
+                "title": "Raycast (Snatch Item)",
+                "icon": "minecraft:bundle",
+                "list_index": 0
             }
-          },
-          {
-            "type": "palladium:run_command",
-            "command": "tag @s remove GrabEntity"
-          }
-        ]
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "activation"
         }
-      },
-      "properties": {
-        "title": "Raycast (Snatch Item)",
-        "icon": "minecraft:bundle",
-        "list_index": 0
-      }
     }
-  }
 }

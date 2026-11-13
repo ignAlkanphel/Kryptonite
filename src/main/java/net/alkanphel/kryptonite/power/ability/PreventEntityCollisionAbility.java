@@ -61,7 +61,7 @@ public class PreventEntityCollisionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityCollisionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity with this ability from colliding with other entities. For this ability, the \"source\" is the entity with this ability & the \"target\" is the entity being collided with.")
-                    .addOptional("entity_condition", TYPE_CONDITION_LIST, "Condition(s) the target must meet for collision to be prevented.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for collision to be prevented.")
                     .addExampleObject(new PreventEntityCollisionAbility(TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

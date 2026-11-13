@@ -20,9 +20,6 @@ public class IsTamedCondition implements Condition {
 
     @Override
     public boolean test(DataContext context) {
-        var entity = context.getEntity();
-        if (entity == null) return false;
-
         return context.getEntity() instanceof TamableAnimal tameable && tameable.getOwner() != null;
     }
 

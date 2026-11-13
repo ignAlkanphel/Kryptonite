@@ -1,22 +1,22 @@
 {
-  "name": "Prevent Item Pickup", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "prevent_item_pickup": {
-      "type": "kryptonite:prevent_item_pickup",
-      "item_conditions": {
-        "type": "kryptonite:item",
-        "item": "minecraft:apple"
-      },
-      "entity_conditions": {
-        "type": "palladium:as_source",
-        "conditions": [
-          {
-            "type": "palladium:has_effect",
-            "effect": "minecraft:speed"
-          }
-        ]
-      }
+    "name": "Prevent Item Pickup",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "prevent_item_pickup": {
+            "type": "kryptonite:prevent_item_pickup",
+            "item_conditions": {
+                "type": "kryptonite:item",
+                "item": "minecraft:apple"
+            },
+            "entity_conditions": {
+                "type": "palladium:as_source",
+                "conditions": [
+                    {
+                        "type": "palladium:has_effect",
+                        "effects": "minecraft:speed"
+                    }
+                ]
+            }
+        }
     }
-  }
 }

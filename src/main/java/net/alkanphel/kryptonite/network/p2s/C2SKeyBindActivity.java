@@ -22,7 +22,7 @@ public record C2SKeyBindActivity(Set<String> pressedKeys) implements CustomPacke
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<C2SKeyBindActivity> type() {
         return TYPE;
     }
 

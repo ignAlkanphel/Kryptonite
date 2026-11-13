@@ -28,7 +28,7 @@ import net.threetag.palladium.util.PalladiumHolderSet;
 public record DamageImmunityCondition(PalladiumHolderSet<DamageType> damageTypes) implements Condition {
 
     public static final MapCodec<DamageImmunityCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            PalladiumHolderSet.codec(Registries.DAMAGE_TYPE).fieldOf("damage_type").forGetter(DamageImmunityCondition::damageTypes)
+            PalladiumHolderSet.codec(Registries.DAMAGE_TYPE).fieldOf("damage_types").forGetter(DamageImmunityCondition::damageTypes)
     ).apply(instance, DamageImmunityCondition::new));
 
     @Override
@@ -79,7 +79,7 @@ public record DamageImmunityCondition(PalladiumHolderSet<DamageType> damageTypes
         public void addDocumentation(CodecDocumentationBuilder<Condition, DamageImmunityCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Damage Immunity")
                     .setDescription("Checks if the entity is immune against certain damage types.")
-                    .add("damage_type", TYPE_DAMAGE_TYPE_HOLDER_SET, "IDs or tags of the damage types")
+                    .add("damage_types", TYPE_DAMAGE_TYPE_HOLDER_SET, "IDs or tags of the damage types")
                     .addExampleObject(new DamageImmunityCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.withDefaultNamespace("cactus")))))))
                     .addExampleObject(new DamageImmunityCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.withDefaultNamespace("cactus"))), provider.holderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.withDefaultNamespace("in_fire")))))));
         }

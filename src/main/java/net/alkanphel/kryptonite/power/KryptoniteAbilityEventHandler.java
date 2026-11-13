@@ -605,11 +605,7 @@ public class KryptoniteAbilityEventHandler {
         if (!(e.getEntity() instanceof Projectile projectile)) return;
         if (!(projectile.getOwner() instanceof ServerPlayer player)) return;
 
-        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PROJECTILE_ACCURACY.get())
-                .stream()
-                .filter(instance -> instance.getAbility().doesApply(player, projectile, instance))
-                .toList();
-
+        var instances = AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PROJECTILE_ACCURACY.get()).stream().filter(instance -> instance.getAbility().doesApply(player, projectile, instance)).toList();
         if (instances.isEmpty()) return;
 
         Vec3 delta = projectile.getDeltaMovement();
@@ -690,7 +686,7 @@ public class KryptoniteAbilityEventHandler {
     }
 
     @SubscribeEvent // Game Event Listener ability
-    public static void onVanillaGameEventII(VanillaGameEvent e) {
+    public static void onVanillaGameEventListener(VanillaGameEvent e) {
         if (e.isCanceled() || !(e.getLevel() instanceof ServerLevel serverLevel)) return;
 
         int notificationRadius = e.getVanillaEvent().value().notificationRadius();

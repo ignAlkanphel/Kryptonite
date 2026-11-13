@@ -1,32 +1,32 @@
 {
-  "name": "Action On Item Pickup", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "action_on_item_pickup": {
-      "type": "kryptonite:action_on_item_pickup",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say AHHH!!! PICKED UP PICKED UP!!!"
-      }
-    },
-    "action_on_item_pickup_not": {
-      "type": "kryptonite:action_on_item_pickup",
-      "priority": 5,
-      "item_conditions": {
-        "type": "kryptonite:not",
-        "conditions": {
-            "type": "kryptonite:item",
-            "item": "minecraft:cod"
-          }
-      },
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say You got speed? Pick me up, baby!"
-      },
-      "entity_conditions": {
-        "type": "palladium:has_effect",
-        "effect": "minecraft:speed"
-      }
+    "name": "Action On Item Pickup",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "action_on_item_pickup": {
+            "type": "kryptonite:action_on_item_pickup",
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "say AHHH!!! PICKED UP PICKED UP!!!"
+            }
+        },
+        "action_on_item_pickup_not": {
+            "type": "kryptonite:action_on_item_pickup",
+            "priority": 5,
+            "item_conditions": {
+                "type": "kryptonite:not",
+                "conditions": {
+                    "type": "kryptonite:item",
+                    "item": "minecraft:cod"
+                }
+            },
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "say You got speed? Pick me up, baby!"
+            },
+            "entity_conditions": {
+                "type": "palladium:has_effect",
+                "effects": "minecraft:speed"
+            }
+        }
     }
-  }
 }

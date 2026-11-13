@@ -1,31 +1,31 @@
 {
-  "name": "Game Event Listener", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "game_event_listener": {
-      "type": "kryptonite:game_event_listener",
-      "delivery_mode": "by_distance",
-      "range": 5,
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"
-      },
-      "entity_conditions": {
-        "type": "palladium:as_source",
-        "conditions": [
-          {
-            "type": "palladium:entity_type",
-            "entity_type": "minecraft:villager"
-          }
-        ]
-      },
-      "block_conditions": {
-        "type": "kryptonite:block",
-        "block": "#minecraft:sand"
-      },
-      "game_events": [
-        "minecraft:step"
-      ]
+    "name": "Game Event Listener",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "game_event_listener": {
+            "type": "kryptonite:game_event_listener",
+            "delivery_mode": "by_distance",
+            "range": 5,
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"
+            },
+            "entity_conditions": {
+                "type": "palladium:as_source",
+                "conditions": [
+                    {
+                        "type": "palladium:entity_type",
+                        "entity_types": "minecraft:villager"
+                    }
+                ]
+            },
+            "block_conditions": {
+                "type": "kryptonite:block",
+                "block": "#minecraft:sand"
+            },
+            "game_events": [
+                "minecraft:step"
+            ]
+        }
     }
-  }
 }

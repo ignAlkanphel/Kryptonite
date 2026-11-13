@@ -20,7 +20,7 @@ public record S2CSyncAttacker(int targetId, Optional<Integer> attackerId) implem
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<S2CSyncAttacker> type() {
         return TYPE;
     }
 

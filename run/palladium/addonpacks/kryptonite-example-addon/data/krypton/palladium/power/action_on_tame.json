@@ -1,26 +1,26 @@
 {
-  "name": "Action On Tame", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "action_on_tame": {
-      "type": "kryptonite:action_on_tame",
-      "entity_actions": [
-        {
-          "type": "palladium:run_command",
-          "command": "say You tamed me!"
-        },
-        {
-          "type": "palladium:as_source",
-          "actions": {
-            "type": "palladium:run_command",
-            "command": "say You tamed them"
-          }
+    "name": "Action On Tame",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "action_on_tame": {
+            "type": "kryptonite:action_on_tame",
+            "entity_actions": [
+                {
+                    "type": "palladium:run_command",
+                    "command": "say You tamed me!"
+                },
+                {
+                    "type": "palladium:as_source",
+                    "actions": {
+                        "type": "palladium:run_command",
+                        "command": "say You tamed them"
+                    }
+                }
+            ],
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:wolf"
+            }
         }
-      ],
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:wolf"
-      }
     }
-  }
 }

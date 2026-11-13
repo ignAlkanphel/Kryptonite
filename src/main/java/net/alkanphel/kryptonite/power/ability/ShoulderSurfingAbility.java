@@ -17,7 +17,7 @@ import java.util.List;
 public class ShoulderSurfingAbility extends Ability {
 
     public static final MapCodec<ShoulderSurfingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BooleanValueHolder.CODEC.optionalFieldOf("frequency", BooleanValueHolder.FALSE).forGetter(ab -> ab.cameraCoupling),
+            BooleanValueHolder.CODEC.optionalFieldOf("camera_coupling", BooleanValueHolder.FALSE).forGetter(ab -> ab.cameraCoupling),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ShoulderSurfingAbility::new));
 

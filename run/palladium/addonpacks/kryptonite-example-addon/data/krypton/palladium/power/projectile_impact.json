@@ -1,55 +1,55 @@
 {
-  "name": "Projectile Impact", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "projectile_impact": {
-      "type": "kryptonite:projectile_impact",
-      "impact_result": "ignore",
-      "shooter_actions": [
-        {
-          "type": "palladium:run_command",
-          "command": "say Shooter Actions!"
-        },
-        {
-          "type": "palladium:as_source",
-          "actions": [
-            {
-              "type": "palladium:run_command",
-              "command": "say Hit entity actions!"
+    "name": "Projectile Impact",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "projectile_impact": {
+            "type": "kryptonite:projectile_impact",
+            "impact_result": "ignore",
+            "shooter_actions": [
+                {
+                    "type": "palladium:run_command",
+                    "command": "say Shooter Actions!"
+                },
+                {
+                    "type": "palladium:as_source",
+                    "actions": [
+                        {
+                            "type": "palladium:run_command",
+                            "command": "say Hit entity actions!"
+                        }
+                    ]
+                }
+            ],
+            "projectile_actions": [
+                {
+                    "type": "palladium:run_command",
+                    "command": "say Projectile Actions!"
+                },
+                {
+                    "type": "palladium:as_source",
+                    "actions": [
+                        {
+                            "type": "palladium:run_command",
+                            "command": "say Hit entity actions!"
+                        }
+                    ]
+                }
+            ],
+            "projectile_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:arrow"
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "toggle"
+                }
+            },
+            "properties": {
+                "title": "Pass Through",
+                "icon": "minecraft:arrow",
+                "list_index": 0
             }
-          ]
         }
-      ],
-      "projectile_actions": [
-        {
-          "type": "palladium:run_command",
-          "command": "say Projectile Actions!"
-        },
-        {
-          "type": "palladium:as_source",
-          "actions": [
-            {
-              "type": "palladium:run_command",
-              "command": "say Hit entity actions!"
-            }
-          ]
-        }
-      ],
-      "projectile_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:arrow"
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "toggle"
-        }
-      },
-      "properties": {
-        "title": "Pass Through",
-        "icon": "minecraft:arrow",
-        "list_index": 0
-      }
     }
-  }
 }

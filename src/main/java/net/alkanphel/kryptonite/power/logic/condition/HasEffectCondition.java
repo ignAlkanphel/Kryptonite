@@ -25,7 +25,7 @@ import java.util.Optional;
 public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffect, Optional<Value> minDuration, Optional<Value> maxDuration, Optional<Value> minAmplifier, Optional<Value> maxAmplifier, Optional<BooleanValueHolder> hiddenParticles, Optional<BooleanValueHolder> matchAll) implements Condition {
 
     public static final MapCodec<HasEffectCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            PalladiumHolderSet.codec(Registries.MOB_EFFECT).optionalFieldOf("effect").forGetter(HasEffectCondition::mobEffect),
+            PalladiumHolderSet.codec(Registries.MOB_EFFECT).optionalFieldOf("effects").forGetter(HasEffectCondition::mobEffect),
             Value.NUMBER_CODEC.optionalFieldOf("min_duration").forGetter(HasEffectCondition::minDuration),
             Value.NUMBER_CODEC.optionalFieldOf("max_duration").forGetter(HasEffectCondition::maxDuration),
             Value.NUMBER_CODEC.optionalFieldOf("min_amplifier").forGetter(HasEffectCondition::minAmplifier),
@@ -101,7 +101,7 @@ public record HasEffectCondition(Optional<PalladiumHolderSet<MobEffect>> mobEffe
         public void addDocumentation(CodecDocumentationBuilder<Condition, HasEffectCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Has Effect")
                     .setDescription("Checks if the entity has the specified (potion) effect(s). Omitted fields will be ignored.")
-                    .add("effect", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the required mob/potion effect")
+                    .addOptional("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the required mob/potion effect")
                     .addOptional("min_duration", TYPE_INT_VALUE, "Minimum duration in ticks the effect should have left. For this field, -1 is explicitly infinite duration.")
                     .addOptional("max_duration", TYPE_INT_VALUE, "Maximum duration in ticks the effect should have left.")
                     .addOptional("min_amplifier", TYPE_INT_VALUE, "Minimum amplifier the effect should have.")

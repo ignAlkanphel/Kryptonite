@@ -10,7 +10,7 @@
       },
       "damage_conditions": {
         "type": "kryptonite:damage_type",
-        "damage_type": "#minecraft:is_fire"
+        "damage_types": "#minecraft:is_fire"
       }
     }
   }

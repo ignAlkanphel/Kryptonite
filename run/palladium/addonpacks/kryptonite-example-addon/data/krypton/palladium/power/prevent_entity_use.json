@@ -1,36 +1,36 @@
 {
-  "name": "Prevent Entity Use", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "prevent_entity_use_source": {
-      "type": "kryptonite:prevent_entity_use",
-      "target_used": "source",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "title @s actionbar {\"text\": \"Cannot interact with pigs!\", \"color\": \"red\"}"
-      },
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:pig"
-      },
-      "state": {
-        "enabling": [
-          {
-            "type": "palladium:not",
-            "conditions": {
-              "type": "palladium:crouching"
+    "name": "Prevent Entity Use",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "prevent_entity_use_source": {
+            "type": "kryptonite:prevent_entity_use",
+            "target_used": "source",
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "title @s actionbar {\"text\": \"Cannot interact with pigs!\", \"color\": \"red\"}"
+            },
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:pig"
+            },
+            "state": {
+                "enabling": [
+                    {
+                        "type": "palladium:not",
+                        "conditions": {
+                            "type": "palladium:crouching"
+                        }
+                    }
+                ]
             }
-          }
-        ]
-      }
-    },
-    "prevent_entity_use_target": {
-      "type": "kryptonite:prevent_entity_use",
-      "target_used": "target",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"
-      }
+        },
+        "prevent_entity_use_target": {
+            "type": "kryptonite:prevent_entity_use",
+            "target_used": "target",
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"
+            }
+        }
     }
-  }
 }

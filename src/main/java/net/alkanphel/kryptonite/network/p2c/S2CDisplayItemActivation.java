@@ -17,7 +17,7 @@ public record S2CDisplayItemActivation(ItemStack stack) implements CustomPacketP
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<S2CDisplayItemActivation> type() {
         return TYPE;
     }
 

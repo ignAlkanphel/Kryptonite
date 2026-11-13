@@ -29,7 +29,7 @@ import java.util.Optional;
 public class SpawnEntityBlockAction extends BlockAction {
 
     public static final MapCodec<SpawnEntityBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_type").forGetter(a -> a.entityType),
+            RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(a -> a.entityType),
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             CompoundTag.CODEC.optionalFieldOf("entity_nbt", new CompoundTag()).forGetter(a -> a.tag)
     ).apply(instance, SpawnEntityBlockAction::new));
@@ -81,7 +81,7 @@ public class SpawnEntityBlockAction extends BlockAction {
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, SpawnEntityBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Spawn Entity")
                     .setDescription("Spawns an entity at the block's position.")
-                    .add("entity_type", TYPE_ENTITY_TYPE_HOLDER_SET, "The entity to spawn of the specified Entity IDs or tags.")
+                    .add("entity_types", TYPE_ENTITY_TYPE_HOLDER_SET, "The entity to spawn of the specified Entity IDs or tags.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the spawned entity.")
                     .addOptional("entity_nbt", TYPE_NBT, "The NBT data applied to the spawned entity.")
                     .addExampleObject(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), addExampleNbt()));

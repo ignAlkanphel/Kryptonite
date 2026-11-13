@@ -1,59 +1,59 @@
 {
-  "name": "Last Location Teleport", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "last_location_teleport": {
-      "type": "palladium:action",
-      "first_tick_action": {
-        "type": "kryptonite:last_location_teleport",
-        "action_on_success": {
-          "type": "palladium:run_command",
-          "command": "tellraw @s {\"color\":\"green\", \"text\": \"Last Location Teleport (Async) success!\"}"
+    "name": "Last Location Teleport",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "last_location_teleport": {
+            "type": "palladium:action",
+            "first_tick_action": {
+                "type": "kryptonite:last_location_teleport",
+                "action_on_success": {
+                    "type": "palladium:run_command",
+                    "command": "tellraw @s {\"color\":\"green\", \"text\": \"Last Location Teleport (Async) success!\"}"
+                },
+                "action_on_fail": {
+                    "type": "palladium:run_command",
+                    "command": "tellraw @s {\"color\":\"red\", \"text\": \"Last Location Teleport (Async) fail!\"}"
+                },
+                "keep_mount": true
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "activation"
+                }
+            },
+            "properties": {
+                "title": "Last Location (Teleport) Async",
+                "icon": "minecraft:ender_pearl",
+                "list_index": 0
+            }
         },
-        "action_on_fail": {
-          "type": "palladium:run_command",
-          "command": "tellraw @s {\"color\":\"red\", \"text\": \"Last Location Teleport (Async) fail!\"}"
-        },
-        "keep_mount": true
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "activation"
+        "last_location_teleport_non_async": {
+            "type": "palladium:action",
+            "first_tick_action": {
+                "type": "kryptonite:last_location_teleport",
+                "action_on_success": {
+                    "type": "palladium:run_command",
+                    "command": "tellraw @s {\"color\":\"green\", \"text\": \"Last Location Teleport success!\"}"
+                },
+                "action_on_fail": {
+                    "type": "palladium:run_command",
+                    "command": "tellraw @s {\"color\":\"red\", \"text\": \"Last Location Teleport fail!\"}"
+                },
+                "async": false,
+                "keep_mount": true
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "activation"
+                }
+            },
+            "properties": {
+                "title": "Last Location (Teleport)",
+                "icon": "minecraft:ender_pearl",
+                "list_index": 0
+            }
         }
-      },
-      "properties": {
-        "title": "Last Location (Teleport) Async",
-        "icon": "minecraft:ender_pearl",
-        "list_index": 0
-      }
-    },
-    "last_location_teleport_non_async": {
-      "type": "palladium:action",
-      "first_tick_action": {
-        "type": "kryptonite:last_location_teleport",
-        "action_on_success": {
-          "type": "palladium:run_command",
-          "command": "tellraw @s {\"color\":\"green\", \"text\": \"Last Location Teleport success!\"}"
-        },
-        "action_on_fail": {
-          "type": "palladium:run_command",
-          "command": "tellraw @s {\"color\":\"red\", \"text\": \"Last Location Teleport fail!\"}"
-        },
-        "async": false,
-        "keep_mount": true
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "activation"
-        }
-      },
-      "properties": {
-        "title": "Last Location (Teleport)",
-        "icon": "minecraft:ender_pearl",
-        "list_index": 0
-      }
     }
-  }
 }

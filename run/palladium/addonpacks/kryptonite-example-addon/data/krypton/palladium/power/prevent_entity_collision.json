@@ -1,38 +1,38 @@
 {
-  "name": "Prevent Entity Collision", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "prevent_entity_collision": {
-      "type": "kryptonite:prevent_entity_collision",
-      "properties": {
-        "icon": "minecraft:barrier",
-        "title": "Prevent Entity Selection",
-        "list_index": 0
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "toggle"
+    "name": "Prevent Entity Collision",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "prevent_entity_collision": {
+            "type": "kryptonite:prevent_entity_collision",
+            "properties": {
+                "icon": "minecraft:barrier",
+                "title": "Prevent Entity Selection",
+                "list_index": 0
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "toggle"
+                }
+            }
+        },
+        "prevent_entity_collision_zombies": {
+            "type": "kryptonite:prevent_entity_collision",
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "#minecraft:zombies"
+            },
+            "properties": {
+                "icon": "minecraft:zombie_head",
+                "title": "Prevent Entity Collision (Zombies)",
+                "list_index": 1
+            },
+            "state": {
+                "enabling": {
+                    "type": "palladium:key_bind",
+                    "behaviour": "toggle"
+                }
+            }
         }
-      }
-    },
-    "prevent_entity_collision_zombies": {
-      "type": "kryptonite:prevent_entity_collision",
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "#minecraft:zombies"
-      },
-      "properties": {
-        "icon": "minecraft:zombie_head",
-        "title": "Prevent Entity Collision (Zombies)",
-        "list_index": 1
-      },
-      "state": {
-        "enabling": {
-          "type": "palladium:key_bind",
-          "behaviour": "toggle"
-        }
-      }
     }
-  }
 }

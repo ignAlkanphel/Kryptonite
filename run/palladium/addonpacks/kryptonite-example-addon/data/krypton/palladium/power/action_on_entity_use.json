@@ -1,46 +1,46 @@
 {
-  "name": "Action On Entity Use", "icon": "minecraft:barrier",
-
-  "abilities": {
-    "action_on_entity_use_source": {
-      "type": "kryptonite:action_on_entity_use",
-      "target_used": "source",
-      "action_result": "consume",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "title @s actionbar {\"text\": \"Action on entity use (source)!\", \"color\": \"red\"}"
-      },
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:iron_golem"
-      },
-      "held_item_conditions": {
-        "type": "kryptonite:item",
-        "item": "minecraft:diamond"
-      },
-      "hands": [
-        "off_hand"
-      ]
-    },
-    "action_on_entity_use_target": {
-      "type": "kryptonite:action_on_entity_use",
-      "target_used": "target",
-      "action_result": "consume",
-      "entity_actions": {
-        "type": "palladium:run_command",
-        "command": "title @s actionbar {\"text\": \"Action on entity use (target)!\", \"color\": \"red\"}"
-      },
-      "entity_conditions": {
-        "type": "palladium:entity_type",
-        "entity_type": "minecraft:iron_golem"
-      },
-      "held_item_conditions": {
-        "type": "kryptonite:item",
-        "item": "minecraft:stick"
-      },
-      "hands": [
-        "off_hand"
-      ]
+    "name": "Action On Entity Use",
+    "icon": "minecraft:barrier",
+    "abilities": {
+        "action_on_entity_use_source": {
+            "type": "kryptonite:action_on_entity_use",
+            "target_used": "source",
+            "action_result": "consume",
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "title @s actionbar {\"text\": \"Action on entity use (source)!\", \"color\": \"red\"}"
+            },
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:iron_golem"
+            },
+            "held_item_conditions": {
+                "type": "kryptonite:item",
+                "item": "minecraft:diamond"
+            },
+            "hands": [
+                "off_hand"
+            ]
+        },
+        "action_on_entity_use_target": {
+            "type": "kryptonite:action_on_entity_use",
+            "target_used": "target",
+            "action_result": "consume",
+            "entity_actions": {
+                "type": "palladium:run_command",
+                "command": "title @s actionbar {\"text\": \"Action on entity use (target)!\", \"color\": \"red\"}"
+            },
+            "entity_conditions": {
+                "type": "palladium:entity_type",
+                "entity_types": "minecraft:iron_golem"
+            },
+            "held_item_conditions": {
+                "type": "kryptonite:item",
+                "item": "minecraft:stick"
+            },
+            "hands": [
+                "off_hand"
+            ]
+        }
     }
-  }
 }
