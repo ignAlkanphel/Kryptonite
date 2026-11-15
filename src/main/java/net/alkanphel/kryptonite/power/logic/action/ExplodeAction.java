@@ -9,11 +9,13 @@ import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondit
 import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.gamerule.PalladiumGameRules;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.condition.Condition;
@@ -59,10 +61,9 @@ public class ExplodeAction extends Action {
     @Override
     protected boolean execute(DataContext context) {
         var entity = context.getEntity();
-        if (entity == null) return false;
+        if (entity == null || !(entity.level() instanceof ServerLevel level)) return false;
 
-        var level = entity.level();
-        if (level.isClientSide()) return false;
+        boolean griefing = PalladiumGameRules.allowsPowerGriefing(level);
 
         Predicate<BlockConditionContext> behaviorCondition = ctx -> false;
 
@@ -92,8 +93,8 @@ public class ExplodeAction extends Action {
                 entity.getY(),
                 entity.getZ(),
                 Math.max(0, power.getAsFloat(context)),
-                createFire.get(context),
-                destructionType,
+                griefing && createFire.get(context),
+                griefing ? destructionType : Level.ExplosionInteraction.NONE,
                 MiscUtil.createExplosionDamageCalculator(behaviorCondition, Math.max(0, indestructibleResistance.getAsFloat(context)), damageEntityCondition)
         );
 

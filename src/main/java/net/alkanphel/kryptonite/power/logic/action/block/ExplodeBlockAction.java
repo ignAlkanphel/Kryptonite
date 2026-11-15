@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.gamerule.PalladiumGameRules;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
@@ -51,6 +52,8 @@ public class ExplodeBlockAction extends BlockAction {
         ServerLevel level = context.level();
         if (level.isClientSide()) return false;
 
+        boolean griefing = PalladiumGameRules.allowsPowerGriefing(level);
+
         Predicate<BlockConditionContext> behaviorCondition = ctx -> false;
 
         if (!indestructibleConditions.isEmpty()) {
@@ -66,8 +69,8 @@ public class ExplodeBlockAction extends BlockAction {
                 level,
                 context.pos().getCenter(),
                 Math.max(0, power.getAsFloat(null)),
-                createFire.get(null),
-                destructionType,
+                griefing && createFire.get(null),
+                griefing ? destructionType : Level.ExplosionInteraction.NONE,
                 MiscUtil.createExplosionDamageCalculator(behaviorCondition, Math.max(0, indestructibleResistance.getAsFloat(null)))
         );
 
