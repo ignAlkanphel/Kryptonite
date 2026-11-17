@@ -64,7 +64,7 @@ public record EntityInstanceofCondition(Type type) implements Condition {
 
     @Override
     public ConditionSerializer<EntityInstanceofCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_ENTITY.get();
+        return KryptoniteConditionSerializers.ENTITY_INSTANCEOF.get();
     }
 
     public static class Serializer extends ConditionSerializer<EntityInstanceofCondition> {

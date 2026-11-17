@@ -29,6 +29,7 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, EntityCollisionCondition.Serializer> ENTITY_COLLISION = CONDITIONS_SERIALIZERS.register("entity_collision", EntityCollisionCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EntityInRadiusCondition.Serializer> ENTITY_IN_RADIUS = CONDITIONS_SERIALIZERS.register("entity_in_radius", EntityInRadiusCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EntityInSightCondition.Serializer> ENTITY_IN_SIGHT = CONDITIONS_SERIALIZERS.register("entity_in_sight", EntityInSightCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, EntityInstanceofCondition.Serializer> ENTITY_INSTANCEOF = CONDITIONS_SERIALIZERS.register("entity_instanceof", EntityInstanceofCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EntityRotationCondition.Serializer> ENTITY_ROTATION = CONDITIONS_SERIALIZERS.register("entity_rotation", EntityRotationCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, EquipmentCondition.Serializer> EQUIPMENT = CONDITIONS_SERIALIZERS.register("equipment", EquipmentCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, FluidHeightCondition.Serializer> FLUID_HEIGHT = CONDITIONS_SERIALIZERS.register("fluid_height", FluidHeightCondition.Serializer::new);
@@ -37,7 +38,6 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, HasEffectPossibleCondition.Serializer> HAS_EFFECT_POSSIBLE = CONDITIONS_SERIALIZERS.register("has_effect_possible", HasEffectPossibleCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, HasRespawnCondition.Serializer> HAS_RESPAWN = CONDITIONS_SERIALIZERS.register("has_respawn", HasRespawnCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, InventoryCondition.Serializer> INVENTORY = CONDITIONS_SERIALIZERS.register("inventory", InventoryCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, EntityInstanceofCondition.Serializer> IS_ENTITY = CONDITIONS_SERIALIZERS.register("is_entity", EntityInstanceofCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, PredicateCondition.Serializer> PREDICATE = CONDITIONS_SERIALIZERS.register("predicate", PredicateCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, UsingCorrectToolCondition.Serializer> USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("using_correct_tool", UsingCorrectToolCondition.Serializer::new);
