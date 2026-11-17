@@ -26,15 +26,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public record IsEntityCondition(Type type) implements Condition {
+public record EntityInstanceofCondition(Type type) implements Condition {
 
-    public static final MapCodec<IsEntityCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Type.CODEC.optionalFieldOf("instanceof", Type.EXISTING).forGetter(IsEntityCondition::type)
-    ).apply(instance, IsEntityCondition::new));
+    public static final MapCodec<EntityInstanceofCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Type.CODEC.optionalFieldOf("instanceof", Type.EXISTING).forGetter(EntityInstanceofCondition::type)
+    ).apply(instance, EntityInstanceofCondition::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsEntityCondition> STREAM_CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(Type.class), IsEntityCondition::type,
-            IsEntityCondition::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntityInstanceofCondition> STREAM_CODEC = StreamCodec.composite(
+            NeoForgeStreamCodecs.enumCodec(Type.class), EntityInstanceofCondition::type,
+            EntityInstanceofCondition::new
     );
 
     @Override
@@ -63,24 +63,24 @@ public record IsEntityCondition(Type type) implements Condition {
     }
 
     @Override
-    public ConditionSerializer<IsEntityCondition> getSerializer() {
+    public ConditionSerializer<EntityInstanceofCondition> getSerializer() {
         return KryptoniteConditionSerializers.IS_ENTITY.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsEntityCondition> {
+    public static class Serializer extends ConditionSerializer<EntityInstanceofCondition> {
 
         @Override
-        public MapCodec<IsEntityCondition> codec() {
+        public MapCodec<EntityInstanceofCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsEntityCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Entity")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, EntityInstanceofCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Entity Instanceof")
                     .setDescription("Checks what \"instanceof\" type the entity is. \"existing\" simply checks if the entity exists.")
                     .addOptional("instanceof", SettingType.enumList(Type.values()), "The \"instanceof\" type.", Type.EXISTING)
-                    .addExampleObject(new IsEntityCondition(Type.EXISTING))
-                    .addExampleObject(new IsEntityCondition(Type.LIVING));
+                    .addExampleObject(new EntityInstanceofCondition(Type.EXISTING))
+                    .addExampleObject(new EntityInstanceofCondition(Type.LIVING));
         }
     }
 

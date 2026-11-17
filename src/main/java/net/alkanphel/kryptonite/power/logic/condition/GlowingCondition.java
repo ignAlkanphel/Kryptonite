@@ -11,12 +11,12 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public class IsGlowingCondition implements Condition {
+public class GlowingCondition implements Condition {
 
-    public static final IsGlowingCondition INSTANCE = new IsGlowingCondition();
+    public static final GlowingCondition INSTANCE = new GlowingCondition();
 
-    public static final MapCodec<IsGlowingCondition> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsGlowingCondition> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final MapCodec<GlowingCondition> CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, GlowingCondition> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public boolean test(DataContext context) {
@@ -29,20 +29,20 @@ public class IsGlowingCondition implements Condition {
     }
 
     @Override
-    public ConditionSerializer<IsGlowingCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_GLOWING.get();
+    public ConditionSerializer<GlowingCondition> getSerializer() {
+        return KryptoniteConditionSerializers.GLOWING.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsGlowingCondition> {
+    public static class Serializer extends ConditionSerializer<GlowingCondition> {
 
         @Override
-        public MapCodec<IsGlowingCondition> codec() {
+        public MapCodec<GlowingCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsGlowingCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Glowing")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, GlowingCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Glowing")
                     .setDescription("Checks if the entity has a glowing outline (e.g. the \"minecraft:glowing\" effect).")
                     .addExampleObject(INSTANCE);
         }

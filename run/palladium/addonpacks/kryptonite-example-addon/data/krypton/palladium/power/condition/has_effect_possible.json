@@ -1,14 +1,14 @@
 {
-  "name": "Is Effect Possible", "icon": "minecraft:barrier",
+  "name": "Has Effect Possible", "icon": "minecraft:barrier",
 
   "abilities": {
-    "is_effect_possible": {
+    "has_effect_possible": {
       "type": "palladium:command",
       "commands": ["effect give @s minecraft:glowing 1 0 true"],
       "last_tick_commands": ["effect clear @s minecraft:glowing"],
       "state": {
         "enabling": {
-          "type": "kryptonite:is_effect_possible",
+          "type": "kryptonite:has_effect_possible",
           "effects": "minecraft:poison"
         }
       }

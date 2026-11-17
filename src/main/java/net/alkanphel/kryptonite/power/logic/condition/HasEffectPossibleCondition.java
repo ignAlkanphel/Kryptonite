@@ -19,11 +19,11 @@ import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
-public record IsEffectPossibleCondition(PalladiumHolderSet<MobEffect> mobEffect) implements Condition {
+public record HasEffectPossibleCondition(PalladiumHolderSet<MobEffect> mobEffect) implements Condition {
 
-    public static final MapCodec<IsEffectPossibleCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            PalladiumHolderSet.codec(Registries.MOB_EFFECT).fieldOf("effects").forGetter(IsEffectPossibleCondition::mobEffect)
-    ).apply(instance, IsEffectPossibleCondition::new));
+    public static final MapCodec<HasEffectPossibleCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            PalladiumHolderSet.codec(Registries.MOB_EFFECT).fieldOf("effects").forGetter(HasEffectPossibleCondition::mobEffect)
+    ).apply(instance, HasEffectPossibleCondition::new));
 
     @Override
     public boolean test(DataContext context) {
@@ -45,24 +45,24 @@ public record IsEffectPossibleCondition(PalladiumHolderSet<MobEffect> mobEffect)
     }
 
     @Override
-    public ConditionSerializer<IsEffectPossibleCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_EFFECT_POSSIBLE.get();
+    public ConditionSerializer<HasEffectPossibleCondition> getSerializer() {
+        return KryptoniteConditionSerializers.HAS_EFFECT_POSSIBLE.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsEffectPossibleCondition> {
+    public static class Serializer extends ConditionSerializer<HasEffectPossibleCondition> {
 
         @Override
-        public MapCodec<IsEffectPossibleCondition> codec() {
+        public MapCodec<HasEffectPossibleCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsEffectPossibleCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Effect Possible")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, HasEffectPossibleCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Has Effect Possible")
                     .setDescription("Checks if the entity is NOT immune to the specified effects.")
                     .add("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "IDs or tags of the effects")
-                    .addExampleObject(new IsEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))))
-                    .addExampleObject(new IsEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))));
+                    .addExampleObject(new HasEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness")))))))
+                    .addExampleObject(new HasEffectPossibleCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("slowness"))), provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("mining_fatigue")))))));
         }
     }
 
