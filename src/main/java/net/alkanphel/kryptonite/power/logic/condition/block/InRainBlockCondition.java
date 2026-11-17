@@ -10,10 +10,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
-public record IsInRainBlockCondition() implements BlockCondition {
+public record InRainBlockCondition() implements BlockCondition {
 
-    public static final MapCodec<IsInRainBlockCondition> CODEC = MapCodec.unit(IsInRainBlockCondition::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsInRainBlockCondition> STREAM_CODEC = StreamCodec.unit(new IsInRainBlockCondition());
+    public static final MapCodec<InRainBlockCondition> CODEC = MapCodec.unit(InRainBlockCondition::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, InRainBlockCondition> STREAM_CODEC = StreamCodec.unit(new InRainBlockCondition());
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -21,22 +21,22 @@ public record IsInRainBlockCondition() implements BlockCondition {
     }
 
     @Override
-    public BlockConditionSerializer<IsInRainBlockCondition> getSerializer() {
-        return BlockConditionSerializers.IS_IN_RAIN.get();
+    public BlockConditionSerializer<InRainBlockCondition> getSerializer() {
+        return BlockConditionSerializers.IN_RAIN.get();
     }
 
-    public static class Serializer extends BlockConditionSerializer<IsInRainBlockCondition> {
+    public static class Serializer extends BlockConditionSerializer<InRainBlockCondition> {
 
         @Override
-        public MapCodec<IsInRainBlockCondition> codec() {
+        public MapCodec<InRainBlockCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInRainBlockCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is in Rain")
+        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, InRainBlockCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("In Rain")
                     .setDescription("Checks if it's raining above the block.")
-                    .addExampleObject(new IsInRainBlockCondition());
+                    .addExampleObject(new InRainBlockCondition());
         }
     }
 

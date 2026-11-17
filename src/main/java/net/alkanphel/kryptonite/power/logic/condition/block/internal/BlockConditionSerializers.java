@@ -31,6 +31,7 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, AttachableBlockCondition.Serializer> ATTACHABLE = BLOCK_CONDITION_SERIALIZERS.register("attachable", AttachableBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, BlockBlockCondition.Serializer> BLOCK = BLOCK_CONDITION_SERIALIZERS.register("block", BlockBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, BlockEntityBlockCondition.Serializer> BLOCK_ENTITY = BLOCK_CONDITION_SERIALIZERS.register("block_entity", BlockEntityBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, BlockInstanceofBlockCondition.Serializer> BLOCK_INSTANCEOF = BLOCK_CONDITION_SERIALIZERS.register("block_instanceof", BlockInstanceofBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, BlockStateBlockCondition.Serializer> BLOCK_STATE = BLOCK_CONDITION_SERIALIZERS.register("block_state", BlockStateBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, CanSeeSkyBlockCondition.Serializer> CAN_SEE_SKY = BLOCK_CONDITION_SERIALIZERS.register("can_see_sky", CanSeeSkyBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, CommandResultBlockCondition.Serializer> COMMAND_RESULT = BLOCK_CONDITION_SERIALIZERS.register("command_result", CommandResultBlockCondition.Serializer::new);
@@ -40,10 +41,9 @@ public class BlockConditionSerializers {
     public static final DeferredHolder<BlockConditionSerializer<?>, FluidTypeBlockCondition.Serializer> FLUID_TYPE = BLOCK_CONDITION_SERIALIZERS.register("fluid_type", FluidTypeBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, FrictionBlockCondition.Serializer> FRICTION = BLOCK_CONDITION_SERIALIZERS.register("friction", FrictionBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, HeightBlockCondition.Serializer> HEIGHT = BLOCK_CONDITION_SERIALIZERS.register("height", HeightBlockCondition.Serializer::new);
-    public static final DeferredHolder<BlockConditionSerializer<?>, IsBlockBlockCondition.Serializer> IS_BLOCK = BLOCK_CONDITION_SERIALIZERS.register("is_block", IsBlockBlockCondition.Serializer::new);
-    public static final DeferredHolder<BlockConditionSerializer<?>, IsInRainBlockCondition.Serializer> IS_IN_RAIN = BLOCK_CONDITION_SERIALIZERS.register("is_in_rain", IsInRainBlockCondition.Serializer::new);
-    public static final DeferredHolder<BlockConditionSerializer<?>, IsInSnowBlockCondition.Serializer> IS_IN_SNOW = BLOCK_CONDITION_SERIALIZERS.register("is_in_snow", IsInSnowBlockCondition.Serializer::new);
-    public static final DeferredHolder<BlockConditionSerializer<?>, IsInThunderBlockCondition.Serializer> IS_IN_THUNDER = BLOCK_CONDITION_SERIALIZERS.register("is_in_thunder", IsInThunderBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, InRainBlockCondition.Serializer> IN_RAIN = BLOCK_CONDITION_SERIALIZERS.register("in_rain", InRainBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, InSnowBlockCondition.Serializer> IN_SNOW = BLOCK_CONDITION_SERIALIZERS.register("in_snow", InSnowBlockCondition.Serializer::new);
+    public static final DeferredHolder<BlockConditionSerializer<?>, InThunderBlockCondition.Serializer> IN_THUNDER = BLOCK_CONDITION_SERIALIZERS.register("in_thunder", InThunderBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, LightBlockingBlockCondition.Serializer> LIGHT_BLOCKING = BLOCK_CONDITION_SERIALIZERS.register("light_blocking", LightBlockingBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, LightLevelBlockCondition.Serializer> LIGHT_LEVEL = BLOCK_CONDITION_SERIALIZERS.register("light_level", LightLevelBlockCondition.Serializer::new);
     public static final DeferredHolder<BlockConditionSerializer<?>, MovementBlockingBlockCondition.Serializer> MOVEMENT_BLOCKING = BLOCK_CONDITION_SERIALIZERS.register("movement_blocking", MovementBlockingBlockCondition.Serializer::new);

@@ -12,10 +12,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
-public record IsInThunderBlockCondition() implements BlockCondition {
+public record InThunderBlockCondition() implements BlockCondition {
 
-    public static final MapCodec<IsInThunderBlockCondition> CODEC = MapCodec.unit(IsInThunderBlockCondition::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsInThunderBlockCondition> STREAM_CODEC = StreamCodec.unit(new IsInThunderBlockCondition());
+    public static final MapCodec<InThunderBlockCondition> CODEC = MapCodec.unit(InThunderBlockCondition::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, InThunderBlockCondition> STREAM_CODEC = StreamCodec.unit(new InThunderBlockCondition());
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -29,22 +29,22 @@ public record IsInThunderBlockCondition() implements BlockCondition {
     }
 
     @Override
-    public BlockConditionSerializer<IsInThunderBlockCondition> getSerializer() {
-        return BlockConditionSerializers.IS_IN_THUNDER.get();
+    public BlockConditionSerializer<InThunderBlockCondition> getSerializer() {
+        return BlockConditionSerializers.IN_THUNDER.get();
     }
 
-    public static class Serializer extends BlockConditionSerializer<IsInThunderBlockCondition> {
+    public static class Serializer extends BlockConditionSerializer<InThunderBlockCondition> {
 
         @Override
-        public MapCodec<IsInThunderBlockCondition> codec() {
+        public MapCodec<InThunderBlockCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInThunderBlockCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is in Thunder")
+        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, InThunderBlockCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("In Thunder")
                     .setDescription("Checks if it's thundering above the block.")
-                    .addExampleObject(new IsInThunderBlockCondition());
+                    .addExampleObject(new InThunderBlockCondition());
         }
     }
 

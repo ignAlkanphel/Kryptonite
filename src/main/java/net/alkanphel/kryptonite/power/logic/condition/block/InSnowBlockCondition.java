@@ -13,10 +13,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 
-public record IsInSnowBlockCondition() implements BlockCondition {
+public record InSnowBlockCondition() implements BlockCondition {
 
-    public static final MapCodec<IsInSnowBlockCondition> CODEC = MapCodec.unit(IsInSnowBlockCondition::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsInSnowBlockCondition> STREAM_CODEC = StreamCodec.unit(new IsInSnowBlockCondition());
+    public static final MapCodec<InSnowBlockCondition> CODEC = MapCodec.unit(InSnowBlockCondition::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, InSnowBlockCondition> STREAM_CODEC = StreamCodec.unit(new InSnowBlockCondition());
 
     @Override
     public boolean test(BlockConditionContext context) {
@@ -30,22 +30,22 @@ public record IsInSnowBlockCondition() implements BlockCondition {
     }
 
     @Override
-    public BlockConditionSerializer<IsInSnowBlockCondition> getSerializer() {
-        return BlockConditionSerializers.IS_IN_SNOW.get();
+    public BlockConditionSerializer<InSnowBlockCondition> getSerializer() {
+        return BlockConditionSerializers.IN_SNOW.get();
     }
 
-    public static class Serializer extends BlockConditionSerializer<IsInSnowBlockCondition> {
+    public static class Serializer extends BlockConditionSerializer<InSnowBlockCondition> {
 
         @Override
-        public MapCodec<IsInSnowBlockCondition> codec() {
+        public MapCodec<InSnowBlockCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsInSnowBlockCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is in Snow")
+        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, InSnowBlockCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("In Snow")
                     .setDescription("Checks if it's snowing above the block.")
-                    .addExampleObject(new IsInSnowBlockCondition());
+                    .addExampleObject(new InSnowBlockCondition());
         }
     }
 

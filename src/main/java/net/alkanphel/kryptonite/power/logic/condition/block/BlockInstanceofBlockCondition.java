@@ -19,15 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public record IsBlockBlockCondition(Type type) implements BlockCondition {
+public record BlockInstanceofBlockCondition(Type type) implements BlockCondition {
 
-    public static final MapCodec<IsBlockBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Type.CODEC.fieldOf("instanceof").forGetter(IsBlockBlockCondition::type)
-    ).apply(instance, IsBlockBlockCondition::new));
+    public static final MapCodec<BlockInstanceofBlockCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Type.CODEC.fieldOf("instanceof").forGetter(BlockInstanceofBlockCondition::type)
+    ).apply(instance, BlockInstanceofBlockCondition::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsBlockBlockCondition> STREAM_CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(Type.class), IsBlockBlockCondition::type,
-            IsBlockBlockCondition::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockInstanceofBlockCondition> STREAM_CODEC = StreamCodec.composite(
+            NeoForgeStreamCodecs.enumCodec(Type.class), BlockInstanceofBlockCondition::type,
+            BlockInstanceofBlockCondition::new
     );
 
     @Override
@@ -48,24 +48,24 @@ public record IsBlockBlockCondition(Type type) implements BlockCondition {
     }
 
     @Override
-    public BlockConditionSerializer<IsBlockBlockCondition> getSerializer() {
-        return BlockConditionSerializers.IS_BLOCK.get();
+    public BlockConditionSerializer<BlockInstanceofBlockCondition> getSerializer() {
+        return BlockConditionSerializers.BLOCK_INSTANCEOF.get();
     }
 
-    public static class Serializer extends BlockConditionSerializer<IsBlockBlockCondition> {
+    public static class Serializer extends BlockConditionSerializer<BlockInstanceofBlockCondition> {
 
         @Override
-        public MapCodec<IsBlockBlockCondition> codec() {
+        public MapCodec<BlockInstanceofBlockCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, IsBlockBlockCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Block")
+        public void addDocumentation(CodecDocumentationBuilder<BlockCondition, BlockInstanceofBlockCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Block Instanceof")
                     .setDescription("Checks what \"instanceof\" type the block is.")
                     .add("instanceof", SettingType.enumList(Type.values()), "The \"instanceof\" type.")
-                    .addExampleObject(new IsBlockBlockCondition(Type.FLOWER))
-                    .addExampleObject(new IsBlockBlockCondition(Type.CROP));
+                    .addExampleObject(new BlockInstanceofBlockCondition(Type.FLOWER))
+                    .addExampleObject(new BlockInstanceofBlockCondition(Type.CROP));
         }
     }
 
