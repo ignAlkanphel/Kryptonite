@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.event.EventHooks;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
@@ -29,10 +30,12 @@ public class TameAction extends Action {
 
         return switch (target) {
             case TamableAnimal tameableTarget when !tameableTarget.isTame() -> {
+                if (EventHooks.onAnimalTame(tameableTarget, source)) yield false;
                 tameableTarget.tame(source);
                 yield true;
             }
             case AbstractHorse horseLikeTarget when !horseLikeTarget.isTamed() -> {
+                if (EventHooks.onAnimalTame(horseLikeTarget, source)) yield false;
                 horseLikeTarget.tameWithName(source);
                 yield true;
             }
