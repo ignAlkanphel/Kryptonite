@@ -19,15 +19,15 @@ import net.threetag.palladium.logic.context.DataContext;
 
 import java.util.List;
 
-public record IsUsingItemCondition(List<ItemCondition> itemConditions) implements Condition {
+public record UsingItemCondition(List<ItemCondition> itemConditions) implements Condition {
 
-    public static final MapCodec<IsUsingItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(IsUsingItemCondition::itemConditions)
-    ).apply(instance, IsUsingItemCondition::new));
+    public static final MapCodec<UsingItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(UsingItemCondition::itemConditions)
+    ).apply(instance, UsingItemCondition::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsUsingItemCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemCondition.LIST_CODEC), IsUsingItemCondition::itemConditions,
-            IsUsingItemCondition::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, UsingItemCondition> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemCondition.LIST_CODEC), UsingItemCondition::itemConditions,
+            UsingItemCondition::new
     );
 
     @Override
@@ -45,23 +45,23 @@ public record IsUsingItemCondition(List<ItemCondition> itemConditions) implement
     }
 
     @Override
-    public ConditionSerializer<IsUsingItemCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_USING_ITEM.get();
+    public ConditionSerializer<UsingItemCondition> getSerializer() {
+        return KryptoniteConditionSerializers.USING_ITEM.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsUsingItemCondition> {
+    public static class Serializer extends ConditionSerializer<UsingItemCondition> {
 
         @Override
-        public MapCodec<IsUsingItemCondition> codec() {
+        public MapCodec<UsingItemCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsUsingItemCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Using Item")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, UsingItemCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Using Item")
                     .setDescription("Checks if the entity is currently using an item (e.g. eating a food item, using shield or bow, etc.)")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the used item must meet.")
-                    .addExampleObject(new IsUsingItemCondition(List.of()));
+                    .addExampleObject(new UsingItemCondition(List.of()));
         }
     }
 

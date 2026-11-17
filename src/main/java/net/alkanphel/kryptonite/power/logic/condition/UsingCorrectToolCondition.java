@@ -16,12 +16,12 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public class IsUsingCorrectToolCondition implements Condition {
+public class UsingCorrectToolCondition implements Condition {
 
-    public static final IsUsingCorrectToolCondition INSTANCE = new IsUsingCorrectToolCondition();
+    public static final UsingCorrectToolCondition INSTANCE = new UsingCorrectToolCondition();
 
-    public static final MapCodec<IsUsingCorrectToolCondition> CODEC = MapCodec.unit(INSTANCE);
-    public static final StreamCodec<RegistryFriendlyByteBuf, IsUsingCorrectToolCondition> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final MapCodec<UsingCorrectToolCondition> CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, UsingCorrectToolCondition> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public boolean test(DataContext context) {
@@ -43,20 +43,20 @@ public class IsUsingCorrectToolCondition implements Condition {
     }
 
     @Override
-    public ConditionSerializer<IsUsingCorrectToolCondition> getSerializer() {
-        return KryptoniteConditionSerializers.IS_USING_CORRECT_TOOL.get();
+    public ConditionSerializer<UsingCorrectToolCondition> getSerializer() {
+        return KryptoniteConditionSerializers.USING_CORRECT_TOOL.get();
     }
 
-    public static class Serializer extends ConditionSerializer<IsUsingCorrectToolCondition> {
+    public static class Serializer extends ConditionSerializer<UsingCorrectToolCondition> {
 
         @Override
-        public MapCodec<IsUsingCorrectToolCondition> codec() {
+        public MapCodec<UsingCorrectToolCondition> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Condition, IsUsingCorrectToolCondition> builder, HolderLookup.Provider provider) {
-            builder.setName("Is Using Correct Tool")
+        public void addDocumentation(CodecDocumentationBuilder<Condition, UsingCorrectToolCondition> builder, HolderLookup.Provider provider) {
+            builder.setName("Using Correct Tool")
                     .setDescription("Checks if the player is breaking a block using the correct tool for drops.")
                     .addExampleObject(INSTANCE);
         }

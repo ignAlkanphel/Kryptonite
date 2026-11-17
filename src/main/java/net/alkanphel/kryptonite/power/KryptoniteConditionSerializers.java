@@ -42,10 +42,10 @@ public class KryptoniteConditionSerializers {
     public static final DeferredHolder<ConditionSerializer<?>, IsGlowingCondition.Serializer> IS_GLOWING = CONDITIONS_SERIALIZERS.register("is_glowing", IsGlowingCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsOwnedCondition.Serializer> IS_OWNED = CONDITIONS_SERIALIZERS.register("is_owned", IsOwnedCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, IsTamedCondition.Serializer> IS_TAMED = CONDITIONS_SERIALIZERS.register("is_tamed", IsTamedCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, IsUsingCorrectToolCondition.Serializer> IS_USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("is_using_correct_tool", IsUsingCorrectToolCondition.Serializer::new);
-    public static final DeferredHolder<ConditionSerializer<?>, IsUsingItemCondition.Serializer> IS_USING_ITEM = CONDITIONS_SERIALIZERS.register("is_using_item", IsUsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, NbtCondition.Serializer> NBT = CONDITIONS_SERIALIZERS.register("nbt", NbtCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, PredicateCondition.Serializer> PREDICATE = CONDITIONS_SERIALIZERS.register("predicate", PredicateCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, UsingCorrectToolCondition.Serializer> USING_CORRECT_TOOL = CONDITIONS_SERIALIZERS.register("using_correct_tool", UsingCorrectToolCondition.Serializer::new);
+    public static final DeferredHolder<ConditionSerializer<?>, UsingItemCondition.Serializer> USING_ITEM = CONDITIONS_SERIALIZERS.register("using_item", UsingItemCondition.Serializer::new);
     public static final DeferredHolder<ConditionSerializer<?>, UUIDCondition.Serializer> UUID = CONDITIONS_SERIALIZERS.register("uuid", UUIDCondition.Serializer::new);
 
 }
