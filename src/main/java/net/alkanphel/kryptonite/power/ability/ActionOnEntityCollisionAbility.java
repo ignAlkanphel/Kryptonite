@@ -119,8 +119,7 @@ public class ActionOnEntityCollisionAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityCollisionAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Entity Collision")
-                    .setDescription("Performs actions when the entity collides with another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being collided with.")
+            builder.setDescription("Performs actions when the entity collides with another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being collided with.")
                     .addOptional("entity_actions_on_first_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target on first tick of collision.")
                     .addOptional("entity_actions_on_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target every tick while colliding with an entity.")
                     .addOptional("entity_actions_on_last_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target the last tick of collision.")

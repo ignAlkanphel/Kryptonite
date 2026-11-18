@@ -94,8 +94,7 @@ public class PreventEntityRenderAbility extends Ability implements OpacityRender
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityRenderAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Entity Render")
-                    .setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. For this ability, the \"source\" is the player/viewer that has the ability & the \"target\" is the entity whose rendering is being modified.")
+            builder.setDescription("Prevents entities from rendering and/or changing their opacity for the player that has this ability. For this ability, the \"source\" is the player/viewer that has the ability & the \"target\" is the entity whose rendering is being modified.")
                     .addOptional("target_opacity", TYPE_FLOAT_VALUE, "The opacity value that the entities will render with. A value of 0 will explicitly cause entities to no longer render rather than have their opacity change.", 0)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to have its rendering modified. Use 'palladium:as_source' to check conditions against the viewer instead. Evaluates client-side.")
                     .addExampleObject(new PreventEntityRenderAbility(new StaticValue(0), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

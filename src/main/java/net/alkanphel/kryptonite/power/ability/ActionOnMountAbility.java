@@ -80,8 +80,7 @@ public class ActionOnMountAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnMountAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Mount")
-                    .setDescription("Performs actions when the entity that has this ability mounts or dismounts a vehicle. For this ability, the \"source\" is the entity mounting or dismounting & the \"target\" is the vehicle.")
+            builder.setDescription("Performs actions when the entity that has this ability mounts or dismounts a vehicle. For this ability, the \"source\" is the entity mounting or dismounting & the \"target\" is the vehicle.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity mounting or dismounting.")
                     .addOptional("vehicle_actions", TYPE_ACTION_LIST, "Action(s) performed on the vehicle.")
                     .addOptional("vehicle_conditions", TYPE_CONDITION_LIST, "Condition(s) the vehicle must meet for the actions to perform.")

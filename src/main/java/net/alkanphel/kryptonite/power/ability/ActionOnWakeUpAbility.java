@@ -70,8 +70,7 @@ public class ActionOnWakeUpAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnWakeUpAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Wake Up")
-                    .setDescription("Performs actions upon the player waking up after sleeping.")
+            builder.setDescription("Performs actions upon the player waking up after sleeping.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon waking up.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player was sleeping on.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the sleeping block must meet for the actions to perform.")

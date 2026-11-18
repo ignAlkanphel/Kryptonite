@@ -126,8 +126,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventItemPickupAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Item Pickup")
-                    .setDescription("Prevents the entity that has this ability from picking up items. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity attempting to pick up the item.")
+            builder.setDescription("Prevents the entity that has this ability from picking up items. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity attempting to pick up the item.")
                     .addOptional("entity_actions_thrower", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("entity_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")

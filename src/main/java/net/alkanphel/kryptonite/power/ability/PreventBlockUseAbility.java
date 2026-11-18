@@ -99,8 +99,7 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Block Use")
-                    .setDescription("Prevents the player from using blocks. Preventing the 'usage' of a block means that the player won't be able to interact (right-click) with said block.")
+            builder.setDescription("Prevents the player from using blocks. Preventing the 'usage' of a block means that the player won't be able to interact (right-click) with said block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon being prevented from using a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player tried to use.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block at the position of the block the player tried to use must meet for the actions to perform.")

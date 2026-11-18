@@ -50,8 +50,7 @@ public class ActionOnJumpAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnJumpAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Jump")
-                    .setDescription("Performs actions upon jumping.")
+            builder.setDescription("Performs actions upon jumping.")
                     .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon jumping.")
                     .addExampleObject(new ActionOnJumpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on jump!"))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

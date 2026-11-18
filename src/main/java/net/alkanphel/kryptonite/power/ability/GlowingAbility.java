@@ -83,8 +83,7 @@ public class GlowingAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, GlowingAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Glowing")
-                    .setDescription("Makes entities glow like the \"minecraft:glowing\" effect. Use \"self\" mode to make the ability holder glow for others, \"target\" mode to make other entities glow for the ability holder.")
+            builder.setDescription("Makes entities glow like the \"minecraft:glowing\" effect. Use \"self\" mode to make the ability holder glow for others, \"target\" mode to make other entities glow for the ability holder.")
                     .addOptional("mode", SettingType.enumList(Mode.values()), "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to see the glow in \"self\" mode or glow in \"other\" mode. Use 'palladium:as_source' to check conditions against the ability holder instead.")
                     .addOptional("use_teams", TYPE_BOOLEAN_VALUE, "If true, the team color overrides the glow color when applicable.", true)

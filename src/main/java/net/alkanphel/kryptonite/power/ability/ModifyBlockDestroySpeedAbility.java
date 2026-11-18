@@ -72,8 +72,7 @@ public class ModifyBlockDestroySpeedAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyBlockDestroySpeedAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Block Destroy Speed")
-                    .setDescription("Modifies how fast the player destroys blocks.")
+            builder.setDescription("Modifies how fast the player destroys blocks.")
                     .addOptional("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the destroy speed of the block.")
                     .addOptional("hardness_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the effective destroy speed value of the block while calculating the block's destroy speed.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for the modifiers to apply.")

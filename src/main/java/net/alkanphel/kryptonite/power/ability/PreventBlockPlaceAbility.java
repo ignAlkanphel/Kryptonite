@@ -103,8 +103,7 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockPlaceAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Block Place")
-                    .setDescription("Prevents the player from placing blocks.")
+            builder.setDescription("Prevents the player from placing blocks.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon being prevented from placing a block.")
                     .addOptional("place_to_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the position of the block the player tried to place.")
                     .addOptional("place_on_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player tried to place a block on.")

@@ -112,8 +112,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemPickupAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Item Pickup")
-                    .setDescription("Performs actions when an entity picks up an item. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity picking up the item.")
+            builder.setDescription("Performs actions when an entity picks up an item. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity picking up the item.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Action(s) performed on the item stack being picked up.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")

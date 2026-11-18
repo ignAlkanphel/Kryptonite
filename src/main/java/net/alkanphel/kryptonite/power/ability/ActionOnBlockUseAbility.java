@@ -129,8 +129,7 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Block Use")
-                    .setDescription("Performs actions when the player that has this ability 'uses' (right-clicks) a block.")
+            builder.setDescription("Performs actions when the player that has this ability 'uses' (right-clicks) a block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them using a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player used.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")

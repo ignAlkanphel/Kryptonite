@@ -81,8 +81,7 @@ public class PreventDamageAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDamageAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Damage")
-                    .setDescription("Makes the entity immune to certain damage types.")
+            builder.setDescription("Makes the entity immune to certain damage types.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for damage to be prevented.")
                     .addOptional("prevent_fire", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to be set on fire.", false)
                     .addOptional("prevent_freeze", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to freeze.", false)

@@ -88,8 +88,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyBlockHarvestAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Block Harvest")
-                    .setDescription("Modifies if a player is able to harvest a block regardless of the tool.")
+            builder.setDescription("Modifies if a player is able to harvest a block regardless of the tool.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")
                     .addOptional("allow", TYPE_BOOLEAN, "If true, allows harvesting. If false, denies it.", true)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)

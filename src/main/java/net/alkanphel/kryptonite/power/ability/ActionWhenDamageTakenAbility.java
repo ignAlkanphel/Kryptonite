@@ -61,8 +61,7 @@ public class ActionWhenDamageTakenAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionWhenDamageTakenAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action When Damage Taken")
-                    .setDescription("Performs actions upon the entity that has this ability taking damage.")
+            builder.setDescription("Performs actions upon the entity that has this ability taking damage.")
                     .add("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the actions to perform.")
                     .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE)))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

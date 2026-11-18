@@ -69,8 +69,7 @@ public class ActionOnItemFishedAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemFishedAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Item Fished")
-                    .setDescription("Performs actions when the player reels in an item while fishing.")
+            builder.setDescription("Performs actions when the player reels in an item while fishing.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player after reeling in an item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the reeled item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the reeled item must meet for the actions to perform.")

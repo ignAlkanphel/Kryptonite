@@ -71,8 +71,7 @@ public class ModifyFrictionAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyFrictionAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Friction")
-                    .setDescription("Modifies the friction of blocks for the entity that has this ability.")
+            builder.setDescription("Modifies the friction of blocks for the entity that has this ability.")
                     .addOptional("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the friction.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for the modifiers to apply.")
                     .addExampleObject(new ModifyFrictionAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.75), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

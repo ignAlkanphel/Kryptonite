@@ -72,8 +72,7 @@ public class ActionOnDeathAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnDeathAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Death")
-                    .setDescription("Performs actions when the entity that has this ability dies. For this ability, the \"source\" is the entity responsible for the damage & the \"target\" is the entity that died.")
+            builder.setDescription("Performs actions when the entity that has this ability dies. For this ability, the \"source\" is the entity responsible for the damage & the \"target\" is the entity that died.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the killing damage must meet for the actions to perform.")

@@ -76,8 +76,7 @@ public class ActionOnTotemUseAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTotemUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Totem Use")
-                    .setDescription("Performs actions when the entity that has this ability uses a Totem of Undying to prevent death.")
+            builder.setDescription("Performs actions when the entity that has this ability uses a Totem of Undying to prevent death.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is activated.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source that activated the totem must meet for the actions to perform.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))

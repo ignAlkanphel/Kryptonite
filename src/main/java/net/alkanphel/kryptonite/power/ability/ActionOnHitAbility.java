@@ -75,8 +75,7 @@ public class ActionOnHitAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnHitAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Hit")
-                    .setDescription("Performs actions when the entity that has this ability hits another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being hit.")
+            builder.setDescription("Performs actions when the entity that has this ability hits another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being hit.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the hit must meet for the actions to perform.")

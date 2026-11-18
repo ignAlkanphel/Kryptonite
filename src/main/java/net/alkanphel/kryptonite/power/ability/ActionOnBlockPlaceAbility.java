@@ -111,8 +111,7 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockPlaceAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Block Place")
-                    .setDescription("Performs actions upon placing a block.")
+            builder.setDescription("Performs actions upon placing a block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them placing a block.")
                     .addOptional("place_to_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the position of the block the player has placed.")
                     .addOptional("place_on_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player placed a block on.")

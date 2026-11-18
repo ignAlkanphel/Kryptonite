@@ -92,8 +92,7 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Entity Use")
-                    .setDescription("Performs actions when a player \"uses\" (right-clicks) an entity. For this ability, the \"source\" is the player performing the interaction & the \"target\" is the entity being interacted with. Which one of them needs to have this ability is determined by \"target_used\".")
+            builder.setDescription("Performs actions when a player \"uses\" (right-clicks) an entity. For this ability, the \"source\" is the player performing the interaction & the \"target\" is the entity being interacted with. Which one of them needs to have this ability is determined by \"target_used\".")
                     .addOptional("target_used", SettingType.enumList(TargetUsed.values()), "Determines which entity needs to have this ability. If \"source\", the actions perform when the entity with this ability uses another entity. If \"target\", the actions perform when the entity with this ability is used by a player.", TargetUsed.SOURCE)
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when an entity is used.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")

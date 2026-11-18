@@ -114,8 +114,7 @@ public class ModifyEntityTypeTagAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyEntityTypeTagAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Entity Type Tag")
-                    .setDescription("Makes the entity be apart of the specified entity type tag (including sub-tags).")
+            builder.setDescription("Makes the entity be apart of the specified entity type tag (including sub-tags).")
                     .add("tag", KryptoniteDocumented.TYPE_ENTITY_TYPE_TAG, "The specified entity type tag.")
                     .addExampleObject(new ModifyEntityTypeTagAbility(TagKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("powder_snow_walkable_mobs")), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

@@ -92,8 +92,7 @@ public class ActionOnBlockBreakAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockBreakAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Block Break")
-                    .setDescription("Performs actions when the player that has this ability breaks a block.")
+            builder.setDescription("Performs actions when the player that has this ability breaks a block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon the player breaking a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the broken block position.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the broken block must meet for the actions to perform.")

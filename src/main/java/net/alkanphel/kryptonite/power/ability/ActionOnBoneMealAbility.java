@@ -72,8 +72,7 @@ public class ActionOnBoneMealAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBoneMealAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Bone Meal")
-                    .setDescription("Performs actions when the player bone meals a block.")
+            builder.setDescription("Performs actions when the player bone meals a block.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon bone mealing a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the bone mealed block.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) that the bone mealed block must meet for the actions to perform.")

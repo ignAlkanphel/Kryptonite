@@ -119,8 +119,7 @@ public class GameEventListenerAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, GameEventListenerAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Game Event Listener")
-                    .setDescription("Performs actions when entities emit game events. For this ability, the \"source\" is the entity that emitted the game event & the \"target\" is the entity listening for it.")
+            builder.setDescription("Performs actions when entities emit game events. For this ability, the \"source\" is the entity that emitted the game event & the \"target\" is the entity listening for it.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block being stood on by the entity detecting the game events.")

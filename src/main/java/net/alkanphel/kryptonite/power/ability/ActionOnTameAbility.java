@@ -64,8 +64,7 @@ public class ActionOnTameAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTameAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Tame")
-                    .setDescription("Performs actions when a player tames an animal. For this ability, the \"source\" is the player taming the animal & the \"target\" is the animal being tamed.")
+            builder.setDescription("Performs actions when a player tames an animal. For this ability, the \"source\" is the player taming the animal & the \"target\" is the animal being tamed.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the animal must meet for the actions to perform.")
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

@@ -72,8 +72,7 @@ public class ActionOnItemDropAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemDropAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Item Drop")
-                    .setDescription("Performs actions when the player drops an item.")
+            builder.setDescription("Performs actions when the player drops an item.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when they drop an item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the dropped item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the dropped item must meet for the actions to perform.")

@@ -102,8 +102,7 @@ public class ModifyKnockbackAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyKnockbackAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Knockback")
-                    .setDescription("Modifies knockback dealt or received. For this ability, the \"source\" is the entity that deals knockback & the \"target\" is the entity that receives knockback. For the \"apply_to\" field, \"self\" and \"other\" refer to the entity that has this ability.")
+            builder.setDescription("Modifies knockback dealt or received. For this ability, the \"source\" is the entity that deals knockback & the \"target\" is the entity that receives knockback. For the \"apply_to\" field, \"self\" and \"other\" refer to the entity that has this ability.")
                     .addOptional("apply_to", SettingType.enumList(ApplyTo.values()), "Whether this ability modifies knockback received by the target or knockback dealt to another entity.", ApplyTo.OTHER)
                     .addOptional("strength_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to knockback strength.")
                     .addOptional("ratio_x_modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to knockback X ratio.")

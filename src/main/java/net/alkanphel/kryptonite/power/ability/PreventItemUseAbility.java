@@ -49,8 +49,7 @@ public class PreventItemUseAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventItemUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Item Use")
-                    .setDescription("Prevents the player from using items. (right-click actions such as eating, shield use, or placing blocks still work).")
+            builder.setDescription("Prevents the player from using items. (right-click actions such as eating, shield use, or placing blocks still work).")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the items must meet for use to be prevented.")
                     .addExampleObject(new PreventItemUseAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

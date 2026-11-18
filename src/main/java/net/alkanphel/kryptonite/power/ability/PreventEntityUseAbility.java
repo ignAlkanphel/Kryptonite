@@ -95,8 +95,7 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Use")
-                    .setDescription("Prevents a player from \"using\" (right-clicking) an entity and performs actions upon being prevented. For this ability, the \"source\" is the player performing the interaction & the \"target\" is the entity being interacted with. Which one of them needs to have this ability is determined by \"target_used\".")
+            builder.setDescription("Prevents a player from \"using\" (right-clicking) an entity and performs actions upon being prevented. For this ability, the \"source\" is the player performing the interaction & the \"target\" is the entity being interacted with. Which one of them needs to have this ability is determined by \"target_used\".")
                     .addOptional("target_used", SettingType.enumList(TargetUsed.values()), "Determines which entity needs to have this ability. If \"source\", the player with this ability is prevented from using an entity. If \"target\", the entity with this ability is prevented from being used by a player.", TargetUsed.SOURCE)
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when entity use is prevented.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for entity use to be prevented.")

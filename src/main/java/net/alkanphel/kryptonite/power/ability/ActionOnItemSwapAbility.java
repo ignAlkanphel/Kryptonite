@@ -92,8 +92,7 @@ public class ActionOnItemSwapAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemSwapAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Item Swap")
-                    .setDescription("Performs actions on the player upon swapping items between their main hand & off hand.")
+            builder.setDescription("Performs actions on the player upon swapping items between their main hand & off hand.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap conditions meet.")
                     .addOptional("main_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the main hand.")
                     .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the off hand.")

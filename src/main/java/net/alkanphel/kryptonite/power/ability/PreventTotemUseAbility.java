@@ -86,8 +86,7 @@ public class PreventTotemUseAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventTotemUseAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Prevent Totem Use")
-                    .setDescription("Prevents the entity that has this ability from using a Totem of Undying.")
+            builder.setDescription("Prevents the entity that has this ability from using a Totem of Undying.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is prevented.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the totem to be prevented.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))

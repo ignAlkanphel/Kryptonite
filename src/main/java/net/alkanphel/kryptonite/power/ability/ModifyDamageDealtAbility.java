@@ -82,8 +82,7 @@ public class ModifyDamageDealtAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyDamageDealtAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Damage Dealt")
-                    .setDescription("Modifies the amount of damage the entity that has this ability deals. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that was hit.")
+            builder.setDescription("Modifies the amount of damage the entity that has this ability deals. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that was hit.")
                     .add("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the damage dealt by the \"source\" entity.")
                     .addOptional("self_actions", TYPE_ACTION_LIST, "Action(s) performed on the source.")
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")

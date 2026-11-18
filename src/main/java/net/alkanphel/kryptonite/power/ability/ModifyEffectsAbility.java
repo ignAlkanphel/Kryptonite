@@ -68,8 +68,7 @@ public class ModifyEffectsAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyEffectsAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Modify Effects")
-                    .setDescription("Modifies the amplifier or duration for effects applied to the entity that has this ability.")
+            builder.setDescription("Modifies the amplifier or duration for effects applied to the entity that has this ability.")
                     .add("mode", SettingType.enumList(Mode.values()), "Mode(s) to use for the ability.")
                     .addOptional("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) to apply for the effects.")
                     .addOptional("effects", TYPE_MOB_EFFECT_TYPE_HOLDER_SET, "If specified, only modifies the listed effects upon them being added, otherwise applies to all effects.")

@@ -70,8 +70,7 @@ public class ActionOnCallbackAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnCallbackAbility> builder, HolderLookup.Provider provider) {
-            builder.setName("Action On Callback")
-                    .setDescription("Performs actions on the player with this ability & power based on the lifecycle of a power instance.")
+            builder.setDescription("Performs actions on the player with this ability & power based on the lifecycle of a power instance.")
                     .addOptional("on_spawn", TYPE_ACTION_LIST, "Action(s) performed right after the player respawns & this power is usable.")
                     .addOptional("on_load", TYPE_ACTION_LIST, "Action(s) performed when this power is loaded onto the player (e.g. on login & respawn).")
                     .addOptional("on_unload", TYPE_ACTION_LIST, "Action(s) performed when this power is unloaded from the player (e.g. on logout & death).")
