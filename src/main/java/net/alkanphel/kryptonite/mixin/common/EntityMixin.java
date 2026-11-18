@@ -46,21 +46,6 @@ public abstract class EntityMixin {
         return original || self instanceof LivingEntity living && PreventDamageAbility.preventsFire(living);
     }
 
-    // Prevent Entity Collision ability
-    @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
-    private void kryptonite$preventEntityPushing(Entity entity, CallbackInfo ci) {
-        if (PreventEntityCollisionAbility.doesApply((Entity) (Object) this, entity)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "isPickable", at = @At("RETURN"), cancellable = true)
-    private void kryptonite$preventEntityCollision(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && PreventEntityCollisionAbility.doesApply((Entity) (Object) this, (Entity) (Object) this)) {
-            cir.setReturnValue(false);
-        }
-    }
-
     // Prevent Slowdown (water) ability
     @Inject(method = "isInWater", at = @At("HEAD"), cancellable = true)
     private void kryptonite$preventSlowdownWaterIgnoreIsInWater(CallbackInfoReturnable<Boolean> cir) {
