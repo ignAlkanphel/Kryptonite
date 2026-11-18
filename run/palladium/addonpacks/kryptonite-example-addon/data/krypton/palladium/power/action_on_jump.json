@@ -4,7 +4,7 @@
   "abilities": {
     "action_on_jump": {
       "type": "kryptonite:action_on_jump",
-      "entity_actions": {
+      "actions": {
         "type": "palladium:run_command",
         "command": "say Action on Jump!"
       }

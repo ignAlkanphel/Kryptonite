@@ -4,7 +4,7 @@
     "abilities": {
         "action_on_game_event": {
             "type": "kryptonite:action_on_game_event",
-            "entity_actions": {
+            "actions": {
                 "type": "palladium:run_command",
                 "command": "say Action on game event!"
             },

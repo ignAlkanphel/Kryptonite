@@ -4,7 +4,7 @@
   "abilities": {
     "action_on_land": {
       "type": "kryptonite:action_on_land",
-      "entity_actions": {
+      "actions": {
         "type": "palladium:run_command",
         "command": "say Action on Land!"
       }

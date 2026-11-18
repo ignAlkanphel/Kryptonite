@@ -24,17 +24,17 @@ import java.util.List;
 public class PreventGameEventAbility extends Ability {
 
     public static final MapCodec<PreventGameEventAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(ab -> ab.action),
             PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventGameEventAbility::new));
 
-    public final List<Action> entityActions;
+    public final List<Action> action;
     public final PalladiumHolderSet<GameEvent> gameEvents;
 
-    public PreventGameEventAbility(List<Action> entityActions, PalladiumHolderSet<GameEvent> gameEvents, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventGameEventAbility(List<Action> action, PalladiumHolderSet<GameEvent> gameEvents, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
         this.gameEvents = gameEvents;
     }
 
@@ -43,7 +43,7 @@ public class PreventGameEventAbility extends Ability {
     }
 
     public void runActions(LivingEntity entity) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PreventGameEventAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventGameEventAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity that has this ability from emitting game events.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) to perform when the game events are prevented.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) to perform when the game events are prevented.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events to prevent.")
                     .addExampleObject(new PreventGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say A game event was prevented!")))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventGameEventAbility(List.of(), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.TELEPORT, GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

@@ -24,17 +24,17 @@ import java.util.List;
 public class ActionOnGameEventAbility extends Ability {
 
     public static final MapCodec<ActionOnGameEventAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(ab -> ab.action),
             PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnGameEventAbility::new));
 
-    public final List<Action> entityActions;
+    public final List<Action> action;
     public final PalladiumHolderSet<GameEvent> gameEvents;
 
-    public ActionOnGameEventAbility(List<Action> entityActions, PalladiumHolderSet<GameEvent> gameEvents, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnGameEventAbility(List<Action> action, PalladiumHolderSet<GameEvent> gameEvents, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
         super(properties, stateManager, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
         this.gameEvents = gameEvents;
     }
 
@@ -43,7 +43,7 @@ public class ActionOnGameEventAbility extends Ability {
     }
 
     public void runActions(LivingEntity entity) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ActionOnGameEventAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnGameEventAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Game Event")
                     .setDescription("Performs actions when the entity that has this ability emits game events.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when game events are emitted.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed when game events are emitted.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events that must be emitted for the actions to perform.")
                     .addExampleObject(new ActionOnGameEventAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Action on game event!")))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.STEP)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

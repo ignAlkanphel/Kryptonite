@@ -21,19 +21,19 @@ import java.util.List;
 public class ActionOnJumpAbility extends Ability {
 
     public static final MapCodec<ActionOnJumpAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.fieldOf("entity_actions").forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.action),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnJumpAbility::new));
 
-    public final List<Action> entityActions;
+    public final List<Action> action;
 
-    public ActionOnJumpAbility(List<Action> entityActions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnJumpAbility(List<Action> action, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
     }
 
     public void runActions(LivingEntity entity) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ActionOnJumpAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnJumpAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Jump")
                     .setDescription("Performs actions upon jumping.")
-                    .add("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon jumping.")
+                    .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon jumping.")
                     .addExampleObject(new ActionOnJumpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on jump!"))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

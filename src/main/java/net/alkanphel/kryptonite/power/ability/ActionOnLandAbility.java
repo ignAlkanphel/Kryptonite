@@ -18,19 +18,19 @@ import java.util.List;
 public class ActionOnLandAbility extends Ability {
 
     public static final MapCodec<ActionOnLandAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.fieldOf("entity_actions").forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.action),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnLandAbility::new));
 
-    public final List<Action> entityActions;
+    public final List<Action> action;
 
-    public ActionOnLandAbility(List<Action> entityActions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnLandAbility(List<Action> action, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
     }
 
     public void runActions(LivingEntity entity) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ActionOnLandAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnLandAbility> builder, HolderLookup.Provider provider) {
             builder.setName("Action On Land")
                     .setDescription("Performs actions upon landing after being airborne.")
-                    .add("entity_actions", TYPE_ACTION_LIST, "Acton(s) performed upon landing.")
+                    .add("actions", TYPE_ACTION_LIST, "Acton(s) performed upon landing.")
                     .addExampleObject(new ActionOnLandAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on land!"))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

@@ -8,7 +8,7 @@
         "minecraft:hit_ground",
         "minecraft:step"
       ],
-      "entity_actions": {
+      "actions": {
         "type": "palladium:run_command",
         "command": "say A game event was prevented!"
       }

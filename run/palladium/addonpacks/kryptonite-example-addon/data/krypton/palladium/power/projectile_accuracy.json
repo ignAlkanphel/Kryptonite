@@ -4,7 +4,7 @@
     "abilities": {
         "projectile_accuracy_arrow": {
             "type": "kryptonite:projectile_accuracy",
-            "entity_conditions": {
+            "projectile_conditions": {
                 "type": "palladium:as_target",
                 "conditions": [
                     {
@@ -26,7 +26,7 @@
         },
         "projectile_accuracy_snowball": {
             "type": "kryptonite:projectile_accuracy",
-            "entity_conditions": {
+            "projectile_conditions": {
                 "type": "palladium:as_target",
                 "conditions": [
                     {

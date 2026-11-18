@@ -24,19 +24,19 @@ import java.util.List;
 public class ProjectileAccuracyAbility extends Ability {
 
     public static final MapCodec<ProjectileAccuracyAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Condition.CODEC.optionalFieldOf("projectile_conditions", TrueCondition.INSTANCE).forGetter(a -> a.condition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ProjectileAccuracyAbility::new));
 
-    public final Condition entityConditions;
+    public final Condition condition;
 
-    public ProjectileAccuracyAbility(Condition entityConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ProjectileAccuracyAbility(Condition condition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityConditions = entityConditions;
+        this.condition = condition;
     }
 
     public boolean doesApply(LivingEntity source, Projectile target, AbilityInstance<?> abilityInstance) {
-        return entityConditions.test(DataContext.forAffected(target, source, abilityInstance));
+        return condition.test(DataContext.forAffected(target, source, abilityInstance));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ProjectileAccuracyAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ProjectileAccuracyAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes projectiles shot by the player more accurate by making their divergence less random. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the projectile.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the projectile must meet to be affected.")
+                    .addOptional("projectile_conditions", TYPE_CONDITION_LIST, "Condition(s) the projectile must meet to be affected.")
                     .addExampleObject(new ProjectileAccuracyAbility(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("arrow")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
