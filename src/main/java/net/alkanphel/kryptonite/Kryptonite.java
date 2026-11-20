@@ -1,7 +1,6 @@
 package net.alkanphel.kryptonite;
 
 import com.mojang.logging.LogUtils;
-import net.alkanphel.kryptonite.client.particle.KryptoniteParticles;
 import net.alkanphel.kryptonite.network.KryptoniteNetwork;
 import net.alkanphel.kryptonite.power.*;
 import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributes;
@@ -35,7 +34,6 @@ public class Kryptonite {
     public Kryptonite(IEventBus modEventBus, ModContainer modContainer) {
 
         KryptoniteAttributes.register(modEventBus);
-        KryptoniteParticles.PARTICLE_TYPES.register(modEventBus);
         KryptoniteAttachments.ATTACHMENT_TYPES.register(modEventBus);
         KryptoniteActionSerializers.ACTION_SERIALIZERS.register(modEventBus);
         KryptoniteAbilitySerializers.ABILITIES_SERIALIZERS.register(modEventBus);
