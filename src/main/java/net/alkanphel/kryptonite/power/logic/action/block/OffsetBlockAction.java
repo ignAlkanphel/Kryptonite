@@ -58,9 +58,9 @@ public class OffsetBlockAction extends BlockAction {
             builder.setName("Offset")
                     .setDescription("Performs block actions with an offset position relative to the original block.")
                     .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the offset position.")
-                    .addOptional("x", TYPE_VALUE, "How much to offset the position on the x-axis.", 0)
-                    .addOptional("y", TYPE_VALUE, "How much to offset the position on the y-axis.", 0)
-                    .addOptional("z", TYPE_VALUE, "How much to offset the position on the z-axis.", 0)
+                    .addOptional("x", TYPE_VALUE, "How much to offset the position on the X axis.", 0)
+                    .addOptional("y", TYPE_VALUE, "How much to offset the position on the Y axis.", 0)
+                    .addOptional("z", TYPE_VALUE, "How much to offset the position on the Z axis.", 0)
                     .addExampleObject(new OffsetBlockAction(List.of(), new StaticValue(0), new StaticValue(1), new StaticValue(0)));
         }
     }

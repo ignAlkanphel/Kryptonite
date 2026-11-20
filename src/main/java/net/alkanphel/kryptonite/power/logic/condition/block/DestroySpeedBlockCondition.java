@@ -51,7 +51,7 @@ public record DestroySpeedBlockCondition(NumberComparator comparator, Value comp
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockCondition, DestroySpeedBlockCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Destroy Speed")
-                    .setDescription("Checks and compartes the destroy speed value of the block.")
+                    .setDescription("Checks and compares the destroy speed value of the block.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used")
                     .add("compare_to", TYPE_FLOAT_VALUE, "Value that is being compared against")
                     .addExampleObject(new DestroySpeedBlockCondition(NumberComparator.EQUALS, new StaticValue(1.5)));
