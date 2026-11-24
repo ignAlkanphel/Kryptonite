@@ -11,13 +11,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ChunkResult;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -29,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = Kryptonite.MOD_ID)
 public record LastLocation(ResourceKey<Level> dimension, double x, double y, double z, float yaw, float pitch) {
@@ -126,35 +124,32 @@ public record LastLocation(ResourceKey<Level> dimension, double x, double y, dou
         }
 
         Vec3 pos = new Vec3(location.x(), location.y(), location.z());
-        int chunkX = SectionPos.blockToSectionCoord(pos.x);
-        int chunkZ = SectionPos.blockToSectionCoord(pos.z);
+        ChunkPos chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
 
-        loadChunkAsync(level, chunkX, chunkZ).thenAccept(chunkResult -> {
-            if (!chunkResult.isSuccess()) {
-                if (onFail != null) level.getServer().execute(onFail);
+        var future = level.getChunkSource().addTicketAndLoadWithRadius(TicketType.PLAYER_SPAWN, chunkPos, 0);
+
+        future.whenComplete((ignored, error) -> level.getServer().execute(() -> {
+            if (error != null) {
+                if (onFail != null) onFail.run();
                 return;
             }
 
-            level.getServer().execute(() -> {
-                Entity target = keepMount ? player.getRootVehicle() : player;
-                if (resetFallDistance) target.resetFallDistance();
+            if (player.hasDisconnected() || player.isRemoved() || !player.isAlive()) return;
 
-                float yaw = keepRotation ? player.getYRot() : location.yaw();
-                float pitch = keepRotation ? player.getXRot() : location.pitch();
+            Entity target = keepMount ? player.getRootVehicle() : player;
+            if (resetFallDistance) target.resetFallDistance();
 
-                if (target.teleportTo(level, pos.x, pos.y, pos.z, Set.of(), yaw, pitch, true)) {
-                    if (onSuccess != null) onSuccess.run();
-                } else {
-                    if (onFail != null) onFail.run();
-                }
-            });
-        });
+            float yaw = keepRotation ? player.getYRot() : location.yaw();
+            float pitch = keepRotation ? player.getXRot() : location.pitch();
+
+            if (target.teleportTo(level, pos.x, pos.y, pos.z, Set.of(), yaw, pitch, true)) {
+                if (onSuccess != null) onSuccess.run();
+            } else {
+                if (onFail != null) onFail.run();
+            }
+        }));
 
         return true;
-    }
-
-    public static CompletableFuture<ChunkResult<ChunkAccess>> loadChunkAsync(ServerLevel level, int x, int z) {
-        return level.getChunkSource().getChunkFuture(x, z, ChunkStatus.FULL, true);
     }
 
 }
