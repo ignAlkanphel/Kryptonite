@@ -123,8 +123,8 @@ public class ExplodeAction extends Action {
                     .addOptional("damage_entity_conditions", TYPE_CONDITION_LIST, "Condition(s) an entity must meet to take damage from the explosion.")
                     .addOptional("damage_self", TYPE_BOOLEAN_VALUE, "If true, the entity that triggered the explosion will also take damage from it.", true)
                     .addOptional("create_fire", TYPE_BOOLEAN_VALUE, "If true, the explosion will create fire (e.g. ghast fireball).", false)
-                    .addOptional("power", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The strength/radius of the explosion.")
-                    .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Integer.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
+                    .addOptional("power", KryptoniteSettingType.floatValueRange(0, Float.MAX_VALUE), "The strength/radius of the explosion.")
+                    .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Float.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
                     .addExampleObject(new ExplodeAction(List.of(), List.of(), Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, new StaticValue(4), new StaticValue(10)));
         }
     }
