@@ -38,7 +38,7 @@ import java.util.Optional;
 public class ActionOnBlockBreakAbility extends Ability {
 
     public static final MapCodec<ActionOnBlockBreakAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             Codec.BOOL.optionalFieldOf("only_when_harvested", false).forGetter(a -> a.onlyWhenHarvested),
@@ -93,7 +93,7 @@ public class ActionOnBlockBreakAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockBreakAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player that has this ability breaks a block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon the player breaking a block.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon the player breaking a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the broken block position.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the broken block must meet for the actions to perform.")
                     .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only performs the actions when the block was successfully harvested (using correct tool for drops).", false)

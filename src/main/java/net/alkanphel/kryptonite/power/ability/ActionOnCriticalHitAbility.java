@@ -25,8 +25,8 @@ import java.util.List;
 public class ActionOnCriticalHitAbility extends Ability {
 
     public static final MapCodec<ActionOnCriticalHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnCriticalHitAbility::new));
 
@@ -62,8 +62,8 @@ public class ActionOnCriticalHitAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnCriticalHitAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player with this ability lands a critical hit. For this ability, the \"source\" is the attacking player & the \"target\" is the entity being hit.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target when a critical hit is dealt.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target when a critical hit is dealt.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addExampleObject(new ActionOnCriticalHitAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on critical hit!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

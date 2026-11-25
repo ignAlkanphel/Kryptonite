@@ -25,7 +25,7 @@ import java.util.List;
 public class ActionWhenDamageTakenAbility extends Ability {
 
     public static final MapCodec<ActionWhenDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.fieldOf("entity_actions").forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.entityActions),
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionWhenDamageTakenAbility::new));
@@ -61,8 +61,8 @@ public class ActionWhenDamageTakenAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionWhenDamageTakenAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Performs actions upon the entity that has this ability taking damage.")
-                    .add("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
+            builder.setDescription("Performs actions upon taking damage.")
+                    .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the actions to perform.")
                     .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE)))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

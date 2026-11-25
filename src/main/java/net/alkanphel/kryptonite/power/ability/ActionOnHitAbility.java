@@ -32,8 +32,8 @@ import java.util.List;
 public class ActionOnHitAbility extends Ability {
 
     public static final MapCodec<ActionOnHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnHitAbility::new));
@@ -76,8 +76,8 @@ public class ActionOnHitAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnHitAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the entity that has this ability hits another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being hit.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the hit must meet for the actions to perform.")
                     .addExampleObject(new ActionOnHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit something!"))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

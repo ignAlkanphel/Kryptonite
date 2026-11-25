@@ -33,7 +33,7 @@ import java.util.Optional;
 public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<ActionOnBlockPlaceAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("place_to_actions", List.of()).forGetter(a -> a.placeToActions),
             BlockAction.LIST_CODEC.optionalFieldOf("place_on_actions", List.of()).forGetter(a -> a.placeOnActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("place_to_conditions", List.of()).forGetter(a -> a.placeToConditions),
@@ -112,7 +112,7 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockPlaceAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions upon placing a block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them placing a block.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them placing a block.")
                     .addOptional("place_to_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the position of the block the player has placed.")
                     .addOptional("place_on_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player placed a block on.")
                     .addOptional("place_to_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block at the position of the block the player is about to place must meet for the actions to perform.")

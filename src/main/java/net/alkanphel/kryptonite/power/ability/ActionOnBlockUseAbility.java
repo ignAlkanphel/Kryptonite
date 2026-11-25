@@ -36,7 +36,7 @@ import java.util.Optional;
 public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<ActionOnBlockUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             BlockUsagePhase.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("use_phases", EnumSet.allOf(BlockUsagePhase.class)).forGetter(a -> a.usePhases),
@@ -130,7 +130,7 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player that has this ability 'uses' (right-clicks) a block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them using a block.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon them using a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player used.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")
                     .addOptional("use_phases", KryptoniteDocumented.TYPE_BLOCK_USAGE_PHASE, "At which point the actions should be performed/prevented.")
