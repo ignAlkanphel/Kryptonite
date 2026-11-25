@@ -25,6 +25,7 @@ eclipse
 !/run/palladium/addonpacks/
 !/run/palladium/addonpacks/example_pack/
 /run/palladium/addonpacks/palladium-example-addon/
+/run/palladium/addonpacks/kryptonite-example-addon/
 repo
 /.vscode
 /.claude
