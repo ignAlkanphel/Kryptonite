@@ -10,12 +10,12 @@ import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public class VehicleDismountAction extends Action {
+public class DismountAction extends Action {
 
-    public static final MapCodec<VehicleDismountAction> CODEC = MapCodec.unit(new VehicleDismountAction());
-    public static final StreamCodec<RegistryFriendlyByteBuf, VehicleDismountAction> STREAM_CODEC = StreamCodec.unit(new VehicleDismountAction());
+    public static final MapCodec<DismountAction> CODEC = MapCodec.unit(new DismountAction());
+    public static final StreamCodec<RegistryFriendlyByteBuf, DismountAction> STREAM_CODEC = StreamCodec.unit(new DismountAction());
 
-    public VehicleDismountAction() {}
+    public DismountAction() {}
 
     @Override
     protected boolean execute(DataContext context) {
@@ -28,21 +28,21 @@ public class VehicleDismountAction extends Action {
 
     @Override
     public ActionSerializer<?> getSerializer() {
-        return KryptoniteActionSerializers.VEHICLE_DISMOUNT.get();
+        return KryptoniteActionSerializers.DISMOUNT.get();
     }
 
-    public static class Serializer extends ActionSerializer<VehicleDismountAction> {
+    public static class Serializer extends ActionSerializer<DismountAction> {
 
         @Override
-        public MapCodec<VehicleDismountAction> codec() {
+        public MapCodec<DismountAction> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Action, VehicleDismountAction> builder, HolderLookup.Provider provider) {
-            builder.setName("Vehicle Dismount")
+        public void addDocumentation(CodecDocumentationBuilder<Action, DismountAction> builder, HolderLookup.Provider provider) {
+            builder.setName("Dismount")
                     .setDescription("Dismounts the entity from their vehicle.")
-                    .addExampleObject(new VehicleDismountAction());
+                    .addExampleObject(new DismountAction());
         }
     }
 
