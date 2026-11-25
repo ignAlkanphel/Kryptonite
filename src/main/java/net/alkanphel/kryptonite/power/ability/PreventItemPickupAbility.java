@@ -44,10 +44,10 @@ import java.util.UUID;
 public class PreventItemPickupAbility extends Ability implements Prioritized {
 
     public static final MapCodec<PreventItemPickupAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions_thrower", List.of()).forGetter(a -> a.entityActionsThrower),
-            Action.LIST_CODEC.optionalFieldOf("entity_actions_item", List.of()).forGetter(a -> a.entityActionsItem),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_thrower", List.of()).forGetter(a -> a.entityActionsThrower),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_item", List.of()).forGetter(a -> a.entityActionsItem),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -127,10 +127,10 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventItemPickupAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity that has this ability from picking up items. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity attempting to pick up the item.")
-                    .addOptional("entity_actions_thrower", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
-                    .addOptional("entity_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
+                    .addOptional("target_actions_thrower", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
+                    .addOptional("target_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet to prevent item pickup.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

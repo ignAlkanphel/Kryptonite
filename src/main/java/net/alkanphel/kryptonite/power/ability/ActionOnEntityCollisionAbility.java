@@ -22,10 +22,10 @@ import java.util.*;
 public class ActionOnEntityCollisionAbility extends Ability {
 
     public static final MapCodec<ActionOnEntityCollisionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_first_tick", List.of()).forGetter(a -> a.entityActionsFirstTick),
-            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_tick", List.of()).forGetter(a -> a.entityActionsTick),
-            Action.LIST_CODEC.optionalFieldOf("entity_actions_on_last_tick", List.of()).forGetter(a -> a.entityActionsLastTick),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_on_first_tick", List.of()).forGetter(a -> a.entityActionsFirstTick),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_on_tick", List.of()).forGetter(a -> a.entityActionsTick),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_on_last_tick", List.of()).forGetter(a -> a.entityActionsLastTick),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnEntityCollisionAbility::new));
 
@@ -120,10 +120,10 @@ public class ActionOnEntityCollisionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnEntityCollisionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the entity collides with another entity. For this ability, the \"source\" is the entity that has this ability & the \"target\" is the entity being collided with.")
-                    .addOptional("entity_actions_on_first_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target on first tick of collision.")
-                    .addOptional("entity_actions_on_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target every tick while colliding with an entity.")
-                    .addOptional("entity_actions_on_last_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target the last tick of collision.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("target_actions_on_first_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target on first tick of collision.")
+                    .addOptional("target_actions_on_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target every tick while colliding with an entity.")
+                    .addOptional("target_actions_on_last_tick", TYPE_ACTION_LIST, "Action(s) that are performed on the target the last tick of collision.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (source)!"))))), List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (source)!"))))), List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (source)!"))))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnEntityCollisionAbility(List.of(new RunCommandAction(new ParsedCommands("say first tick action on entity collision (target)!"))), List.of(new RunCommandAction(new ParsedCommands("say tick action on entity collision (target)!"))), List.of(new RunCommandAction(new ParsedCommands("say last tick action on entity collision (target)!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

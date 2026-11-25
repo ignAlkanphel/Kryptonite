@@ -28,8 +28,8 @@ import java.util.List;
 public class ActionOnTameAbility extends Ability {
 
     public static final MapCodec<ActionOnTameAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnTameAbility::new));
 
@@ -65,8 +65,8 @@ public class ActionOnTameAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTameAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when a player tames an animal. For this ability, the \"source\" is the player taming the animal & the \"target\" is the animal being tamed.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the animal must meet for the actions to perform.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the animal being tamed.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the animal must meet for the actions to perform.")
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!"))), TrueCondition.INSTANCE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnTameAbility(List.of(new RunCommandAction(new ParsedCommands("say You tamed me!")), new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say You tamed them"))))), new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("wolf")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

@@ -32,7 +32,7 @@ public class GlowingAbility extends Ability {
 
     public static final MapCodec<GlowingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Mode.CODEC.optionalFieldOf("mode", Mode.SELF).forGetter(ab -> ab.mode),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(ab -> ab.entityConditions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(ab -> ab.entityConditions),
             BooleanValueHolder.CODEC.optionalFieldOf("use_teams", BooleanValueHolder.TRUE).forGetter(ab -> ab.useTeams),
             KryptoniteCodecs.RGBValue.CODEC.optionalFieldOf("color", KryptoniteCodecs.RGBValue.WHITE).forGetter(ab -> ab.color),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -85,7 +85,7 @@ public class GlowingAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, GlowingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes entities glow like the \"minecraft:glowing\" effect. Use \"self\" mode to make the ability holder glow for others, \"target\" mode to make other entities glow for the ability holder.")
                     .addOptional("mode", SettingType.enumList(Mode.values()), "\"self\" means the ability holder glows for others & \"target\" means the ability holder sees others glow.", Mode.SELF)
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to see the glow in \"self\" mode or glow in \"other\" mode. Use 'palladium:as_source' to check conditions against the ability holder instead.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to see the glow in \"self\" mode or glow in \"other\" mode. Use 'palladium:as_source' to check conditions against the ability holder instead.")
                     .addOptional("use_teams", TYPE_BOOLEAN_VALUE, "If true, the team color overrides the glow color when applicable.", true)
                     .addOptional("color", KryptoniteDocumented.TYPE_RGB_VALUE, "The RGB glow color to use.", KryptoniteCodecs.RGBValue.WHITE)
                     .addExampleObject(new GlowingAbility(Mode.SELF, TrueCondition.INSTANCE, BooleanValueHolder.TRUE, new KryptoniteCodecs.RGBValue(new StaticValue(0.85), new StaticValue(1.0), new StaticValue(0.1)), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

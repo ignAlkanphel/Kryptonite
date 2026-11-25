@@ -41,8 +41,8 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<PreventEntityUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             TargetUsed.CODEC.optionalFieldOf("target_used", TargetUsed.SOURCE).forGetter(a -> a.targetUsed),
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemActions, a.heldItemConditions, a.resultItemActions, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, (targetUsed, entityActions, entityConditions, activeFields, properties, state, energyBarUsages) -> {
@@ -97,8 +97,8 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventEntityUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents a player from \"using\" (right-clicking) an entity and performs actions upon being prevented. For this ability, the \"source\" is the player performing the interaction & the \"target\" is the entity being interacted with. Which one of them needs to have this ability is determined by \"target_used\".")
                     .addOptional("target_used", SettingType.enumList(TargetUsed.values()), "Determines which entity needs to have this ability. If \"source\", the player with this ability is prevented from using an entity. If \"target\", the entity with this ability is prevented from being used by a player.", TargetUsed.SOURCE)
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when entity use is prevented.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for entity use to be prevented.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when entity use is prevented.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for entity use to be prevented.")
                     .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item used by the source to interact with the target.")
                     .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item used by the source must meet for entity use to be prevented.")
                     .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the source.")

@@ -39,7 +39,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
     public static final MapCodec<ActionOnItemPickupAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -115,7 +115,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
             builder.setDescription("Performs actions when an entity picks up an item. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity picking up the item.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Action(s) performed on the item stack being picked up.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet for actions to perform.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
                     .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say AHHH!!! PICKED UP PICKED UP!!!"))), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

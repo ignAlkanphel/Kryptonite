@@ -32,7 +32,7 @@ import java.util.Optional;
 public class ActionOnFarmlandTrampleAbility extends Ability {
 
     public static final MapCodec<ActionOnFarmlandTrampleAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -73,7 +73,7 @@ public class ActionOnFarmlandTrampleAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnFarmlandTrampleAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when trampling a farmland block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when trampling the farmland block.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed when trampling the farmland block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the trampled farmland block.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the farmland block must meet for the actions to perform.")
                     .addExampleObject(new ActionOnFarmlandTrampleAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on farmland trample!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
