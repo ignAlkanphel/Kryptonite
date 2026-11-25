@@ -35,7 +35,7 @@ import java.util.List;
 public class ActionOnTotemUseAbility extends Ability {
 
     public static final MapCodec<ActionOnTotemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
             Codec.list(KryptoniteCodecs.HAND_CODEC).xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("hands", EnumSet.allOf(InteractionHand.class)).forGetter(a -> a.hands),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -77,7 +77,7 @@ public class ActionOnTotemUseAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnTotemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the entity that has this ability uses a Totem of Undying to prevent death.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is activated.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is activated.")
                     .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source that activated the totem must meet for the actions to perform.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
                     .addExampleObject(new ActionOnTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on totem use!"))), List.of(), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

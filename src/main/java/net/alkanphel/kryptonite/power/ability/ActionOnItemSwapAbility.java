@@ -37,7 +37,7 @@ import java.util.Locale;
 public class ActionOnItemSwapAbility extends Ability {
 
     public static final MapCodec<ActionOnItemSwapAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("main_item_actions", List.of()).forGetter(a -> a.mainItemActions),
             ItemAction.LIST_CODEC.optionalFieldOf("off_item_actions", List.of()).forGetter(a -> a.offItemActions),
             ItemCondition.LIST_CODEC.optionalFieldOf("main_item_conditions", List.of()).forGetter(a -> a.mainItemConditions),
@@ -93,7 +93,7 @@ public class ActionOnItemSwapAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemSwapAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions on the player upon swapping items between their main hand & off hand.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap conditions meet.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap conditions meet.")
                     .addOptional("main_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the main hand.")
                     .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the off hand.")
                     .addOptional("main_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the post-swap main hand item must meet.")

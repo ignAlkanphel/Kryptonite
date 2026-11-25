@@ -32,7 +32,7 @@ import java.util.Optional;
 public class ActionOnBoneMealAbility extends Ability {
 
     public static final MapCodec<ActionOnBoneMealAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -73,7 +73,7 @@ public class ActionOnBoneMealAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBoneMealAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player bone meals a block.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon bone mealing a block.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon bone mealing a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the bone mealed block.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) that the bone mealed block must meet for the actions to perform.")
                     .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

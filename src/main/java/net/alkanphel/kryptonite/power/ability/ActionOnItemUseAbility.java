@@ -40,7 +40,7 @@ import java.util.Locale;
 public class ActionOnItemUseAbility extends Ability implements Prioritized {
 
     public static final MapCodec<ActionOnItemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
             ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             TriggerType.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("trigger", EnumSet.allOf(TriggerType.class)).forGetter(a -> a.triggerType),
@@ -110,7 +110,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player uses an item (e.g. drawing a bow or eating).")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player after using an item.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player after using an item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the remaining item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the remaining item must meet for the actions to perform.")
                     .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions perform.", TriggerType.FINISH)

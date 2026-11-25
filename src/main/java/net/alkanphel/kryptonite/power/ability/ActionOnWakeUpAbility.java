@@ -30,7 +30,7 @@ import java.util.Optional;
 public class ActionOnWakeUpAbility extends Ability {
 
     public static final MapCodec<ActionOnWakeUpAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -70,8 +70,8 @@ public class ActionOnWakeUpAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnWakeUpAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Performs actions upon the player waking up after sleeping.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon waking up.")
+            builder.setDescription("Performs actions upon waking up after sleeping.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon waking up.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player was sleeping on.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the sleeping block must meet for the actions to perform.")
                     .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

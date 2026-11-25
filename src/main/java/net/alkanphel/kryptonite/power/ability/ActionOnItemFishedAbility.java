@@ -29,7 +29,7 @@ import java.util.List;
 public class ActionOnItemFishedAbility extends Ability {
 
     public static final MapCodec<ActionOnItemFishedAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
             ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -70,7 +70,7 @@ public class ActionOnItemFishedAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemFishedAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player reels in an item while fishing.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player after reeling in an item.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player after reeling in an item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the reeled item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the reeled item must meet for the actions to perform.")
                     .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))

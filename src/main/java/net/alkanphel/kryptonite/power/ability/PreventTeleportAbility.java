@@ -32,7 +32,7 @@ import java.util.Optional;
 public class PreventTeleportAbility extends Ability {
 
     public static final MapCodec<PreventTeleportAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("from_dimension_conditions", List.of()).forGetter(a -> a.originDimensionConditions),
             DimensionCondition.LIST_CODEC.optionalFieldOf("to_dimension_conditions", List.of()).forGetter(a -> a.destinationDimensionConditions),
             Value.NUMBER_CODEC.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
@@ -139,7 +139,7 @@ public class PreventTeleportAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventTeleportAbility> builder, HolderLookup.Provider provider) {
 
             builder.setDescription("Prevents the entity that has this ability from teleporting by the specified sources.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed upon teleportation being prevented.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon teleportation being prevented.")
                     .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting from.")
                     .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting to.")
                     .addOptional("min_distance", TYPE_DOUBLE_VALUE, "Minimum distance required for prevention. Doesn't work for the 'dimension_travel' source.")

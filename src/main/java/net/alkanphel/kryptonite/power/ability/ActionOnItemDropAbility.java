@@ -32,7 +32,7 @@ import java.util.List;
 public class ActionOnItemDropAbility extends Ability {
 
     public static final MapCodec<ActionOnItemDropAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
             ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
@@ -73,7 +73,7 @@ public class ActionOnItemDropAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemDropAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player drops an item.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the player when they drop an item.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player when they drop an item.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the dropped item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the dropped item must meet for the actions to perform.")
                     .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped an item!")))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
