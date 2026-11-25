@@ -1,9 +1,0 @@
-{
-  "name": "Allow Enderman Stare", "icon": "minecraft:carved_pumpkin",
-
-  "abilities": {
-    "allow_enderman_stare": {
-      "type": "kryptonite:allow_enderman_stare"
-    }
-  }
-}
