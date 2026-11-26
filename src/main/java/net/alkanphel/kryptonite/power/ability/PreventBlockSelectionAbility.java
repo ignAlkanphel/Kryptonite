@@ -3,9 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -25,22 +23,22 @@ import java.util.List;
 public class PreventBlockSelectionAbility extends Ability {
 
     public static final MapCodec<PreventBlockSelectionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(ab -> ab.blockFilter),
             BooleanValueHolder.CODEC.optionalFieldOf("visual_only", BooleanValueHolder.FALSE).forGetter(a -> a.visualOnly),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventBlockSelectionAbility::new));
 
-    public final List<BlockCondition> blockConditions;
+    public final BlockFilter blockFilter;
     public final BooleanValueHolder visualOnly;
 
-    public PreventBlockSelectionAbility(List<BlockCondition> blockConditions, BooleanValueHolder visualOnly, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventBlockSelectionAbility(BlockFilter blockFilter, BooleanValueHolder visualOnly, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.blockConditions = blockConditions;
+        this.blockFilter = blockFilter;
         this.visualOnly = visualOnly;
     }
 
     public boolean doesPrevent(Level level, BlockPos pos) {
-        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, level, pos);
+        return blockFilter.test(level, pos);
     }
 
     public static boolean doesPrevent(LivingEntity living, BlockPos pos) {
@@ -68,10 +66,10 @@ public class PreventBlockSelectionAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockSelectionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the selection of blocks. The player won't be able to mine or interact with said blocks; meaning actions will pass through to whatever is behind said blocks.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for selection to be prevented.")
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the blocks must pass for selection to be prevented.")
                     .addOptional("visual_only", TYPE_BOOLEAN_VALUE, "If true, the ability will be purely visual.", false)
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(), BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockSelectionAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES)))), BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockSelectionAbility(BlockFilter.EMPTY, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockSelectionAbility(BlockFilter.ofBlock((PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.LEAVES)))), BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

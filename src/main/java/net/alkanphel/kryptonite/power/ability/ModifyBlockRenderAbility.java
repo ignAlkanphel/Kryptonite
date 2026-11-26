@@ -5,9 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.network.p2c.S2CModifyBlockRender;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -33,19 +31,19 @@ import java.util.Locale;
 public class ModifyBlockRenderAbility extends Ability {
 
     public static final MapCodec<ModifyBlockRenderAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(ab -> ab.blockFilter),
             BlockState.CODEC.fieldOf("block_state").forGetter(ab -> ab.blockState),
             Mode.CODEC.optionalFieldOf("chunk_mode", Mode.REFRESH_VISIBLE).forGetter(ab -> ab.mode),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyBlockRenderAbility::new));
 
-    public final List<BlockCondition> blockConditions;
+    public final BlockFilter blockFilter;
     public final BlockState blockState;
     public final Mode mode;
 
-    public ModifyBlockRenderAbility(List<BlockCondition> blockConditions, BlockState blockState, Mode mode, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyBlockRenderAbility(BlockFilter blockFilter, BlockState blockState, Mode mode, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.blockConditions = blockConditions;
+        this.blockFilter = blockFilter;
         this.blockState = blockState;
         this.mode = mode;
     }
@@ -65,7 +63,7 @@ public class ModifyBlockRenderAbility extends Ability {
     }
 
     public boolean doesApply(Level level, BlockPos pos) {
-        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, level, pos);
+        return blockFilter.test(level, pos);
     }
 
     public BlockState getBlockState() {
@@ -87,11 +85,11 @@ public class ModifyBlockRenderAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyBlockRenderAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Modifies how a block looks like for the player that has this ability.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the blocks must pass to be affected.")
                     .add("block_state", TYPE_BLOCK_STATE, "The block state to render in place of the block.")
                     .addOptional("chunk_mode", SettingType.enumList(Mode.values()), "How the block visuals are updated on the client. Mode \"refresh_all\" reloads all chunks again. Mode \"refresh_visible\" updates currently visible chunks in sections & is less performance taxing due to that. Regardless of which, \"refresh_all\" activates on the last tick of the ability.", Mode.REFRESH_VISIBLE)
-                    .addExampleObject(new ModifyBlockRenderAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sponge"))))))), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ModifyBlockRenderAbility(List.of(), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_ALL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ModifyBlockRenderAbility(BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sponge"))))))), Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_VISIBLE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ModifyBlockRenderAbility(BlockFilter.EMPTY, Blocks.DIAMOND_BLOCK.defaultBlockState(), Mode.REFRESH_ALL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

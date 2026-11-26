@@ -4,7 +4,6 @@ import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.addonpack.log.AddonPackLog;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

@@ -6,8 +6,8 @@ import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializer;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.power.logic.context.BlockActionContext;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.minecraft.core.HolderLookup;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
@@ -20,19 +20,19 @@ public class AreaOfEffectBlockAction extends BlockAction {
 
     public static final MapCodec<AreaOfEffectBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockAction.LIST_CODEC.fieldOf("block_actions").forGetter(a -> a.blockActions),
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(a -> a.shape),
             Value.NUMBER_CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(a -> a.radius)
     ).apply(instance, AreaOfEffectBlockAction::new));
 
     private final List<BlockAction> blockActions;
-    private final List<BlockCondition> blockConditions;
+    private final BlockFilter blockFilter;
     private final Shape shape;
     private final Value radius;
 
-    public AreaOfEffectBlockAction(List<BlockAction> blockActions, List<BlockCondition> blockConditions, Shape shape, Value radius) {
+    public AreaOfEffectBlockAction(List<BlockAction> blockActions, BlockFilter blockFilter, Shape shape, Value radius) {
         this.blockActions = blockActions;
-        this.blockConditions = blockConditions;
+        this.blockFilter = blockFilter;
         this.shape = shape;
         this.radius = radius;
     }
@@ -43,7 +43,7 @@ public class AreaOfEffectBlockAction extends BlockAction {
 
         shape.getBlockPositions(context.pos(), radius.getAsInt(null))
                 .stream()
-                .filter(pos -> BlockCondition.checkConditions(blockConditions, level, pos))
+                .filter(pos -> blockFilter.test(level, pos))
                 .forEach(pos -> BlockAction.runList(blockActions, level, pos, context.direction()));
 
         return true;
@@ -66,10 +66,10 @@ public class AreaOfEffectBlockAction extends BlockAction {
             builder.setName("Area of Effect")
                     .setDescription("Performs block actions on all blocks within a radius.")
                     .add("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the blocks in range.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks in range must meet for the actions to perform.")
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the blocks in range must pass for the actions to perform.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", TYPE_INT_VALUE, "The radius of the area.", 16)
-                    .addExampleObject(new AreaOfEffectBlockAction(List.of(), List.of(), Shape.CUBE, new StaticValue(16)));
+                    .addExampleObject(new AreaOfEffectBlockAction(List.of(), BlockFilter.EMPTY, Shape.CUBE, new StaticValue(16)));
         }
     }
 

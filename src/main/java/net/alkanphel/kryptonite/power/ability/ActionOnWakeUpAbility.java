@@ -5,8 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
-import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -32,23 +31,23 @@ public class ActionOnWakeUpAbility extends Ability {
     public static final MapCodec<ActionOnWakeUpAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnWakeUpAbility::new));
 
     public final List<Action> entityActions;
     public final List<BlockAction> blockActions;
-    public final List<BlockCondition> blockConditions;
+    public final BlockFilter blockFilter;
 
-    public ActionOnWakeUpAbility(List<Action> entityActions, List<BlockAction> blockActions, List<BlockCondition> blockConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnWakeUpAbility(List<Action> entityActions, List<BlockAction> blockActions, BlockFilter blockFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.blockActions = blockActions;
-        this.blockConditions = blockConditions;
+        this.blockFilter = blockFilter;
     }
 
     public boolean doesApply(BlockPos pos, LivingEntity entity) {
-        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, entity.level(), pos);
+        return blockFilter.test(entity.level(), pos);
     }
 
     public void runActions(BlockPos pos, Direction direction, LivingEntity entity) {
@@ -73,8 +72,8 @@ public class ActionOnWakeUpAbility extends Ability {
             builder.setDescription("Performs actions upon waking up after sleeping.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon waking up.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player was sleeping on.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the sleeping block must meet for the actions to perform.")
-                    .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the sleeping block must pass for the actions to perform.")
+                    .addExampleObject(new ActionOnWakeUpAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on wake up!"))), List.of(), BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("red_bed"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

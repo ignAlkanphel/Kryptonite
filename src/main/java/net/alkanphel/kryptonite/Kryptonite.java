@@ -7,7 +7,6 @@ import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributes;
 import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompatImpl;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
 import net.alkanphel.kryptonite.power.KryptoniteAttachments;
 import net.minecraft.resources.Identifier;
@@ -38,7 +37,6 @@ public class Kryptonite {
         KryptoniteValueSerializers.VALUE_SERIALIZERS.register(modEventBus);
         BlockActionSerializers.BLOCK_ACTION_SERIALIZERS.register(modEventBus);
         ItemActionSerializers.ITEM_ACTION_SERIALIZERS.register(modEventBus);
-        BlockConditionSerializers.BLOCK_CONDITION_SERIALIZERS.register(modEventBus);
 
         KryptoniteNetwork.init();
 

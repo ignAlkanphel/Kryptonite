@@ -6,7 +6,7 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.block.SpawnEntityBlockAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -34,23 +34,23 @@ public class ActionOnBoneMealAbility extends Ability {
     public static final MapCodec<ActionOnBoneMealAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnBoneMealAbility::new));
 
     public final List<Action> entityActions;
     public final List<BlockAction> blockActions;
-    public final List<BlockCondition> blockConditions;
+    public final BlockFilter blockFilter;
 
-    public ActionOnBoneMealAbility(List<Action> entityActions, List<BlockAction> blockActions, List<BlockCondition> blockCondition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnBoneMealAbility(List<Action> entityActions, List<BlockAction> blockActions, BlockFilter blockFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.blockActions = blockActions;
-        this.blockConditions = blockCondition;
+        this.blockFilter = blockFilter;
     }
 
     public boolean doesApply(Level level, BlockPos pos) {
-        return blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, level, pos);
+        return blockFilter.test(level, pos);
     }
 
     public void runActions(LivingEntity entity, Level level, BlockPos pos) {
@@ -75,9 +75,9 @@ public class ActionOnBoneMealAbility extends Ability {
             builder.setDescription("Performs actions when the player bone meals a block.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon bone mealing a block.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the bone mealed block.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) that the bone mealed block must meet for the actions to perform.")
-                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal! Aw, man!"))), List.of(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SpawnEntityBlockAction.Serializer.addExampleNbt())), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) that the bone mealed block must pass for the actions to perform.")
+                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), List.of(), BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal! Aw, man!"))), List.of(new SpawnEntityBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SpawnEntityBlockAction.Serializer.addExampleNbt())), BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

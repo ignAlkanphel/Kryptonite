@@ -3,9 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
-import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -23,18 +21,16 @@ import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
-import java.util.List;
-
-public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, NumberComparator comparator, Value compareTo) implements Condition {
+public record BlockInAnywhereCondition(BlockFilter blockFilter, NumberComparator comparator, Value compareTo) implements Condition {
 
     public static final MapCodec<BlockInAnywhereCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockInAnywhereCondition::blockConditions),
+            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(BlockInAnywhereCondition::blockFilter),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_OR_EQUAL).forGetter(BlockInAnywhereCondition::comparator),
             Value.NUMBER_CODEC.optionalFieldOf("compare_to", new StaticValue(1)).forGetter(BlockInAnywhereCondition::compareTo)
     ).apply(instance, BlockInAnywhereCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockInAnywhereCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockInAnywhereCondition::blockConditions,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockFilter.CODEC), BlockInAnywhereCondition::blockFilter,
             NumberComparator.STREAM_CODEC, BlockInAnywhereCondition::comparator,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockInAnywhereCondition::compareTo,
             BlockInAnywhereCondition::new
@@ -65,7 +61,7 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
                 for (int z = minPos.getZ(); z <= maxPos.getZ() && matches < threshold; z++) {
                     mutablePos.set(x, y, z);
 
-                    if (blockConditions.isEmpty() || BlockCondition.checkConditions(blockConditions, entity.level(), mutablePos)) {
+                    if (blockFilter.test(entity.level(), mutablePos)) {
                         matches++;
                     }
                 }
@@ -91,10 +87,10 @@ public record BlockInAnywhereCondition(List<BlockCondition> blockConditions, Num
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockInAnywhereCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block In Anywhere")
                     .setDescription("Checks how many blocks are overlapping with the entity's eyes or feet.")
-                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the overlapping blocks must meet.")
+                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the overlapping blocks must pass.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used", NumberComparator.GREATER_OR_EQUAL)
                     .addOptional("compare_to", TYPE_INT_VALUE, "Value that is being compared against", 1)
-                    .addExampleObject(new BlockInAnywhereCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS)))), NumberComparator.GREATER_THAN, new StaticValue(1)));
+                    .addExampleObject(new BlockInAnywhereCondition(BlockFilter.ofBlock((PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.FLOWERS)))), NumberComparator.GREATER_THAN, new StaticValue(1)));
         }
     }
 
