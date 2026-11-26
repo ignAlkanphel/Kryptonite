@@ -3,6 +3,7 @@ package net.alkanphel.kryptonite.power.logic.filter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.alkanphel.kryptonite.power.logic.context.DamageFilterContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
@@ -44,8 +45,12 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
                 .buildObject("Damage Filters");
     }
 
+    public boolean test(DamageFilterContext context) {
+        return operator.test(filters, context);
+    }
+
     public boolean test(DamageSource source, float damage) {
-        return operator.test(filters, source, damage);
+        return test(new DamageFilterContext(source, damage));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -74,8 +79,10 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
             return amount.isEmpty() && damageTypes.isEmpty() && attacker.isEmpty() && projectile.isEmpty();
         }
 
-        public boolean test(DamageSource source, float damage) {
-            if (amount.isPresent() && !amount.get().test(damage)) return false;
+        public boolean test(DamageFilterContext context) {
+            DamageSource source = context.source();
+
+            if (amount.isPresent() && !amount.get().test(context)) return false;
 
             if (damageTypes.isPresent() && !damageTypes.get().contains(source.typeHolder())) return false;
 
@@ -84,7 +91,7 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
                 if (entity == null || !attacker.get().test(DataContext.forEntity(entity))) return false;
             }
 
-            if (projectile.isPresent() && !projectile.get().test(source)) return false;
+            if (projectile.isPresent() && !projectile.get().test(context)) return false;
 
             return true;
         }
@@ -108,8 +115,8 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Damage Amount");
         }
 
-        public boolean test(float damage) {
-            return comparator.compare(damage, compareTo.getAsFloat(null));
+        public boolean test(DamageFilterContext context) {
+            return comparator.compare(context.amount(), compareTo.getAsFloat(null));
         }
     }
 
@@ -131,7 +138,8 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Projectile");
         }
 
-        public boolean test(DamageSource source) {
+        public boolean test(DamageFilterContext context) {
+            DamageSource source = context.source();
             Entity direct = source.getDirectEntity();
             return source.is(DamageTypeTags.IS_PROJECTILE)
                     && direct != null
@@ -147,11 +155,11 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
 
         public static final Codec<Operator> CODEC = Codec.STRING.xmap(name -> Operator.valueOf(name.toUpperCase(Locale.ROOT)), operator -> operator.name().toLowerCase(Locale.ROOT));
 
-        public boolean test(List<FilterType> filters, DamageSource source, float damage) {
+        public boolean test(List<FilterType> filters, DamageFilterContext context) {
             return switch (this) {
-                case AND -> filters.stream().allMatch(filter -> filter.test(source, damage));
-                case OR -> filters.stream().anyMatch(filter -> filter.test(source, damage));
-                case NOT -> filters.stream().noneMatch(filter -> filter.test(source, damage));
+                case AND -> filters.stream().allMatch(filter -> filter.test(context));
+                case OR -> filters.stream().anyMatch(filter -> filter.test(context));
+                case NOT -> filters.stream().noneMatch(filter -> filter.test(context));
             };
         }
     }

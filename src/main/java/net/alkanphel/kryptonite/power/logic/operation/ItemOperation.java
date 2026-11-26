@@ -211,10 +211,6 @@ public record ItemOperation(List<OperationType> operations) {
         return new ItemOperation(List.of(type));
     }
 
-    public static ItemOperation of(OperationType... operations) {
-        return new ItemOperation(List.of(operations));
-    }
-
     public static ItemOperation ofConsume(Value amount) {
         return single(new OperationType(Optional.of(amount), none(), none(), none()));
     }
