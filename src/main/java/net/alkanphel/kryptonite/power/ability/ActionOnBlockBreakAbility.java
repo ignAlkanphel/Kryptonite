@@ -4,10 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.block.SetBlockBlockAction;
-import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.logic.operation.BlockOperation;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,21 +36,21 @@ public class ActionOnBlockBreakAbility extends Ability {
 
     public static final MapCodec<ActionOnBlockBreakAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockActions),
+            BlockOperation.CODEC.optionalFieldOf("block_operations", BlockOperation.EMPTY).forGetter(a -> a.blockOperation),
             BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
             Codec.BOOL.optionalFieldOf("only_when_harvested", false).forGetter(a -> a.onlyWhenHarvested),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnBlockBreakAbility::new));
 
     public final List<Action> entityActions;
-    public final List<BlockAction> blockActions;
+    public final BlockOperation blockOperation;
     public final BlockFilter blockFilter;
     public final boolean onlyWhenHarvested;
 
-    public ActionOnBlockBreakAbility(List<Action> entityActions, List<BlockAction> blockActions, BlockFilter blockFilter, boolean onlyWhenHarvested, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnBlockBreakAbility(List<Action> entityActions, BlockOperation blockOperation, BlockFilter blockFilter, boolean onlyWhenHarvested, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.blockActions = blockActions;
+        this.blockOperation = blockOperation;
         this.blockFilter = blockFilter;
         this.onlyWhenHarvested = onlyWhenHarvested;
     }
@@ -70,7 +68,7 @@ public class ActionOnBlockBreakAbility extends Ability {
     }
 
     public void runActions(Player player, BlockPos pos, Direction direction) {
-        if (!blockActions.isEmpty()) BlockAction.runList(blockActions, player.level(), pos, Optional.of(direction));
+        if (!blockOperation.operations().isEmpty()) blockOperation.run(player.level(), pos, Optional.of(direction));
 
         if (!entityActions.isEmpty() && player.level() instanceof ServerLevel) {
             Action.runList(entityActions, DataContext.forEntity(player));
@@ -93,10 +91,10 @@ public class ActionOnBlockBreakAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBlockBreakAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player that has this ability breaks a block.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon the player breaking a block.")
-                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the broken block position.")
+                    .addOptional("block_operations", BlockOperation.documentation(provider), "Block operation(s) performed at the broken block position.")
                     .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the broken block must pass for the actions to perform.")
                     .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only performs the actions when the block was successfully harvested (using correct tool for drops).", false)
-                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new SetBlockBlockAction(Blocks.LAVA.defaultBlockState())), BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block"))))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), BlockOperation.ofBlockSet(Blocks.LAVA.defaultBlockState()), BlockFilter.ofBlock(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block")))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

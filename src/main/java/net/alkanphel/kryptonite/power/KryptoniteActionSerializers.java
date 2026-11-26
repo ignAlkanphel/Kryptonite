@@ -14,7 +14,7 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, AbilityCooldownAction.Serializer> ABILITY_COOLDOWN = ACTION_SERIALIZERS.register("ability_cooldown", AbilityCooldownAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AddVelocityAction.Serializer> ADD_VELOCITY = ACTION_SERIALIZERS.register("add_velocity", AddVelocityAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AddVelocityRelativeAction.Serializer> ADD_VELOCITY_RELATIVE = ACTION_SERIALIZERS.register("add_velocity_relative", AddVelocityRelativeAction.Serializer::new);
-    public static final DeferredHolder<ActionSerializer<?>, BlockActionAtAction.Serializer> BLOCK_ACTION_AT = ACTION_SERIALIZERS.register("block_action_at", BlockActionAtAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, BlockOperationAtAction.Serializer> BLOCK_OPERATION_AT = ACTION_SERIALIZERS.register("block_operation_at", BlockOperationAtAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DismountAction.Serializer> DISMOUNT = ACTION_SERIALIZERS.register("dismount", DismountAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DisplayItemActivationAction.Serializer> DISPLAY_ITEM_ACTIVATION = ACTION_SERIALIZERS.register("display_item_activation", DisplayItemActivationAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, EquipmentAction.Serializer> EQUIPMENT = ACTION_SERIALIZERS.register("equipment", EquipmentAction.Serializer::new);
@@ -26,7 +26,6 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, PocketCraftingTableAction.Serializer> POCKET_CRAFTING_TABLE = ACTION_SERIALIZERS.register("pocket_crafting_table", PocketCraftingTableAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketEnchantingTableAction.Serializer> POCKET_ENCHANTING_TABLE = ACTION_SERIALIZERS.register("pocket_enchanting_table", PocketEnchantingTableAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, PocketEnderChestAction.Serializer> POCKET_ENDER_CHEST = ACTION_SERIALIZERS.register("pocket_ender_chest", PocketEnderChestAction.Serializer::new);
-    public static final DeferredHolder<ActionSerializer<?>, RaycastAction.Serializer> RAYCAST = ACTION_SERIALIZERS.register("raycast", RaycastAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, RespawnResetAction.Serializer> RESPAWN_RESET = ACTION_SERIALIZERS.register("respawn_reset", RespawnResetAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, RespawnTeleportAction.Serializer> RESPAWN_TELEPORT = ACTION_SERIALIZERS.register("respawn_teleport", RespawnTeleportAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, SetInLoveAction.Serializer> SET_IN_LOVE = ACTION_SERIALIZERS.register("set_in_love", SetInLoveAction.Serializer::new);

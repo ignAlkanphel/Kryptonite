@@ -6,4 +6,4 @@ import net.minecraft.server.level.ServerLevel;
 
 import java.util.Optional;
 
-public record BlockActionContext(ServerLevel level, BlockPos pos, Optional<Direction> direction) {}
+public record BlockOperationContext(ServerLevel level, BlockPos pos, Optional<Direction> direction) {}
