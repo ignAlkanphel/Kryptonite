@@ -20,6 +20,6 @@ https://github.com/ignAlkanphel/Kryptonite/wiki
 
 Also check out [Argon](https://modrinth.com/mod/argon-fsang18) by FSang
 
-It is another library for [Palladium](https://git.threetag.net/ThreeTAG/Palladium) that you may also get use out of.
+It is another library for [Palladium](https://modrinth.com/mod/threetag-palladium) that you may also get use out of.
 
 </div>
