@@ -18,7 +18,7 @@ import java.util.Optional;
 public class KryptoniteProxyClient extends KryptoniteProxy {
 
     @Override
-    public void displayItemActivation(ItemStack stack) {
+    public void screenDisplayItem(ItemStack stack) {
         var mc = Minecraft.getInstance();
         if (mc.player == null) return;
 

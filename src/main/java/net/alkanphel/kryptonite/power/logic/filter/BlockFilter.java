@@ -62,7 +62,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
     public static SettingType documentation(HolderLookup.Provider provider) {
         SettingType filterType = FilterType.documentation(provider);
         return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
-                .addOptional("operator", SettingType.enumList(Operator.values()), "How the filters are combined: \"and\" needs all to pass, \"or\" needs at least one, \"not\" needs none.", "and")
+                .addOptional("operator", SettingType.enumList(Operator.values()), "How the filters are combined: \"and\" needs all to pass, \"or\" needs at least one, \"not\" needs none.", Operator.AND)
                 .add("filters", SettingType.combined(filterType, SettingType.array(filterType)), "Block filter type(s) that must pass.")
                 .buildObject("Block Filters");
     }

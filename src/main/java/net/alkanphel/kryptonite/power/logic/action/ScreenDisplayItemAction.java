@@ -2,7 +2,7 @@ package net.alkanphel.kryptonite.power.logic.action;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.network.p2c.S2CDisplayItemActivation;
+import net.alkanphel.kryptonite.network.p2c.S2CScreenDisplayItem;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -17,15 +17,15 @@ import net.threetag.palladium.logic.action.Action;
 import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public class DisplayItemActivationAction extends Action {
+public class ScreenDisplayItemAction extends Action {
 
-    public static final MapCodec<DisplayItemActivationAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ScreenDisplayItemAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Item.CODEC.fieldOf("item").forGetter(a -> a.item)
-    ).apply(instance, DisplayItemActivationAction::new));
+    ).apply(instance, ScreenDisplayItemAction::new));
 
     private final Holder<Item> item;
 
-    public DisplayItemActivationAction(Holder<Item> item) {
+    public ScreenDisplayItemAction(Holder<Item> item) {
         this.item = item;
     }
 
@@ -33,28 +33,28 @@ public class DisplayItemActivationAction extends Action {
     protected boolean execute(DataContext context) {
         if (!(context.getEntity() instanceof ServerPlayer player)) return false;
 
-        PacketDistributor.sendToPlayer(player, new S2CDisplayItemActivation(new ItemStack(item.value())));
+        PacketDistributor.sendToPlayer(player, new S2CScreenDisplayItem(new ItemStack(item.value())));
         return true;
     }
 
     @Override
     public ActionSerializer<?> getSerializer() {
-        return KryptoniteActionSerializers.DISPLAY_ITEM_ACTIVATION.get();
+        return KryptoniteActionSerializers.SCREEN_DISPLAY_ITEM.get();
     }
 
-    public static class Serializer extends ActionSerializer<DisplayItemActivationAction> {
+    public static class Serializer extends ActionSerializer<ScreenDisplayItemAction> {
 
         @Override
-        public MapCodec<DisplayItemActivationAction> codec() {
+        public MapCodec<ScreenDisplayItemAction> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Action, DisplayItemActivationAction> builder, HolderLookup.Provider provider) {
-            builder.setName("Display Item Activation")
+        public void addDocumentation(CodecDocumentationBuilder<Action, ScreenDisplayItemAction> builder, HolderLookup.Provider provider) {
+            builder.setName("Screen Display Item")
                     .setDescription("Triggers an item to animate on the screen like when a Totem of Undying is activated.")
                     .add("item", SettingType.simple("Item"), "The item used for the animation.")
-                    .addExampleObject(new DisplayItemActivationAction(Items.BOOK.builtInRegistryHolder()));
+                    .addExampleObject(new ScreenDisplayItemAction(Items.BOOK.builtInRegistryHolder()));
         }
     }
 

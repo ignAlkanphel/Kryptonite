@@ -9,7 +9,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class KryptoniteProxy {
 
-    public void displayItemActivation(ItemStack stack) {}
+    public void screenDisplayItem(ItemStack stack) {}
 
     public void modifyBlockRender(ModifyBlockRenderAbility.Mode mode) {}
 
