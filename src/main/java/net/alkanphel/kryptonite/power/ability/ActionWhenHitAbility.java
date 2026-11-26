@@ -3,8 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -31,23 +30,23 @@ public class ActionWhenHitAbility extends Ability {
     public static final MapCodec<ActionWhenHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionWhenHitAbility::new));
 
     public final List<Action> entityActions;
     public final Condition entityConditions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
 
-    public ActionWhenHitAbility(List<Action> entityActions, Condition entityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionWhenHitAbility(List<Action> entityActions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.entityConditions = entityConditions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
     }
 
     public boolean doesApply(Entity source, LivingEntity target, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
-        if (!damageConditions.isEmpty() && !DamageCondition.checkConditions(damageConditions, damageSource, amount)) {
+        if (!damageFilter.test(damageSource, amount)) {
             return false;
         }
 
@@ -75,9 +74,9 @@ public class ActionWhenHitAbility extends Ability {
             builder.setDescription("Performs actions when the entity that has this ability is hit by another entity. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that has this ability.")
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the hit must meet for the actions to perform.")
-                    .addExampleObject(new ActionWhenHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionWhenHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the hit must pass for the actions to perform.")
+                    .addExampleObject(new ActionWhenHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionWhenHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

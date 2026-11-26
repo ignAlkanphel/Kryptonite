@@ -3,9 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.DamageTypeDamageCondition;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
@@ -24,27 +22,25 @@ import java.util.List;
 public class PreventDamageAbility extends Ability {
 
     public static final MapCodec<PreventDamageAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             BooleanValueHolder.CODEC.optionalFieldOf("prevent_fire", BooleanValueHolder.FALSE).forGetter(a -> a.preventFire),
             BooleanValueHolder.CODEC.optionalFieldOf("prevent_freeze", BooleanValueHolder.FALSE).forGetter(a -> a.preventFreeze),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventDamageAbility::new));
 
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
     public final BooleanValueHolder preventFire, preventFreeze;
 
-    public PreventDamageAbility(List<DamageCondition> damageConditions, BooleanValueHolder preventFire, BooleanValueHolder preventFreeze, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public PreventDamageAbility(DamageFilter damageFilter, BooleanValueHolder preventFire, BooleanValueHolder preventFreeze, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
         this.preventFire = preventFire;
         this.preventFreeze = preventFreeze;
     }
 
     public static boolean isImmuneAgainst(AbilityInstance<PreventDamageAbility> ability, DamageSource source, float amount, Entity self) {
         if (!ability.isEnabled()) return false;
-
-        var damageConditions = ability.getAbility().damageConditions;
-        return damageConditions.isEmpty() || DamageCondition.checkConditions(damageConditions, source, amount);
+        return ability.getAbility().damageFilter.test(source, amount);
     }
 
     public static boolean preventsFire(LivingEntity entity) {
@@ -82,11 +78,11 @@ public class PreventDamageAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDamageAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes the entity immune to certain damage types.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for damage to be prevented.")
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for damage to be prevented.")
                     .addOptional("prevent_fire", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to be set on fire.", false)
                     .addOptional("prevent_freeze", TYPE_BOOLEAN_VALUE, "If true, makes the entity unable to freeze.", false)
-                    .addExampleObject(new PreventDamageAbility(List.of(), BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventDamageAbility(List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION)))), BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventDamageAbility(DamageFilter.EMPTY, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventDamageAbility(DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_EXPLOSION))), BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

@@ -5,8 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.AttackerDamageCondition;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -33,24 +32,24 @@ public class PreventTotemUseAbility extends Ability {
 
     public static final MapCodec<PreventTotemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             Codec.list(KryptoniteCodecs.HAND_CODEC).xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("hands", EnumSet.allOf(InteractionHand.class)).forGetter(a -> a.hands),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventTotemUseAbility::new));
 
     public final List<Action> entityActions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
     public final EnumSet<InteractionHand> hands;
 
-    public PreventTotemUseAbility(List<Action> entityActions, List<DamageCondition> damageConditions, EnumSet<InteractionHand> hands, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public PreventTotemUseAbility(List<Action> entityActions, DamageFilter damageFilter, EnumSet<InteractionHand> hands, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.entityActions = entityActions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
         this.hands = hands;
     }
 
     public boolean doesApply(DamageSource source, float amount, InteractionHand hand) {
-        return hands.contains(hand) && DamageCondition.checkConditions(damageConditions, source, amount);
+        return hands.contains(hand) && damageFilter.test(source, amount);
     }
 
     public void runActions(LivingEntity entity) {
@@ -88,10 +87,10 @@ public class PreventTotemUseAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventTotemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity that has this ability from using a Totem of Undying.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed when the totem is prevented.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the totem to be prevented.")
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for the totem to be prevented.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Hand(s) the totem must be in.", EnumSet.allOf(InteractionHand.class))
-                    .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented the use of a totem!"))), List.of(), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented totem use because you died via by Iron Golem!"))), List.of(new AttackerDamageCondition((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented the use of a totem!"))), DamageFilter.EMPTY, EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventTotemUseAbility(List.of(new RunCommandAction(new ParsedCommands("say Prevented totem use because you died via by Iron Golem!"))), DamageFilter.ofAttacker(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))), EnumSet.allOf(InteractionHand.class), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

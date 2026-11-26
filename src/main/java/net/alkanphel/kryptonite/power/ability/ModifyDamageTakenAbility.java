@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,7 +32,7 @@ public class ModifyDamageTakenAbility extends Ability {
             Condition.CODEC.optionalFieldOf("apply_armor_conditions", FalseCondition.INSTANCE).forGetter(a -> a.applyArmorConditions),
             Condition.CODEC.optionalFieldOf("damage_armor_conditions", FalseCondition.INSTANCE).forGetter(a -> a.damageArmorConditions),
             Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyDamageTakenAbility::new));
 
@@ -40,9 +40,9 @@ public class ModifyDamageTakenAbility extends Ability {
     public final List<Action> selfActions, attackerActions, entityActions;
     public final Condition applyArmorConditions, damageArmorConditions;
     public final Condition entityConditions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
 
-    public ModifyDamageTakenAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfActions, List<Action> attackerActions, List<Action> entityActions, Condition applyArmorConditions, Condition damageArmorConditions, Condition entityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyDamageTakenAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfActions, List<Action> attackerActions, List<Action> entityActions, Condition applyArmorConditions, Condition damageArmorConditions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.modifiers = modifiers;
         this.selfActions = selfActions;
@@ -51,7 +51,7 @@ public class ModifyDamageTakenAbility extends Ability {
         this.applyArmorConditions = applyArmorConditions;
         this.damageArmorConditions = damageArmorConditions;
         this.entityConditions = entityConditions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
     }
 
     public boolean modifiesArmorApplicance() {
@@ -73,7 +73,7 @@ public class ModifyDamageTakenAbility extends Ability {
     public boolean doesApply(DamageSource source, float damageAmount, Entity self, AbilityInstance<?> instance) {
         Entity attacker = source.getEntity();
 
-        return DamageCondition.checkConditions(damageConditions, source, damageAmount)
+        return damageFilter.test(source, damageAmount)
                 && (attacker == null || entityConditions.test(DataContext.forAffected(self, attacker, instance)));
     }
 
@@ -111,8 +111,8 @@ public class ModifyDamageTakenAbility extends Ability {
                     .addOptional("apply_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for armor to be applied to the damage.")
                     .addOptional("damage_armor_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for its armor to be damaged.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) evaluated with the source and target available in the context.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the incoming damage must meet for the modifiers and actions to apply.")
-                    .addExampleObject(new ModifyDamageTakenAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-0.5), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), List.of(), FalseCondition.INSTANCE, FalseCondition.INSTANCE, TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the incoming damage must meet for the modifiers and actions to apply.")
+                    .addExampleObject(new ModifyDamageTakenAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(-0.5), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), List.of(), List.of(), FalseCondition.INSTANCE, FalseCondition.INSTANCE, TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

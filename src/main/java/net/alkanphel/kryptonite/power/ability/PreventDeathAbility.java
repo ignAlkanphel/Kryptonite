@@ -3,8 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.condition.damage.AttackerDamageCondition;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -28,21 +27,21 @@ public class PreventDeathAbility extends Ability {
 
     public static final MapCodec<PreventDeathAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(ab -> ab.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(ab -> ab.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventDeathAbility::new));
 
     public final List<Action> entityActions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
 
-    public PreventDeathAbility(List<Action> entityActions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventDeathAbility(List<Action> entityActions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
     }
 
     public boolean doesApply(DamageSource source, float amount) {
-        return DamageCondition.checkConditions(damageConditions, source, amount);
+        return damageFilter.test(source, amount);
     }
 
     public void runActions(LivingEntity entity) {
@@ -80,9 +79,9 @@ public class PreventDeathAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDeathAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from dying. Damage that would kill reduces health to 1/2 a heart.")
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed every time a death is prevented.")
-                    .addOptional("damage_conditions", TYPE_CONDITION_LIST, "Damage condition(s) the damage source must meet for death to be prevented.")
-                    .addExampleObject(new PreventDeathAbility(List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), List.of(new AttackerDamageCondition((new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for death to be prevented.")
+                    .addExampleObject(new PreventDeathAbility(List.of(), DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), DamageFilter.ofAttacker(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

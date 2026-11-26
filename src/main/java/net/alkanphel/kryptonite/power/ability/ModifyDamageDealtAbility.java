@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.damagesource.DamageSource;
@@ -30,16 +30,16 @@ public class ModifyDamageDealtAbility extends Ability {
             Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetConditions),
             Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyDamageDealtAbility::new));
 
     public final List<KryptoniteModifiers.ValueModifier> modifiers;
     public final List<Action> selfActions, targetActions, entityActions;
     public final Condition targetConditions, entityConditions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
 
-    public ModifyDamageDealtAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfActions, List<Action> targetActions, List<Action> entityActions, Condition targetConditions, Condition entityConditions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyDamageDealtAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<Action> selfActions, List<Action> targetActions, List<Action> entityActions, Condition targetConditions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.modifiers = modifiers;
         this.selfActions = selfActions;
@@ -47,11 +47,11 @@ public class ModifyDamageDealtAbility extends Ability {
         this.entityActions = entityActions;
         this.targetConditions = targetConditions;
         this.entityConditions = entityConditions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
     }
 
     public boolean doesApply(DamageSource source, float damageAmount, Entity attacker, Entity target, AbilityInstance<?> instance) {
-        return DamageCondition.checkConditions(damageConditions, source, damageAmount)
+        return damageFilter.test(source, damageAmount)
                 && targetConditions.test(DataContext.forAffected(target, attacker, instance))
                 && entityConditions.test(DataContext.forAffected(target, attacker, instance));
     }
@@ -89,8 +89,8 @@ public class ModifyDamageDealtAbility extends Ability {
                     .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the target, with the source available in the context.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the modifiers and actions to apply.")
                     .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) evaluated with the source and target available in the context.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the dealt damage must meet for the modifiers and actions to apply.")
-                    .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(4.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), TrueCondition.INSTANCE, TrueCondition.INSTANCE, List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the dealt damage must meet for the modifiers and actions to apply.")
+                    .addExampleObject(new ModifyDamageDealtAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(4.0), KryptoniteModifiers.Operation.ADD_BASE_EARLY)), List.of(), List.of(), List.of(), TrueCondition.INSTANCE, TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

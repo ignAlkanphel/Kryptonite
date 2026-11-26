@@ -3,9 +3,7 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.damage.DamageTypeDamageCondition;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageCondition;
+import net.alkanphel.kryptonite.power.logic.filter.DamageFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
@@ -26,21 +24,21 @@ public class ActionWhenDamageTakenAbility extends Ability {
 
     public static final MapCodec<ActionWhenDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.entityActions),
-            DamageCondition.LIST_CODEC.optionalFieldOf("damage_conditions", List.of()).forGetter(a -> a.damageConditions),
+            DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionWhenDamageTakenAbility::new));
 
     public final List<Action> entityActions;
-    public final List<DamageCondition> damageConditions;
+    public final DamageFilter damageFilter;
 
-    public ActionWhenDamageTakenAbility(List<Action> entityActions, List<DamageCondition> damageConditions, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionWhenDamageTakenAbility(List<Action> entityActions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.damageConditions = damageConditions;
+        this.damageFilter = damageFilter;
     }
 
     public boolean doesApply(DamageSource source, float amount) {
-        return damageConditions.isEmpty() || DamageCondition.checkConditions(damageConditions, source, amount);
+        return damageFilter.test(source, amount);
     }
 
     public void runActions(LivingEntity holder) {
@@ -63,8 +61,8 @@ public class ActionWhenDamageTakenAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionWhenDamageTakenAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions upon taking damage.")
                     .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
-                    .addOptional("damage_conditions", KryptoniteDocumented.TYPE_DAMAGE_CONDITION_LIST, "Damage condition(s) the damage source must meet for the actions to perform.")
-                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), List.of(new DamageTypeDamageCondition(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE)))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for the actions to perform.")
+                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

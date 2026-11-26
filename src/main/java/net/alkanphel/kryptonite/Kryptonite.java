@@ -8,7 +8,6 @@ import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompatImpl;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemActionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.condition.damage.internal.DamageConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionConditionSerializers;
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemConditionSerializers;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
@@ -44,7 +43,6 @@ public class Kryptonite {
         BlockConditionSerializers.BLOCK_CONDITION_SERIALIZERS.register(modEventBus);
         ItemConditionSerializers.ITEM_CONDITION_SERIALIZERS.register(modEventBus);
         DimensionConditionSerializers.DIMENSION_CONDITION_SERIALIZERS.register(modEventBus);
-        DamageConditionSerializers.DAMAGE_CONDITION_SERIALIZERS.register(modEventBus);
 
         KryptoniteNetwork.init();
 
