@@ -165,7 +165,7 @@ public class InventoryUtil {
     }
 
     /**
-     * Creates a stack reference that is not linked to any entity for use with item actions.
+     * Creates a stack reference that is not linked to any entity for use with item operations.
      * <p>
      * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's StackReference.
      *

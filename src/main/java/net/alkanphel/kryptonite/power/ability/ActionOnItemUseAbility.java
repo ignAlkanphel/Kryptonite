@@ -4,9 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.minecraft.core.HolderLookup;
@@ -40,7 +39,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
 
     public static final MapCodec<ActionOnItemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
+            ItemOperation.CODEC.optionalFieldOf("item_operations", ItemOperation.EMPTY).forGetter(a -> a.itemOperation),
             ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
             TriggerType.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("trigger", EnumSet.allOf(TriggerType.class)).forGetter(a -> a.triggerType),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
@@ -48,16 +47,16 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
     ).apply(instance, ActionOnItemUseAbility::new));
 
     private final List<Action> entityActions;
-    private final List<ItemAction> itemActions;
+    private final ItemOperation itemOperation;
     private final ItemFilter itemFilter;
     private final EnumSet<TriggerType> triggerType;
 
     private final int priority;
 
-    public ActionOnItemUseAbility(List<Action> entityActions, List<ItemAction> itemActions, ItemFilter itemFilter, EnumSet<TriggerType> triggerType, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemUseAbility(List<Action> entityActions, ItemOperation itemOperation, ItemFilter itemFilter, EnumSet<TriggerType> triggerType, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.itemActions = itemActions;
+        this.itemOperation = itemOperation;
         this.itemFilter = itemFilter;
         this.triggerType = triggerType;
         this.priority = priority;
@@ -80,7 +79,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         var holder = context.getLivingEntity();
         if (holder == null) return;
 
-        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
+        if (!itemOperation.operations().isEmpty()) itemOperation.run(holder.level(), stackReference);
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
     }
 
@@ -110,13 +109,13 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player uses an item (e.g. drawing a bow or eating).")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player after using an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the remaining item.")
+                    .addOptional("item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the remaining item.")
                     .addOptional("item_filters", ItemFilter.documentation(provider), "Item filters(s) the remaining item must pass for the actions to perform.")
                     .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions perform.", TriggerType.FINISH)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), List.of(), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), ItemOperation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), ItemOperation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), ItemOperation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

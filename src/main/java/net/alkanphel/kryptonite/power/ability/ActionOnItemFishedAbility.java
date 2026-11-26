@@ -3,9 +3,8 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -29,19 +28,19 @@ public class ActionOnItemFishedAbility extends Ability {
 
     public static final MapCodec<ActionOnItemFishedAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
+            ItemOperation.CODEC.optionalFieldOf("item_operations", ItemOperation.EMPTY).forGetter(a -> a.itemOperation),
             ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnItemFishedAbility::new));
 
     private final List<Action> entityActions;
-    private final List<ItemAction> itemActions;
+    private final ItemOperation itemOperation;
     private final ItemFilter itemFilter;
 
-    public ActionOnItemFishedAbility(List<Action> entityActions, List<ItemAction> itemActions, ItemFilter itemFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemFishedAbility(List<Action> entityActions, ItemOperation itemOperation, ItemFilter itemFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.itemActions = itemActions;
+        this.itemOperation = itemOperation;
         this.itemFilter = itemFilter;
     }
 
@@ -51,7 +50,7 @@ public class ActionOnItemFishedAbility extends Ability {
 
     public void runActions(LivingEntity holder, SlotAccess slotAccess) {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
-        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), slotAccess);
+        if (!itemOperation.operations().isEmpty()) itemOperation.run(holder.level(), slotAccess);
     }
 
     @Override
@@ -70,10 +69,10 @@ public class ActionOnItemFishedAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemFishedAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player reels in an item while fishing.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player after reeling in an item.")
-                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the reeled item.")
+                    .addOptional("item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the reeled item.")
                     .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the reeled item must pass for the actions to perform.")
-                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), List.of(), ItemFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), List.of(), ItemFilter.ofItem(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up an item!")))), ItemOperation.EMPTY, ItemFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemFishedAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say You fished up raw cod!")))), ItemOperation.EMPTY, ItemFilter.ofItem(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("cod")))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

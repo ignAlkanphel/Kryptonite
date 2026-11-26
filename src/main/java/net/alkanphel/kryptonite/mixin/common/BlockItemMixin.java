@@ -94,7 +94,7 @@ public class BlockItemMixin {
 
         if (callInstance != null && placeContext.getPlayer() != null) {
             var dataContext = DataContext.forEntity(placeContext.getPlayer());
-            callInstance.forEachByPriority(ability -> ability.runItemActions(dataContext, placeContext.getHand()));
+            callInstance.forEachByPriority(ability -> ability.runItemOperations(dataContext, placeContext.getHand()));
         }
     }
 

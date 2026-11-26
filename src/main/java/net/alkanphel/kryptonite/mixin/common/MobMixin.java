@@ -38,7 +38,7 @@ public abstract class MobMixin extends LivingEntity {
         Entity thrower = null;
         if (throwerReference != null) thrower = MiscUtil.getEntityByUuid(throwerReference.getUUID(), this.level().getServer());
 
-        Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, this);
+        Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemOperations(thrower, stackReference, this);
         itemEntity.setItem(stackReference.get());
 
         original.call(mobEntity, level, itemEntity);

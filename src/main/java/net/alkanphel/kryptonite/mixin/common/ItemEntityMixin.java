@@ -44,7 +44,7 @@ public abstract class ItemEntityMixin extends Entity {
             SlotAccess stackReference = InventoryUtil.createStackReference(itemStack);
             Entity thrower = EntityReference.getEntity(this.thrower, this.level());
 
-            Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, player);
+            Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemOperations(thrower, stackReference, player);
             this.setItem(stackReference.get());
 
             boolean result = original.call(playerInventory, this.getItem());

@@ -4,8 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.item.ConsumeItemAction;
-import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -17,21 +16,19 @@ import net.threetag.palladium.logic.action.ActionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 
-import java.util.List;
-
 public class EquipmentAction extends Action {
 
     public static final MapCodec<EquipmentAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             EquipmentSlotGroup.CODEC.fieldOf("equipment_slot").forGetter(ab -> ab.equipmentSlot),
-            ItemAction.LIST_CODEC.fieldOf("item_actions").forGetter(ab -> ab.itemAction)
+            ItemOperation.CODEC.fieldOf("item_operations").forGetter(ab -> ab.itemOperation)
     ).apply(instance, EquipmentAction::new));
 
     public final EquipmentSlotGroup equipmentSlot;
-    public final List<ItemAction> itemAction;
+    public final ItemOperation itemOperation;
 
-    public EquipmentAction(EquipmentSlotGroup equipmentSlot, List<ItemAction> itemAction) {
+    public EquipmentAction(EquipmentSlotGroup equipmentSlot, ItemOperation itemOperation) {
         this.equipmentSlot = equipmentSlot;
-        this.itemAction = itemAction;
+        this.itemOperation = itemOperation;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class EquipmentAction extends Action {
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (equipmentSlot.test(slot)) {
-                result |= ItemAction.runList(itemAction, context.getLevel(), SlotAccess.forEquipmentSlot(livingEntity, slot));
+                result |= itemOperation.run(context.getLevel(), SlotAccess.forEquipmentSlot(livingEntity, slot));
             }
         }
 
@@ -64,10 +61,10 @@ public class EquipmentAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, EquipmentAction> builder, HolderLookup.Provider provider) {
             builder.setName("Equipment")
-                    .setDescription("Performs item actions on an item stack in the specified equipment slot.")
-                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to perform the item actions on.")
-                    .add("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack in the specified equipment slot.")
-                    .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, List.of(new ConsumeItemAction(new StaticValue(1)))));
+                    .setDescription("Performs item operations on an item stack in the specified equipment slot.")
+                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to perform the item operations on.")
+                    .add("item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item stack in the specified equipment slot.")
+                    .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, ItemOperation.ofConsume(new StaticValue(1))));
         }
     }
 

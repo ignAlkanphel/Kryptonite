@@ -5,9 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
-import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
 import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,11 +39,11 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
             BlockFilter.CODEC.optionalFieldOf("place_to_filters", BlockFilter.EMPTY).forGetter(a -> a.placeToFilter),
             BlockFilter.CODEC.optionalFieldOf("place_on_filters", BlockFilter.EMPTY).forGetter(a -> a.placeOnFilter),
             Direction.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("directions", EnumSet.allOf(Direction.class)).forGetter(a -> a.directions),
-            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemActions, a.heldItemFilter, a.resultItemActions, a.resultStack, a.hands, a.actionResult), a.getPriority())),
+            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemOperation, a.resultItemOperation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, (entityActions, placeToActions, placeOnActions, placeToFilter, placeOnFilter, directions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new ActionOnBlockPlaceAbility(entityActions, placeToActions, placeOnActions, placeToFilter, placeOnFilter, directions, interaction.heldItemActions(), interaction.heldItemFilter(), interaction.resultItemActions(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new ActionOnBlockPlaceAbility(entityActions, placeToActions, placeOnActions, placeToFilter, placeOnFilter, directions, interaction.heldItemFilter(), interaction.heldItemOperation(), interaction.resultItemOperation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
     public final List<Action> entityActions;
@@ -52,8 +52,8 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
     public final BlockFilter placeOnFilter;
     public final EnumSet<Direction> directions;
 
-    public ActionOnBlockPlaceAbility(List<Action> entityActions, List<BlockAction> placeToActions, List<BlockAction> placeOnActions, BlockFilter placeToFilter, BlockFilter placeOnFilter, EnumSet<Direction> directions, List<ItemAction> heldItemActions, ItemFilter heldItemFilter, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemActions, heldItemFilter, resultItemActions, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+    public ActionOnBlockPlaceAbility(List<Action> entityActions, List<BlockAction> placeToActions, List<BlockAction> placeOnActions, BlockFilter placeToFilter, BlockFilter placeOnFilter, EnumSet<Direction> directions, ItemFilter heldItemFilter, ItemOperation heldItemOperation, ItemOperation resultItemOperation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemFilter, heldItemOperation, resultItemOperation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.placeToActions = placeToActions;
         this.placeOnActions = placeOnActions;
@@ -91,7 +91,7 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
         }
     }
 
-    public void runItemActions(DataContext context, InteractionHand hand) {
+    public void runItemOperations(DataContext context, InteractionHand hand) {
         if (context.getLivingEntity() instanceof Player player) {
             this.performSourceItemStuff(player, hand);
         }
@@ -118,14 +118,14 @@ public class ActionOnBlockPlaceAbility extends InteractionPrioritizedAbility {
                     .addOptional("place_to_filters", BlockFilter.documentation(provider), "Block filter(s) the block at the position of the block the player is about to place must pass for the actions to perform.")
                     .addOptional("place_on_filters", BlockFilter.documentation(provider), "Block filter(s) the block the player is about to place a block on must pass for the actions to perform.")
                     .addOptional("directions", KryptoniteDocumented.TYPE_DIRECTION, "If the actions should be performed if the player is about to place a block at the specified sides of a block.")
-                    .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item the player has used to place a block.")
-                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item the player has used to place a block must pass for the item actions to perform.")
-                    .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the player upon placing a block.")
+                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item the player has used to place a block must pass for the item operations to perform.")
+                    .addOptional("held_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item the player has used to place a block.")
+                    .addOptional("result_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item given to the player upon placing a block.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon placing a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands when placing a block.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnBlockPlaceAbility(List.of(), List.of(), List.of(), BlockFilter.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(Direction.class), List.of(), ItemFilter.EMPTY, List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnBlockPlaceAbility(List.of(), List.of(), List.of(), BlockFilter.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
