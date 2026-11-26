@@ -10,13 +10,17 @@ A library for [Palladium](https://git.threetag.net/ThreeTAG/Palladium) that adds
 
 Notably adapts things from the [Apoli](https://github.com/apace100/apoli/releases) (licensed under MIT) mod for Palladium.<br>
 
-## Documentation
+<br>
 
-<hr width="100%">
+## Documentation
 
 https://github.com/ignAlkanphel/Kryptonite/wiki
 
----
+</div>
+
+<div align="center">
+
+<br><br>
 
 Also check out [Argon](https://modrinth.com/mod/argon-fsang18) by FSang
 
