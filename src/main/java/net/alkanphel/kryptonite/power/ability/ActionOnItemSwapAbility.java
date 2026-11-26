@@ -6,8 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
-import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -40,30 +39,30 @@ public class ActionOnItemSwapAbility extends Ability {
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
             ItemAction.LIST_CODEC.optionalFieldOf("main_item_actions", List.of()).forGetter(a -> a.mainItemActions),
             ItemAction.LIST_CODEC.optionalFieldOf("off_item_actions", List.of()).forGetter(a -> a.offItemActions),
-            ItemCondition.LIST_CODEC.optionalFieldOf("main_item_conditions", List.of()).forGetter(a -> a.mainItemConditions),
-            ItemCondition.LIST_CODEC.optionalFieldOf("off_item_conditions", List.of()).forGetter(a -> a.offItemConditions),
+            ItemFilter.CODEC.optionalFieldOf("main_item_filters", ItemFilter.EMPTY).forGetter(a -> a.mainItemFilter),
+            ItemFilter.CODEC.optionalFieldOf("off_item_filters", ItemFilter.EMPTY).forGetter(a -> a.offItemFilter),
             TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.BOTH).forGetter(a -> a.trigger),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnItemSwapAbility::new));
 
     private final List<Action> entityActions;
     private final List<ItemAction> mainItemActions, offItemActions;
-    private final List<ItemCondition> mainItemConditions, offItemConditions;
+    private final ItemFilter mainItemFilter, offItemFilter;
     private final TriggerType trigger;
 
-    public ActionOnItemSwapAbility(List<Action> entityActions, List<ItemAction> mainItemActions, List<ItemAction> offItemActions, List<ItemCondition> mainItemConditions, List<ItemCondition> offItemConditions, TriggerType trigger, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemSwapAbility(List<Action> entityActions, List<ItemAction> mainItemActions, List<ItemAction> offItemActions, ItemFilter mainItemFilter, ItemFilter offItemFilter, TriggerType trigger, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.mainItemActions = mainItemActions;
         this.offItemActions = offItemActions;
-        this.mainItemConditions = mainItemConditions;
-        this.offItemConditions = offItemConditions;
+        this.mainItemFilter = mainItemFilter;
+        this.offItemFilter = offItemFilter;
         this.trigger = trigger;
     }
 
     public boolean doesApply(LivingEntity holder, ItemStack mainStack, ItemStack offStack) {
-        boolean mainMatches = mainItemConditions.isEmpty() || ItemCondition.checkConditions(mainItemConditions, holder.level(), mainStack);
-        boolean offMatches = offItemConditions.isEmpty() || ItemCondition.checkConditions(offItemConditions, holder.level(), offStack);
+        boolean mainMatches = mainItemFilter.test(holder.level(), mainStack);
+        boolean offMatches = offItemFilter.test(holder.level(), offStack);
 
         return switch (trigger) {
             case MAIN -> mainMatches;
@@ -93,15 +92,15 @@ public class ActionOnItemSwapAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemSwapAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions on the player upon swapping items between their main hand & off hand.")
-                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap conditions meet.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player when the swap filters pass.")
                     .addOptional("main_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the main hand.")
                     .addOptional("off_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item swapped into the off hand.")
-                    .addOptional("main_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the post-swap main hand item must meet.")
-                    .addOptional("off_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the post-swap off hand item must meet.")
-                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "Hand(s) whose item conditions must meet for the actions to perform.", "both")
-                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in main hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), List.of(), TriggerType.MAIN, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in off hand!")))), List.of(), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), TriggerType.OFF, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Diamond in main hand + Coal in off hand!")))), List.of(), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("coal"))))))), TriggerType.BOTH, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("main_item_filters", ItemFilter.documentation(provider), "Item filters(s) the post-swap main hand item must pass.")
+                    .addOptional("off_item_filters", ItemFilter.documentation(provider), "Item filters(s) the post-swap off hand item must pass.")
+                    .addOptional("trigger", SettingType.enumList(TriggerType.values()), "Hand(s) whose item filters must pass for the actions to perform.", TriggerType.BOTH)
+                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in main hand!")))), List.of(), List.of(), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), ItemFilter.EMPTY, TriggerType.MAIN, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dirt in off hand!")))), List.of(), List.of(), ItemFilter.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), TriggerType.OFF, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemSwapAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Diamond in main hand + Coal in off hand!")))), List.of(), List.of(), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("coal"))))))), TriggerType.BOTH, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

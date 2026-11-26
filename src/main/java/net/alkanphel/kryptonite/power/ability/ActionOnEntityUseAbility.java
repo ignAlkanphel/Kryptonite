@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.minecraft.core.HolderLookup;
@@ -42,19 +42,19 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
             TargetUsed.CODEC.optionalFieldOf("target_used", TargetUsed.SOURCE).forGetter(a -> a.targetUsed),
             Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemActions, a.heldItemConditions, a.resultItemActions, a.resultStack, a.hands, a.actionResult), a.getPriority())),
+            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemActions, a.heldItemFilter, a.resultItemActions, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, (targetUsed, entityActions, entityConditions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new ActionOnEntityUseAbility(targetUsed, entityActions, entityConditions, interaction.heldItemActions(), interaction.heldItemConditions(), interaction.resultItemActions(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new ActionOnEntityUseAbility(targetUsed, entityActions, entityConditions, interaction.heldItemActions(), interaction.heldItemFilter(), interaction.resultItemActions(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
     public final TargetUsed targetUsed;
     public final List<Action> entityActions;
     public final Condition entityConditions;
 
-    public ActionOnEntityUseAbility(TargetUsed targetUsed, List<Action> entityActions, Condition entityConditions, List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemActions, heldItemConditions, resultItemActions, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+    public ActionOnEntityUseAbility(TargetUsed targetUsed, List<Action> entityActions, Condition entityConditions, List<ItemAction> heldItemActions, ItemFilter heldItemFilter, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemActions, heldItemFilter, resultItemActions, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
         this.targetUsed = targetUsed;
         this.entityActions = entityActions;
         this.entityConditions = entityConditions;
@@ -97,14 +97,14 @@ public class ActionOnEntityUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when an entity is used.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item used by the source to interact with the target.")
-                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item used by the source must meet for the item actions to perform.")
+                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item used by the source must pass for the item actions to perform.")
                     .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the source.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "IThe item stack given to the source.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Determines if this ability should activate if the source used the specified hands.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.SOURCE, List.of(), TrueCondition.INSTANCE, List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.TARGET, List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Action on source when interacting with entity!\", \"color\": \"red\"}"))), TrueCondition.INSTANCE, List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.SOURCE, List.of(), TrueCondition.INSTANCE, List.of(), ItemFilter.EMPTY, List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnEntityUseAbility(TargetUsed.TARGET, List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Action on source when interacting with entity!\", \"color\": \"red\"}"))), TrueCondition.INSTANCE, List.of(), ItemFilter.EMPTY, List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

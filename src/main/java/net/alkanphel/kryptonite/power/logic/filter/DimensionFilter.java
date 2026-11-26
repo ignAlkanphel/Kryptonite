@@ -521,6 +521,10 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
+    private static <T> Optional<T> none() {
+        return Optional.empty();
+    }
+
     private static DimensionFilter single(FilterType type) {
         return new DimensionFilter(Operator.AND, List.of(type));
     }
@@ -528,190 +532,190 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
     public static DimensionFilter ofAmbientLight(NumberComparator comparator, float compareTo) {
         return single(new FilterType(
                 Optional.of(new AmbientLightFilter(comparator, compareTo)),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofAttributes(EnvironmentAttributeMap attributes) {
         return single(new FilterType(
-                Optional.empty(),
+                none(),
                 Optional.of(attributes),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofCardinalLight(CardinalLighting.Type cardinalLight) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(),
+                none(), none(),
                 Optional.of(cardinalLight),
-                Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofCoordinateScale(NumberComparator comparator, double compareTo) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(),
                 Optional.of(new CoordinateScaleFilter(comparator, compareTo)),
-                Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofDefaultClock(Holder<WorldClock> defaultClock) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(),
                 Optional.of(defaultClock),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty()
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none()
         ));
     }
 
     public static DimensionFilter ofDimension(ResourceKey<Level> dimension) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
                 Optional.of(dimension),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHasCeiling(boolean hasCeiling) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(),
                 Optional.of(hasCeiling),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHasEnderDragonFight(boolean hasEnderDragonFight) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(),
                 Optional.of(hasEnderDragonFight),
-                Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHasEndFlashes(boolean hasEndFlashes) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(),
                 Optional.of(hasEndFlashes),
-                Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHasFixedTime(boolean hasFixedTime) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(),
                 Optional.of(hasFixedTime),
-                Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(),
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHasSkylight(boolean hasSkylight) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
                 Optional.of(hasSkylight),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofHeight(NumberComparator comparator, int compareTo) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(),
                 Optional.of(new HeightFilter(comparator, compareTo)),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofInfiniburn(TagKey<Block> infiniburn) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(),
                 Optional.of(infiniburn),
-                Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofLogicalHeight(NumberComparator comparator, int compareTo) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(),
                 Optional.of(new LogicalHeightFilter(comparator, compareTo)),
-                Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty()
+                none(), none(),
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofMinY(NumberComparator comparator, int compareTo) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(),
                 Optional.of(new MinYFilter(comparator, compareTo)),
-                Optional.empty(), Optional.empty(), Optional.empty()
+                none(), none(), none()
         ));
     }
 
     public static DimensionFilter ofMonsterSettings(MonsterSettingsFilter monsterSettings) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
                 Optional.of(monsterSettings),
-                Optional.empty(), Optional.empty()
+                none(), none()
         ));
     }
 
     public static DimensionFilter ofSkybox(DimensionType.Skybox skybox) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(),
                 Optional.of(skybox),
-                Optional.empty()
+                none()
         ));
     }
 
     public static DimensionFilter ofTimelines(HolderSet<Timeline> timelines) {
         return single(new FilterType(
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                Optional.empty(), Optional.empty(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(), none(), none(), none(),
+                none(), none(),
                 Optional.of(timelines)
         ));
     }

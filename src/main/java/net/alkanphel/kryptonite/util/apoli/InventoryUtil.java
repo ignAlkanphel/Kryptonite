@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.ints.IntSets;
 import net.alkanphel.kryptonite.mixin.common.SlotRangesAccessor;
 import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompat;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,7 @@ public class InventoryUtil {
         }
     }
 
-    public static int checkInventory(Entity entity, IntCollection slots, List<ItemCondition> itemConditions, ProcessMode processMode) {
+    public static int checkInventory(Entity entity, IntCollection slots, ItemFilter itemFilter, ProcessMode processMode) {
         IntSet preppedSlots = prepSlots(slots, entity);
         OptionalInt slotToSkip = getSelectedHotBarSlot(entity);
         int matches = 0;
@@ -66,7 +66,7 @@ public class InventoryUtil {
             ItemStack stack = slotAccess.get();
             if (stack.isEmpty()) continue;
 
-            if (ItemCondition.checkConditions(itemConditions, entity.level(), stack)) {
+            if (itemFilter.test(entity.level(), stack)) {
                 matches += processMode.applyAsInt(stack);
             }
         }
@@ -74,7 +74,7 @@ public class InventoryUtil {
         return matches;
     }
 
-    public static int checkCuriosInventory(LivingEntity entity, List<String> curiosSlots, List<ItemCondition> itemConditions, ProcessMode processMode) {
+    public static int checkCuriosInventory(LivingEntity entity, List<String> curiosSlots, ItemFilter itemFilter, ProcessMode processMode) {
         List<String> slotsToCheck = curiosSlots.isEmpty()
                 ? KryptoniteCuriosCompat.INSTANCE.getSlots(entity.level())
                 : curiosSlots;
@@ -85,7 +85,7 @@ public class InventoryUtil {
             for (ItemStack stack : KryptoniteCuriosCompat.INSTANCE.getFromSlot(entity, slot)) {
                 if (stack.isEmpty()) continue;
 
-                if (ItemCondition.checkConditions(itemConditions, entity.level(), stack)) {
+                if (itemFilter.test(entity.level(), stack)) {
                     matches += processMode.applyAsInt(stack);
                 }
             }

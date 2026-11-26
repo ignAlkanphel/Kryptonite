@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +27,8 @@ public class InteractionPrioritizedAbility extends InteractionAbility implements
 
     private final int priority;
 
-    public InteractionPrioritizedAbility(List<ItemAction> heldItemActions, List<ItemCondition> heldItemConditions, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemActions, heldItemConditions, resultItemActions, resultStack, hands, actionResult, properties, conditions, energyBarUsages);
+    public InteractionPrioritizedAbility(List<ItemAction> heldItemActions, ItemFilter heldItemFilter, List<ItemAction> resultItemActions, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemActions, heldItemFilter, resultItemActions, resultStack, hands, actionResult, properties, conditions, energyBarUsages);
         this.priority = priority;
     }
 

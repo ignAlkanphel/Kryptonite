@@ -7,8 +7,7 @@ import net.alkanphel.kryptonite.mixin.common.ItemEntityAccessor;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
-import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
@@ -48,7 +47,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
             Action.LIST_CODEC.optionalFieldOf("target_actions_item", List.of()).forGetter(a -> a.entityActionsItem),
             ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
+            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventItemPickupAbility::new));
@@ -56,16 +55,16 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     private final List<Action> entityActionsThrower, entityActionsItem;
     private final List<ItemAction> itemActions;
     private final Condition entityConditions;
-    private final List<ItemCondition> itemConditions;
+    private final ItemFilter itemFilter;
     private final int priority;
 
-    public PreventItemPickupAbility(List<Action> entityActionsThrower, List<Action> entityActionsItem, List<ItemAction> itemActions, Condition entityConditions, List<ItemCondition> itemConditions, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventItemPickupAbility(List<Action> entityActionsThrower, List<Action> entityActionsItem, List<ItemAction> itemActions, Condition entityConditions, ItemFilter itemFilter, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActionsThrower = entityActionsThrower;
         this.entityActionsItem = entityActionsItem;
         this.itemActions = itemActions;
         this.entityConditions = entityConditions;
-        this.itemConditions = itemConditions;
+        this.itemFilter = itemFilter;
         this.priority = priority;
     }
 
@@ -75,7 +74,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     }
 
     public boolean doesPrevent(ItemStack stack, Entity thrower, Entity holder) {
-        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
+        if (!itemFilter.test(holder.level(), stack)) {
             return false;
         }
 
@@ -131,10 +130,10 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
                     .addOptional("target_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
-                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet to prevent item pickup.")
+                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the item being picked up must pass to prevent item pickup.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), TrueCondition.INSTANCE, ItemFilter.EMPTY, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), ItemFilter.ofItem(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

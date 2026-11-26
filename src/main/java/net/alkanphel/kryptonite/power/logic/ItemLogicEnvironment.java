@@ -1,6 +1,5 @@
 package net.alkanphel.kryptonite.power.logic;
 
-import net.alkanphel.kryptonite.power.logic.context.ItemConditionContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.addonpack.log.AddonPackLog;
@@ -15,10 +14,6 @@ public enum ItemLogicEnvironment {
     CLIENT;
 
     private static final Set<Identifier> WARNED = ConcurrentHashMap.newKeySet();
-
-    public boolean matches(ItemConditionContext context) {
-        return matches(context.level());
-    }
 
     public boolean matches(Level level) {
         return switch (this) {

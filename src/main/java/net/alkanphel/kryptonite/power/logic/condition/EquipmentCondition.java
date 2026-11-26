@@ -4,8 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.item.EmptyItemCondition;
-import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
+import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,15 +17,15 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public record EquipmentCondition(ItemCondition itemCondition, EquipmentSlotGroup equipmentSlot) implements Condition {
+public record EquipmentCondition(ItemFilter itemFilter, EquipmentSlotGroup equipmentSlot) implements Condition {
 
     public static final MapCodec<EquipmentCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemCondition.CODEC.fieldOf("item_conditions").forGetter(EquipmentCondition::itemCondition),
+            ItemFilter.CODEC.fieldOf("item_filters").forGetter(EquipmentCondition::itemFilter),
             EquipmentSlotGroup.CODEC.fieldOf("equipment_slot").forGetter(EquipmentCondition::equipmentSlot)
     ).apply(instance, EquipmentCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EquipmentCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemCondition.CODEC), EquipmentCondition::itemCondition,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemFilter.CODEC), EquipmentCondition::itemFilter,
             EquipmentSlotGroup.STREAM_CODEC, EquipmentCondition::equipmentSlot,
             EquipmentCondition::new
     );
@@ -36,7 +35,7 @@ public record EquipmentCondition(ItemCondition itemCondition, EquipmentSlotGroup
         if (!(context.getEntity() instanceof LivingEntity livingEntity)) return false;
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (equipmentSlot.test(slot) && itemCondition.test(livingEntity.level(), livingEntity.getItemBySlot(slot))) {
+            if (equipmentSlot.test(slot) && itemFilter.test(livingEntity.level(), livingEntity.getItemBySlot(slot))) {
                 return true;
             }
         }
@@ -60,9 +59,9 @@ public record EquipmentCondition(ItemCondition itemCondition, EquipmentSlotGroup
         public void addDocumentation(CodecDocumentationBuilder<Condition, EquipmentCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Equipment")
                     .setDescription("Checks if the entity has the specified item equipped in the specified equipment slot.")
-                    .add("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "The item conditions that must be fulfilled by the item.")
+                    .add("item_filters", ItemFilter.documentation(provider), "Item filter(s) that the equipped item must pass.")
                     .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to check for the item.")
-                    .addExampleObject(new EquipmentCondition(new EmptyItemCondition(), EquipmentSlotGroup.MAINHAND));
+                    .addExampleObject(new EquipmentCondition(ItemFilter.EMPTY, EquipmentSlotGroup.MAINHAND));
         }
     }
 

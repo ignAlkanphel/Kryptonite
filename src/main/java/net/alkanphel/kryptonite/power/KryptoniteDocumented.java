@@ -20,7 +20,6 @@ import net.threetag.palladium.documentation.SettingType;
 public interface KryptoniteDocumented<T, R extends T> {
 
     SettingType TYPE_BLOCK_CONDITION_LIST = SettingType.listOrPrimitive("Block Condition");
-    SettingType TYPE_ITEM_CONDITION_LIST = SettingType.listOrPrimitive("Item Condition");
     SettingType TYPE_BLOCK_ACTION_LIST = SettingType.listOrPrimitive("Block Action");
     SettingType TYPE_ITEM_ACTION_LIST = SettingType.listOrPrimitive("Item Action");
 

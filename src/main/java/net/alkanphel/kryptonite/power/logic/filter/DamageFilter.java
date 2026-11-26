@@ -158,24 +158,28 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
+    private static <T> Optional<T> none() {
+        return Optional.empty();
+    }
+
     private static DamageFilter single(FilterType type) {
         return new DamageFilter(Operator.AND, List.of(type));
     }
 
     public static DamageFilter ofAttacker(Condition condition) {
-        return single(new FilterType(Optional.empty(), Optional.empty(), Optional.of(condition), Optional.empty()));
+        return single(new FilterType(none(), none(), Optional.of(condition), none()));
     }
 
     public static DamageFilter ofDamageTypes(PalladiumHolderSet<DamageType> types) {
-        return single(new FilterType(Optional.empty(), Optional.of(types), Optional.empty(), Optional.empty()));
+        return single(new FilterType(none(), Optional.of(types), none(), none()));
     }
 
     public static DamageFilter ofAmount(NumberComparator comparator, Value compareTo) {
-        return single(new FilterType(Optional.of(new AmountFilter(comparator, compareTo)), Optional.empty(), Optional.empty(), Optional.empty()));
+        return single(new FilterType(Optional.of(new AmountFilter(comparator, compareTo)), none(), none(), none()));
     }
 
     public static DamageFilter ofProjectile(Optional<PalladiumHolderSet<EntityType<?>>> types, Condition conditions) {
-        return single(new FilterType(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(new ProjectileFilter(types, conditions))));
+        return single(new FilterType(none(), none(), none(), Optional.of(new ProjectileFilter(types, conditions))));
     }
 
 }
