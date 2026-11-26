@@ -4,9 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.condition.dimension.DimensionDimensionCondition;
-import net.alkanphel.kryptonite.power.logic.condition.dimension.internal.DimensionCondition;
+import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
+import net.alkanphel.kryptonite.power.logic.filter.DimensionFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -33,8 +32,8 @@ public class PreventTeleportAbility extends Ability {
 
     public static final MapCodec<PreventTeleportAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            DimensionCondition.LIST_CODEC.optionalFieldOf("from_dimension_conditions", List.of()).forGetter(a -> a.originDimensionConditions),
-            DimensionCondition.LIST_CODEC.optionalFieldOf("to_dimension_conditions", List.of()).forGetter(a -> a.destinationDimensionConditions),
+            DimensionFilter.CODEC.optionalFieldOf("from_dimension_filters", DimensionFilter.EMPTY).forGetter(a -> a.originDimensionFilters),
+            DimensionFilter.CODEC.optionalFieldOf("to_dimension_filters", DimensionFilter.EMPTY).forGetter(a -> a.destinationDimensionFilters),
             Value.NUMBER_CODEC.optionalFieldOf("min_distance").forGetter(a -> a.minDistance),
             Value.NUMBER_CODEC.optionalFieldOf("max_distance").forGetter(a -> a.maxDistance),
             Source.CODEC.fieldOf("source").forGetter(a -> a.source),
@@ -42,15 +41,15 @@ public class PreventTeleportAbility extends Ability {
     ).apply(instance, PreventTeleportAbility::new));
 
     public final List<Action> entityActions;
-    public final List<DimensionCondition> originDimensionConditions, destinationDimensionConditions;
+    public final DimensionFilter originDimensionFilters, destinationDimensionFilters;
     public final Optional<Value> minDistance, maxDistance;
     public final Source source;
 
-    public PreventTeleportAbility(List<Action> entityActions, List<DimensionCondition> originDimensionConditions, List<DimensionCondition> destinationDimensionConditions, Optional<Value> minDistance, Optional<Value> maxDistance, Source source, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventTeleportAbility(List<Action> entityActions, DimensionFilter originDimensionFilters, DimensionFilter destinationDimensionFilters, Optional<Value> minDistance, Optional<Value> maxDistance, Source source, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.originDimensionConditions = originDimensionConditions;
-        this.destinationDimensionConditions = destinationDimensionConditions;
+        this.originDimensionFilters = originDimensionFilters;
+        this.destinationDimensionFilters = destinationDimensionFilters;
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         this.source = source;
@@ -58,17 +57,14 @@ public class PreventTeleportAbility extends Ability {
 
     public boolean doesApply(LivingEntity entity, AbilityInstance<?> instance, ServerLevel destinationLevel, Vec3 destination) {
         Vec3 origin = entity.position();
+        Level originLevel = entity.level();
 
-        if (!originDimensionConditions.isEmpty()) {
-            if (!DimensionCondition.checkConditions(originDimensionConditions, entity.level().dimensionType(), entity.level(), entity)) {
-                return false;
-            }
+        if (!originDimensionFilters.test(new DimensionConditionContext(originLevel.dimensionType(), originLevel, entity))) {
+            return false;
         }
 
-        if (!destinationDimensionConditions.isEmpty()) {
-            if (!DimensionCondition.checkConditions(destinationDimensionConditions, destinationLevel.dimensionType(), destinationLevel, entity)) {
-                return false;
-            }
+        if (!destinationDimensionFilters.test(new DimensionConditionContext(destinationLevel.dimensionType(), destinationLevel, entity))) {
+            return false;
         }
 
         double distance = origin.distanceTo(destination);
@@ -87,17 +83,15 @@ public class PreventTeleportAbility extends Ability {
     public boolean doesApply(LivingEntity entity, ResourceKey<Level> destination) {
         Level originLevel = entity.level();
 
-        if (!originDimensionConditions.isEmpty()) {
-            if (!DimensionCondition.checkConditions(originDimensionConditions, originLevel.dimensionType(), originLevel, entity)) {
-                return false;
-            }
+        if (!originDimensionFilters.test(new DimensionConditionContext(originLevel.dimensionType(), originLevel, entity))) {
+            return false;
         }
 
-        if (!destinationDimensionConditions.isEmpty()) {
+        if (!destinationDimensionFilters.filters().isEmpty()) {
             if (originLevel instanceof ServerLevel serverLevel) {
                 ServerLevel destinationLevel = serverLevel.getServer().getLevel(destination);
                 if (destinationLevel == null) return false;
-                return DimensionCondition.checkConditions(destinationDimensionConditions, destinationLevel.dimensionType(), destinationLevel, null);
+                return destinationDimensionFilters.test(new DimensionConditionContext(destinationLevel.dimensionType(), destinationLevel, null));
             }
         }
 
@@ -140,13 +134,13 @@ public class PreventTeleportAbility extends Ability {
 
             builder.setDescription("Prevents the entity that has this ability from teleporting by the specified sources.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon teleportation being prevented.")
-                    .addOptional("from_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting from.")
-                    .addOptional("to_dimension_conditions", KryptoniteDocumented.TYPE_DIMENSION_CONDITION_LIST, "Dimension condition(s) the dimension must meet for the dimension the entity is teleporting to.")
+                    .addOptional("from_dimension_filters", DimensionFilter.documentation(provider), "Dimension filter(s) the dimension must pass for the dimension the entity is teleporting from.")
+                    .addOptional("to_dimension_filters", DimensionFilter.documentation(provider), "Dimension filter(s) the dimension must pass for the dimension the entity is teleporting to.")
                     .addOptional("min_distance", TYPE_DOUBLE_VALUE, "Minimum distance required for prevention. Doesn't work for the 'dimension_travel' source.")
                     .addOptional("max_distance", TYPE_DOUBLE_VALUE, "Maximum distance required for prevention. Doesn't work for the 'dimension_travel' source.")
                     .add("source", SettingType.enumList(Source.values()), "The teleportation source to prevent.")
-                    .addExampleObject(new PreventTeleportAbility(List.of(), List.of(), List.of(), Optional.empty(), Optional.empty(), Source.ENDER_PEARL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventTeleportAbility(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"))), List.of(new DimensionDimensionCondition(Level.OVERWORLD)), List.of(new DimensionDimensionCondition(Level.NETHER)), Optional.empty(), Optional.empty(), Source.DIMENSION_TRAVEL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventTeleportAbility(List.of(), DimensionFilter.EMPTY, DimensionFilter.EMPTY, Optional.empty(), Optional.empty(), Source.ENDER_PEARL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventTeleportAbility(List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\":\"You cannot enter The Nether from the Overworld!\"}"))), DimensionFilter.ofDimension(Level.OVERWORLD), DimensionFilter.ofDimension(Level.NETHER), Optional.empty(), Optional.empty(), Source.DIMENSION_TRAVEL, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

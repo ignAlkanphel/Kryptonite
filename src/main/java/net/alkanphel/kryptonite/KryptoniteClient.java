@@ -48,7 +48,6 @@ public class KryptoniteClient {
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.ITEM_ACTION_SERIALIZER, KryptoniteRegistries.ITEM_ACTION_SERIALIZER, "Item Actions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.BLOCK_CONDITION_SERIALIZER, KryptoniteRegistries.BLOCK_CONDITION_SERIALIZER, "Block Conditions", clientLevel.registryAccess()).save();
         HTMLBuilder.documentedPage(KryptoniteRegistryKeys.ITEM_CONDITION_SERIALIZER, KryptoniteRegistries.ITEM_CONDITION_SERIALIZER, "Item Conditions", clientLevel.registryAccess()).save();
-        HTMLBuilder.documentedPage(KryptoniteRegistryKeys.DIMENSION_CONDITION_SERIALIZER, KryptoniteRegistries.DIMENSION_CONDITION_SERIALIZER, "Dimension Conditions", clientLevel.registryAccess()).save();
         CodecDocumentationBuilder.createDocFiles();
     }
 
