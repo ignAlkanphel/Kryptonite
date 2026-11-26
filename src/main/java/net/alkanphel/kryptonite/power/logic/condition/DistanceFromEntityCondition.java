@@ -48,7 +48,7 @@ public record DistanceFromEntityCondition(NumberComparator comparator, Value com
             builder.setName("Distance From Entity")
                     .setDescription("Compares the distance between the source & target entities.")
                     .add("comparator", TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
-                    .add("compare_to", TYPE_VALUE, "Value that is being compared against.")
+                    .add("compare_to", TYPE_DOUBLE_VALUE, "Value that is being compared against.")
                     .addExampleObject(new DistanceFromEntityCondition(NumberComparator.LESS_OR_EQUAL, new StaticValue(10.0D)));
         }
     }

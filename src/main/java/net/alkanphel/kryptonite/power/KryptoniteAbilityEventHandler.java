@@ -206,9 +206,9 @@ public class KryptoniteAbilityEventHandler {
 
         // Action On Death ability
         for (AbilityInstance<ActionOnDeathAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DEATH.get())) {
-            if (!instance.getAbility().doesApply(attacker, target, source, damage, instance)) continue;
+            if (!instance.getAbility().doesApply(target, attacker, source, damage, instance)) continue;
 
-            instance.getAbility().runActions(attacker, target, instance);
+            instance.getAbility().runActions(target, attacker, instance);
         }
     }
 
