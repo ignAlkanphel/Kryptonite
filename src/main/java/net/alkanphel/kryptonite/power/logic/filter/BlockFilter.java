@@ -7,7 +7,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.BlockLogicEnvironment;
-import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.alkanphel.kryptonite.util.apoli.ability.DistanceFromCoordinates;
@@ -71,16 +71,16 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
         return filters.isEmpty();
     }
 
-    public boolean test(BlockConditionContext context) {
+    public boolean test(BlockFilterContext context) {
         return operator.test(filters, context);
     }
 
     public boolean test(SavedBlockPosition savedBlock) {
-        return test(new BlockConditionContext(savedBlock));
+        return test(new BlockFilterContext(savedBlock));
     }
 
     public boolean test(Level level, BlockPos pos) {
-        return test(new BlockConditionContext(level, pos));
+        return test(new BlockFilterContext(level, pos));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -325,7 +325,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     && waterLoggable.isEmpty();
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             return testAdjacent(context)
                     && testAttachable(context)
                     && testBlock(context)
@@ -352,23 +352,23 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     && testWaterLoggable(context);
         }
 
-        private boolean testAdjacent(BlockConditionContext context) {
+        private boolean testAdjacent(BlockFilterContext context) {
             return adjacent.isEmpty() || adjacent.get().test(context);
         }
 
-        private boolean testAttachable(BlockConditionContext context) {
+        private boolean testAttachable(BlockFilterContext context) {
             return attachable.isEmpty() || attachable.get() == isAttachable(context);
         }
 
-        private boolean testBlock(BlockConditionContext context) {
+        private boolean testBlock(BlockFilterContext context) {
             return block.isEmpty() || block.get().contains(context.blockState().typeHolder());
         }
 
-        private boolean testBlockEntity(BlockConditionContext context) {
+        private boolean testBlockEntity(BlockFilterContext context) {
             return blockEntity.isEmpty() || blockEntity.get() == context.blockEntity().isPresent();
         }
 
-        private boolean testInstanceof(BlockConditionContext context) {
+        private boolean testInstanceof(BlockFilterContext context) {
             if (instanceofBlock.isEmpty()) return true;
 
             var state = context.blockState();
@@ -385,65 +385,65 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
             };
         }
 
-        private boolean testBlockState(BlockConditionContext context) {
+        private boolean testBlockState(BlockFilterContext context) {
             return blockState.isEmpty() || blockState.get().test(context);
         }
 
-        private boolean testCanSeeSky(BlockConditionContext context) {
+        private boolean testCanSeeSky(BlockFilterContext context) {
             return canSeeSky.isEmpty() || canSeeSky.get() == context.level().canSeeSky(context.pos());
         }
 
-        private boolean testCommandResult(BlockConditionContext context) {
+        private boolean testCommandResult(BlockFilterContext context) {
             return commandResult.isEmpty() || !BlockLogicEnvironment.SERVER.matches(context) || commandResult.get().test(context);
         }
 
-        private boolean testDestroySpeed(BlockConditionContext context) {
+        private boolean testDestroySpeed(BlockFilterContext context) {
             return destroySpeed.isEmpty() || destroySpeed.get().test(context);
         }
 
-        private boolean testDistanceFromCoordinates(BlockConditionContext context) {
+        private boolean testDistanceFromCoordinates(BlockFilterContext context) {
             return distanceFromCoordinates.isEmpty() || distanceFromCoordinates.get().test(context);
         }
 
-        private boolean testExplosionResistance(BlockConditionContext context) {
+        private boolean testExplosionResistance(BlockFilterContext context) {
             return explosionResistance.isEmpty() || explosionResistance.get().test(context);
         }
 
-        private boolean testFluidType(BlockConditionContext context) {
+        private boolean testFluidType(BlockFilterContext context) {
             return fluidType.isEmpty() || fluidType.get().contains(context.blockState().getFluidState().typeHolder());
         }
 
-        private boolean testFriction(BlockConditionContext context) {
+        private boolean testFriction(BlockFilterContext context) {
             return friction.isEmpty() || friction.get().test(context);
         }
 
-        private boolean testHeight(BlockConditionContext context) {
+        private boolean testHeight(BlockFilterContext context) {
             return height.isEmpty() || height.get().test(context);
         }
 
-        private boolean testInRain(BlockConditionContext context) {
+        private boolean testInRain(BlockFilterContext context) {
             return inRain.isEmpty() || inRain.get() == context.level().isRainingAt(context.pos().above());
         }
 
-        private boolean testInSnow(BlockConditionContext context) {
+        private boolean testInSnow(BlockFilterContext context) {
             if (inSnow.isEmpty()) return true;
             boolean snowing = context.level().getBiome(context.pos()).value().getPrecipitationAt(context.pos(), context.level().getSeaLevel()) == Biome.Precipitation.SNOW && context.level().isRaining() && context.level().canSeeSky(context.pos());
             return inSnow.get() == snowing;
         }
 
-        private boolean testInThunder(BlockConditionContext context) {
+        private boolean testInThunder(BlockFilterContext context) {
             return inThunder.isEmpty() || inThunder.get() == inThunderstorm(context.level(), context.pos().above());
         }
 
-        private boolean testLightBlocking(BlockConditionContext context) {
+        private boolean testLightBlocking(BlockFilterContext context) {
             return lightBlocking.isEmpty() || lightBlocking.get() == context.blockState().isSolidRender();
         }
 
-        private boolean testLightLevel(BlockConditionContext context) {
+        private boolean testLightLevel(BlockFilterContext context) {
             return lightLevel.isEmpty() || lightLevel.get().test(context);
         }
 
-        private boolean testMovementBlocking(BlockConditionContext context) {
+        private boolean testMovementBlocking(BlockFilterContext context) {
             if (movementBlocking.isEmpty()) return true;
 
             var state = context.blockState();
@@ -452,22 +452,22 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
             return movementBlocking.get() == blocksMovement;
         }
 
-        private boolean testNbt(BlockConditionContext context) {
+        private boolean testNbt(BlockFilterContext context) {
             return nbt.isEmpty() || context.blockEntity()
                     .map(blockEntity -> blockEntity.saveWithoutMetadata(context.level().registryAccess()))
                     .map(blockEntityNbt -> NbtUtils.compareNbt(nbt.get(), blockEntityNbt, true))
                     .orElse(false);
         }
 
-        private boolean testOffset(BlockConditionContext context) {
+        private boolean testOffset(BlockFilterContext context) {
             return offset.isEmpty() || offset.get().test(context);
         }
 
-        private boolean testReplaceable(BlockConditionContext context) {
+        private boolean testReplaceable(BlockFilterContext context) {
             return replaceable.isEmpty() || replaceable.get() == context.blockState().canBeReplaced();
         }
 
-        private boolean testWaterLoggable(BlockConditionContext context) {
+        private boolean testWaterLoggable(BlockFilterContext context) {
             return waterLoggable.isEmpty() || waterLoggable.get() == (context.blockState().getBlock() instanceof SimpleWaterloggedBlock);
         }
 
@@ -477,7 +477,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
             return level.isThundering() && level.isRaining() && level.canSeeSky(pos);
         }
 
-        private static boolean isAttachable(BlockConditionContext context) {
+        private static boolean isAttachable(BlockFilterContext context) {
             Level level = context.level();
             BlockPos pos = context.pos();
 
@@ -520,7 +520,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Adjacent Blocks");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             Level level = context.level();
             BlockPos pos = context.pos();
 
@@ -579,7 +579,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Block State");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             var blockState = context.blockState();
             var propValue = blockState.getProperties()
                     .stream()
@@ -617,7 +617,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Command Result");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             if (!(context.level() instanceof ServerLevel serverLevel)) return false;
 
             MinecraftServer server = serverLevel.getServer();
@@ -662,7 +662,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Destroy Speed");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             float destroySpeed = context.blockState().getDestroySpeed(context.level(), context.pos());
             float comparedValue = compareTo.getAsFloat(null);
 
@@ -705,7 +705,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Distance From Coordinates");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             return DistanceFromCoordinates.super.testCondition(Either.left(context));
         }
     }
@@ -728,7 +728,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Explosion Resistance");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             float resistance = context.blockState().getBlock().getExplosionResistance();
             float comparedValue = compareTo.getAsFloat(null);
 
@@ -752,7 +752,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Fluid Type");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             return fluid.contains(context.blockState().getFluidState().typeHolder());
         }
     }
@@ -775,7 +775,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Friction");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             float friction = context.blockState().getBlock().getFriction();
             float comparedValue = compareTo.getAsFloat(null);
 
@@ -801,7 +801,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Height");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             int y = context.pos().getY();
             int comparedValue = compareTo.getAsInt(null);
 
@@ -833,7 +833,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Light Level");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             Level level = context.level();
             BlockPos pos = context.pos();
 
@@ -880,7 +880,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Offset");
         }
 
-        public boolean test(BlockConditionContext context) {
+        public boolean test(BlockFilterContext context) {
             BlockPos offsetBlockPos = context.pos().offset(x.getAsInt(null), y.getAsInt(null), z.getAsInt(null));
             return context.level().hasChunkAt(offsetBlockPos) && blockFilter.test(context.level(), offsetBlockPos);
         }
@@ -893,7 +893,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
 
         public static final Codec<Operator> CODEC = Codec.STRING.xmap(name -> Operator.valueOf(name.toUpperCase(Locale.ROOT)), operator -> operator.name().toLowerCase(Locale.ROOT));
 
-        public boolean test(List<FilterType> filters, BlockConditionContext context) {
+        public boolean test(List<FilterType> filters, BlockFilterContext context) {
             return switch (this) {
                 case AND -> filters.stream().allMatch(filter -> filter.test(context));
                 case OR -> filters.stream().anyMatch(filter -> filter.test(context));

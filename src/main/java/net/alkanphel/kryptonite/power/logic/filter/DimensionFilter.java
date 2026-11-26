@@ -6,7 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.DimensionFilterContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -56,7 +56,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                 .buildObject("Dimension Filters");
     }
 
-    public boolean test(DimensionConditionContext context) {
+    public boolean test(DimensionFilterContext context) {
         return operator.test(filters, context);
     }
 
@@ -189,7 +189,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     && timelines.isEmpty();
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             return testAmbientLight(context)
                     && testAttributes(context)
                     && testCardinalLight(context)
@@ -210,81 +210,81 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     && testTimelines(context);
         }
 
-        private boolean testAmbientLight(DimensionConditionContext context) {
+        private boolean testAmbientLight(DimensionFilterContext context) {
             return ambientLight.isEmpty() || ambientLight.get().test(context);
         }
 
-        private boolean testAttributes(DimensionConditionContext context) {
+        private boolean testAttributes(DimensionFilterContext context) {
             return attributes.isEmpty() || testAttributes(attributes.get(), context);
         }
 
-        private boolean testCardinalLight(DimensionConditionContext context) {
+        private boolean testCardinalLight(DimensionFilterContext context) {
             if (cardinalLight.isEmpty()) return true;
             if (context.level() == null) return false;
 
             return context.dimensionType().cardinalLightType() == cardinalLight.get();
         }
 
-        private boolean testCoordinateScale(DimensionConditionContext context) {
+        private boolean testCoordinateScale(DimensionFilterContext context) {
             return coordinateScale.isEmpty() || coordinateScale.get().test(context);
         }
 
-        private boolean testDefaultClock(DimensionConditionContext context) {
+        private boolean testDefaultClock(DimensionFilterContext context) {
             if (defaultClock.isEmpty()) return true;
             if (context.level() == null || context.dimensionType().defaultClock().isEmpty()) return false;
 
             return context.dimensionType().defaultClock().get().equals(defaultClock.get());
         }
 
-        private boolean testDimension(DimensionConditionContext context) {
+        private boolean testDimension(DimensionFilterContext context) {
             return dimension.isEmpty() || context.level() != null && context.level().dimension().equals(dimension.get());
         }
 
-        private boolean testHasCeiling(DimensionConditionContext context) {
+        private boolean testHasCeiling(DimensionFilterContext context) {
             return hasCeiling.isEmpty() || hasCeiling.get() == context.dimensionType().hasCeiling();
         }
 
-        private boolean testHasEnderDragonFight(DimensionConditionContext context) {
+        private boolean testHasEnderDragonFight(DimensionFilterContext context) {
             return hasEnderDragonFight.isEmpty() || hasEnderDragonFight.get() == context.dimensionType().hasEnderDragonFight();
         }
 
-        private boolean testHasEndFlashes(DimensionConditionContext context) {
+        private boolean testHasEndFlashes(DimensionFilterContext context) {
             return hasEndFlashes.isEmpty() || hasEndFlashes.get() == context.dimensionType().hasEndFlashes();
         }
 
-        private boolean testHasFixedTime(DimensionConditionContext context) {
+        private boolean testHasFixedTime(DimensionFilterContext context) {
             return hasFixedTime.isEmpty() || hasFixedTime.get() == context.dimensionType().hasFixedTime();
         }
 
-        private boolean testHasSkylight(DimensionConditionContext context) {
+        private boolean testHasSkylight(DimensionFilterContext context) {
             return hasSkylight.isEmpty() || hasSkylight.get() == context.dimensionType().hasSkyLight();
         }
 
-        private boolean testSkybox(DimensionConditionContext context) {
+        private boolean testSkybox(DimensionFilterContext context) {
             return skybox.isEmpty() || context.dimensionType().skybox() == skybox.get();
         }
 
-        private boolean testHeight(DimensionConditionContext context) {
+        private boolean testHeight(DimensionFilterContext context) {
             return height.isEmpty() || height.get().test(context);
         }
 
-        private boolean testInfiniburn(DimensionConditionContext context) {
+        private boolean testInfiniburn(DimensionFilterContext context) {
             return infiniburn.isEmpty() || context.dimensionType().infiniburn().equals(infiniburn.get());
         }
 
-        private boolean testLogicalHeight(DimensionConditionContext context) {
+        private boolean testLogicalHeight(DimensionFilterContext context) {
             return logicalHeight.isEmpty() || logicalHeight.get().test(context);
         }
 
-        private boolean testMinY(DimensionConditionContext context) {
+        private boolean testMinY(DimensionFilterContext context) {
             return minY.isEmpty() || minY.get().test(context);
         }
 
-        private boolean testMonsterSettings(DimensionConditionContext context) {
+        private boolean testMonsterSettings(DimensionFilterContext context) {
             return monsterSettings.isEmpty() || monsterSettings.get().test(context);
         }
 
-        private boolean testTimelines(DimensionConditionContext context) {
+        private boolean testTimelines(DimensionFilterContext context) {
             if (timelines.isEmpty()) return true;
             if (context.level() == null) return false;
 
@@ -298,7 +298,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
 
         // -------------------------------------------------------------------------------------------------------------------------------
 
-        private static boolean testAttributes(EnvironmentAttributeMap attributes, DimensionConditionContext context) {
+        private static boolean testAttributes(EnvironmentAttributeMap attributes, DimensionFilterContext context) {
             Level level = context.level();
             Entity entity = context.entity();
             if (level == null || entity == null) return false;
@@ -342,7 +342,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Ambient Light");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.level() == null) return false;
             return comparator.compare(context.dimensionType().ambientLight(), compareTo);
         }
@@ -366,7 +366,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Coordinate Scale");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.level() == null) return false;
             return comparator.compare(context.dimensionType().coordinateScale(), compareTo);
         }
@@ -390,7 +390,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Height");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.level() == null) return false;
             return comparator.compare(context.dimensionType().height(), compareTo);
         }
@@ -414,7 +414,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Logical Height");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.level() == null) return false;
             return comparator.compare(context.dimensionType().logicalHeight(), compareTo);
         }
@@ -438,7 +438,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Min Y");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.level() == null) return false;
             return comparator.compare(context.dimensionType().minY(), compareTo);
         }
@@ -472,7 +472,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Dimension Monster Settings");
         }
 
-        public boolean test(DimensionConditionContext context) {
+        public boolean test(DimensionFilterContext context) {
             if (context.dimensionType() == null) return false;
 
             var settings = context.dimensionType().monsterSettings();
@@ -510,7 +510,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
 
         public static final Codec<Operator> CODEC = Codec.STRING.xmap(name -> Operator.valueOf(name.toUpperCase(Locale.ROOT)), operator -> operator.name().toLowerCase(Locale.ROOT));
 
-        public boolean test(List<FilterType> filters, DimensionConditionContext context) {
+        public boolean test(List<FilterType> filters, DimensionFilterContext context) {
             return switch (this) {
                 case AND -> filters.stream().allMatch(filter -> filter.test(context));
                 case OR -> filters.stream().anyMatch(filter -> filter.test(context));

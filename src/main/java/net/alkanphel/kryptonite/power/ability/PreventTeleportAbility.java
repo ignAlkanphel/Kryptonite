@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.DimensionFilterContext;
 import net.alkanphel.kryptonite.power.logic.filter.DimensionFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
@@ -59,11 +59,11 @@ public class PreventTeleportAbility extends Ability {
         Vec3 origin = entity.position();
         Level originLevel = entity.level();
 
-        if (!originDimensionFilters.test(new DimensionConditionContext(originLevel.dimensionType(), originLevel, entity))) {
+        if (!originDimensionFilters.test(new DimensionFilterContext(originLevel.dimensionType(), originLevel, entity))) {
             return false;
         }
 
-        if (!destinationDimensionFilters.test(new DimensionConditionContext(destinationLevel.dimensionType(), destinationLevel, entity))) {
+        if (!destinationDimensionFilters.test(new DimensionFilterContext(destinationLevel.dimensionType(), destinationLevel, entity))) {
             return false;
         }
 
@@ -83,7 +83,7 @@ public class PreventTeleportAbility extends Ability {
     public boolean doesApply(LivingEntity entity, ResourceKey<Level> destination) {
         Level originLevel = entity.level();
 
-        if (!originDimensionFilters.test(new DimensionConditionContext(originLevel.dimensionType(), originLevel, entity))) {
+        if (!originDimensionFilters.test(new DimensionFilterContext(originLevel.dimensionType(), originLevel, entity))) {
             return false;
         }
 
@@ -91,7 +91,7 @@ public class PreventTeleportAbility extends Ability {
             if (originLevel instanceof ServerLevel serverLevel) {
                 ServerLevel destinationLevel = serverLevel.getServer().getLevel(destination);
                 if (destinationLevel == null) return false;
-                return destinationDimensionFilters.test(new DimensionConditionContext(destinationLevel.dimensionType(), destinationLevel, null));
+                return destinationDimensionFilters.test(new DimensionFilterContext(destinationLevel.dimensionType(), destinationLevel, null));
             }
         }
 

@@ -5,4 +5,4 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
-public record DimensionConditionContext(DimensionType dimensionType, @Nullable Level level, @Nullable Entity entity) {}
+public record DimensionFilterContext(DimensionType dimensionType, @Nullable Level level, @Nullable Entity entity) {}

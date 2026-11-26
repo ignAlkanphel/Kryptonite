@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
-import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
 import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.core.HolderLookup;
@@ -64,14 +64,14 @@ public class ExplodeAction extends Action {
 
         boolean griefing = PalladiumGameRules.allowsPowerGriefing(level);
 
-        Predicate<BlockConditionContext> behaviorCondition = ctx -> false;
+        Predicate<BlockFilterContext> behaviorCondition = ctx -> false;
 
         if (!indestructibleFilter.isEmpty()) {
             behaviorCondition = indestructibleFilter::test;
         }
 
         if (!destructibleFilter.isEmpty()) {
-            Predicate<BlockConditionContext> destructible = destructibleFilter::test;
+            Predicate<BlockFilterContext> destructible = destructibleFilter::test;
             behaviorCondition = MiscUtil.combineOr(destructible.negate(), behaviorCondition);
         }
 

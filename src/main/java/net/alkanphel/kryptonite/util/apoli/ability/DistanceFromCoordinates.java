@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
 import net.alkanphel.kryptonite.util.apoli.Shape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -82,9 +82,9 @@ public interface DistanceFromCoordinates {
         T create(Reference reference, Shape shape, Optional<Integer> roundToDigit, Optional<Offset> offset, NumberComparator comparator, double compareTo, boolean scaleReferenceToDimension, boolean scaleDistanceToDimension, boolean ignoreX, boolean ignoreY, boolean ignoreZ);
     }
 
-    default boolean testCondition(Either<BlockConditionContext, DataContext> context) {
-        Level level = context.map(BlockConditionContext::level, DataContext::getLevel);
-        BlockPos pos = context.map(BlockConditionContext::pos, DataContext::getBlockPos);
+    default boolean testCondition(Either<BlockFilterContext, DataContext> context) {
+        Level level = context.map(BlockFilterContext::level, DataContext::getLevel);
+        BlockPos pos = context.map(BlockFilterContext::pos, DataContext::getBlockPos);
 
         double coordinateScale = level.dimensionType().coordinateScale();
 

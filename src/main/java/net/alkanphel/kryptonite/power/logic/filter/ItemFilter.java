@@ -10,7 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.mixin.common.DelayedDataComponentMapAccessor;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
-import net.alkanphel.kryptonite.power.logic.context.ItemConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.ItemFilterContext;
 import net.alkanphel.kryptonite.util.apoli.access.EntityLinkedItemStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -65,12 +65,12 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                 .buildObject("Item Filters");
     }
 
-    public boolean test(ItemConditionContext context) {
+    public boolean test(ItemFilterContext context) {
         return operator.test(filters, context);
     }
 
     public boolean test(Level level, ItemStack stack) {
-        return test(new ItemConditionContext(level, stack));
+        return test(new ItemFilterContext(level, stack));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     && smeltable.isEmpty();
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             return testAmount(context)
                     && testBlockItem(context)
                     && testComponents(context)
@@ -216,66 +216,66 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     && testSmeltable(context);
         }
 
-        private boolean testAmount(ItemConditionContext context) {
+        private boolean testAmount(ItemFilterContext context) {
             return amount.isEmpty() || amount.get().test(context);
         }
 
-        private boolean testBlockItem(ItemConditionContext context) {
+        private boolean testBlockItem(ItemFilterContext context) {
             return blockItem.isEmpty() || blockItem.get() == context.stack().getItem() instanceof BlockItem;
         }
 
-        private boolean testComponents(ItemConditionContext context) {
+        private boolean testComponents(ItemFilterContext context) {
             return components.isEmpty() || testComponents(components.get(), context);
         }
 
-        private boolean testCooldown(ItemConditionContext context) {
+        private boolean testCooldown(ItemFilterContext context) {
             return cooldown.isEmpty() || cooldown.get().test(context);
         }
 
-        private boolean testCooldownRelative(ItemConditionContext context) {
+        private boolean testCooldownRelative(ItemFilterContext context) {
             return cooldownRelative.isEmpty() || cooldownRelative.get().test(context);
         }
 
-        private boolean testDamageable(ItemConditionContext context) {
+        private boolean testDamageable(ItemFilterContext context) {
             return damageable.isEmpty() || damageable.get() == context.stack().isDamageableItem();
         }
 
-        private boolean testDurability(ItemConditionContext context) {
+        private boolean testDurability(ItemFilterContext context) {
             return durability.isEmpty() || durability.get().test(context);
         }
 
-        private boolean testDurabilityRelative(ItemConditionContext context) {
+        private boolean testDurabilityRelative(ItemFilterContext context) {
             return durabilityRelative.isEmpty() || durabilityRelative.get().test(context);
         }
 
-        private boolean testEmpty(ItemConditionContext context) {
+        private boolean testEmpty(ItemFilterContext context) {
             return empty.isEmpty() || empty.get() == context.stack().isEmpty();
         }
 
-        private boolean testEnchantable(ItemConditionContext context) {
+        private boolean testEnchantable(ItemFilterContext context) {
             return enchantable.isEmpty() || enchantable.get() == context.stack().isEnchantable();
         }
 
-        private boolean testEnchantment(ItemConditionContext context) {
+        private boolean testEnchantment(ItemFilterContext context) {
             return enchantment.isEmpty() || enchantment.get().test(context);
         }
 
-        private boolean testEquipable(ItemConditionContext context) {
+        private boolean testEquipable(ItemFilterContext context) {
             return equipable.isEmpty() || equipable.get().test(context);
         }
 
-        private boolean testFuel(ItemConditionContext context) {
+        private boolean testFuel(ItemFilterContext context) {
             return fuel.isEmpty() || fuel.get().test(context);
         }
 
-        private boolean testHolderConditions(ItemConditionContext context) {
+        private boolean testHolderConditions(ItemFilterContext context) {
             if (holderConditions.isEmpty()) return true;
 
             Entity holder = getHolderEntity(context);
             return holder != null && holderConditions.get().test(DataContext.forEntity(holder));
         }
 
-        private boolean testItem(ItemConditionContext context) {
+        private boolean testItem(ItemFilterContext context) {
             return item.isEmpty() || item.get().contains(context.stack().typeHolder());
         }
 
@@ -283,25 +283,25 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return modLoaded.isEmpty() || ModList.get().isLoaded(modLoaded.get());
         }
 
-        private boolean testOnCooldown(ItemConditionContext context) {
+        private boolean testOnCooldown(ItemFilterContext context) {
             if (onCooldown.isEmpty()) return true;
 
             Player player = getHolder(context);
             return player != null && onCooldown.get() == player.getCooldowns().isOnCooldown(context.stack());
         }
 
-        private boolean testSmeltable(ItemConditionContext context) {
+        private boolean testSmeltable(ItemFilterContext context) {
             return smeltable.isEmpty() || smeltable.get() == isSmeltable(context);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------------
 
-        private static boolean isSmeltable(ItemConditionContext context) {
+        private static boolean isSmeltable(ItemFilterContext context) {
             Level level = context.level();
             return level.recipeAccess() instanceof RecipeManager recipeManager && recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(context.stack()), level).isPresent();
         }
 
-        private static boolean testComponents(DelayedDataComponentMap components, ItemConditionContext context) {
+        private static boolean testComponents(DelayedDataComponentMap components, ItemFilterContext context) {
             ItemStack stack = context.stack();
             Map<DataComponentType<?>, Dynamic<?>> values = ((DelayedDataComponentMapAccessor) components).kryptonite$getValues();
             var ops = context.level().registryAccess().createSerializationContext(JsonOps.INSTANCE);
@@ -346,7 +346,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Amount");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             return comparator.compare(context.stack().getCount(), compareTo.getAsInt(null));
         }
     }
@@ -369,7 +369,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Cooldown");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             Player player = getHolder(context);
             if (player == null) return false;
 
@@ -402,7 +402,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Relative Cooldown");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             Player player = getHolder(context);
             if (player == null) return false;
 
@@ -429,7 +429,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Durability");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             ItemStack stack = context.stack();
             return stack.isDamageableItem() && comparator.compare(Math.abs(stack.getMaxDamage() - stack.getDamageValue()), compareTo.getAsInt(null));
         }
@@ -453,7 +453,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Relative Durability");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             ItemStack stack = context.stack();
             return stack.isDamageableItem() && comparator.compare(Math.abs((float) (stack.getMaxDamage() - stack.getDamageValue())) / (float) stack.getMaxDamage(), Mth.clamp(compareTo.getAsFloat(null), 0F, 1F));
         }
@@ -479,7 +479,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Enchantment");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             ItemEnchantments enchantments = context.stack().get(DataComponents.ENCHANTMENTS);
             if (enchantments == null) return false;
 
@@ -518,7 +518,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Equipable");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             Equippable equippable = context.stack().get(DataComponents.EQUIPPABLE);
             if (equippable == null) return false;
 
@@ -544,7 +544,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .buildObject("Item Fuel");
         }
 
-        public boolean test(ItemConditionContext context) {
+        public boolean test(ItemFilterContext context) {
             int burnTime = context.stack().getBurnTime(null, context.level().fuelValues());
             return comparator.compare(burnTime, Math.max(0, compareTo.getAsInt(null)));
         }
@@ -557,7 +557,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
 
         public static final Codec<Operator> CODEC = Codec.STRING.xmap(name -> Operator.valueOf(name.toUpperCase(Locale.ROOT)), operator -> operator.name().toLowerCase(Locale.ROOT));
 
-        public boolean test(List<FilterType> filters, ItemConditionContext context) {
+        public boolean test(List<FilterType> filters, ItemFilterContext context) {
             return switch (this) {
                 case AND -> filters.stream().allMatch(filter -> filter.test(context));
                 case OR -> filters.stream().anyMatch(filter -> filter.test(context));
@@ -568,14 +568,14 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    private static Entity getHolderEntity(ItemConditionContext context) {
+    private static Entity getHolderEntity(ItemFilterContext context) {
         ItemStack stack = context.stack();
         if (stack.isEmpty()) return null;
 
         return ((EntityLinkedItemStack) (Object) stack).kryptonite$getEntity();
     }
 
-    private static Player getHolder(ItemConditionContext context) {
+    private static Player getHolder(ItemFilterContext context) {
         return getHolderEntity(context) instanceof Player player ? player : null;
     }
 

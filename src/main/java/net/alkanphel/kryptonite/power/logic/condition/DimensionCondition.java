@@ -3,7 +3,7 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.context.DimensionConditionContext;
+import net.alkanphel.kryptonite.power.logic.context.DimensionFilterContext;
 import net.alkanphel.kryptonite.power.logic.filter.DimensionFilter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -31,7 +31,7 @@ public record DimensionCondition(DimensionFilter dimensionFilter) implements Con
         var level = context.getLevel();
         if (level == null) return false;
 
-        return dimensionFilter.test(new DimensionConditionContext(level.dimensionType(), level, context.getEntity()));
+        return dimensionFilter.test(new DimensionFilterContext(level.dimensionType(), level, context.getEntity()));
     }
 
     @Override
