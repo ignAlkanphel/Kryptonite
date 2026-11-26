@@ -3,18 +3,15 @@ package net.alkanphel.kryptonite;
 import com.mojang.logging.LogUtils;
 import net.alkanphel.kryptonite.network.KryptoniteNetwork;
 import net.alkanphel.kryptonite.power.*;
-import net.alkanphel.kryptonite.power.attribute.KryptoniteAttributes;
 import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompatImpl;
 import net.alkanphel.kryptonite.proxy.KryptoniteProxy;
 import net.alkanphel.kryptonite.power.KryptoniteAttachments;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import org.slf4j.Logger;
 
 @Mod(Kryptonite.MOD_ID)
@@ -27,7 +24,6 @@ public class Kryptonite {
 
     public Kryptonite(IEventBus modEventBus, ModContainer modContainer) {
 
-        KryptoniteAttributes.register(modEventBus);
         KryptoniteAttachments.ATTACHMENT_TYPES.register(modEventBus);
         KryptoniteActionSerializers.ACTION_SERIALIZERS.register(modEventBus);
         KryptoniteAbilitySerializers.ABILITIES_SERIALIZERS.register(modEventBus);
@@ -39,11 +35,6 @@ public class Kryptonite {
         if (ModList.get().isLoaded("curios")) {
             KryptoniteCuriosCompatImpl.register();
         }
-    }
-
-    @SubscribeEvent
-    public static void onEntityAttributeModification(EntityAttributeModificationEvent event) {
-        event.getTypes().forEach(type -> event.add(type, KryptoniteAttributes.MODEL_DEPTH));
     }
 
     public static Identifier id(String path) {

@@ -50,7 +50,7 @@ public record DimensionCondition(DimensionFilter dimensionFilter) implements Con
         public void addDocumentation(CodecDocumentationBuilder<Condition, DimensionCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Dimension")
                     .setDescription("Tests and filters for the current dimension.")
-                    .addOptional("dimension_filters", DimensionFilter.documentation(provider), "Damage filter(s) that must pass. Returns true if none specified.");
+                    .addOptional("dimension_filters", DimensionFilter.documentation(provider), "Dimension filter(s) that must pass. Returns true if none specified.");
         }
     }
 

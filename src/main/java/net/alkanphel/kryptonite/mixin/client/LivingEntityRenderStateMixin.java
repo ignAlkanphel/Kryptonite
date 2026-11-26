@@ -14,8 +14,6 @@ public class LivingEntityRenderStateMixin implements KryptoniteLivingEntityRende
     @Unique private float kryptonite$shakingFrequency = 0.0F;
     @Unique private float kryptonite$shakingAmplitude = 0.0F;
 
-    @Unique private double kryptonite$modelDepth;
-
     @Override
     public void kryptonite$setDamageTint(int color) {
         this.kryptonite$damageTint = color;
@@ -54,16 +52,6 @@ public class LivingEntityRenderStateMixin implements KryptoniteLivingEntityRende
     @Override
     public float kryptonite$getShakingAmplitude() {
         return this.kryptonite$shakingAmplitude;
-    }
-
-    @Override
-    public void kryptonite$setModelDepth(double depth) {
-        kryptonite$modelDepth = depth;
-    }
-
-    @Override
-    public double kryptonite$getModelDepth() {
-        return kryptonite$modelDepth;
     }
 
 }
