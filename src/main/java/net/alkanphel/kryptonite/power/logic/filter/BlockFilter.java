@@ -41,6 +41,7 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.util.NumberComparator;
 import net.threetag.palladium.util.PalladiumHolderSet;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Locale;
@@ -425,7 +426,9 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
         }
 
         private boolean testInSnow(BlockConditionContext context) {
-            return context.level().getBiome(context.pos()).value().getPrecipitationAt(context.pos(), context.level().getSeaLevel()) == Biome.Precipitation.SNOW && context.level().isRaining() && context.level().canSeeSky(context.pos());
+            if (inSnow.isEmpty()) return true;
+            boolean snowing = context.level().getBiome(context.pos()).value().getPrecipitationAt(context.pos(), context.level().getSeaLevel()) == Biome.Precipitation.SNOW && context.level().isRaining() && context.level().canSeeSky(context.pos());
+            return inSnow.get() == snowing;
         }
 
         private boolean testInThunder(BlockConditionContext context) {
@@ -504,7 +507,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
         private static final MapCodec<AdjacentFilter> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 NumberComparator.CODEC.fieldOf("comparator").forGetter(AdjacentFilter::comparator),
                 Codec.FLOAT.fieldOf("compare_to").forGetter(AdjacentFilter::compareTo),
-                BlockFilter.CODEC.fieldOf("filter").forGetter(AdjacentFilter::filter)
+                Codec.lazyInitialized(() -> BlockFilter.CODEC).fieldOf("filter").forGetter(AdjacentFilter::filter)
         ).apply(instance, AdjacentFilter::new));
 
         public static final Codec<AdjacentFilter> CODEC = MAP_CODEC.codec();
@@ -513,7 +516,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", net.threetag.palladium.documentation.Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", net.threetag.palladium.documentation.Documented.TYPE_FLOAT, "Value that is being compared against.")
-                    .add("filter", BlockFilter.documentation(provider), "Filter that adjacent blocks must pass.")
+                    .add("filter", SettingType.simple("Block Filters"), "Block filter(s) that adjacent blocks must pass.")
                     .buildObject("Adjacent Blocks");
         }
 
@@ -541,7 +544,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
         public static final Codec<InstanceofType> CODEC = StringRepresentable.fromEnum(InstanceofType::values);
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
         }
     }
@@ -850,7 +853,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
         public static final Codec<LightType> CODEC = StringRepresentable.fromEnum(LightType::values);
 
         @Override
-        public String getSerializedName() {
+        public @NotNull String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
         }
     }
@@ -860,7 +863,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
     public record OffsetFilter(BlockFilter blockFilter, Value x, Value y, Value z) {
 
         private static final MapCodec<OffsetFilter> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                BlockFilter.CODEC.fieldOf("block_filters").forGetter(OffsetFilter::blockFilter),
+                Codec.lazyInitialized(() -> BlockFilter.CODEC).fieldOf("block_filters").forGetter(OffsetFilter::blockFilter),
                 Value.NUMBER_CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetFilter::x),
                 Value.NUMBER_CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetFilter::y),
                 Value.NUMBER_CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetFilter::z)
@@ -870,7 +873,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
-                    .add("block_filters", BlockFilter.documentation(provider), "Block filter(s) that must pass at the offset position.")
+                    .add("block_filters", SettingType.simple("Block Filters"), "Block filter(s) that must pass at the offset position.")
                     .addOptional("x", Documented.TYPE_FLOAT_VALUE, "How much to offset the position on the X axis.", new StaticValue(0))
                     .addOptional("y", Documented.TYPE_FLOAT_VALUE, "How much to offset the position on the Y axis.", new StaticValue(0))
                     .addOptional("z", Documented.TYPE_FLOAT_VALUE, "How much to offset the position on the Z axis.", new StaticValue(0))
