@@ -28,33 +28,33 @@ import java.util.List;
 public class ActionOnDeathAbility extends Ability {
 
     public static final MapCodec<ActionOnDeathAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnDeathAbility::new));
 
-    public final List<Action> entityActions;
-    public final Condition entityConditions;
+    public final List<Action> action;
+    public final Condition targetCondition;
     public final DamageFilter damageFilter;
 
-    public ActionOnDeathAbility(List<Action> entityActions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnDeathAbility(List<Action> action, Condition targetCondition, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.entityConditions = entityConditions;
+        this.action = action;
+        this.targetCondition = targetCondition;
         this.damageFilter = damageFilter;
     }
 
-    public boolean doesApply(LivingEntity source, Entity target, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
+    public boolean doesApply(LivingEntity target, Entity source, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
         if (!damageFilter.test(damageSource, amount)) {
             return false;
         }
 
-        return entityConditions.test(DataContext.forAffected(source, target, instance));
+        return targetCondition.test(DataContext.forAffected(source, target, instance));
     }
 
-    public void runActions(LivingEntity source, Entity target, AbilityInstance<?> instance) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(source, target, instance));
+    public void runActions(LivingEntity target, Entity source, AbilityInstance<?> instance) {
+        if (!action.isEmpty()) Action.runList(action, DataContext.forAffected(target, source, instance));
     }
 
     @Override
@@ -71,9 +71,9 @@ public class ActionOnDeathAbility extends Ability {
 
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnDeathAbility> builder, HolderLookup.Provider provider) {
-            builder.setDescription("Performs actions when the entity that has this ability dies. For this ability, the \"source\" is the entity that died & the \"target\" is the entity responsible for the damage.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the source.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the source must meet for the actions to perform.")
+            builder.setDescription("Performs actions when the entity that has this ability dies. For this ability, the \"target\" is the entity that died, and the \"source\" is the entity responsible for the death.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the target after dying.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the source must meet for the actions to perform.")
                     .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the killing damage must pass for the actions to perform.")
                     .addExampleObject(new ActionOnDeathAbility(List.of(new RunCommandAction(new ParsedCommands("say I was killed!"))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnDeathAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I killed something!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

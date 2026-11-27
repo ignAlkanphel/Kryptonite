@@ -96,11 +96,8 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             Optional<Boolean> smeltable
     ) {
 
-        private static final MapCodec<Optional<Boolean>> ON_COOLDOWN_CODEC =
-                Codec.BOOL.optionalFieldOf("on_cooldown");
-
-        private static final MapCodec<Optional<Boolean>> SMELTABLE_CODEC =
-                Codec.BOOL.optionalFieldOf("smeltable");
+        private static final MapCodec<Optional<Boolean>> ON_COOLDOWN_CODEC = Codec.BOOL.optionalFieldOf("on_cooldown");
+        private static final MapCodec<Optional<Boolean>> SMELTABLE_CODEC = Codec.BOOL.optionalFieldOf("smeltable");
 
         private static final MapCodec<FilterType> MAP_CODEC = RecordCodecBuilder.<FilterType>mapCodec(instance -> instance.group(
                 AmountFilter.CODEC.optionalFieldOf("amount").forGetter(FilterType::amount),
@@ -120,33 +117,16 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                 PalladiumHolderSet.codec(Registries.ITEM).optionalFieldOf("item").forGetter(FilterType::item),
                 Codec.STRING.optionalFieldOf("mod_loaded").forGetter(FilterType::modLoaded)
         ).apply(instance, (amount, blockItem, components, cooldown, cooldownRelative, damageable, durability, durabilityRelative, empty, enchantable, enchantment, equipable, fuel, holderConditions, item, modLoaded) ->
-                new FilterType(amount, blockItem, components, cooldown, cooldownRelative, damageable, durability, durabilityRelative, empty, enchantable, enchantment, equipable, fuel, holderConditions, item, modLoaded, Optional.empty(), Optional.empty())
-        )).dependent(
-                ON_COOLDOWN_CODEC,
-                filter -> Pair.of(filter.onCooldown(), ON_COOLDOWN_CODEC),
-                FilterType::withOnCooldown
-        ).dependent(
-                SMELTABLE_CODEC,
-                filter -> Pair.of(filter.smeltable(), SMELTABLE_CODEC),
-                FilterType::withSmeltable
-        );
+                new FilterType(amount, blockItem, components, cooldown, cooldownRelative, damageable, durability, durabilityRelative, empty, enchantable, enchantment, equipable, fuel, holderConditions, item, modLoaded, Optional.empty(), Optional.empty()))
+        ).dependent(ON_COOLDOWN_CODEC, filter -> Pair.of(filter.onCooldown(), ON_COOLDOWN_CODEC), FilterType::withOnCooldown
+        ).dependent(SMELTABLE_CODEC, filter -> Pair.of(filter.smeltable(), SMELTABLE_CODEC), FilterType::withSmeltable);
 
         private FilterType withOnCooldown(Optional<Boolean> onCooldown) {
-            return new FilterType(
-                    amount, blockItem, components, cooldown, cooldownRelative,
-                    damageable, durability, durabilityRelative, empty, enchantable,
-                    enchantment, equipable, fuel, holderConditions, item, modLoaded,
-                    onCooldown, smeltable
-            );
+            return new FilterType(amount, blockItem, components, cooldown, cooldownRelative, damageable, durability, durabilityRelative, empty, enchantable, enchantment, equipable, fuel, holderConditions, item, modLoaded, onCooldown, smeltable);
         }
 
         private FilterType withSmeltable(Optional<Boolean> smeltable) {
-            return new FilterType(
-                    amount, blockItem, components, cooldown, cooldownRelative,
-                    damageable, durability, durabilityRelative, empty, enchantable,
-                    enchantment, equipable, fuel, holderConditions, item, modLoaded,
-                    onCooldown, smeltable
-            );
+            return new FilterType(amount, blockItem, components, cooldown, cooldownRelative, damageable, durability, durabilityRelative, empty, enchantable, enchantment, equipable, fuel, holderConditions, item, modLoaded, onCooldown, smeltable);
         }
 
         public static final Codec<FilterType> CODEC = MAP_CODEC.codec();
@@ -343,7 +323,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the item amount is compared.")
                     .add("compare_to", Documented.TYPE_INT_VALUE, "Value the item amount is compared to.")
-                    .buildObject("Item Amount");
+                    .buildObject("Amount");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -366,7 +346,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the remaining cooldown is compared.")
                     .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Cooldown in ticks the remaining cooldown is compared to.")
-                    .buildObject("Item Cooldown");
+                    .buildObject("Cooldown");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -399,7 +379,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the relative cooldown is compared.")
                     .add("compare_to", KryptoniteSettingType.floatValueRange(0F, 1F), "Value the relative cooldown is compared to, calculated as remaining cooldown / total cooldown.")
-                    .buildObject("Item Relative Cooldown");
+                    .buildObject("Relative Cooldown");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -426,7 +406,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the durability is compared.")
                     .add("compare_to", Documented.TYPE_INT_VALUE, "Value the durability is compared to.")
-                    .buildObject("Item Durability");
+                    .buildObject("Durability");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -450,7 +430,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the relative durability is compared.")
                     .add("compare_to", KryptoniteSettingType.floatValueRange(0F, 1F), "Value the relative durability is compared to, calculated as current durability / max durability.")
-                    .buildObject("Item Relative Durability");
+                    .buildObject("Relative Durability");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -476,7 +456,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
                     .addOptional("enchantment", SettingType.simple("Enchantment"), "The enchantment to check. If omitted, checks any enchantment.")
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the enchantment level is compared.")
                     .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Value the enchantment level is compared to.")
-                    .buildObject("Item Enchantment");
+                    .buildObject("Enchantment");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -515,7 +495,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .addOptional("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "Checks if the item can be equipped in this equipment slot.")
-                    .buildObject("Item Equipable");
+                    .buildObject("Equipable");
         }
 
         public boolean test(ItemFilterContext context) {
@@ -541,7 +521,7 @@ public record ItemFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .addOptional("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the fuel time is compared.", ">")
                     .add("compare_to", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "Fuel time in ticks the fuel time is compared to.")
-                    .buildObject("Item Fuel");
+                    .buildObject("Fuel");
         }
 
         public boolean test(ItemFilterContext context) {

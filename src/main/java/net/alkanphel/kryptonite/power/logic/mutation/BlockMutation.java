@@ -97,27 +97,27 @@ public record BlockMutation(List<MutationType> mutations) {
     public record MutationType(
             Optional<AreaOfEffectMutation> areaOfEffect,
             Optional<BlockState> blockAdd,
+            Optional<Boolean> blockFall,
             Optional<BlockState> blockSet,
             Optional<BoneMealMutation> boneMeal,
+            Optional<ParsedCommands> command,
             Optional<ExplodeMutation> explode,
-            Optional<Boolean> fallingBlock,
             Optional<ModifyBlockStateMutation> modifyBlockState,
             Optional<OffsetMutation> offset,
-            Optional<ParsedCommands> runCommand,
-            Optional<SpawnEntityMutation> spawnEntity
+            Optional<SummonMutation> spawnEntity
     ) {
 
         private static final MapCodec<MutationType> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 AreaOfEffectMutation.CODEC.optionalFieldOf("area_of_effect").forGetter(MutationType::areaOfEffect),
                 BlockState.CODEC.optionalFieldOf("block_add").forGetter(MutationType::blockAdd),
+                Codec.BOOL.optionalFieldOf("block_fall").forGetter(MutationType::blockFall),
                 BlockState.CODEC.optionalFieldOf("block_set").forGetter(MutationType::blockSet),
                 BoneMealMutation.CODEC.optionalFieldOf("bone_meal").forGetter(MutationType::boneMeal),
+                ParsedCommands.CODEC.optionalFieldOf("command").forGetter(MutationType::command),
                 ExplodeMutation.CODEC.optionalFieldOf("explode").forGetter(MutationType::explode),
-                Codec.BOOL.optionalFieldOf("falling_block").forGetter(MutationType::fallingBlock),
                 ModifyBlockStateMutation.CODEC.optionalFieldOf("modify_block_state").forGetter(MutationType::modifyBlockState),
                 OffsetMutation.CODEC.optionalFieldOf("offset").forGetter(MutationType::offset),
-                ParsedCommands.CODEC.optionalFieldOf("run_command").forGetter(MutationType::runCommand),
-                SpawnEntityMutation.CODEC.optionalFieldOf("spawn_entity").forGetter(MutationType::spawnEntity)
+                SummonMutation.CODEC.optionalFieldOf("summon").forGetter(MutationType::spawnEntity)
         ).apply(instance, MutationType::new));
 
         public static final Codec<MutationType> CODEC = MAP_CODEC.codec();
@@ -126,40 +126,40 @@ public record BlockMutation(List<MutationType> mutations) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .addOptional("area_of_effect", AreaOfEffectMutation.documentation(provider), "Performs block mutations on blocks within a radius.")
                     .addOptional("block_add", Documented.TYPE_BLOCK_STATE, "Adds/places a block at the mutation position (offset by the direction of the mutation).")
+                    .addOptional("block_fall", Documented.TYPE_BOOLEAN, "Converts the block at the mutation position into a falling block entity.")
                     .addOptional("block_set", Documented.TYPE_BLOCK_STATE, "Sets/replaces a block at the mutation position (offset by the direction of the mutation).")
                     .addOptional("bone_meal", BoneMealMutation.documentation(provider), "Applies bone meal to the target block.")
+                    .addOptional("command", Documented.TYPE_STRING_ARRAY, "Runs commands at the block's position.")
                     .addOptional("explode", ExplodeMutation.documentation(provider), "Creates an explosion at the block's position.")
-                    .addOptional("falling_block", Documented.TYPE_BOOLEAN, "Converts the block at the mutation position into a falling block entity.")
                     .addOptional("modify_block_state", ModifyBlockStateMutation.documentation(provider), "Modifies a block state property at the mutation position.")
                     .addOptional("offset", OffsetMutation.documentation(provider), "Performs block mutations at an offset position relative to the original block.")
-                    .addOptional("run_command", Documented.TYPE_STRING_ARRAY, "Runs commands at the block's position.")
-                    .addOptional("spawn_entity", SpawnEntityMutation.documentation(provider), "Spawns entities at the block's position.")
+                    .addOptional("summon", SummonMutation.documentation(provider), "Summons entities at the block's position.")
                     .buildObject("Block Mutation Types");
         }
 
         public boolean isEmpty() {
             return areaOfEffect.isEmpty()
                     && blockAdd.isEmpty()
+                    && blockFall.isEmpty()
                     && blockSet.isEmpty()
                     && boneMeal.isEmpty()
+                    && command.isEmpty()
                     && explode.isEmpty()
-                    && fallingBlock.isEmpty()
                     && modifyBlockState.isEmpty()
                     && offset.isEmpty()
-                    && runCommand.isEmpty()
                     && spawnEntity.isEmpty();
         }
 
         public boolean run(BlockMutationContext context) {
             return runAreaOfEffect(context)
                     | runBlockAdd(context)
+                    | runBlockFall(context)
                     | runBlockSet(context)
                     | runBoneMeal(context)
+                    | runCommand(context)
                     | runExplode(context)
-                    | runFallingBlock(context)
                     | runModifyBlockState(context)
                     | runOffset(context)
-                    | runRunCommand(context)
                     | runSpawnEntity(context);
         }
 
@@ -172,6 +172,20 @@ public record BlockMutation(List<MutationType> mutations) {
                 context.level().setBlockAndUpdate(context.pos().relative(direction), blockState);
                 return true;
             }).orElse(false)).orElse(false);
+        }
+
+        private boolean runBlockFall(BlockMutationContext context) {
+            return blockFall.filter(Boolean::booleanValue).map(enabled -> {
+                ServerLevel level = context.level();
+                BlockPos pos = context.pos();
+                BlockState state = level.getBlockState(pos);
+
+                if (state.isAir()) return false;
+
+                FallingBlockEntity.fall(level, pos, state);
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                return true;
+            }).orElse(false);
         }
 
         private boolean runBlockSet(BlockMutationContext context) {
@@ -189,20 +203,6 @@ public record BlockMutation(List<MutationType> mutations) {
             return explode.map(explodeMutation -> explodeMutation.run(context)).orElse(false);
         }
 
-        private boolean runFallingBlock(BlockMutationContext context) {
-            return fallingBlock.filter(Boolean::booleanValue).map(enabled -> {
-                ServerLevel level = context.level();
-                BlockPos pos = context.pos();
-                BlockState state = level.getBlockState(pos);
-
-                if (state.isAir()) return false;
-
-                FallingBlockEntity.fall(level, pos, state);
-                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                return true;
-            }).orElse(false);
-        }
-
         private boolean runModifyBlockState(BlockMutationContext context) {
             return modifyBlockState.map(mutation -> mutation.run(context)).orElse(false);
         }
@@ -211,8 +211,8 @@ public record BlockMutation(List<MutationType> mutations) {
             return offset.map(mutation -> mutation.run(context)).orElse(false);
         }
 
-        private boolean runRunCommand(BlockMutationContext context) {
-            return runCommand.map(command -> {
+        private boolean runCommand(BlockMutationContext context) {
+            return command.map(command -> {
                 ServerLevel serverLevel = context.level();
                 BlockPos pos = context.pos();
                 BlockState blockState = serverLevel.getBlockState(pos);
@@ -522,19 +522,19 @@ public record BlockMutation(List<MutationType> mutations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record SpawnEntityMutation(
+    public record SummonMutation(
             HolderSet<EntityType<?>> entityTypes,
             List<Action> entityActions,
             CompoundTag entityNbt
     ) {
 
-        private static final MapCodec<SpawnEntityMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(SpawnEntityMutation::entityTypes),
-                Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(SpawnEntityMutation::entityActions),
-                CompoundTag.CODEC.optionalFieldOf("entity_nbt", new CompoundTag()).forGetter(SpawnEntityMutation::entityNbt)
-        ).apply(instance, SpawnEntityMutation::new));
+        private static final MapCodec<SummonMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(SummonMutation::entityTypes),
+                Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(SummonMutation::entityActions),
+                CompoundTag.CODEC.optionalFieldOf("entity_nbt", new CompoundTag()).forGetter(SummonMutation::entityNbt)
+        ).apply(instance, SummonMutation::new));
 
-        public static final Codec<SpawnEntityMutation> CODEC = MAP_CODEC.codec();
+        public static final Codec<SummonMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
@@ -582,35 +582,35 @@ public record BlockMutation(List<MutationType> mutations) {
         return single(new MutationType(none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
+    public static BlockMutation ofBlockFall(boolean fallingBlock) {
+        return single(new MutationType(none(), none(), Optional.of(fallingBlock), none(), none(), none(), none(), none(), none(), none()));
+    }
+
     public static BlockMutation ofBlockSet(BlockState block) {
-        return single(new MutationType(none(), none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none()));
+        return single(new MutationType(none(), none(), none(), Optional.of(block), none(), none(), none(), none(), none(), none()));
     }
 
     public static BlockMutation ofBoneMeal(boolean showEffects) {
-        return single(new MutationType(none(), none(), none(), Optional.of(new BoneMealMutation(showEffects)), none(), none(), none(), none(), none(), none()));
+        return single(new MutationType(none(), none(), none(), none(), Optional.of(new BoneMealMutation(showEffects)), none(), none(), none(), none(), none()));
+    }
+
+    public static BlockMutation ofCommand(ParsedCommands command) {
+        return single(new MutationType(none(), none(), none(), none(), none(), Optional.of(command), none(), none(), none(), none()));
     }
 
     public static BlockMutation ofExplode(ExplodeMutation explode) {
-        return single(new MutationType(none(), none(), none(), none(), Optional.of(explode), none(), none(), none(), none(), none()));
-    }
-
-    public static BlockMutation ofFallingBlock(boolean fallingBlock) {
-        return single(new MutationType(none(), none(), none(), none(), none(), Optional.of(fallingBlock), none(), none(), none(), none()));
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), Optional.of(explode), none(), none(), none()));
     }
 
     public static BlockMutation ofModifyBlockState(ModifyBlockStateMutation modifyBlockState) {
-        return single(new MutationType(none(), none(), none(), none(), none(), none(), Optional.of(modifyBlockState), none(), none(), none()));
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), Optional.of(modifyBlockState), none(), none()));
     }
 
     public static BlockMutation ofOffset(OffsetMutation offset) {
-        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), Optional.of(offset), none(), none()));
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(offset), none()));
     }
 
-    public static BlockMutation ofRunCommand(ParsedCommands runCommand) {
-        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(runCommand), none()));
-    }
-
-    public static BlockMutation ofSpawnEntity(SpawnEntityMutation spawnEntity) {
+    public static BlockMutation ofSpawnEntity(SummonMutation spawnEntity) {
         return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(spawnEntity)));
     }
 

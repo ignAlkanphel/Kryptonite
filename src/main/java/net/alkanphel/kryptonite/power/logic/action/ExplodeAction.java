@@ -33,7 +33,7 @@ public class ExplodeAction extends Action {
             BlockFilter.CODEC.optionalFieldOf("destructible", BlockFilter.EMPTY).forGetter(ab -> ab.destructibleFilter),
             BlockFilter.CODEC.optionalFieldOf("indestructible", BlockFilter.EMPTY).forGetter(ab -> ab.indestructibleFilter),
             Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(a -> a.destructionType),
-            Condition.CODEC.optionalFieldOf("damage_entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageEntityConditions),
+            Condition.CODEC.optionalFieldOf("damage_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageCondition),
             BooleanValueHolder.CODEC.optionalFieldOf("damage_self", BooleanValueHolder.TRUE).forGetter(a -> a.damageSelf),
             BooleanValueHolder.CODEC.optionalFieldOf("create_fire", BooleanValueHolder.FALSE).forGetter(a -> a.createFire),
             Value.NUMBER_CODEC.fieldOf("power").forGetter(a -> a.power),
@@ -42,15 +42,15 @@ public class ExplodeAction extends Action {
 
     public final BlockFilter destructibleFilter, indestructibleFilter;
     public final Level.ExplosionInteraction destructionType;
-    public final Condition damageEntityConditions;
+    public final Condition damageCondition;
     public final BooleanValueHolder damageSelf, createFire;
     public final Value power, indestructibleResistance;
 
-    public ExplodeAction(BlockFilter destructibleFilter, BlockFilter indestructibleFilter, Level.ExplosionInteraction destructionType, Condition damageEntityConditions, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
+    public ExplodeAction(BlockFilter destructibleFilter, BlockFilter indestructibleFilter, Level.ExplosionInteraction destructionType, Condition damageCondition, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
         this.destructibleFilter = destructibleFilter;
         this.indestructibleFilter = indestructibleFilter;
         this.destructionType = destructionType;
-        this.damageEntityConditions = damageEntityConditions;
+        this.damageCondition = damageCondition;
         this.damageSelf = damageSelf;
         this.createFire = createFire;
         this.power = power;
@@ -81,7 +81,7 @@ public class ExplodeAction extends Action {
 
         Predicate<Entity> damageEntityCondition = target -> {
             if (target == entity) return damageSelf;
-            return damageEntityConditions.test(DataContext.forAffected(target, entity, context.getAbility()));
+            return damageCondition.test(DataContext.forAffected(target, entity, context.getAbility()));
         };
 
         MiscUtil.createExplosion(
@@ -119,7 +119,7 @@ public class ExplodeAction extends Action {
                     .addOptional("destructible", BlockFilter.documentation(provider), "Block filter(s) the blocks in the explosion must pass to be destroyed.")
                     .addOptional("indestructible", BlockFilter.documentation(provider), "Block filter(s) the blocks in the explosion must pass to not be affected.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
-                    .addOptional("damage_entity_conditions", TYPE_CONDITION_LIST, "Condition(s) an entity must meet to take damage from the explosion.")
+                    .addOptional("damage_conditions", TYPE_CONDITION_LIST, "Condition(s) an entity must meet to take damage from the explosion.")
                     .addOptional("damage_self", TYPE_BOOLEAN_VALUE, "If true, the entity that triggered the explosion will also take damage from it.", true)
                     .addOptional("create_fire", TYPE_BOOLEAN_VALUE, "If true, the explosion will create fire (e.g. ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Float.MAX_VALUE), "The strength/radius of the explosion.")

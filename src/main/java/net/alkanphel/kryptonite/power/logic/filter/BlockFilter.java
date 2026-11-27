@@ -112,29 +112,14 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
             Optional<Boolean> waterLoggable
     ) {
 
-        private static final MapCodec<Optional<Boolean>> IN_THUNDER_CODEC =
-                Codec.BOOL.optionalFieldOf("in_thunder");
-
-        private static final MapCodec<Optional<Boolean>> LIGHT_BLOCKING_CODEC =
-                Codec.BOOL.optionalFieldOf("light_blocking");
-
-        private static final MapCodec<Optional<LightLevelFilter>> LIGHT_LEVEL_CODEC =
-                LightLevelFilter.CODEC.optionalFieldOf("light_level");
-
-        private static final MapCodec<Optional<Boolean>> MOVEMENT_BLOCKING_CODEC =
-                Codec.BOOL.optionalFieldOf("movement_blocking");
-
-        private static final MapCodec<Optional<CompoundTag>> NBT_CODEC =
-                CompoundTag.CODEC.optionalFieldOf("nbt");
-
-        private static final MapCodec<Optional<OffsetFilter>> OFFSET_CODEC =
-                OffsetFilter.CODEC.optionalFieldOf("offset");
-
-        private static final MapCodec<Optional<Boolean>> REPLACEABLE_CODEC =
-                Codec.BOOL.optionalFieldOf("replaceable");
-
-        private static final MapCodec<Optional<Boolean>> WATER_LOGGABLE_CODEC =
-                Codec.BOOL.optionalFieldOf("water_loggable");
+        private static final MapCodec<Optional<Boolean>> IN_THUNDER_CODEC = Codec.BOOL.optionalFieldOf("in_thunder");
+        private static final MapCodec<Optional<Boolean>> LIGHT_BLOCKING_CODEC = Codec.BOOL.optionalFieldOf("light_blocking");
+        private static final MapCodec<Optional<LightLevelFilter>> LIGHT_LEVEL_CODEC = LightLevelFilter.CODEC.optionalFieldOf("light_level");
+        private static final MapCodec<Optional<Boolean>> MOVEMENT_BLOCKING_CODEC = Codec.BOOL.optionalFieldOf("movement_blocking");
+        private static final MapCodec<Optional<CompoundTag>> NBT_CODEC = CompoundTag.CODEC.optionalFieldOf("nbt");
+        private static final MapCodec<Optional<OffsetFilter>> OFFSET_CODEC = OffsetFilter.CODEC.optionalFieldOf("offset");
+        private static final MapCodec<Optional<Boolean>> REPLACEABLE_CODEC = Codec.BOOL.optionalFieldOf("replaceable");
+        private static final MapCodec<Optional<Boolean>> WATER_LOGGABLE_CODEC = Codec.BOOL.optionalFieldOf("water_loggable");
 
         private static final MapCodec<FilterType> MAP_CODEC = RecordCodecBuilder.<FilterType>mapCodec(instance -> instance.group(
                 AdjacentFilter.CODEC.optionalFieldOf("adjacent").forGetter(FilterType::adjacent),
@@ -154,117 +139,46 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
                 Codec.BOOL.optionalFieldOf("in_rain").forGetter(FilterType::inRain),
                 Codec.BOOL.optionalFieldOf("in_snow").forGetter(FilterType::inSnow)
         ).apply(instance, (adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow) ->
-                new FilterType(
-                        adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                        canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                        fluidType, friction, height, inRain, inSnow,
-                        Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-                        Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()
-                )
-        )).dependent(
-                IN_THUNDER_CODEC,
-                filter -> Pair.of(filter.inThunder(), IN_THUNDER_CODEC),
-                FilterType::withInThunder
-        ).dependent(
-                LIGHT_BLOCKING_CODEC,
-                filter -> Pair.of(filter.lightBlocking(), LIGHT_BLOCKING_CODEC),
-                FilterType::withLightBlocking
-        ).dependent(
-                LIGHT_LEVEL_CODEC,
-                filter -> Pair.of(filter.lightLevel(), LIGHT_LEVEL_CODEC),
-                FilterType::withLightLevel
-        ).dependent(
-                MOVEMENT_BLOCKING_CODEC,
-                filter -> Pair.of(filter.movementBlocking(), MOVEMENT_BLOCKING_CODEC),
-                FilterType::withMovementBlocking
-        ).dependent(
-                NBT_CODEC,
-                filter -> Pair.of(filter.nbt(), NBT_CODEC),
-                FilterType::withNbt
-        ).dependent(
-                OFFSET_CODEC,
-                filter -> Pair.of(filter.offset(), OFFSET_CODEC),
-                FilterType::withOffset
-        ).dependent(
-                REPLACEABLE_CODEC,
-                filter -> Pair.of(filter.replaceable(), REPLACEABLE_CODEC),
-                FilterType::withReplaceable
-        ).dependent(
-                WATER_LOGGABLE_CODEC,
-                filter -> Pair.of(filter.waterLoggable(), WATER_LOGGABLE_CODEC),
-                FilterType::withWaterLoggable
-        );
+                new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()))
+        ).dependent(IN_THUNDER_CODEC, filter -> Pair.of(filter.inThunder(), IN_THUNDER_CODEC), FilterType::withInThunder
+        ).dependent(LIGHT_BLOCKING_CODEC, filter -> Pair.of(filter.lightBlocking(), LIGHT_BLOCKING_CODEC), FilterType::withLightBlocking
+        ).dependent(LIGHT_LEVEL_CODEC, filter -> Pair.of(filter.lightLevel(), LIGHT_LEVEL_CODEC), FilterType::withLightLevel
+        ).dependent(MOVEMENT_BLOCKING_CODEC, filter -> Pair.of(filter.movementBlocking(), MOVEMENT_BLOCKING_CODEC), FilterType::withMovementBlocking
+        ).dependent(NBT_CODEC, filter -> Pair.of(filter.nbt(), NBT_CODEC), FilterType::withNbt
+        ).dependent(OFFSET_CODEC, filter -> Pair.of(filter.offset(), OFFSET_CODEC), FilterType::withOffset
+        ).dependent(REPLACEABLE_CODEC, filter -> Pair.of(filter.replaceable(), REPLACEABLE_CODEC), FilterType::withReplaceable
+        ).dependent(WATER_LOGGABLE_CODEC, filter -> Pair.of(filter.waterLoggable(), WATER_LOGGABLE_CODEC), FilterType::withWaterLoggable);
 
         private FilterType withInThunder(Optional<Boolean> inThunder) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withLightBlocking(Optional<Boolean> lightBlocking) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withLightLevel(Optional<LightLevelFilter> lightLevel) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withMovementBlocking(Optional<Boolean> movementBlocking) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withNbt(Optional<CompoundTag> nbt) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withOffset(Optional<OffsetFilter> offset) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withReplaceable(Optional<Boolean> replaceable) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         private FilterType withWaterLoggable(Optional<Boolean> waterLoggable) {
-            return new FilterType(
-                    adjacent, attachable, block, blockEntity, instanceofBlock, blockState,
-                    canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance,
-                    fluidType, friction, height, inRain, inSnow, inThunder,
-                    lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable
-            );
+            return new FilterType(adjacent, attachable, block, blockEntity, instanceofBlock, blockState, canSeeSky, commandResult, destroySpeed, distanceFromCoordinates, explosionResistance, fluidType, friction, height, inRain, inSnow, inThunder, lightBlocking, lightLevel, movementBlocking, nbt, offset, replaceable, waterLoggable);
         }
 
         public static final Codec<FilterType> CODEC = MAP_CODEC.codec();
@@ -551,13 +465,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record BlockStateFilter(
-            String property,
-            Optional<NumberComparator> comparator,
-            Optional<Integer> compareTo,
-            Optional<Boolean> boolValue,
-            Optional<String> enumValue
-    ) {
+    public record BlockStateFilter(String property, Optional<NumberComparator> comparator, Optional<Integer> compareTo, Optional<Boolean> boolValue, Optional<String> enumValue) {
 
         private static final MapCodec<BlockStateFilter> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.fieldOf("property").forGetter(BlockStateFilter::property),
@@ -672,19 +580,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record DistanceFromCoordinatesFilter(
-            DistanceFromCoordinates.Reference reference,
-            Shape shape,
-            Optional<Integer> roundToDigit,
-            Optional<DistanceFromCoordinates.Offset> offset,
-            NumberComparator comparator,
-            double compareTo,
-            boolean scaleReferenceToDimension,
-            boolean scaleDistanceToDimension,
-            boolean ignoreX,
-            boolean ignoreY,
-            boolean ignoreZ
-    ) implements DistanceFromCoordinates {
+    public record DistanceFromCoordinatesFilter(DistanceFromCoordinates.Reference reference, Shape shape, Optional<Integer> roundToDigit, Optional<DistanceFromCoordinates.Offset> offset, NumberComparator comparator, double compareTo, boolean scaleReferenceToDimension, boolean scaleDistanceToDimension, boolean ignoreX, boolean ignoreY, boolean ignoreZ) implements DistanceFromCoordinates {
 
         public static final MapCodec<DistanceFromCoordinatesFilter> MAP_CODEC = DistanceFromCoordinates.mapCodec(DistanceFromCoordinatesFilter::new);
         public static final Codec<DistanceFromCoordinatesFilter> CODEC = MAP_CODEC.codec();
@@ -811,11 +707,7 @@ public record BlockFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record LightLevelFilter(
-            Optional<LightType> lightType,
-            NumberComparator comparator,
-            Value compareTo
-    ) {
+    public record LightLevelFilter(Optional<LightType> lightType, NumberComparator comparator, Value compareTo) {
 
         private static final MapCodec<LightLevelFilter> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 LightType.CODEC.optionalFieldOf("light_type").forGetter(LightLevelFilter::lightType),

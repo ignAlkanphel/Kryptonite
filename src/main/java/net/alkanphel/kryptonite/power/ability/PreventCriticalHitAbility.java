@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Locale;
 
+// TODO Rename the "entity_" fields
 public class PreventCriticalHitAbility extends Ability {
 
     public static final MapCodec<PreventCriticalHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

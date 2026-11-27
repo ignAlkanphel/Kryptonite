@@ -26,17 +26,17 @@ import java.util.List;
 public class PreventDeathAbility extends Ability {
 
     public static final MapCodec<PreventDeathAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(ab -> ab.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(ab -> ab.action),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(ab -> ab.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventDeathAbility::new));
 
-    public final List<Action> entityActions;
+    public final List<Action> action;
     public final DamageFilter damageFilter;
 
-    public PreventDeathAbility(List<Action> entityActions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventDeathAbility(List<Action> action, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
         this.damageFilter = damageFilter;
     }
 
@@ -45,7 +45,7 @@ public class PreventDeathAbility extends Ability {
     }
 
     public void runActions(LivingEntity entity) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
     }
 
     public static boolean tryPreventDeath(LivingEntity entity, DamageSource source, float amount) {
@@ -78,7 +78,7 @@ public class PreventDeathAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventDeathAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the entity from dying. Damage that would kill reduces health to 1/2 a heart.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed every time a death is prevented.")
+                    .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed every time a death is prevented.")
                     .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for death to be prevented.")
                     .addExampleObject(new PreventDeathAbility(List.of(), DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventDeathAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say My death was greatly exaggerated!")))), DamageFilter.ofAttacker(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("iron_golem"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

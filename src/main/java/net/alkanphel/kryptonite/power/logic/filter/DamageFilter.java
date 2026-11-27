@@ -112,7 +112,7 @@ public record DamageFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "How the damage amount is compared.")
                     .add("compare_to", Documented.TYPE_FLOAT_VALUE, "Value the damage amount is compared to.")
-                    .buildObject("Damage Amount");
+                    .buildObject("Amount");
         }
 
         public boolean test(DamageFilterContext context) {

@@ -22,6 +22,7 @@ import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
 import java.util.List;
 
+// TODO Clean the fields up
 public class ModifyDamageTakenAbility extends Ability {
 
     public static final MapCodec<ModifyDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

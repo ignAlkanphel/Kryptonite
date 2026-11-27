@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Locale;
 
+// TODO Clean the fields up
 public class ModifyKnockbackAbility extends Ability {
 
     public static final MapCodec<ModifyKnockbackAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

@@ -83,11 +83,8 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             Optional<HolderSet<Timeline>> timelines
     ) {
 
-        private static final MapCodec<Optional<MonsterSettingsFilter>> MONSTER_SETTINGS_CODEC =
-                MonsterSettingsFilter.CODEC.optionalFieldOf("monster_settings");
-
-        private static final MapCodec<Optional<HolderSet<Timeline>>> TIMELINES_CODEC =
-                RegistryCodecs.homogeneousList(Registries.TIMELINE).optionalFieldOf("timelines");
+        private static final MapCodec<Optional<MonsterSettingsFilter>> MONSTER_SETTINGS_CODEC = MonsterSettingsFilter.CODEC.optionalFieldOf("monster_settings");
+        private static final MapCodec<Optional<HolderSet<Timeline>>> TIMELINES_CODEC = RegistryCodecs.homogeneousList(Registries.TIMELINE).optionalFieldOf("timelines");
 
         private static final MapCodec<FilterType> MAP_CODEC = RecordCodecBuilder.<FilterType>mapCodec(instance -> instance.group(
                 AmbientLightFilter.CODEC.optionalFieldOf("ambient_light").forGetter(FilterType::ambientLight),
@@ -106,41 +103,17 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
                 LogicalHeightFilter.CODEC.optionalFieldOf("logical_height").forGetter(FilterType::logicalHeight),
                 MinYFilter.CODEC.optionalFieldOf("min_y").forGetter(FilterType::minY),
                 DimensionType.Skybox.CODEC.optionalFieldOf("skybox").forGetter(FilterType::skybox)
-        ).apply(instance, (ambientLight, attributes, cardinalLight, coordinateScale, defaultClock,
-                           dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime,
-                           hasSkylight, height, infiniburn, logicalHeight, minY, skybox) ->
-                new FilterType(
-                        ambientLight, attributes, cardinalLight, coordinateScale, defaultClock,
-                        dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime,
-                        hasSkylight, height, infiniburn, logicalHeight, minY, Optional.empty(),
-                        skybox, Optional.empty()
-                )
-        )).dependent(
-                MONSTER_SETTINGS_CODEC,
-                filter -> Pair.of(filter.monsterSettings(), MONSTER_SETTINGS_CODEC),
-                FilterType::withMonsterSettings
-        ).dependent(
-                TIMELINES_CODEC,
-                filter -> Pair.of(filter.timelines(), TIMELINES_CODEC),
-                FilterType::withTimelines
-        );
+        ).apply(instance, (ambientLight, attributes, cardinalLight, coordinateScale, defaultClock, dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime, hasSkylight, height, infiniburn, logicalHeight, minY, skybox) ->
+                new FilterType(ambientLight, attributes, cardinalLight, coordinateScale, defaultClock, dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime, hasSkylight, height, infiniburn, logicalHeight, minY, Optional.empty(), skybox, Optional.empty()))
+        ).dependent(MONSTER_SETTINGS_CODEC, filter -> Pair.of(filter.monsterSettings(), MONSTER_SETTINGS_CODEC), FilterType::withMonsterSettings
+        ).dependent(TIMELINES_CODEC, filter -> Pair.of(filter.timelines(), TIMELINES_CODEC), FilterType::withTimelines);
 
         private FilterType withMonsterSettings(Optional<MonsterSettingsFilter> monsterSettings) {
-            return new FilterType(
-                    ambientLight, attributes, cardinalLight, coordinateScale, defaultClock,
-                    dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime,
-                    hasSkylight, height, infiniburn, logicalHeight, minY, monsterSettings,
-                    skybox, timelines
-            );
+            return new FilterType(ambientLight, attributes, cardinalLight, coordinateScale, defaultClock, dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime, hasSkylight, height, infiniburn, logicalHeight, minY, monsterSettings, skybox, timelines);
         }
 
         private FilterType withTimelines(Optional<HolderSet<Timeline>> timelines) {
-            return new FilterType(
-                    ambientLight, attributes, cardinalLight, coordinateScale, defaultClock,
-                    dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime,
-                    hasSkylight, height, infiniburn, logicalHeight, minY, monsterSettings,
-                    skybox, timelines
-            );
+            return new FilterType(ambientLight, attributes, cardinalLight, coordinateScale, defaultClock, dimension, hasCeiling, hasEnderDragonFight, hasEndFlashes, hasFixedTime, hasSkylight, height, infiniburn, logicalHeight, minY, monsterSettings, skybox, timelines);
         }
 
         public static final Codec<FilterType> CODEC = MAP_CODEC.codec();
@@ -339,7 +312,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", SettingType.combined(SettingType.doubleRange(0.0F, 1.0F)), "Value that is being compared against.")
-                    .buildObject("Dimension Ambient Light");
+                    .buildObject("Ambient Light");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -363,7 +336,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", SettingType.combined(SettingType.doubleRange(1.0E-5F, 3.0E7)), "Value that is being compared against.")
-                    .buildObject("Dimension Coordinate Scale");
+                    .buildObject("Coordinate Scale");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -387,7 +360,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", SettingType.combined(SettingType.intRange(16, DimensionType.Y_SIZE)), "Value that is being compared against.")
-                    .buildObject("Dimension Height");
+                    .buildObject("Height");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -411,7 +384,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", SettingType.combined(SettingType.intRange(0, DimensionType.Y_SIZE)), "Value that is being compared against.")
-                    .buildObject("Dimension Logical Height");
+                    .buildObject("Logical Height");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -435,7 +408,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("comparator", Documented.TYPE_NUMBER_COMPARATOR, "Comparison operator being used.")
                     .add("compare_to", SettingType.combined(SettingType.intRange(DimensionType.MIN_Y, DimensionType.MAX_Y)), "Value that is being compared against.")
-                    .buildObject("Dimension Min Y");
+                    .buildObject("Min Y");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -446,10 +419,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record MonsterSettingsFilter(
-            Optional<Integer> monsterSpawnBlockLightLimit,
-            Optional<IntProvider> monsterSpawnLightLevel
-    ) {
+    public record MonsterSettingsFilter(Optional<Integer> monsterSpawnBlockLightLimit, Optional<IntProvider> monsterSpawnLightLevel) {
 
         private static final Codec<IntProvider> INT_PROVIDER_CODEC = Codec.either(Codec.INT, IntProviders.CODEC).xmap(
                 either -> either.map(ConstantInt::of, provider -> provider),
@@ -469,7 +439,7 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .addOptional("monster_spawn_block_light_limit", SettingType.combined(SettingType.intRange(0, 15)), "The block light limit for monsters to spawn.")
                     .addOptional("monster_spawn_light_level", SettingType.combined(SettingType.intRange(0, 15)), "The light level for monsters to spawn.")
-                    .buildObject("Dimension Monster Settings");
+                    .buildObject("Monster Settings");
         }
 
         public boolean test(DimensionFilterContext context) {
@@ -530,194 +500,75 @@ public record DimensionFilter(Operator operator, List<FilterType> filters) {
     }
 
     public static DimensionFilter ofAmbientLight(NumberComparator comparator, float compareTo) {
-        return single(new FilterType(
-                Optional.of(new AmbientLightFilter(comparator, compareTo)),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(Optional.of(new AmbientLightFilter(comparator, compareTo)), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofAttributes(EnvironmentAttributeMap attributes) {
-        return single(new FilterType(
-                none(),
-                Optional.of(attributes),
-                none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), Optional.of(attributes), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofCardinalLight(CardinalLighting.Type cardinalLight) {
-        return single(new FilterType(
-                none(), none(),
-                Optional.of(cardinalLight),
-                none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), Optional.of(cardinalLight), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofCoordinateScale(NumberComparator comparator, double compareTo) {
-        return single(new FilterType(
-                none(), none(), none(),
-                Optional.of(new CoordinateScaleFilter(comparator, compareTo)),
-                none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), Optional.of(new CoordinateScaleFilter(comparator, compareTo)), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofDefaultClock(Holder<WorldClock> defaultClock) {
-        return single(new FilterType(
-                none(), none(), none(), none(),
-                Optional.of(defaultClock),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), Optional.of(defaultClock), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofDimension(ResourceKey<Level> dimension) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                Optional.of(dimension),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), Optional.of(dimension), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHasCeiling(boolean hasCeiling) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(),
-                Optional.of(hasCeiling),
-                none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), Optional.of(hasCeiling), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHasEnderDragonFight(boolean hasEnderDragonFight) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(),
-                Optional.of(hasEnderDragonFight),
-                none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), Optional.of(hasEnderDragonFight), none(), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHasEndFlashes(boolean hasEndFlashes) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(),
-                Optional.of(hasEndFlashes),
-                none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(hasEndFlashes), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHasFixedTime(boolean hasFixedTime) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(),
-                Optional.of(hasFixedTime),
-                none(),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(hasFixedTime), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHasSkylight(boolean hasSkylight) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                Optional.of(hasSkylight),
-                none(), none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(hasSkylight), none(), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofHeight(NumberComparator comparator, int compareTo) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(),
-                Optional.of(new HeightFilter(comparator, compareTo)),
-                none(), none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(new HeightFilter(comparator, compareTo)), none(), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofInfiniburn(TagKey<Block> infiniburn) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(),
-                Optional.of(infiniburn),
-                none(), none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(infiniburn), none(), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofLogicalHeight(NumberComparator comparator, int compareTo) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(),
-                Optional.of(new LogicalHeightFilter(comparator, compareTo)),
-                none(), none(),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(new LogicalHeightFilter(comparator, compareTo)), none(), none(), none(), none()));
     }
 
     public static DimensionFilter ofMinY(NumberComparator comparator, int compareTo) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(),
-                Optional.of(new MinYFilter(comparator, compareTo)),
-                none(), none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(new MinYFilter(comparator, compareTo)), none(), none(), none()));
     }
 
     public static DimensionFilter ofMonsterSettings(MonsterSettingsFilter monsterSettings) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                Optional.of(monsterSettings),
-                none(), none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(monsterSettings), none(), none()));
     }
 
     public static DimensionFilter ofSkybox(DimensionType.Skybox skybox) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(),
-                Optional.of(skybox),
-                none()
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(skybox), none()));
     }
 
     public static DimensionFilter ofTimelines(HolderSet<Timeline> timelines) {
-        return single(new FilterType(
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(), none(), none(), none(),
-                none(), none(),
-                Optional.of(timelines)
-        ));
+        return single(new FilterType(none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(timelines)));
     }
 
 }
