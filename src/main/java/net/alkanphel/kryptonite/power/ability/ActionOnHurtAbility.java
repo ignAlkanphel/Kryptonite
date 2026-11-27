@@ -25,20 +25,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ActionOnDamageAbility extends Ability {
+public class ActionOnHurtAbility extends Ability {
 
-    public static final MapCodec<ActionOnDamageAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ActionOnHurtAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.action),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, ActionOnDamageAbility::new));
+    ).apply(instance, ActionOnHurtAbility::new));
 
     public final List<Action> action;
     public final Condition targetCondition;
     public final DamageFilter damageFilter;
 
-    public ActionOnDamageAbility(List<Action> action, Condition targetCondition, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnHurtAbility(List<Action> action, Condition targetCondition, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.action = action;
         this.targetCondition = targetCondition;
@@ -59,24 +59,24 @@ public class ActionOnDamageAbility extends Ability {
 
     @Override
     public AbilitySerializer<?> getSerializer() {
-        return KryptoniteAbilitySerializers.ACTION_ON_DAMAGE.get();
+        return KryptoniteAbilitySerializers.ACTION_ON_HURT.get();
     }
 
-    public static class Serializer extends AbilitySerializer<ActionOnDamageAbility> {
+    public static class Serializer extends AbilitySerializer<ActionOnHurtAbility> {
 
         @Override
-        public MapCodec<ActionOnDamageAbility> codec() {
+        public MapCodec<ActionOnHurtAbility> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnDamageAbility> builder, HolderLookup.Provider provider) {
+        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnHurtAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions upon taking damage. For this ability, the \"target\" is the entity that has this ability & the \"source\" is the entity that dealt the damage, if there is one.")
                     .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the entity that has this ability must meet for the actions to perform.")
                     .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for the actions to perform.")
-                    .addExampleObject(new ActionOnDamageAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), TrueCondition.INSTANCE, DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnDamageAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnHurtAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), TrueCondition.INSTANCE, DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnHurtAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

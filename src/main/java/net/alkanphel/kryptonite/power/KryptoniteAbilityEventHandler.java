@@ -236,8 +236,8 @@ public class KryptoniteAbilityEventHandler {
             }
         }
 
-        // Action On Damage ability
-        for (AbilityInstance<ActionOnDamageAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DAMAGE.get())) {
+        // Action On Hurt ability
+        for (AbilityInstance<ActionOnHurtAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_HURT.get())) {
             if (!instance.getAbility().doesApply(target, attacker, e.getSource(), amount, instance)) continue;
 
             instance.getAbility().runActions(target, attacker, instance);

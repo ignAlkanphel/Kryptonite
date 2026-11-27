@@ -42,13 +42,13 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_USE, "Action On Block Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BONE_MEAL, "Action On Bone Meal");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_CRITICAL_HIT, "Action On Critical Hit");
-            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DAMAGE, "Action On Damage");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_DEATH, "Action On Death");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_COLLISION, "Action On Entity Collision");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ENTITY_USE, "Action On Entity Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_FARMLAND_TRAMPLE, "Action On Farmland Trample");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_GAME_EVENT, "Action On Game Event");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_HIT, "Action On Hit");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_HURT, "Action On Hurt");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_DROP, "Action On Item Drop");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_FISHED, "Action On Item Fished");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_ITEM_PICKUP, "Action On Item Pickup");
