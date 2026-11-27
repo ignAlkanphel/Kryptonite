@@ -10,7 +10,6 @@
     "common.BlockStateBaseMixin",
     "common.DelayedDataComponentMapAccessor",
     "common.EntityMixin",
-    "common.EntityPowerHandlerMixin",
     "common.EntitySuperpowerHandlerMixin",
     "common.EntityTypeMixin",
     "common.HolderReferenceMixin",
