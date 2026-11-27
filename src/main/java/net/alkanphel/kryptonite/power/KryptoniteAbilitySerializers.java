@@ -11,13 +11,12 @@ public class KryptoniteAbilitySerializers {
 
     public static final DeferredRegister<AbilitySerializer<?>> ABILITIES_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ABILITY_SERIALIZER, Kryptonite.MOD_ID);
 
-    public static final DeferredHolder<AbilitySerializer<?>, ActionIfDamageTakenAbility.Serializer> ACTION_IF_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_if_damage_taken", ActionIfDamageTakenAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, ActionIfHitAbility.Serializer> ACTION_IF_HIT = ABILITIES_SERIALIZERS.register("action_if_hit", ActionIfHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockUseAbility.Serializer> ACTION_ON_BLOCK_USE = ABILITIES_SERIALIZERS.register("action_on_block_use", ActionOnBlockUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBoneMealAbility.Serializer> ACTION_ON_BONE_MEAL = ABILITIES_SERIALIZERS.register("action_on_bone_meal", ActionOnBoneMealAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnCriticalHitAbility.Serializer> ACTION_ON_CRITICAL_HIT = ABILITIES_SERIALIZERS.register("action_on_critical_hit", ActionOnCriticalHitAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnDamageAbility.Serializer> ACTION_ON_DAMAGE = ABILITIES_SERIALIZERS.register("action_on_damage", ActionOnDamageAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnDeathAbility.Serializer> ACTION_ON_DEATH = ABILITIES_SERIALIZERS.register("action_on_death", ActionOnDeathAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnEntityCollisionAbility.Serializer> ACTION_ON_ENTITY_COLLISION = ABILITIES_SERIALIZERS.register("action_on_entity_collision", ActionOnEntityCollisionAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnEntityUseAbility.Serializer> ACTION_ON_ENTITY_USE = ABILITIES_SERIALIZERS.register("action_on_entity_use", ActionOnEntityUseAbility.Serializer::new);

@@ -31,33 +31,32 @@ import java.util.List;
 public class ActionOnHitAbility extends Ability {
 
     public static final MapCodec<ActionOnHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.targetAction),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnHitAbility::new));
 
-    public final List<Action> entityActions;
-    public final Condition entityConditions;
+    public final List<Action> targetAction;
+    public final Condition targetCondition;
     public final DamageFilter damageFilter;
 
-    public ActionOnHitAbility(List<Action> entityActions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnHitAbility(List<Action> targetAction, Condition targetCondition, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.entityConditions = entityConditions;
+        this.targetAction = targetAction;
+        this.targetCondition = targetCondition;
         this.damageFilter = damageFilter;
     }
 
-    public boolean doesApply(LivingEntity source, Entity target, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
+    public boolean doesApply(Entity source, Entity target, DamageSource damageSource, float amount, AbilityInstance<?> instance) {
         if (!damageFilter.test(damageSource, amount)) {
             return false;
         }
-
-        return entityConditions.test(DataContext.forAffected(target, source, instance));
+        return targetCondition.test(DataContext.forAffected(target, source, instance));
     }
 
-    public void runActions(LivingEntity source, Entity target, AbilityInstance<?> instance) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(target, source, instance));
+    public void runActions(Entity source, Entity target, AbilityInstance<?> instance) {
+        if (!targetAction.isEmpty()) Action.runList(targetAction, DataContext.forAffected(target, source, instance));
     }
 
     @Override

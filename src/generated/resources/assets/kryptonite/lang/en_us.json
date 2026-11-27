@@ -1,11 +1,10 @@
 {
-  "palladium.ability.kryptonite.action_if_damage_taken": "Action If Damage Taken",
-  "palladium.ability.kryptonite.action_if_hit": "Action If Hit",
   "palladium.ability.kryptonite.action_on_block_break": "Action On Block Break",
   "palladium.ability.kryptonite.action_on_block_place": "Action On Block Place",
   "palladium.ability.kryptonite.action_on_block_use": "Action On Block Use",
   "palladium.ability.kryptonite.action_on_bone_meal": "Action On Bone Meal",
   "palladium.ability.kryptonite.action_on_critical_hit": "Action On Critical Hit",
+  "palladium.ability.kryptonite.action_on_damage": "Action On Damage",
   "palladium.ability.kryptonite.action_on_death": "Action On Death",
   "palladium.ability.kryptonite.action_on_entity_collision": "Action On Entity Collision",
   "palladium.ability.kryptonite.action_on_entity_use": "Action On Entity Use",

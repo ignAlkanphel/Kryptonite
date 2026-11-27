@@ -218,7 +218,7 @@ public class KryptoniteAbilityEventHandler {
         Entity attacker = e.getSource().getEntity();
         float amount = e.getInflictedDamage();
 
-        // Action On Hit ability (source has the ability)
+        // Action On Hit ability
         if (attacker instanceof LivingEntity livingAttacker) {
             for (AbilityInstance<ActionOnHitAbility> instance : AbilityUtil.getEnabledInstances(livingAttacker, KryptoniteAbilitySerializers.ACTION_ON_HIT.get())) {
                 if (!instance.getAbility().doesApply(livingAttacker, target, e.getSource(), amount, instance)) continue;
@@ -227,20 +227,11 @@ public class KryptoniteAbilityEventHandler {
             }
         }
 
-        // Action If Hit ability (target has the ability)
-        if (attacker != null) {
-            for (AbilityInstance<ActionIfHitAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_IF_HIT.get())) {
-                if (!instance.getAbility().doesApply(attacker, target, e.getSource(), amount, instance)) continue;
+        // Action On Damage ability
+        for (AbilityInstance<ActionOnDamageAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DAMAGE.get())) {
+            if (!instance.getAbility().doesApply(target, attacker, e.getSource(), amount, instance)) continue;
 
-                instance.getAbility().runActions(attacker, target, instance);
-            }
-        }
-
-        // Action If Damage Taken ability (target has the ability, no specified attacker)
-        for (AbilityInstance<ActionIfDamageTakenAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_IF_DAMAGE_TAKEN.get())) {
-            if (!instance.getAbility().doesApply(e.getSource(), amount)) continue;
-
-            instance.getAbility().runActions(target);
+            instance.getAbility().runActions(target, attacker, instance);
         }
     }
 
