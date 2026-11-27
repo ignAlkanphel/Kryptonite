@@ -732,6 +732,20 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
+    @SubscribeEvent // Action On Login ability
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent e) {
+        if (e.getEntity() instanceof ServerPlayer player) {
+            ActionOnLoginAbility.flag(player);
+        }
+    }
+
+    @SubscribeEvent // Action On Logout ability
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent e) {
+        if (e.getEntity() instanceof ServerPlayer player) {
+            ActionOnLogoutAbility.runActions(player);
+        }
+    }
+
     @SubscribeEvent // Action On Respawn ability
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent e) {
         if (e.getEntity() instanceof ServerPlayer player) {

@@ -12,14 +12,11 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ActionOnRespawnAbility extends Ability {
 
-    private static final Set<UUID> PENDING = new HashSet<>();
+    private static final Map<UUID, Integer> PENDING = new HashMap<>();
 
     public static final MapCodec<ActionOnRespawnAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
@@ -34,18 +31,20 @@ public class ActionOnRespawnAbility extends Ability {
     }
 
     public static void flag(ServerPlayer player) {
-        PENDING.add(player.getUUID());
+        PENDING.put(player.getUUID(), player.tickCount + 1);
     }
 
     @Override
-    public boolean tick(LivingEntity entity, AbilityInstance<?> abilityInstance, boolean enabled) {
-        if (enabled && entity instanceof ServerPlayer player && PENDING.remove(player.getUUID())) {
-            for (AbilityInstance<ActionOnRespawnAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_RESPAWN.get())) {
-                Action.runList(instance.getAbility().action, DataContext.forEntity(player));
+    public void firstTick(LivingEntity entity, AbilityInstance<?> abilityInstance) {
+        if (entity instanceof ServerPlayer player) {
+            Integer respawnTick = PENDING.remove(player.getUUID());
+
+            if (respawnTick != null && player.tickCount <= respawnTick) {
+                for (AbilityInstance<ActionOnRespawnAbility> instance : AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.ACTION_ON_RESPAWN.get())) {
+                    Action.runList(instance.getAbility().action, DataContext.forEntity(player));
+                }
             }
         }
-
-        return super.tick(entity, abilityInstance, enabled);
     }
 
     @Override

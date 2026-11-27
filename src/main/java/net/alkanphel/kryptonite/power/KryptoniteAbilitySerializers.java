@@ -32,6 +32,8 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnWakeUpAbility.Serializer> ACTION_ON_WAKE_UP = ABILITIES_SERIALIZERS.register("action_on_wake_up", ActionOnWakeUpAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnJumpAbility.Serializer> ACTION_ON_JUMP = ABILITIES_SERIALIZERS.register("action_on_jump", ActionOnJumpAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLandAbility.Serializer> ACTION_ON_LAND = ABILITIES_SERIALIZERS.register("action_on_land", ActionOnLandAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnLoginAbility.Serializer> ACTION_ON_LOGIN = ABILITIES_SERIALIZERS.register("action_on_login", ActionOnLoginAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnLogoutAbility.Serializer> ACTION_ON_LOGOUT = ABILITIES_SERIALIZERS.register("action_on_logout", ActionOnLogoutAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnMountAbility.Serializer> ACTION_ON_MOUNT = ABILITIES_SERIALIZERS.register("action_on_mount", ActionOnMountAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnRespawnAbility.Serializer> ACTION_ON_RESPAWN = ABILITIES_SERIALIZERS.register("action_on_respawn", ActionOnRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionWhenDamageTakenAbility.Serializer> ACTION_WHEN_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_when_damage_taken", ActionWhenDamageTakenAbility.Serializer::new);

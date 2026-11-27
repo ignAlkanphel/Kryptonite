@@ -17,6 +17,8 @@
   "palladium.ability.kryptonite.action_on_item_use": "Action On Item Use",
   "palladium.ability.kryptonite.action_on_jump": "Action On Jump",
   "palladium.ability.kryptonite.action_on_land": "Action On Land",
+  "palladium.ability.kryptonite.action_on_login": "Action On Login",
+  "palladium.ability.kryptonite.action_on_logout": "Action On Logout",
   "palladium.ability.kryptonite.action_on_mount": "Action On Mount",
   "palladium.ability.kryptonite.action_on_respawn": "Action On Respawn",
   "palladium.ability.kryptonite.action_on_tame": "Action On Tame",
