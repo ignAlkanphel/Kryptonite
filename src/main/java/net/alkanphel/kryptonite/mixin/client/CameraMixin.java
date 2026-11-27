@@ -22,9 +22,9 @@ public class CameraMixin {
     @Inject(method = "getFluidInCamera", at = @At("RETURN"), cancellable = true)
     private void kryptonite$modifyFluidFogType(CallbackInfoReturnable<FogType> cir) {
         if (this.entity instanceof LivingEntity living) {
-            FogType originalType = cir.getReturnValue();
+            FogType original = cir.getReturnValue();
+            Optional<FogType> replacement = ModifyFogTypeAbility.tryReplace(living, original);
 
-            Optional<FogType> replacement = ModifyFogTypeAbility.tryReplace(living, originalType);
             replacement.ifPresent(cir::setReturnValue);
         }
     }

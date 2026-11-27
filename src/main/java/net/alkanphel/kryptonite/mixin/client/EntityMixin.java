@@ -25,18 +25,14 @@ public abstract class EntityMixin {
     // Prevent Slowdown (soul_sand & honey_block) ability
     @ModifyExpressionValue(method = "getBlockSpeedFactor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;"))
     private Block kryptonite$preventSlowdownSoulSandHoneyBlock(Block original) {
-        var mc = Minecraft.getInstance();
-        var player = mc.player;
-
+        var player = Minecraft.getInstance().player;
         if ((Object) this != player) return original;
 
-        if (original == Blocks.SOUL_SAND && AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())
-                .stream().anyMatch(i -> i.getAbility().modeBlocksPrevents(PreventSlowdownAbility.ModeBlocks.SOUL_SAND))) {
+        if (original == Blocks.SOUL_SAND && PreventSlowdownAbility.preventsBlock(player, PreventSlowdownAbility.ModeBlocks.SOUL_SAND)) {
             return Blocks.STONE;
         }
 
-        if (original == Blocks.HONEY_BLOCK && AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())
-                .stream().anyMatch(i -> i.getAbility().modeBlocksPrevents(PreventSlowdownAbility.ModeBlocks.HONEY_BLOCK))) {
+        if (original == Blocks.HONEY_BLOCK && PreventSlowdownAbility.preventsBlock(player, PreventSlowdownAbility.ModeBlocks.HONEY_BLOCK)) {
             return Blocks.STONE;
         }
 

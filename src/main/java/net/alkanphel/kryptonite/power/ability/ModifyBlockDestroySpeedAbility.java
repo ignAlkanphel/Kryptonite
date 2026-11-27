@@ -47,14 +47,34 @@ public class ModifyBlockDestroySpeedAbility extends Ability {
 
     public float applySpeedModifiers(float value, AbilityInstance<?> instance, LivingEntity entity) {
         if (modifiers.isEmpty()) return value;
-
         return KryptoniteModifiers.applyModifiers(value, modifiers, DataContext.forAbility(entity, instance));
     }
 
     public float applyHardnessModifiers(float value, AbilityInstance<?> instance, LivingEntity entity) {
         if (hardnessModifiers.isEmpty()) return value;
-
         return KryptoniteModifiers.applyModifiers(value, hardnessModifiers, DataContext.forAbility(entity, instance));
+    }
+
+    public static float applySpeedModifiers(float value, LivingEntity entity, BlockPos pos) {
+        for (AbilityInstance<ModifyBlockDestroySpeedAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_BLOCK_DESTROY_SPEED.get())) {
+            var ability = instance.getAbility();
+            if (!ability.blockFilter.test(entity.level(), pos)) continue;
+
+            value = ability.applySpeedModifiers(value, instance, entity);
+        }
+
+        return value;
+    }
+
+    public static float applyHardnessModifiers(float value, LivingEntity entity, BlockPos pos) {
+        for (AbilityInstance<ModifyBlockDestroySpeedAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_BLOCK_DESTROY_SPEED.get())) {
+            var ability = instance.getAbility();
+            if (!ability.blockFilter.test(entity.level(), pos)) continue;
+
+            value = ability.applyHardnessModifiers(value, instance, entity);
+        }
+
+        return value;
     }
 
     @Override

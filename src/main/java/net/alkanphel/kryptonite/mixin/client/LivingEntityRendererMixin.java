@@ -32,12 +32,10 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     private void kryptonite$extractShaking(LivingEntity entity, LivingEntityRenderState state, float partialTicks, CallbackInfo ci) {
         if (!(state instanceof KryptoniteLivingEntityRenderState renderStateExtension)) return;
 
-        var instances = AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.SHAKING.get());
-
         float frequency = 0F;
         float amplitude = 0F;
 
-        for (AbilityInstance<ShakingAbility> instance : instances) {
+        for (AbilityInstance<ShakingAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.SHAKING.get())) {
             DataContext context = DataContext.forAbility(entity, instance);
             frequency = Math.max(frequency, (float) instance.getAbility().frequency.getAsDouble(context));
             amplitude = Math.max(amplitude, (float) instance.getAbility().amplitude.getAsDouble(context));

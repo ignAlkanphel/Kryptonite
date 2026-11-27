@@ -28,7 +28,6 @@ public class Kryptonite {
         KryptoniteActionSerializers.ACTION_SERIALIZERS.register(modEventBus);
         KryptoniteAbilitySerializers.ABILITIES_SERIALIZERS.register(modEventBus);
         KryptoniteConditionSerializers.CONDITIONS_SERIALIZERS.register(modEventBus);
-        KryptoniteValueSerializers.VALUE_SERIALIZERS.register(modEventBus);
 
         KryptoniteNetwork.init();
 

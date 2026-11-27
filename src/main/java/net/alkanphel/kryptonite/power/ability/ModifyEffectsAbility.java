@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
@@ -46,12 +47,34 @@ public class ModifyEffectsAbility extends Ability {
         this.effects = effects;
     }
 
-    public boolean doesApply(Holder<MobEffect> effect) {
-        return effects.map(set -> set.contains(effect)).orElse(true);
-    }
-
     public int applyModifiers(int amplifier, LivingEntity entity, AbilityInstance<?> instance) {
         return Math.max(0, KryptoniteModifiers.applyModifiers(amplifier, modifiers, DataContext.forAbility(entity, instance)));
+    }
+
+    public static MobEffectInstance modifyEffect(MobEffectInstance newEffect, LivingEntity entity) {
+        Holder<MobEffect> effectType = newEffect.getEffect();
+
+        int newAmplifier = newEffect.getAmplifier();
+        int newDuration = newEffect.getDuration();
+
+        for (AbilityInstance<ModifyEffectsAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.MODIFY_EFFECTS.get())) {
+            ModifyEffectsAbility ability = instance.getAbility();
+
+            if (ability.effects.isPresent() && !ability.effects.get().contains(effectType)) continue;
+
+            for (Mode mode : ability.mode) {
+                switch (mode) {
+                    case AMPLIFIER -> newAmplifier = ability.applyModifiers(newAmplifier, entity, instance);
+                    case DURATION -> newDuration = ability.applyModifiers(newDuration, entity, instance);
+                }
+            }
+        }
+
+        if (newAmplifier == newEffect.getAmplifier() && newDuration == newEffect.getDuration()) {
+            return newEffect;
+        }
+
+        return new MobEffectInstance(effectType, newDuration, newAmplifier, newEffect.isAmbient(), newEffect.isVisible(), newEffect.showIcon());
     }
 
     @Override

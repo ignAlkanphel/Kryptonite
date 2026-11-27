@@ -7,12 +7,10 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
-import net.threetag.palladium.power.ability.Ability;
-import net.threetag.palladium.power.ability.AbilityProperties;
-import net.threetag.palladium.power.ability.AbilitySerializer;
-import net.threetag.palladium.power.ability.AbilityStateManager;
+import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +31,14 @@ public class PreventParticlesAbility extends Ability {
         this.eventParticles = eventParticles;
     }
 
-    public boolean prevents(EventParticle particle) {
-        return eventParticles.contains(particle);
+    public static boolean prevents(LivingEntity entity, EventParticle particle) {
+        for (AbilityInstance<PreventParticlesAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())) {
+            if (instance.getAbility().eventParticles.contains(particle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

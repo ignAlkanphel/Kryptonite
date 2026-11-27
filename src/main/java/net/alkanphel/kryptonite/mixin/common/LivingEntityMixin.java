@@ -1,15 +1,14 @@
 package net.alkanphel.kryptonite.mixin.common;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.alkanphel.kryptonite.network.p2c.S2CSyncAttacker;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.ability.*;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.access.EntityLinkedItemStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,9 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -74,31 +71,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity self = (LivingEntity) (Object) this;
         if (self.level().isClientSide()) return newEffect;
 
-        Holder<MobEffect> effectType = newEffect.getEffect();
-
-        int newAmplifier = newEffect.getAmplifier();
-        int newDuration = newEffect.getDuration();
-
-        for (AbilityInstance<ModifyEffectsAbility> instance : AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.MODIFY_EFFECTS.get())) {
-            ModifyEffectsAbility ability = instance.getAbility();
-
-            if (!ability.doesApply(effectType)) {
-                continue;
-            }
-
-            for (ModifyEffectsAbility.Mode mode : ability.mode) {
-                switch (mode) {
-                    case AMPLIFIER -> newAmplifier = ability.applyModifiers(newAmplifier, self, instance);
-                    case DURATION -> newDuration = ability.applyModifiers(newDuration, self, instance);
-                }
-            }
-        }
-
-        if (newAmplifier == newEffect.getAmplifier() && newDuration == newEffect.getDuration()) {
-            return newEffect;
-        }
-
-        return new MobEffectInstance(effectType, newDuration, newAmplifier, newEffect.isAmbient(), newEffect.isVisible(), newEffect.showIcon());
+        return ModifyEffectsAbility.modifyEffect(newEffect, self);
     }
 
     // Prevent Damage ability (prevent freeze)
@@ -112,20 +85,22 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     // Prevent Slowdown (water) ability
-    @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;jumpInFluid(Lnet/neoforged/neoforge/fluids/FluidType;)V"))
-    private void kryptonite$preventSlowdownWaterAllowJumping(LivingEntity self, FluidType fluidType) {
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER)) && fluidType == NeoForgeMod.WATER_TYPE.value()) {
-            return;
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/neoforged/neoforge/fluids/FluidType;isAir()Z", ordinal = 1))
+    private boolean kryptonite$preventSlowdownWaterAllowJumping(boolean isAir) {
+        LivingEntity self = (LivingEntity) (Object) this;
+
+        if (self.getMaxHeightFluidType() == NeoForgeMod.WATER_TYPE.value() && PreventSlowdownAbility.preventsMode(self, PreventSlowdownAbility.Mode.WATER)) {
+            return true;
         }
 
-        self.jumpInFluid(fluidType);
+        return isAir;
     }
 
     // Prevent Slowdown (water) ability
     @Inject(method = "shouldTravelInFluid", at = @At("HEAD"), cancellable = true)
     private void kryptonite$preventSlowdownWaterIgnoreFluidCheck(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
-        LivingEntity self = (LivingEntity)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (PreventSlowdownAbility.preventsMode(self, PreventSlowdownAbility.Mode.WATER)) {
             if (fluidState.getFluidType() == NeoForgeMod.WATER_TYPE.value()) {
                 cir.setReturnValue(false);
             }
@@ -151,9 +126,8 @@ public abstract class LivingEntityMixin extends Entity {
     // Prevent Particles (Landing) ability
     @Redirect(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T extends ParticleOptions> int kryptonite$preventParticlesLanding(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
-        LivingEntity self = (LivingEntity)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.LANDING))) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (PreventParticlesAbility.prevents(self, PreventParticlesAbility.EventParticle.LANDING)) {
             return 0;
         }
 
@@ -163,9 +137,8 @@ public abstract class LivingEntityMixin extends Entity {
     // Prevent Particles (Death) ability
     @Inject(method = "makePoofParticles", at = @At("HEAD"), cancellable = true)
     private void kryptonite$preventParticlesDeath(CallbackInfo ci) {
-        LivingEntity self = (LivingEntity)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DEATH))) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        if (PreventParticlesAbility.prevents(self, PreventParticlesAbility.EventParticle.DEATH)) {
             ci.cancel();
         }
     }
@@ -174,8 +147,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "makeDrownParticles", at = @At("HEAD"), cancellable = true)
     private void kryptonite$preventParticlesDrowning(CallbackInfo ci) {
         LivingEntity self = (LivingEntity)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DROWNING))) {
+        if (PreventParticlesAbility.prevents(self, PreventParticlesAbility.EventParticle.DROWNING)) {
             ci.cancel();
         }
     }

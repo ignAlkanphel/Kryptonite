@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.LivingEntity;
 import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.documentation.SettingType;
 import net.threetag.palladium.power.ability.*;
@@ -30,6 +31,26 @@ public class PreventSlowdownAbility extends Ability {
         super(properties, conditions, energyBarUsages);
         this.mode = mode;
         this.modeBlocks = modeBlocks;
+    }
+
+    public static boolean preventsMode(LivingEntity entity, Mode mode) {
+        for (AbilityInstance<PreventSlowdownAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())) {
+            if (instance.getAbility().modePrevents(mode)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean preventsBlock(LivingEntity entity, ModeBlocks block) {
+        for (AbilityInstance<PreventSlowdownAbility> instance : AbilityUtil.getEnabledInstances(entity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get())) {
+            if (instance.getAbility().modeBlocksPrevents(block)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean modePrevents(Mode modeEnum) {

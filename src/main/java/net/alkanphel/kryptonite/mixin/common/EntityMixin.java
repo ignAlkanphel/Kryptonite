@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.threetag.palladium.power.ability.AbilityInstance;
 import net.threetag.palladium.power.ability.AbilityUtil;
@@ -49,9 +48,8 @@ public abstract class EntityMixin {
     // Prevent Slowdown (water) ability
     @Inject(method = "isInWater", at = @At("HEAD"), cancellable = true)
     private void kryptonite$preventSlowdownWaterIgnoreIsInWater(CallbackInfoReturnable<Boolean> cir) {
-        if (!((Object) this instanceof LivingEntity livingEntity)) return;
-
-        if (AbilityUtil.getEnabledInstances(livingEntity, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
+        if (!((Object) this instanceof LivingEntity living)) return;
+        if (PreventSlowdownAbility.preventsMode(living, PreventSlowdownAbility.Mode.WATER)) {
             cir.setReturnValue(false);
         }
     }
@@ -74,13 +72,9 @@ public abstract class EntityMixin {
     // Prevent Particles (Sprinting) ability
     @ModifyReturnValue(method = "canSpawnSprintParticle", at = @At("TAIL"))
     private boolean kryptonite$preventParticlesSprinting(boolean original) {
-        if (!((Object) this instanceof Player player)) return original;
-        if (AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.SPRINTING))) {
-            return false;
-        }
+        if (!((Object) this instanceof LivingEntity living)) return original;
 
-        return original;
+        return original && !PreventParticlesAbility.prevents(living, PreventParticlesAbility.EventParticle.SPRINTING);
     }
 
 }

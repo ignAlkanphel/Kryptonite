@@ -202,8 +202,7 @@ public abstract class PlayerMixin extends LivingEntity {
     @Inject(method = "updateSwimming", at = @At("TAIL"))
     private void kryptonite$preventSlowdownWaterUpdateSwimming(CallbackInfo ci) {
         Player player = (Player) (Object) this;
-
-        if (AbilityUtil.getEnabledInstances(player, KryptoniteAbilitySerializers.PREVENT_SLOWDOWN.get()).stream().anyMatch(i -> i.getAbility().modePrevents(PreventSlowdownAbility.Mode.WATER))) {
+        if (PreventSlowdownAbility.preventsMode(player, PreventSlowdownAbility.Mode.WATER)) {
             this.setSwimming(false);
         }
     }
@@ -213,8 +212,7 @@ public abstract class PlayerMixin extends LivingEntity {
     // Prevent Particles (Critical Hit) ability
     @Redirect(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;crit(Lnet/minecraft/world/entity/Entity;)V"))
     private void kryptonite$preventParticlesCriticalHit(Player instance, Entity entity) {
-        if (AbilityUtil.getEnabledInstances(instance, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.CRITICAL_HIT))) {
+        if (PreventParticlesAbility.prevents(instance, PreventParticlesAbility.EventParticle.CRITICAL_HIT)) {
             return;
         }
 
@@ -224,19 +222,18 @@ public abstract class PlayerMixin extends LivingEntity {
     // Prevent Particles (Magical Critical Hit) ability
     @Redirect(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;magicCrit(Lnet/minecraft/world/entity/Entity;)V"))
     private void kryptonite$preventParticlesMagicCriticalHit(Player instance, Entity entity) {
-        if (AbilityUtil.getEnabledInstances(instance, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.MAGIC_CRITICAL_HIT))) {
+        if (PreventParticlesAbility.prevents(instance, PreventParticlesAbility.EventParticle.MAGIC_CRITICAL_HIT)) {
             return;
         }
+
         instance.magicCrit(entity);
     }
 
     // Prevent Particles (Damage Indicator) ability
     @Redirect(method = "damageStatsAndHearts", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T extends ParticleOptions> int kryptonite$preventParticlesDamageIndicator(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
-        Player self = (Player)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.DAMAGE_INDICATOR))) {
+        Player self = (Player) (Object) this;
+        if (PreventParticlesAbility.prevents(self, PreventParticlesAbility.EventParticle.DAMAGE_INDICATOR)) {
             return 0;
         }
 
@@ -246,9 +243,8 @@ public abstract class PlayerMixin extends LivingEntity {
     // Prevent Particles (Sweep Attack) ability
     @Redirect(method = "doSweepAttack(Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;FLnet/minecraft/world/phys/AABB;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T extends ParticleOptions> int kryptonite$preventParticlesSweepAttack(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {
-        Player self = (Player)(Object)this;
-        if (AbilityUtil.getEnabledInstances(self, KryptoniteAbilitySerializers.PREVENT_PARTICLES.get())
-                .stream().anyMatch(i -> i.getAbility().prevents(PreventParticlesAbility.EventParticle.SWEEP_ATTACK))) {
+        Player self = (Player) (Object) this;
+        if (PreventParticlesAbility.prevents(self, PreventParticlesAbility.EventParticle.SWEEP_ATTACK)) {
             return 0;
         }
 
