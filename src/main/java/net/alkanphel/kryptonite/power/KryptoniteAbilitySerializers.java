@@ -32,6 +32,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnTotemUseAbility.Serializer> ACTION_ON_TOTEM_USE = ABILITIES_SERIALIZERS.register("action_on_totem_use", ActionOnTotemUseAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnWakeUpAbility.Serializer> ACTION_ON_WAKE_UP = ABILITIES_SERIALIZERS.register("action_on_wake_up", ActionOnWakeUpAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnJumpAbility.Serializer> ACTION_ON_JUMP = ABILITIES_SERIALIZERS.register("action_on_jump", ActionOnJumpAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnKillAbility.Serializer> ACTION_ON_KILL = ABILITIES_SERIALIZERS.register("action_on_kill", ActionOnKillAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLandAbility.Serializer> ACTION_ON_LAND = ABILITIES_SERIALIZERS.register("action_on_land", ActionOnLandAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLoginAbility.Serializer> ACTION_ON_LOGIN = ABILITIES_SERIALIZERS.register("action_on_login", ActionOnLoginAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLogoutAbility.Serializer> ACTION_ON_LOGOUT = ABILITIES_SERIALIZERS.register("action_on_logout", ActionOnLogoutAbility.Serializer::new);

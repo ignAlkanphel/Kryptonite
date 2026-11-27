@@ -193,12 +193,12 @@ public class KryptoniteAbilityEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onLivingDeath(LivingDeathEvent e) {
         LivingEntity target = e.getEntity();
-        DamageSource source = e.getSource();
-        Entity attacker = source.getEntity();
-        float damage = target.getMaxHealth();
+        DamageSource damageSource = e.getSource();
+        Entity attacker = damageSource.getEntity();
+        float damageAmount = target.getMaxHealth();
 
         // Prevent Death ability
-        if (PreventDeathAbility.tryPreventDeath(target, source, damage)) {
+        if (PreventDeathAbility.tryPreventDeath(target, damageSource, damageAmount)) {
             target.setHealth(1.0F);
             e.setCanceled(true);
             return; // stops actions running for 'Action On Death'
@@ -206,9 +206,18 @@ public class KryptoniteAbilityEventHandler {
 
         // Action On Death ability
         for (AbilityInstance<ActionOnDeathAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_ON_DEATH.get())) {
-            if (!instance.getAbility().doesApply(target, attacker, source, damage, instance)) continue;
+            if (!instance.getAbility().doesApply(target, attacker, damageSource, damageAmount, instance)) continue;
 
             instance.getAbility().runActions(target, attacker, instance);
+        }
+
+        // Action On Kill ability
+        if (attacker instanceof LivingEntity source) {
+            for (AbilityInstance<ActionOnKillAbility> instance : AbilityUtil.getEnabledInstances(source, KryptoniteAbilitySerializers.ACTION_ON_KILL.get())) {
+                if (!instance.getAbility().doesApply(source, target, damageSource, damageAmount, instance)) continue;
+
+                instance.getAbility().runActions(source, target, instance);
+            }
         }
     }
 
