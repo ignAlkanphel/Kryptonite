@@ -5,8 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.mixin.common.ItemEntityAccessor;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
@@ -42,28 +44,28 @@ import java.util.UUID;
 public class PreventItemPickupAbility extends Ability implements Prioritized {
 
     public static final MapCodec<PreventItemPickupAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("target_actions_thrower", List.of()).forGetter(a -> a.entityActionsThrower),
-            Action.LIST_CODEC.optionalFieldOf("target_actions_item", List.of()).forGetter(a -> a.entityActionsItem),
-            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            ItemMutation.CODEC.optionalFieldOf("item_mutations", ItemMutation.EMPTY).forGetter(a -> a.itemMutation),
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_thrower", List.of()).forGetter(a -> a.targetActionsThrower),
+            Action.LIST_CODEC.optionalFieldOf("target_actions_item", List.of()).forGetter(a -> a.targetActionsItem),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetConditions),
+            ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventItemPickupAbility::new));
 
-    private final List<Action> entityActionsThrower, entityActionsItem;
-    private final Condition entityConditions;
-    private final ItemMutation itemMutation;
-    private final ItemFilter itemFilter;
+    private final List<Action> targetActionsThrower, targetActionsItem;
+    private final List<ItemAction> itemActions;
+    private final Condition targetConditions;
+    private final List<ItemCondition> itemConditions;
     private final int priority;
 
-    public PreventItemPickupAbility(List<Action> entityActionsThrower, List<Action> entityActionsItem, Condition entityConditions, ItemMutation itemMutation, ItemFilter itemFilter, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventItemPickupAbility(List<Action> targetActionsThrower, List<Action> targetActionsItem, Condition targetConditions, List<ItemAction> itemActions, List<ItemCondition> itemConditions, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActionsThrower = entityActionsThrower;
-        this.entityActionsItem = entityActionsItem;
-        this.entityConditions = entityConditions;
-        this.itemMutation = itemMutation;
-        this.itemFilter = itemFilter;
+        this.targetActionsThrower = targetActionsThrower;
+        this.targetActionsItem = targetActionsItem;
+        this.itemActions = itemActions;
+        this.targetConditions = targetConditions;
+        this.itemConditions = itemConditions;
         this.priority = priority;
     }
 
@@ -73,11 +75,11 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     }
 
     public boolean doesPrevent(ItemStack stack, Entity thrower, Entity holder) {
-        if (!itemFilter.test(holder.level(), stack)) {
+        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
             return false;
         }
 
-        return entityConditions.test(DataContext.forAffected(thrower, holder, null));
+        return targetConditions.test(DataContext.forAffected(thrower, holder, null));
     }
 
     public static boolean doesPrevent(ItemEntity itemEntity, Entity holderEntity) {
@@ -103,9 +105,9 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     public void runActions(ItemEntity itemEntity, Entity thrower, Entity holder) {
         SlotAccess stackReference = InventoryUtil.createStackReference(itemEntity.getItem());
 
-        if (!itemMutation.mutations().isEmpty()) itemMutation.run(holder.level(), stackReference);
-        if (!entityActionsThrower.isEmpty()) Action.runList(entityActionsThrower, DataContext.forAffected(holder, thrower, null));
-        if (!entityActionsItem.isEmpty()) Action.runList(entityActionsItem, DataContext.forAffected(itemEntity, holder, null));
+        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
+        if (!targetActionsThrower.isEmpty()) Action.runList(targetActionsThrower, DataContext.forAffected(holder, thrower, null));
+        if (!targetActionsItem.isEmpty()) Action.runList(targetActionsItem, DataContext.forAffected(itemEntity, holder, null));
 
         itemEntity.setItem(stackReference.get());
     }
@@ -128,11 +130,11 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
                     .addOptional("target_actions_thrower", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
                     .addOptional("target_actions_item", TYPE_ACTION_LIST, "Action(s) performed on the item entity being picked up.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
-                    .addOptional("item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item stack being picked up.")
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the item being picked up must pass to prevent item pickup.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet to prevent item pickup.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), TrueCondition.INSTANCE, ItemMutation.EMPTY, ItemFilter.EMPTY, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), ItemMutation.EMPTY, ItemFilter.ofItem(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple")))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), TrueCondition.INSTANCE, List.of(), List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

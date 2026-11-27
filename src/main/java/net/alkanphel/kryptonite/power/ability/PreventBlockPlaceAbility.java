@@ -4,10 +4,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.BlockMutation;
-import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,31 +35,31 @@ import java.util.Optional;
 public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<PreventBlockPlaceAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            BlockMutation.CODEC.optionalFieldOf("place_to_mutations", BlockMutation.EMPTY).forGetter(a -> a.placeToMutation),
-            BlockMutation.CODEC.optionalFieldOf("place_on_mutations", BlockMutation.EMPTY).forGetter(a -> a.placeOnMutation),
-            BlockFilter.CODEC.optionalFieldOf("place_to_filters", BlockFilter.EMPTY).forGetter(a -> a.placeToFilter),
-            BlockFilter.CODEC.optionalFieldOf("place_on_filters", BlockFilter.EMPTY).forGetter(a -> a.placeOnFilter),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
+            BlockAction.LIST_CODEC.optionalFieldOf("place_to_actions", List.of()).forGetter(a -> a.placeToAction),
+            BlockAction.LIST_CODEC.optionalFieldOf("place_on_actions", List.of()).forGetter(a -> a.placeOnAction),
+            BlockCondition.LIST_CODEC.optionalFieldOf("place_to_conditions", List.of()).forGetter(a -> a.placeToCondition),
+            BlockCondition.LIST_CODEC.optionalFieldOf("place_on_conditions", List.of()).forGetter(a -> a.placeOnCondition),
             Direction.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("directions", EnumSet.allOf(Direction.class)).forGetter(a -> a.directions),
-            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemMutation, a.resultItemMutation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
+            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemCondition, a.heldItemAction, a.resultItemAction, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, (entityActions, placeToMutation, placeOnMutation, placeToFilter, placeOnFilter, directions, activeFields, properties, state, energyBarUsages) -> {
+    ).apply(instance, (action, placeToAction, placeOnAction, placeToCondition, placeOnCondition, directions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new PreventBlockPlaceAbility(entityActions, placeToMutation, placeOnMutation, placeToFilter, placeOnFilter, directions, interaction.heldItemFilter(), interaction.heldItemMutation(), interaction.resultItemMutation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new PreventBlockPlaceAbility(action, placeToAction, placeOnAction, placeToCondition, placeOnCondition, directions, interaction.heldItemCondition(), interaction.heldItemAction(), interaction.resultItemAction(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
-    public final List<Action> entityActions;
-    public final BlockMutation placeToMutation, placeOnMutation;
-    public final BlockFilter placeToFilter, placeOnFilter;
+    public final List<Action> action;
+    public final List<BlockAction> placeToAction, placeOnAction;
+    public final List<BlockCondition> placeToCondition, placeOnCondition;
     public final EnumSet<Direction> directions;
 
-    public PreventBlockPlaceAbility(List<Action> entityActions, BlockMutation placeToMutation, BlockMutation placeOnMutation, BlockFilter placeToFilter, BlockFilter placeOnFilter, EnumSet<Direction> directions, ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemFilter, heldItemMutation, resultItemMutation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.placeToMutation = placeToMutation;
-        this.placeOnMutation = placeOnMutation;
-        this.placeToFilter = placeToFilter;
-        this.placeOnFilter = placeOnFilter;
+    public PreventBlockPlaceAbility(List<Action> action, List<BlockAction> placeToAction, List<BlockAction> placeOnAction, List<BlockCondition> placeToCondition, List<BlockCondition> placeOnCondition, EnumSet<Direction> directions, List<ItemCondition> heldItemCondition, List<ItemAction> heldItemAction, List<ItemAction> resultItemAction, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemCondition, heldItemAction, resultItemAction, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+        this.action = action;
+        this.placeToAction = placeToAction;
+        this.placeOnAction = placeOnAction;
+        this.placeToCondition = placeToCondition;
+        this.placeOnCondition = placeOnCondition;
         this.directions = directions;
     }
 
@@ -68,11 +68,11 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
             return false;
         }
 
-        if (!placeOnFilter.isEmpty() && !placeOnFilter.test(holder.level(), onPos)) {
+        if (!placeOnCondition.isEmpty() && !BlockCondition.checkConditions(placeOnCondition, holder.level(), onPos)) {
             return false;
         }
 
-        if (!placeToFilter.isEmpty() && !placeToFilter.test(holder.level(), toPos)) {
+        if (!placeToCondition.isEmpty() && !BlockCondition.checkConditions(placeToCondition, holder.level(), toPos)) {
             return false;
         }
 
@@ -80,9 +80,9 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
     }
 
     public void runActions(LivingEntity holder, InteractionHand hand, BlockPos toPos, BlockPos onPos, Direction direction) {
-        if (!placeOnMutation.mutations().isEmpty()) placeOnMutation.run(holder.level(), onPos, Optional.of(direction));
-        if (!placeToMutation.mutations().isEmpty()) placeToMutation.run(holder.level(), toPos, Optional.of(direction));
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
+        if (!placeOnAction.isEmpty()) BlockAction.runList(placeOnAction, holder.level(), onPos, Optional.of(direction));
+        if (!placeToAction.isEmpty()) BlockAction.runList(placeToAction, holder.level(), toPos, Optional.of(direction));
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(holder));
 
         if (holder instanceof Player player) {
             performSourceItemStuff(player, hand);
@@ -105,20 +105,20 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockPlaceAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the player from placing blocks.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon being prevented from placing a block.")
-                    .addOptional("place_to_mutations", BlockMutation.documentation(provider), "Block mutation(s) conducted at the position of the block the player tried to place.")
-                    .addOptional("place_on_mutations", BlockMutation.documentation(provider), "Block mutation(s) conducted on the block the player tried to place a block on.")
-                    .addOptional("place_to_filters", BlockFilter.documentation(provider), "Block filter(s) the block at the position of the block the player tried to place must pass.")
-                    .addOptional("place_on_filters", BlockFilter.documentation(provider), "Block filter(s) the block the player tried to place a block on must pass for the actions to perform.")
+                    .addOptional("place_to_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the position of the block the player tried to place.")
+                    .addOptional("place_on_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block the player tried to place a block on.")
+                    .addOptional("place_to_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block at the position of the block the player tried to place must meet.")
+                    .addOptional("place_on_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block the player tried to place a block on must meet for the actions to perform.")
                     .addOptional("directions", KryptoniteDocumented.TYPE_DIRECTION, "If the actions should be performed if the player tried to place a block at the specified side(s) of a block.")
-                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item the player has used to try to place a block must pass for the item mutations to perform.")
-                    .addOptional("held_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item the player has used to try to place a block.")
-                    .addOptional("result_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item given to the player upon trying to place a block.")
+                    .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item the player has used to try to place a block.")
+                    .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item the player has used to try to place a block must meet for the item actions to perform.")
+                    .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the player upon trying to place a block.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon trying to place a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands when trying to place a block.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability performed first.", 0)
-                    .addExampleObject(new PreventBlockPlaceAbility(List.of(), BlockMutation.EMPTY, BlockMutation.EMPTY, BlockFilter.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockPlaceAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot place a block here!\", \"color\": \"red\"}"))), BlockMutation.EMPTY, BlockMutation.EMPTY, BlockFilter.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockPlaceAbility(List.of(), List.of(), List.of(), List.of(), List.of(), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockPlaceAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot place a block here!\", \"color\": \"red\"}"))), List.of(), List.of(), List.of(), List.of(), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

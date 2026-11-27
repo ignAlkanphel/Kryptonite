@@ -5,8 +5,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.BlockMutation;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
+import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -40,30 +41,30 @@ import java.util.Optional;
 public class GameEventListenerAbility extends Ability {
 
     public static final MapCodec<GameEventListenerAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
-            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            BlockMutation.CODEC.optionalFieldOf("block_mutations", BlockMutation.EMPTY).forGetter(a -> a.blockMutation),
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
+            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.targetAction),
+            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
+            BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockAction),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
             PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
             Codec.STRING.xmap(value -> GameEventListener.DeliveryMode.valueOf(value.toUpperCase(Locale.ROOT)), value -> value.name().toLowerCase(Locale.ROOT)).optionalFieldOf("delivery_mode", GameEventListener.DeliveryMode.BY_DISTANCE).forGetter(a -> a.deliveryMode),
             Value.NUMBER_CODEC.optionalFieldOf("range", new StaticValue(16)).forGetter(a -> a.range),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, GameEventListenerAbility::new));
 
-    public final List<Action> entityActions;
-    public final Condition entityConditions;
-    public final BlockMutation blockMutation;
-    public final BlockFilter blockFilter;
+    public final List<Action> targetAction;
+    public final Condition targetCondition;
+    public final List<BlockAction> blockAction;
+    public final List<BlockCondition> blockCondition;
     public final PalladiumHolderSet<GameEvent> gameEvents;
     public final GameEventListener.DeliveryMode deliveryMode;
     public final Value range;
 
-    public GameEventListenerAbility(List<Action> entityActions, Condition entityConditions, BlockMutation blockMutation, BlockFilter blockFilter, PalladiumHolderSet<GameEvent> gameEvents, GameEventListener.DeliveryMode deliveryMode, Value range, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
+    public GameEventListenerAbility(List<Action> targetAction, Condition targetCondition, List<BlockAction> blockAction, List<BlockCondition> blockCondition, PalladiumHolderSet<GameEvent> gameEvents, GameEventListener.DeliveryMode deliveryMode, Value range, AbilityProperties properties, AbilityStateManager stateManager, List<EnergyBarUsage> energyBarUsages) {
         super(properties, stateManager, energyBarUsages);
-        this.entityActions = entityActions;
-        this.entityConditions = entityConditions;
-        this.blockMutation = blockMutation;
-        this.blockFilter = blockFilter;
+        this.targetAction = targetAction;
+        this.targetCondition = targetCondition;
+        this.blockAction = blockAction;
+        this.blockCondition = blockCondition;
         this.gameEvents = gameEvents;
         this.deliveryMode = deliveryMode;
         this.range = range;
@@ -87,20 +88,20 @@ public class GameEventListenerAbility extends Ability {
         Entity source = e.getCause();
         BlockPos blockPos = BlockPos.containing(living.getX(), living.getBoundingBox().minY - 0.01, living.getZ());
 
-        if (source != null && !entityConditions.test(DataContext.forAffected(living, source, instance))) {
+        if (source != null && !targetCondition.test(DataContext.forAffected(living, source, instance))) {
             return;
         }
 
-        if (!blockFilter.test(living.level(), blockPos)) {
+        if (!BlockCondition.checkConditions(blockCondition, living.level(), blockPos)) {
             return;
         }
 
-        if (source != null && !entityActions.isEmpty()) {
-            Action.runList(entityActions, DataContext.forAffected(living, source, instance));
+        if (source != null && !targetAction.isEmpty()) {
+            Action.runList(targetAction, DataContext.forAffected(living, source, instance));
         }
 
-        if (!blockMutation.mutations().isEmpty()) {
-            blockMutation.run(living.level(), blockPos, Optional.empty());
+        if (!blockAction.isEmpty()) {
+            BlockAction.runList(blockAction, living.level(), blockPos, Optional.empty());
         }
     }
 
@@ -119,14 +120,14 @@ public class GameEventListenerAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, GameEventListenerAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when entities emit game events. For this ability, the \"source\" is the entity that emitted the game event & the \"target\" is the entity listening for it.")
-                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
-                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
-                    .addOptional("block_mutations", BlockMutation.documentation(provider), "Block mutation(s) conducted on the block being stood on by the entity detecting the game events.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the block being stood on must pass for the block mutations to perform.")
+                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
+                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block being stood on by the entity detecting the game events.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block being stood on must meet for the block actions to perform.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events that must emit for the actions to perform.")
                     .addOptional("delivery_mode", SettingType.enumList(GameEventListener.DeliveryMode.values()), "Whether game events cause the actions to perform regardless of distance or only when they occur within the specified range.", GameEventListener.DeliveryMode.BY_DISTANCE)
                     .addOptional("range", TYPE_INT_VALUE, "Range game events will be detected within.", 16)
-                    .addExampleObject(new GameEventListenerAbility(List.of(new RunCommandAction(new ParsedCommands("say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"))), new AsSourceCondition(Collections.singletonList(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("villager")))))))), BlockMutation.EMPTY, BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sand"))))))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND, GameEvent.STEP)), GameEventListener.DeliveryMode.BY_DISTANCE, new StaticValue(5), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new GameEventListenerAbility(List.of(new RunCommandAction(new ParsedCommands("say I hear this annoying villager within 5 netherblocking blocks away while I'm standing on sand!"))), new AsSourceCondition(Collections.singletonList(new EntityTypeCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("villager")))))))), List.of(), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sand"))))))), PalladiumHolderSet.direct(HolderSet.direct(GameEvent.HIT_GROUND, GameEvent.STEP)), GameEventListener.DeliveryMode.BY_DISTANCE, new StaticValue(5), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

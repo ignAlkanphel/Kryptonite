@@ -3,7 +3,8 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,14 +17,16 @@ import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.ConditionSerializer;
 import net.threetag.palladium.logic.context.DataContext;
 
-public record UsingItemCondition(ItemFilter itemFilter) implements Condition {
+import java.util.List;
+
+public record UsingItemCondition(List<ItemCondition> itemCondition) implements Condition {
 
     public static final MapCodec<UsingItemCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(UsingItemCondition::itemFilter)
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(UsingItemCondition::itemCondition)
     ).apply(instance, UsingItemCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, UsingItemCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemFilter.CODEC), UsingItemCondition::itemFilter,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(ItemCondition.LIST_CODEC), UsingItemCondition::itemCondition,
             UsingItemCondition::new
     );
 
@@ -33,10 +36,12 @@ public record UsingItemCondition(ItemFilter itemFilter) implements Condition {
             InteractionHand activeHand = livingEntity.getUsedItemHand();
             ItemStack stackInHand = livingEntity.getItemInHand(activeHand);
 
-            return itemFilter.test(livingEntity.level(), stackInHand);
+            return itemCondition.isEmpty() || ItemCondition.checkConditions(itemCondition, livingEntity.level(), stackInHand);
+        }
+        else {
+            return false;
         }
 
-        return false;
     }
 
     @Override
@@ -55,8 +60,8 @@ public record UsingItemCondition(ItemFilter itemFilter) implements Condition {
         public void addDocumentation(CodecDocumentationBuilder<Condition, UsingItemCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Using Item")
                     .setDescription("Checks if the entity is currently using an item (e.g. eating a food item, using shield or bow, etc.)")
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the used item must pass.")
-                    .addExampleObject(new UsingItemCondition(ItemFilter.EMPTY));
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the used item must meet.")
+                    .addExampleObject(new UsingItemCondition(List.of()));
         }
     }
 

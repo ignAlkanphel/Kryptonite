@@ -9,17 +9,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record BlockFilterContext(SavedBlockPosition savedBlockPosition) {
+public record BlockConditionContext(SavedBlockPosition savedBlockPosition) {
 
-    public BlockFilterContext(Level level, BlockPos pos, BlockState blockState, Optional<BlockEntity> blockEntity) {
+    public BlockConditionContext(Level level, BlockPos pos, BlockState blockState, Optional<BlockEntity> blockEntity) {
         this(level, pos, blockState, blockEntity.orElse(null));
     }
 
-    public BlockFilterContext(Level level, BlockPos pos, BlockState blockState, @Nullable BlockEntity blockEntity) {
+    public BlockConditionContext(Level level, BlockPos pos, BlockState blockState, @Nullable BlockEntity blockEntity) {
         this(new SavedBlockPosition(level, pos, blockState, blockEntity));
     }
 
-    public BlockFilterContext(Level level, BlockPos pos) {
+    public BlockConditionContext(Level level, BlockPos pos) {
         this(level, pos, level.getBlockState(pos), level.getBlockEntity(pos));
     }
 

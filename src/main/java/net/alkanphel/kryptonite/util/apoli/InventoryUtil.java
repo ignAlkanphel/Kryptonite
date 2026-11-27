@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.ints.IntSets;
 import net.alkanphel.kryptonite.mixin.common.SlotRangesAccessor;
 import net.alkanphel.kryptonite.power.compat.curios.KryptoniteCuriosCompat;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,7 +50,7 @@ public class InventoryUtil {
         }
     }
 
-    public static int checkInventory(Entity entity, IntCollection slots, ItemFilter itemFilter, ProcessMode processMode) {
+    public static int checkInventory(Entity entity, IntCollection slots, List<ItemCondition> itemConditions, ProcessMode processMode) {
         IntSet preppedSlots = prepSlots(slots, entity);
         OptionalInt slotToSkip = getSelectedHotBarSlot(entity);
         int matches = 0;
@@ -66,7 +66,7 @@ public class InventoryUtil {
             ItemStack stack = slotAccess.get();
             if (stack.isEmpty()) continue;
 
-            if (itemFilter.test(entity.level(), stack)) {
+            if (ItemCondition.checkConditions(itemConditions, entity.level(), stack)) {
                 matches += processMode.applyAsInt(stack);
             }
         }
@@ -74,7 +74,7 @@ public class InventoryUtil {
         return matches;
     }
 
-    public static int checkCuriosInventory(LivingEntity entity, List<String> curiosSlots, ItemFilter itemFilter, ProcessMode processMode) {
+    public static int checkCuriosInventory(LivingEntity entity, List<String> curiosSlots, List<ItemCondition> itemConditions, ProcessMode processMode) {
         List<String> slotsToCheck = curiosSlots.isEmpty()
                 ? KryptoniteCuriosCompat.INSTANCE.getSlots(entity.level())
                 : curiosSlots;
@@ -85,7 +85,7 @@ public class InventoryUtil {
             for (ItemStack stack : KryptoniteCuriosCompat.INSTANCE.getFromSlot(entity, slot)) {
                 if (stack.isEmpty()) continue;
 
-                if (itemFilter.test(entity.level(), stack)) {
+                if (ItemCondition.checkConditions(itemConditions, entity.level(), stack)) {
                     matches += processMode.applyAsInt(stack);
                 }
             }
@@ -165,9 +165,9 @@ public class InventoryUtil {
     }
 
     /**
-     * Creates a stack reference that is not linked to any entity for use with item mutations.
+     * Creates a stack reference that is not linked to any entity for use with item actions.
      * <p>
-     * Recommended for usage when either you don't have an entity for this mutation, or you don't want to set the entity's StackReference.
+     * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's StackReference.
      *
      * @param startingStack The ItemStack that this reference will start with.
      * @return A {@linkplain SlotAccess} that contains an ItemStack.

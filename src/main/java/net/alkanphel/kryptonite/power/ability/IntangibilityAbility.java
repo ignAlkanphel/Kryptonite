@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -36,28 +38,28 @@ import java.util.Locale;
 public class IntangibilityAbility extends Ability {
 
     public static final MapCodec<IntangibilityAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Condition.CODEC.optionalFieldOf("vertical_conditions", FalseCondition.INSTANCE).forGetter(ab -> ab.verticalConditions),
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(ab -> ab.blockFilter),
+            Condition.CODEC.optionalFieldOf("vertical_conditions", FalseCondition.INSTANCE).forGetter(ab -> ab.verticalCondition),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockCondition),
             RenderType.CODEC.optionalFieldOf("render_type", RenderType.DEFAULT).forGetter(a -> a.renderType),
             Codec.BOOL.optionalFieldOf("blacklist", false).forGetter(ab -> ab.blacklist),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, IntangibilityAbility::new));
 
-    private final Condition verticalConditions;
-    private final BlockFilter blockFilter;
+    private final Condition verticalCondition;
+    private final List<BlockCondition> blockCondition;
     public final RenderType renderType;
     private final boolean blacklist;
 
-    public IntangibilityAbility(Condition verticalConditions, BlockFilter blockFilter, RenderType renderType, boolean blacklist, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public IntangibilityAbility(Condition verticalConditions, List<BlockCondition> blockConditions, RenderType renderType, boolean blacklist, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.verticalConditions = verticalConditions;
-        this.blockFilter = blockFilter;
+        this.verticalCondition = verticalConditions;
+        this.blockCondition = blockConditions;
         this.renderType = renderType;
         this.blacklist = blacklist;
     }
 
     public boolean doesApply(Entity entity, BlockPos pos) {
-        return blacklist != blockFilter.test(entity.level(), pos);
+        return blockCondition.isEmpty() || blacklist != BlockCondition.checkConditions(blockCondition, entity.level(), pos);
     }
 
     public boolean shouldPhase(LivingEntity entity, AbilityInstance<IntangibilityAbility> instance, VoxelShape shape, BlockPos pos) {
@@ -66,7 +68,7 @@ public class IntangibilityAbility extends Ability {
     }
 
     public boolean shouldPhaseDown(LivingEntity entity, AbilityInstance<IntangibilityAbility> instance) {
-        return verticalConditions.test(DataContext.forAbility(entity, instance));
+        return verticalCondition.test(DataContext.forAbility(entity, instance));
     }
 
     public static @Nullable BlockState getInWallBlockState(LivingEntity playerEntity) {
@@ -102,11 +104,11 @@ public class IntangibilityAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, IntangibilityAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Makes the entity intangible to certain blocks.")
                     .addOptional("vertical_conditions", TYPE_CONDITION_LIST, "Condition(s) the entity must meet to phase downward (vertically).")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the blocks must pass for the entity to phase through. If omitted, all blocks are phased through.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for the entity to phase through. If omitted, all blocks are phased through.")
                     .addOptional("render_type", SettingType.enumList(RenderType.values()), "How the environment is rendered while phasing through blocks.", RenderType.DEFAULT)
-                    .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_filters\" field will instead decide which blocks the entity can NOT phase through.", false)
-                    .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, BlockFilter.EMPTY, RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire"))))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("blacklist", TYPE_BOOLEAN, "If true, the \"block_conditions\" field will instead decide which blocks the entity can NOT phase through.", false)
+                    .addExampleObject(new IntangibilityAbility(FalseCondition.INSTANCE, List.of(), RenderType.BLINDNESS, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new IntangibilityAbility(CrouchingCondition.INSTANCE, List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tripwire"))))))), RenderType.DEFAULT, false, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

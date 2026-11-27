@@ -3,7 +3,8 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.Level;
@@ -16,19 +17,19 @@ import java.util.List;
 public class PreventFarmlandTrampleAbility extends Ability {
 
     public static final MapCodec<PreventFarmlandTrampleAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(ab -> ab.blockFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockCondition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventFarmlandTrampleAbility::new));
 
-    public final BlockFilter blockFilter;
+    public final List<BlockCondition> blockCondition;
 
-    public PreventFarmlandTrampleAbility(BlockFilter blockFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventFarmlandTrampleAbility(List<BlockCondition> blockCondition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.blockFilter = blockFilter;
+        this.blockCondition = blockCondition;
     }
 
     public boolean doesPrevent(Level level, BlockPos pos) {
-        return blockFilter.test(level, pos);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, level, pos);
     }
 
     @Override
@@ -46,8 +47,8 @@ public class PreventFarmlandTrampleAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventFarmlandTrampleAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the trampling of farmland blocks.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the farmland blocks must pass to prevent trampling.")
-                    .addExampleObject(new PreventFarmlandTrampleAbility(BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the farmland blocks must meet to prevent trampling.")
+                    .addExampleObject(new PreventFarmlandTrampleAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

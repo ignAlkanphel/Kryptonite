@@ -1,6 +1,6 @@
 package net.alkanphel.kryptonite.power.logic;
 
-import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.threetag.palladium.addonpack.log.AddonPackLog;
@@ -16,7 +16,7 @@ public enum BlockLogicEnvironment {
 
     private static final Set<Identifier> WARNED = ConcurrentHashMap.newKeySet();
 
-    public boolean matches(BlockFilterContext context) {
+    public boolean matches(BlockConditionContext context) {
         return matches(context.level());
     }
 

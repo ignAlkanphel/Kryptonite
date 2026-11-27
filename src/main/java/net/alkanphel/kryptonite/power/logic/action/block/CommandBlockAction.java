@@ -1,0 +1,104 @@
+package net.alkanphel.kryptonite.power.logic.action.block;
+
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializer;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockActionSerializers;
+import net.alkanphel.kryptonite.power.logic.context.BlockActionContext;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec2;
+import net.threetag.palladium.documentation.CodecDocumentationBuilder;
+import net.threetag.palladium.util.ParsedCommands;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+public class CommandBlockAction extends BlockAction implements CommandSource {
+
+    public static final MapCodec<CommandBlockAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ParsedCommands.CODEC.optionalFieldOf("command", ParsedCommands.EMPTY).forGetter(a -> a.command)
+    ).apply(instance, CommandBlockAction::new));
+
+    private final ParsedCommands command;
+
+    public CommandBlockAction(ParsedCommands command) {
+        this.command = command;
+    }
+
+    @Override
+    public boolean execute(BlockActionContext context) {
+        if (!(context.level() instanceof ServerLevel serverLevel)) return false;
+
+        BlockPos pos = context.pos();
+        BlockState blockState = serverLevel.getBlockState(pos);
+        String translationKey = blockState.getBlock().getDescriptionId();
+
+        MinecraftServer server = Objects.requireNonNull(serverLevel.getServer());
+
+        CommandSourceStack commandSource = new CommandSourceStack(
+                CommandSource.NULL,
+                pos.getCenter(),
+                Vec2.ZERO,
+                serverLevel,
+                PermissionSet.ALL_PERMISSIONS,
+                translationKey,
+                Component.translatable(translationKey),
+                server,
+                null
+        );
+
+        server.getFunctions().execute(command.getCommandFunction(server), commandSource.withSuppressedOutput().withMaximumPermission(PermissionSet.ALL_PERMISSIONS));
+        return true;
+    }
+
+    @Override
+    public BlockActionSerializer<?> getSerializer() {
+        return BlockActionSerializers.COMMAND.get();
+    }
+
+    @Override
+    public void sendSystemMessage(Component component) {}
+
+    @Override
+    public boolean acceptsSuccess() {
+        return false;
+    }
+
+    @Override
+    public boolean acceptsFailure() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldInformAdmins() {
+        return false;
+    }
+
+    public static class Serializer extends BlockActionSerializer<CommandBlockAction> {
+
+        @Override
+        public MapCodec<CommandBlockAction> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public void addDocumentation(CodecDocumentationBuilder<BlockAction, CommandBlockAction> builder, HolderLookup.Provider provider) {
+            builder.setName("Command")
+                    .setDescription("Runs commands at the block's position.")
+                    .addOptional("command", TYPE_STRING_ARRAY, "The command(s) to run.")
+                    .addExampleObject(new CommandBlockAction(new ParsedCommands(Collections.singletonList("say Hello from a block!"))))
+                    .addExampleObject(new CommandBlockAction(new ParsedCommands(List.of("say Command 1!", "say Command 2!"))));
+        }
+    }
+
+}

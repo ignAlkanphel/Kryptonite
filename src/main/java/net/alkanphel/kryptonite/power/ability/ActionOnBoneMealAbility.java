@@ -3,8 +3,10 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.BlockMutation;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.block.SummonBlockAction;
+import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -30,30 +32,30 @@ import java.util.Optional;
 public class ActionOnBoneMealAbility extends Ability {
 
     public static final MapCodec<ActionOnBoneMealAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            BlockMutation.CODEC.optionalFieldOf("block_mutations", BlockMutation.EMPTY).forGetter(a -> a.blockMutation),
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
+            BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockAction),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnBoneMealAbility::new));
 
-    public final List<Action> entityActions;
-    public final BlockMutation blockMutation;
-    public final BlockFilter blockFilter;
+    public final List<Action> action;
+    public final List<BlockAction> blockAction;
+    public final List<BlockCondition> blockCondition;
 
-    public ActionOnBoneMealAbility(List<Action> entityActions, BlockMutation blockMutation, BlockFilter blockFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnBoneMealAbility(List<Action> action, List<BlockAction> blockAction, List<BlockCondition> blockCondition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.blockMutation = blockMutation;
-        this.blockFilter = blockFilter;
+        this.action = action;
+        this.blockAction = blockAction;
+        this.blockCondition = blockCondition;
     }
 
     public boolean doesApply(Level level, BlockPos pos) {
-        return blockFilter.test(level, pos);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, level, pos);
     }
 
     public void runActions(LivingEntity entity, Level level, BlockPos pos) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(entity));
-        if (!blockMutation.mutations().isEmpty()) blockMutation.run(level, pos, Optional.empty());
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(entity));
+        if (!blockAction.isEmpty()) BlockAction.runList(blockAction, level, pos, Optional.empty());
     }
 
     @Override
@@ -72,10 +74,10 @@ public class ActionOnBoneMealAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnBoneMealAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player bone meals a block.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed upon bone mealing a block.")
-                    .addOptional("block_mutations", BlockMutation.documentation(provider), "Block mutation(s) conducted on the bone mealed block.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) that the bone mealed block must pass for the actions to perform.")
-                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), BlockMutation.EMPTY, BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal! Aw, man!"))), BlockMutation.ofSpawnEntity(new BlockMutation.SummonMutation(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), BlockMutation.SummonMutation.addExampleNbt())), BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the bone mealed block.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) that the bone mealed block must meet for the actions to perform.")
+                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal!"))), List.of(), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnBoneMealAbility(List.of(new RunCommandAction(new ParsedCommands("say Action on bone meal! Aw, man!"))), List.of(new SummonBlockAction(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.withDefaultNamespace("creeper")))), List.of(new RunCommandAction(new ParsedCommands("effect give @s glowing 4 0 true"))), SummonBlockAction.Serializer.addExampleNbt())), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

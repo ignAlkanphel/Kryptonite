@@ -3,7 +3,8 @@ package net.alkanphel.kryptonite.power.ability;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -19,19 +20,19 @@ import java.util.List;
 public class PreventItemUseAbility extends Ability {
 
     public static final MapCodec<PreventItemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemCondition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventItemUseAbility::new));
 
-    private final ItemFilter itemFilter;
+    private final List<ItemCondition> itemCondition;
 
-    public PreventItemUseAbility(ItemFilter itemFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventItemUseAbility(List<ItemCondition> itemCondition, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.itemFilter = itemFilter;
+        this.itemCondition = itemCondition;
     }
 
     public boolean doesPrevent(Entity holder, ItemStack stack) {
-        return itemFilter.test(holder.level(), stack);
+        return itemCondition.isEmpty() || ItemCondition.checkConditions(itemCondition, holder.level(), stack);
     }
 
     @Override
@@ -49,8 +50,8 @@ public class PreventItemUseAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventItemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the player from using items. (right-click actions such as eating, shield use, or placing blocks still work).")
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the items must pass for use to be prevented.")
-                    .addExampleObject(new PreventItemUseAbility(ItemFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the items must meet for use to be prevented.")
+                    .addExampleObject(new PreventItemUseAbility(List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

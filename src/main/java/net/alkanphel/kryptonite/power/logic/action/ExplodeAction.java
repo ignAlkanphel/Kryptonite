@@ -5,8 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
-import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
+import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
@@ -25,32 +25,33 @@ import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ExplodeAction extends Action {
 
     public static final MapCodec<ExplodeAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockFilter.CODEC.optionalFieldOf("destructible", BlockFilter.EMPTY).forGetter(ab -> ab.destructibleFilter),
-            BlockFilter.CODEC.optionalFieldOf("indestructible", BlockFilter.EMPTY).forGetter(ab -> ab.indestructibleFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("destructible", List.of()).forGetter(ab -> ab.destructibleConditions),
+            BlockCondition.LIST_CODEC.optionalFieldOf("indestructible", List.of()).forGetter(ab -> ab.indestructibleConditions),
             Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(a -> a.destructionType),
-            Condition.CODEC.optionalFieldOf("damage_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageCondition),
+            Condition.CODEC.optionalFieldOf("damage_conditions", TrueCondition.INSTANCE).forGetter(a -> a.damageEntityConditions),
             BooleanValueHolder.CODEC.optionalFieldOf("damage_self", BooleanValueHolder.TRUE).forGetter(a -> a.damageSelf),
             BooleanValueHolder.CODEC.optionalFieldOf("create_fire", BooleanValueHolder.FALSE).forGetter(a -> a.createFire),
             Value.NUMBER_CODEC.fieldOf("power").forGetter(a -> a.power),
             Value.NUMBER_CODEC.optionalFieldOf("indestructible_resistance", new StaticValue(10)).forGetter(a -> a.indestructibleResistance)
     ).apply(instance, ExplodeAction::new));
 
-    public final BlockFilter destructibleFilter, indestructibleFilter;
+    public final List<BlockCondition> destructibleConditions, indestructibleConditions;
     public final Level.ExplosionInteraction destructionType;
-    public final Condition damageCondition;
+    public final Condition damageEntityConditions;
     public final BooleanValueHolder damageSelf, createFire;
     public final Value power, indestructibleResistance;
 
-    public ExplodeAction(BlockFilter destructibleFilter, BlockFilter indestructibleFilter, Level.ExplosionInteraction destructionType, Condition damageCondition, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
-        this.destructibleFilter = destructibleFilter;
-        this.indestructibleFilter = indestructibleFilter;
+    public ExplodeAction(List<BlockCondition> destructibleConditions, List<BlockCondition> indestructibleConditions, Level.ExplosionInteraction destructionType, Condition damageEntityConditions, BooleanValueHolder damageSelf, BooleanValueHolder createFire, Value power, Value indestructibleResistance) {
+        this.destructibleConditions = destructibleConditions;
+        this.indestructibleConditions = indestructibleConditions;
         this.destructionType = destructionType;
-        this.damageCondition = damageCondition;
+        this.damageEntityConditions = damageEntityConditions;
         this.damageSelf = damageSelf;
         this.createFire = createFire;
         this.power = power;
@@ -64,14 +65,14 @@ public class ExplodeAction extends Action {
 
         boolean griefing = PalladiumGameRules.allowsPowerGriefing(level);
 
-        Predicate<BlockFilterContext> behaviorCondition = ctx -> false;
+        Predicate<BlockConditionContext> behaviorCondition = ctx -> false;
 
-        if (!indestructibleFilter.isEmpty()) {
-            behaviorCondition = indestructibleFilter::test;
+        if (!indestructibleConditions.isEmpty()) {
+            behaviorCondition = ctx -> BlockCondition.checkConditions(indestructibleConditions, ctx);
         }
 
-        if (!destructibleFilter.isEmpty()) {
-            Predicate<BlockFilterContext> destructible = destructibleFilter::test;
+        if (!destructibleConditions.isEmpty()) {
+            Predicate<BlockConditionContext> destructible = ctx -> BlockCondition.checkConditions(destructibleConditions, ctx);
             behaviorCondition = MiscUtil.combineOr(destructible.negate(), behaviorCondition);
         }
 
@@ -81,7 +82,7 @@ public class ExplodeAction extends Action {
 
         Predicate<Entity> damageEntityCondition = target -> {
             if (target == entity) return damageSelf;
-            return damageCondition.test(DataContext.forAffected(target, entity, context.getAbility()));
+            return damageEntityConditions.test(DataContext.forAffected(target, entity, context.getAbility()));
         };
 
         MiscUtil.createExplosion(
@@ -116,15 +117,15 @@ public class ExplodeAction extends Action {
         public void addDocumentation(CodecDocumentationBuilder<Action, ExplodeAction> builder, HolderLookup.Provider provider) {
             builder.setName("Explode")
                     .setDescription("Creates an explosion.")
-                    .addOptional("destructible", BlockFilter.documentation(provider), "Block filter(s) the blocks in the explosion must pass to be destroyed.")
-                    .addOptional("indestructible", BlockFilter.documentation(provider), "Block filter(s) the blocks in the explosion must pass to not be affected.")
+                    .addOptional("destructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks in the explosion must meet to be destroyed.")
+                    .addOptional("indestructible", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks in the explosion must meet to not be affected.")
                     .addOptional("destruction_type", KryptoniteDocumented.TYPE_EXPLOSION_INTERACTION, "How the explosion interacts with blocks.", Level.ExplosionInteraction.BLOCK)
                     .addOptional("damage_conditions", TYPE_CONDITION_LIST, "Condition(s) an entity must meet to take damage from the explosion.")
                     .addOptional("damage_self", TYPE_BOOLEAN_VALUE, "If true, the entity that triggered the explosion will also take damage from it.", true)
                     .addOptional("create_fire", TYPE_BOOLEAN_VALUE, "If true, the explosion will create fire (e.g. ghast fireball).", false)
                     .addOptional("power", KryptoniteSettingType.floatValueRange(0, Float.MAX_VALUE), "The strength/radius of the explosion.")
                     .addOptional("indestructible_resistance", KryptoniteSettingType.floatValueRange(0, Float.MAX_VALUE), "The explosion resistance value used for indestructible blocks.", 10.0F)
-                    .addExampleObject(new ExplodeAction(BlockFilter.EMPTY, BlockFilter.EMPTY, Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, new StaticValue(4), new StaticValue(10)));
+                    .addExampleObject(new ExplodeAction(List.of(), List.of(), Level.ExplosionInteraction.BLOCK, TrueCondition.INSTANCE, BooleanValueHolder.FALSE, BooleanValueHolder.FALSE, new StaticValue(4), new StaticValue(10)));
         }
     }
 

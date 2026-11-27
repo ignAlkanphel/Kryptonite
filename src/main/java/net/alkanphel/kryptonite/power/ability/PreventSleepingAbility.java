@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -22,28 +24,28 @@ import java.util.List;
 public class PreventSleepingAbility extends Ability {
 
     public static final MapCodec<PreventSleepingAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(ab -> ab.blockFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(ab -> ab.blockCondition),
             Codec.BOOL.optionalFieldOf("set_spawn", false).forGetter(ab -> ab.setSpawn),
             Codec.STRING.optionalFieldOf("message", "Sleep is being prevented via ability!").forGetter(ab -> ab.message),
             Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("priority", 0).forGetter(ab -> ab.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, PreventSleepingAbility::new));
 
-    public final BlockFilter blockFilter;
+    public final List<BlockCondition> blockCondition;
     public final boolean setSpawn;
     public final String message;
     public final int priority;
 
-    public PreventSleepingAbility(BlockFilter blockFilter, boolean setSpawn, String message, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public PreventSleepingAbility(List<BlockCondition> blockCondition, boolean setSpawn, String message, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.blockFilter = blockFilter;
+        this.blockCondition = blockCondition;
         this.setSpawn = setSpawn;
         this.message = message;
         this.priority = priority;
     }
 
     public boolean doesPrevent(Level level, BlockPos pos) {
-        return blockFilter.test(level, pos);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, level, pos);
     }
 
     private static List<PreventSleepingAbility> getSortedAbilities(ServerPlayer player) {
@@ -87,11 +89,11 @@ public class PreventSleepingAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventSleepingAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Allows preventing the player from sleeping.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the block must pass for sleep to be prevented.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block must meet for sleep to be prevented.")
                     .addOptional("set_spawn", TYPE_BOOLEAN, "If the spawn point of the player is set upon using a bed while being prevented.", false)
                     .addOptional("message", TYPE_STRING, "The message shown upon sleep being prevented.", "Sleep is being prevented via ability!")
                     .addOptional("priority", TYPE_INT, "The priority of which this ability will prevent the player to sleep, set their spawn and display a message. Abilities of higher priority & \"set_spawn\" true, are prioritized.", 0)
-                    .addExampleObject(new PreventSleepingAbility(BlockFilter.ofBlock((new PalladiumHolderSet.Direct<>(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.BEDS)))), false, "You cannot sleep as an insomniac!", 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventSleepingAbility(List.of(new BlockBlockCondition(new PalladiumHolderSet.Direct<>(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.BEDS)))), false, "You cannot sleep as an insomniac!", 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

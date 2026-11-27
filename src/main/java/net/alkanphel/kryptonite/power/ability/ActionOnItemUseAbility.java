@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.minecraft.core.HolderLookup;
@@ -38,26 +40,26 @@ import java.util.Locale;
 public class ActionOnItemUseAbility extends Ability implements Prioritized {
 
     public static final MapCodec<ActionOnItemUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            ItemMutation.CODEC.optionalFieldOf("item_mutations", ItemMutation.EMPTY).forGetter(a -> a.itemMutation),
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
+            ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemAction),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemCondition),
             TriggerType.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("trigger", EnumSet.allOf(TriggerType.class)).forGetter(a -> a.triggerType),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnItemUseAbility::new));
 
-    private final List<Action> entityActions;
-    private final ItemMutation itemMutation;
-    private final ItemFilter itemFilter;
+    private final List<Action> action;
+    private final List<ItemAction> itemAction;
+    private final List<ItemCondition> itemCondition;
     private final EnumSet<TriggerType> triggerType;
 
     private final int priority;
 
-    public ActionOnItemUseAbility(List<Action> entityActions, ItemMutation itemMutation, ItemFilter itemFilter, EnumSet<TriggerType> triggerType, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemUseAbility(List<Action> action, List<ItemAction> itemAction, List<ItemCondition> itemCondition, EnumSet<TriggerType> triggerType, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
-        this.itemMutation = itemMutation;
-        this.itemFilter = itemFilter;
+        this.action = action;
+        this.itemAction = itemAction;
+        this.itemCondition = itemCondition;
         this.triggerType = triggerType;
         this.priority = priority;
     }
@@ -72,15 +74,15 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
             return false;
         }
 
-        return itemFilter.test(holder.level(), stack);
+        return itemCondition.isEmpty() || ItemCondition.checkConditions(itemCondition, holder.level(), stack);
     }
 
     public void runActions(DataContext context, SlotAccess stackReference) {
         var holder = context.getLivingEntity();
         if (holder == null) return;
 
-        if (!itemMutation.mutations().isEmpty()) itemMutation.run(holder.level(), stackReference);
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
+        if (!itemAction.isEmpty()) ItemAction.runList(itemAction, holder.level(), stackReference);
+        if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(holder));
     }
 
     public static void apply(LivingEntity user, ItemStack stack, EnumSet<TriggerType> trigger, PriorityPhase phase) {
@@ -90,7 +92,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         call.add(user, ActionOnItemUseAbility.class, a -> a.doesApply(user, stack, trigger, phase));
 
         DataContext context = DataContext.forEntity(user);
-        call.forEachByPriority(ability -> ability.runActions(context, SlotAccess.of(() -> stack, s -> {})));
+        call.forEachByPriority(ability -> ability.runActions(context, SlotAccess.of(() -> stack, _ -> {})));
     }
 
     @Override
@@ -109,13 +111,13 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player uses an item (e.g. drawing a bow or eating).")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player after using an item.")
-                    .addOptional("item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the remaining item.")
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filters(s) the remaining item must pass for the actions to perform.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the remaining item.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the remaining item must meet for the actions to perform.")
                     .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions perform.", TriggerType.FINISH)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), ItemMutation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), ItemMutation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), ItemMutation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

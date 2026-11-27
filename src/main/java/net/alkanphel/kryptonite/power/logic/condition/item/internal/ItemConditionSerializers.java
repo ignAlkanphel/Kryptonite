@@ -1,0 +1,54 @@
+package net.alkanphel.kryptonite.power.logic.condition.item.internal;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import net.alkanphel.kryptonite.Kryptonite;
+import net.alkanphel.kryptonite.power.logic.condition.item.*;
+import net.alkanphel.kryptonite.power.logic.condition.item.meta.*;
+import net.alkanphel.kryptonite.registry.KryptoniteRegistries;
+import net.alkanphel.kryptonite.registry.KryptoniteRegistryKeys;
+import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.threetag.palladium.Palladium;
+
+public class ItemConditionSerializers {
+
+    public static final DeferredRegister<ItemConditionSerializer<?>> ITEM_CONDITION_SERIALIZERS = DeferredRegister.create(KryptoniteRegistryKeys.ITEM_CONDITION_SERIALIZER, Kryptonite.MOD_ID);
+    public static final Codec<ItemConditionSerializer<?>> TYPE_CODEC = Identifier.CODEC.comapFlatMap(ItemConditionSerializers::read, KryptoniteRegistries.ITEM_CONDITION_SERIALIZER::getKey);
+
+    public static final DeferredHolder<ItemConditionSerializer<?>, AndItemCondition.Serializer> AND = ITEM_CONDITION_SERIALIZERS.register("and", AndItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, NotItemCondition.Serializer> NOT = ITEM_CONDITION_SERIALIZERS.register("not", NotItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, OrItemCondition.Serializer> OR = ITEM_CONDITION_SERIALIZERS.register("or", OrItemCondition.Serializer::new);
+
+    static {
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "and"), Kryptonite.id("and"));
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "or"), Kryptonite.id("or"));
+        ITEM_CONDITION_SERIALIZERS.addAlias(Identifier.fromNamespaceAndPath(Palladium.MOD_ID, "not"), Kryptonite.id("not"));
+    }
+
+    public static final DeferredHolder<ItemConditionSerializer<?>, AmountItemCondition.Serializer> AMOUNT = ITEM_CONDITION_SERIALIZERS.register("amount", AmountItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, BlockItemCondition.Serializer> BLOCK_ITEM = ITEM_CONDITION_SERIALIZERS.register("block_item", BlockItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, ComponentItemCondition.Serializer> COMPONENT = ITEM_CONDITION_SERIALIZERS.register("component", ComponentItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, ConditionItemCondition.Serializer> CONDITION = ITEM_CONDITION_SERIALIZERS.register("condition", ConditionItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, CooldownItemCondition.Serializer> COOLDOWN = ITEM_CONDITION_SERIALIZERS.register("cooldown", CooldownItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, CooldownOnItemCondition.Serializer> COOLDOWN_ON = ITEM_CONDITION_SERIALIZERS.register("cooldown_on", CooldownOnItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, CooldownRelativeItemCondition.Serializer> COOLDOWN_RELATIVE = ITEM_CONDITION_SERIALIZERS.register("cooldown_relative", CooldownRelativeItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, DamageableItemCondition.Serializer> DAMAGEABLE = ITEM_CONDITION_SERIALIZERS.register("damageable", DamageableItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, DurabilityItemCondition.Serializer> DURABILITY = ITEM_CONDITION_SERIALIZERS.register("durability", DurabilityItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, DurabilityRelativeItemCondition.Serializer> DURABILITY_RELATIVE = ITEM_CONDITION_SERIALIZERS.register("durability_relative", DurabilityRelativeItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, EmptyItemCondition.Serializer> EMPTY = ITEM_CONDITION_SERIALIZERS.register("empty", EmptyItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, EnchantableItemCondition.Serializer> ENCHANTABLE = ITEM_CONDITION_SERIALIZERS.register("enchantable", EnchantableItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, EnchantmentItemCondition.Serializer> ENCHANTMENT = ITEM_CONDITION_SERIALIZERS.register("enchantment", EnchantmentItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, EquipableItemCondition.Serializer> EQUIPABLE = ITEM_CONDITION_SERIALIZERS.register("equipable", EquipableItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, FuelItemCondition.Serializer> FUEL = ITEM_CONDITION_SERIALIZERS.register("fuel", FuelItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, ItemItemCondition.Serializer> ITEM = ITEM_CONDITION_SERIALIZERS.register("item", ItemItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, ModLoadedItemCondition.Serializer> MOD_LOADED = ITEM_CONDITION_SERIALIZERS.register("mod_loaded", ModLoadedItemCondition.Serializer::new);
+    public static final DeferredHolder<ItemConditionSerializer<?>, SmeltableItemCondition.Serializer> SMELTABLE = ITEM_CONDITION_SERIALIZERS.register("smeltable", SmeltableItemCondition.Serializer::new);
+
+    private static DataResult<ItemConditionSerializer<?>> read(Identifier id) {
+        var serializer = KryptoniteRegistries.ITEM_CONDITION_SERIALIZER.getValue(id);
+        return serializer != null ? DataResult.success(serializer) : DataResult.error(() -> "Unknown condition type: " + id);
+    }
+
+}

@@ -5,7 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.mixin.common.ServerPlayerGameModeAccessor;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -24,17 +26,18 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.holder.BooleanValueHolder;
 import net.threetag.palladium.util.PalladiumHolderSet;
 
+import java.util.List;
 import java.util.Optional;
 
-public record BlockBreakingCondition(BlockFilter blockFilter, Optional<BooleanValueHolder> usingCorrectTool) implements Condition {
+public record BlockBreakingCondition(List<BlockCondition> blockCondition, Optional<BooleanValueHolder> usingCorrectTool) implements Condition {
 
     public static final MapCodec<BlockBreakingCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(BlockBreakingCondition::blockFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockBreakingCondition::blockCondition),
             BooleanValueHolder.CODEC.optionalFieldOf("using_correct_tool").forGetter(BlockBreakingCondition::usingCorrectTool)
     ).apply(instance, BlockBreakingCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockBreakingCondition> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockFilter.CODEC), BlockBreakingCondition::blockFilter,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockBreakingCondition::blockCondition,
             ByteBufCodecs.optional(ByteBufCodecs.fromCodecWithRegistriesTrusted(BooleanValueHolder.CODEC)), BlockBreakingCondition::usingCorrectTool,
             BlockBreakingCondition::new
     );
@@ -52,7 +55,7 @@ public record BlockBreakingCondition(BlockFilter blockFilter, Optional<BooleanVa
             if (correctTool != usingCorrectTool.get().get(context)) return false;
         }
 
-        return blockFilter.test(player.level(), breakingPos);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, player.level(), breakingPos);
     }
 
     private static BlockPos getBreakingPos(Player player) {
@@ -80,10 +83,10 @@ public record BlockBreakingCondition(BlockFilter blockFilter, Optional<BooleanVa
         public void addDocumentation(CodecDocumentationBuilder<Condition, BlockBreakingCondition> builder, HolderLookup.Provider provider) {
             builder.setName("Block Breaking")
                     .setDescription("Checks if the player is currently breaking a block.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the block that is breaking must pass.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block that is breaking must meet.")
                     .addOptional("using_correct_tool", TYPE_BOOLEAN_VALUE, "If omitted, the tool is ignored. True requires using the correct tool to harvest, while false requires the incorrect one.", false)
-                    .addExampleObject(new BlockBreakingCondition(BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("gold_block"))))))), Optional.of(BooleanValueHolder.FALSE)))
-                    .addExampleObject(new BlockBreakingCondition(BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("diamond_block"))))))), Optional.of(BooleanValueHolder.TRUE)));
+                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("gold_block"))))))), Optional.of(BooleanValueHolder.FALSE)))
+                    .addExampleObject(new BlockBreakingCondition(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("diamond_block"))))))), Optional.of(BooleanValueHolder.TRUE)));
 
         }
     }

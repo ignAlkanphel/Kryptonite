@@ -6,7 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
+import net.alkanphel.kryptonite.power.logic.condition.item.ItemItemCondition;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.minecraft.core.HolderLookup;
@@ -33,7 +34,7 @@ public class InventoryCondition implements Condition {
 
     public static final MapCodec<InventoryCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             InventoryUtil.ProcessMode.CODEC.optionalFieldOf("process_mode", InventoryUtil.ProcessMode.ITEMS).forGetter(a -> a.processMode),
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemCondition),
             KryptoniteCodecs.SLOT_RANGES_CODEC.optionalFieldOf("slots").forGetter(a -> a.slotRanges),
             ExtraCodecs.compactListCodec(Codec.STRING).optionalFieldOf("curios_slots").forGetter(a -> a.curiosSlots),
             NumberComparator.CODEC.optionalFieldOf("comparator", NumberComparator.GREATER_THAN).forGetter(a -> a.comparator),
@@ -41,7 +42,7 @@ public class InventoryCondition implements Condition {
     ).apply(instance, InventoryCondition::new));
 
     private final InventoryUtil.ProcessMode processMode;
-    private final ItemFilter itemFilter;
+    private final List<ItemCondition> itemCondition;
 
     private final Optional<List<SlotRange>> slotRanges;
     private final IntSet slots;
@@ -51,9 +52,9 @@ public class InventoryCondition implements Condition {
     private final NumberComparator comparator;
     private final IntValueHolder compareTo;
 
-    public InventoryCondition(InventoryUtil.ProcessMode processMode, ItemFilter itemFilter, Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, NumberComparator comparator, IntValueHolder compareTo) {
+    public InventoryCondition(InventoryUtil.ProcessMode processMode, List<ItemCondition> itemCondition, Optional<List<SlotRange>> slotRanges, Optional<List<String>> curiosSlots, NumberComparator comparator, IntValueHolder compareTo) {
         this.processMode = processMode;
-        this.itemFilter = itemFilter;
+        this.itemCondition = itemCondition;
         this.slotRanges = slotRanges;
         this.slots = slotRanges.map(InventoryUtil::toSlotIdSet).orElseGet(InventoryUtil::getAllSlots);
         this.curiosSlots = curiosSlots;
@@ -68,10 +69,10 @@ public class InventoryCondition implements Condition {
 
         int matches = 0;
 
-        matches += InventoryUtil.checkInventory(entity, slots, itemFilter, processMode);
+        matches += InventoryUtil.checkInventory(entity, slots, itemCondition, processMode);
 
         if (curiosSlots.isPresent()) {
-            matches += InventoryUtil.checkCuriosInventory(entity, curiosSlots.get(), itemFilter, processMode);
+            matches += InventoryUtil.checkCuriosInventory(entity, curiosSlots.get(), itemCondition, processMode);
         }
 
         return comparator.compare(matches, compareTo.get(context));
@@ -94,14 +95,14 @@ public class InventoryCondition implements Condition {
             builder.setName("Inventory")
                     .setDescription("Checks and compares the inventory of the entity.")
                     .addOptional("process_mode", SettingType.enumList(InventoryUtil.ProcessMode.values()), "Determines how the item stacks in the inventory are evaluated.", InventoryUtil.ProcessMode.ITEMS)
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the items in the inventory must pass.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the items in the inventory must meet.")
                     .addOptional("slots", KryptoniteDocumented.TYPE_SLOT_RANGES, "If specified, only items from these specified item slots are evaluated.")
                     .addOptional("curios_slots", TYPE_STRING, "If specified, these slots from the Curios mod are also evaluated (independently from the \"slots\" field). An empty list evaluates all Curios slots. If this field is not specified at all, Curios slots are not evaluated.")
                     .addOptional("comparator", TYPE_NUMBER_COMPARATOR, "Determines how the amount of items/stacks that were evaluated should be compared to the specified value.", NumberComparator.GREATER_THAN)
                     .addOptional("compare_to", TYPE_INT_VALUE, "The value at which the amount of items/stacks that were evaluated will be compared to.", 0)
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, ItemFilter.EMPTY, Optional.empty(), Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, ItemFilter.EMPTY, Optional.empty(), Optional.of(List.of()), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
-                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, ItemFilter.ofItem(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt")))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, new IntValueHolder(16)));
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, List.of(), Optional.empty(), Optional.empty(), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.STACKS, List.of(), Optional.empty(), Optional.of(List.of()), NumberComparator.GREATER_OR_EQUAL, new IntValueHolder(10)))
+                    .addExampleObject(new InventoryCondition(InventoryUtil.ProcessMode.ITEMS, List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dirt"))))))), Optional.empty(), Optional.empty(), NumberComparator.GREATER_THAN, new IntValueHolder(16)));
         }
     }
 

@@ -3,7 +3,8 @@ package net.alkanphel.kryptonite.power.logic.condition;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteConditionSerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,22 +20,23 @@ import net.threetag.palladium.logic.context.DataContext;
 import net.threetag.palladium.logic.value.StaticValue;
 import net.threetag.palladium.logic.value.Value;
 
+import java.util.List;
 import java.util.Objects;
 
-public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offsetZ, BlockFilter blockFilter) implements Condition {
+public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offsetZ, List<BlockCondition> blockCondition) implements Condition {
 
     public static final MapCodec<BlockCollisionCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Value.NUMBER_CODEC.optionalFieldOf("offset_x", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetX),
             Value.NUMBER_CODEC.optionalFieldOf("offset_y", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetY),
             Value.NUMBER_CODEC.optionalFieldOf("offset_z", new StaticValue(0)).forGetter(BlockCollisionCondition::offsetZ),
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(BlockCollisionCondition::blockFilter)
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(BlockCollisionCondition::blockCondition)
     ).apply(instance, BlockCollisionCondition::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockCollisionCondition> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetX,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetY,
             ByteBufCodecs.fromCodecWithRegistriesTrusted(Value.NUMBER_CODEC), BlockCollisionCondition::offsetZ,
-            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockFilter.CODEC), BlockCollisionCondition::blockFilter,
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(BlockCondition.LIST_CODEC), BlockCollisionCondition::blockCondition,
             BlockCollisionCondition::new
     );
 
@@ -50,7 +52,7 @@ public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offset
         for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
             BlockState state = level.getBlockState(pos);
             if (state.getCollisionShape(level, pos).isEmpty()) continue;
-            if (blockFilter.test(level, pos)) return true;
+            if (blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, level, pos)) return true;
         }
 
         return false;
@@ -75,8 +77,8 @@ public record BlockCollisionCondition(Value offsetX, Value offsetY, Value offset
                     .addOptional("offset_x", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the X direction (e.g.: 0 = no offset, 1 = offset of exact width, 2 = offset of twice the width of the bounding box)")
                     .addOptional("offset_y", TYPE_FLOAT_VALUE, "The bounding box size should the box be offset in the Y direction (e.g.: 0 = no offset, 1 = offset of exact height, 2 = offset of twice the height of the bounding box)")
                     .addOptional("offset_z", TYPE_FLOAT_VALUE, "The bounding box size offset in the Z direction (e.g.: 0 = no offset, 1 = offset of exact depth, 2 = offset of twice the depth of the bounding box)")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the colliding block must pass.")
-                    .addExampleObject(new BlockCollisionCondition(new StaticValue(0.1), new StaticValue(0), new StaticValue(0.1), BlockFilter.EMPTY));
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the colliding block must meet.")
+                    .addExampleObject(new BlockCollisionCondition(new StaticValue(0.1), new StaticValue(0), new StaticValue(0.1), List.of()));
         }
     }
 

@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.util.apoli.SavedBlockPosition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.core.HolderLookup;
@@ -25,19 +27,19 @@ import java.util.Optional;
 public class ModifyBlockHarvestAbility extends Ability implements Prioritized, Comparable<ModifyBlockHarvestAbility> {
 
     public static final MapCodec<ModifyBlockHarvestAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
             Codec.BOOL.optionalFieldOf("allow", true).forGetter(a -> a.allow),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyBlockHarvestAbility::new));
 
-    public final BlockFilter blockFilter;
+    public final List<BlockCondition> blockCondition;
     public final boolean allow;
     public final int priority;
 
-    public ModifyBlockHarvestAbility(BlockFilter blockFilter, boolean allow, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyBlockHarvestAbility(List<BlockCondition> blockCondition, boolean allow, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.blockFilter = blockFilter;
+        this.blockCondition = blockCondition;
         this.allow = allow;
         this.priority = priority;
     }
@@ -60,7 +62,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
     }
 
     public boolean doesApply(SavedBlockPosition savedBlockPosition) {
-        return blockFilter.test(savedBlockPosition);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, savedBlockPosition);
     }
 
     public static Optional<Boolean> resolve(LivingEntity entity, SavedBlockPosition savedBlock) {
@@ -87,10 +89,10 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyBlockHarvestAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Modifies if a player is able to harvest a block regardless of the tool.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the blocks must pass to be affected.")
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")
                     .addOptional("allow", TYPE_BOOLEAN, "If true, allows harvesting. If false, denies it.", true)
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ModifyBlockHarvestAbility(BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))), true, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ModifyBlockHarvestAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))), true, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

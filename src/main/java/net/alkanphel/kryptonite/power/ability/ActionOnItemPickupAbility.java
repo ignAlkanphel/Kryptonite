@@ -4,8 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
+import net.alkanphel.kryptonite.power.KryptoniteDocumented;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -36,26 +37,26 @@ import java.util.List;
 public class ActionOnItemPickupAbility extends Ability implements Prioritized {
 
     public static final MapCodec<ActionOnItemPickupAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
+            Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.action),
+            ItemAction.LIST_CODEC.optionalFieldOf("item_actions", List.of()).forGetter(a -> a.itemActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            ItemMutation.CODEC.optionalFieldOf("item_mutations", ItemMutation.EMPTY).forGetter(a -> a.itemMutation),
-            ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
+            ItemCondition.LIST_CODEC.optionalFieldOf("item_conditions", List.of()).forGetter(a -> a.itemConditions),
             Codec.INT.optionalFieldOf("priority", 0).forGetter(a -> a.priority),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnItemPickupAbility::new));
 
-    private final List<Action> entityActions;
+    private final List<Action> action;
+    private final List<ItemAction> itemActions;
     private final Condition entityConditions;
-    private final ItemMutation itemMutation;
-    private final ItemFilter itemFilter;
+    private final List<ItemCondition> itemConditions;
     private final int priority;
 
-    public ActionOnItemPickupAbility(List<Action> entityActions, Condition entityConditions, ItemMutation itemMutation, ItemFilter itemFilter, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemPickupAbility(List<Action> action, List<ItemAction> itemActions, Condition entityConditions, List<ItemCondition> itemConditions, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.entityActions = entityActions;
+        this.action = action;
+        this.itemActions = itemActions;
         this.entityConditions = entityConditions;
-        this.itemMutation = itemMutation;
-        this.itemFilter = itemFilter;
+        this.itemConditions = itemConditions;
         this.priority = priority;
     }
 
@@ -65,26 +66,26 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
     }
 
     public boolean doesApply(ItemStack stack, Entity thrower, Entity holder) {
-        if (!itemFilter.test(holder.level(), stack)) {
+        if (!itemConditions.isEmpty() && !ItemCondition.checkConditions(itemConditions, holder.level(), stack)) {
             return false;
         }
 
         return entityConditions.test(DataContext.forAffected(holder, thrower, null));
     }
 
-    public void runEntityActions(Entity thrower, Entity holder) {
-        if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forAffected(holder, thrower, null));
+    public void runActions(Entity thrower, Entity holder) {
+        if (!action.isEmpty()) Action.runList(action, DataContext.forAffected(holder, thrower, null));
     }
 
-    public void runItemMutations(Entity holder, SlotAccess stackReference) {
-        if (!itemMutation.mutations().isEmpty()) itemMutation.run(holder.level(), stackReference);
+    public void runItemActions(Entity holder, SlotAccess stackReference) {
+        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
     }
 
-    public static void runEntityActions(CallInstance<ActionOnItemPickupAbility> callInstance, Entity throwerEntity, Entity holderEntity) {
-        callInstance.forEachByPriority(ability -> ability.runEntityActions(throwerEntity, holderEntity));
+    public static void runActions(CallInstance<ActionOnItemPickupAbility> callInstance, Entity throwerEntity, Entity holderEntity) {
+        callInstance.forEachByPriority(ability -> ability.runActions(throwerEntity, holderEntity));
     }
 
-    public static CallInstance<ActionOnItemPickupAbility> runItemMutations(Entity throwerEntity, SlotAccess stackReference, Entity holderEntity) {
+    public static CallInstance<ActionOnItemPickupAbility> runItemActions(Entity throwerEntity, SlotAccess stackReference, Entity holderEntity) {
         if (!(holderEntity instanceof LivingEntity livingEntity)) {
             return new CallInstance<>();
         }
@@ -92,7 +93,7 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
         CallInstance<ActionOnItemPickupAbility> callInstance = new CallInstance<>();
         callInstance.add(livingEntity, ActionOnItemPickupAbility.class, ability -> ability.doesApply(stackReference.get(), throwerEntity, holderEntity));
 
-        callInstance.forEachByPriority(ability -> ability.runItemMutations(holderEntity, stackReference));
+        callInstance.forEachByPriority(ability -> ability.runItemActions(holderEntity, stackReference));
 
         return callInstance;
     }
@@ -113,12 +114,12 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemPickupAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when an entity picks up an item. For this ability, the \"source\" is the entity that threw the item & the \"target\" is the entity picking up the item.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the entity picking up the item.")
+                    .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Action(s) performed on the item stack being picked up.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
-                    .addOptional("item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item stack being picked up.")
-                    .addOptional("item_filters", ItemFilter.documentation(provider), "Item filter(s) the item being picked up must pass for actions to perform.")
+                    .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet for actions to perform.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say AHHH!!! PICKED UP PICKED UP!!!"))), TrueCondition.INSTANCE, ItemMutation.EMPTY, ItemFilter.EMPTY, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say You got speed? Pick me up, baby!"))), new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))), ItemMutation.EMPTY, ItemFilter.EMPTY, 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say AHHH!!! PICKED UP PICKED UP!!!"))), List.of(), TrueCondition.INSTANCE, List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemPickupAbility(List.of(new RunCommandAction(new ParsedCommands("say You got speed? Pick me up, baby!"))), List.of(), new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))), List.of(), 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

@@ -3,8 +3,8 @@ package net.alkanphel.kryptonite.util.apoli.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
+import net.alkanphel.kryptonite.power.logic.action.item.internal.ItemAction;
+import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.minecraft.world.InteractionHand;
@@ -27,28 +27,28 @@ import java.util.Optional;
 
 public class InteractionAbility extends Ability {
 
-    public record InteractionFields(ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult) {
+    public record InteractionFields(List<ItemCondition> heldItemCondition, List<ItemAction> heldItemAction, List<ItemAction> resultItemAction, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult) {
         public static final MapCodec<InteractionFields> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ItemFilter.CODEC.optionalFieldOf("held_item_filters", ItemFilter.EMPTY).forGetter(InteractionFields::heldItemFilter),
-                ItemMutation.CODEC.optionalFieldOf("held_item_mutations", ItemMutation.EMPTY).forGetter(InteractionFields::heldItemMutation),
-                ItemMutation.CODEC.optionalFieldOf("result_item_mutations", ItemMutation.EMPTY).forGetter(InteractionFields::resultItemMutation),
+                ItemCondition.LIST_CODEC.optionalFieldOf("held_item_conditions", List.of()).forGetter(InteractionFields::heldItemCondition),
+                ItemAction.LIST_CODEC.optionalFieldOf("held_item_actions", List.of()).forGetter(InteractionFields::heldItemAction),
+                ItemAction.LIST_CODEC.optionalFieldOf("result_item_actions", List.of()).forGetter(InteractionFields::resultItemAction),
                 ItemStack.CODEC.optionalFieldOf("result_stack").forGetter(InteractionFields::resultStack),
                 Codec.list(KryptoniteCodecs.HAND_CODEC).xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("hands", EnumSet.allOf(InteractionHand.class)).forGetter(InteractionFields::hands),
                 InteractionResultUtil.INTERACTION_RESULT_CODEC.optionalFieldOf("action_result", InteractionResult.SUCCESS).forGetter(InteractionFields::actionResult)
         ).apply(instance, InteractionFields::new));
     }
 
-    public final ItemFilter heldItemFilter;
-    public final ItemMutation heldItemMutation, resultItemMutation;
+    public final List<ItemCondition> heldItemCondition;
+    public final List<ItemAction> heldItemAction, resultItemAction;
     public final Optional<ItemStack> resultStack;
     public final EnumSet<InteractionHand> hands;
     public final InteractionResult actionResult;
 
-    public InteractionAbility(ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public InteractionAbility(List<ItemCondition> heldItemCondition, List<ItemAction> heldItemAction, List<ItemAction> resultItemAction, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
-        this.heldItemFilter = heldItemFilter;
-        this.heldItemMutation = heldItemMutation;
-        this.resultItemMutation = resultItemMutation;
+        this.heldItemCondition = heldItemCondition;
+        this.heldItemAction = heldItemAction;
+        this.resultItemAction = resultItemAction;
         this.resultStack = resultStack;
         this.hands = hands;
         this.actionResult = actionResult;
@@ -63,8 +63,8 @@ public class InteractionAbility extends Ability {
     }
 
     public boolean doesApplyToItem(ItemStack heldStack) {
-        if (heldItemFilter.filters().isEmpty()) return true;
-        return heldItemFilter.test(null, heldStack);
+        if (heldItemCondition.isEmpty()) return true;
+        return ItemCondition.checkConditions(heldItemCondition, null, heldStack);
     }
 
     public InteractionResult getActionResult() {
@@ -75,17 +75,17 @@ public class InteractionAbility extends Ability {
         SlotAccess heldStackReference = getHeldStackReference(actor, hand);
         Level level = actor.level();
 
-        if (!heldItemMutation.mutations().isEmpty()) {
-            heldItemMutation.run(level, heldStackReference);
+        if (!heldItemAction.isEmpty()) {
+            ItemAction.runList(heldItemAction, level, heldStackReference);
         }
 
         ItemStack resultStack = this.resultStack.map(ItemStack::copy).orElseGet(() -> heldStackReference.get().copy());
         SlotAccess resultStackReference = InventoryUtil.createStackReference(resultStack);
 
-        boolean modified = this.resultStack.isPresent() || !resultItemMutation.mutations().isEmpty();
+        boolean modified = this.resultStack.isPresent() || !resultItemAction.isEmpty();
 
-        if (!resultItemMutation.mutations().isEmpty()) {
-            resultItemMutation.run(level, resultStackReference);
+        if (!resultItemAction.isEmpty()) {
+            ItemAction.runList(resultItemAction, level, resultStackReference);
         }
 
         if (modified) {

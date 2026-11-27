@@ -1,6 +1,6 @@
 package net.alkanphel.kryptonite.util.apoli;
 
-import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockConditionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ExplosionParticleInfo;
@@ -65,26 +65,26 @@ public class MiscUtil {
     }
 
     @Nullable
-    public static ExplosionDamageCalculator createExplosionDamageCalculator(@Nullable Predicate<BlockFilterContext> indestructibleCondition, float resistance) {
+    public static ExplosionDamageCalculator createExplosionDamageCalculator(@Nullable Predicate<BlockConditionContext> indestructibleCondition, float resistance) {
         return indestructibleCondition == null ? null : new ExplosionDamageCalculator() {
 
             @Override
             public Optional<Float> getBlockExplosionResistance(Explosion explosion, BlockGetter level, BlockPos pos, BlockState block, FluidState fluid) {
                 Optional<Float> defaultValue = super.getBlockExplosionResistance(explosion, level, pos, block, fluid);
-                Optional<Float> newValue = indestructibleCondition.test(new BlockFilterContext((Level) level, pos)) ? Optional.of(resistance) : Optional.empty();
+                Optional<Float> newValue = indestructibleCondition.test(new BlockConditionContext((Level) level, pos)) ? Optional.of(resistance) : Optional.empty();
 
                 return defaultValue.flatMap(defVal -> newValue.map(newVal -> defVal > newVal ? defVal : newVal));
             }
 
             @Override
             public boolean shouldBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state, float power) {
-                return !indestructibleCondition.test(new BlockFilterContext((Level) level, pos));
+                return !indestructibleCondition.test(new BlockConditionContext((Level) level, pos));
             }
         };
     }
 
     @Nullable
-    public static ExplosionDamageCalculator createExplosionDamageCalculator(@Nullable Predicate<BlockFilterContext> indestructibleCondition, float resistance, @Nullable Predicate<Entity> damageEntityCondition) {
+    public static ExplosionDamageCalculator createExplosionDamageCalculator(@Nullable Predicate<BlockConditionContext> indestructibleCondition, float resistance, @Nullable Predicate<Entity> damageEntityCondition) {
         if (indestructibleCondition == null && damageEntityCondition == null) {
             return null;
         }
@@ -98,14 +98,14 @@ public class MiscUtil {
                 }
 
                 Optional<Float> defaultValue = super.getBlockExplosionResistance(explosion, level, pos, block, fluid);
-                Optional<Float> newValue = indestructibleCondition.test(new BlockFilterContext((Level) level, pos)) ? Optional.of(resistance) : Optional.empty();
+                Optional<Float> newValue = indestructibleCondition.test(new BlockConditionContext((Level) level, pos)) ? Optional.of(resistance) : Optional.empty();
 
                 return defaultValue.flatMap(defVal -> newValue.map(newVal -> defVal > newVal ? defVal : newVal));
             }
 
             @Override
             public boolean shouldBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state, float power) {
-                return indestructibleCondition == null || !indestructibleCondition.test(new BlockFilterContext((Level) level, pos));
+                return indestructibleCondition == null || !indestructibleCondition.test(new BlockConditionContext((Level) level, pos));
             }
 
             @Override

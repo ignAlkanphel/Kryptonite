@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
+import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
 import net.alkanphel.kryptonite.util.KryptoniteModifiers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -21,21 +21,21 @@ public class ModifyFrictionAbility extends Ability {
 
     public static final MapCodec<ModifyFrictionAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             KryptoniteModifiers.VALUE_MODIFIERS_CODEC.optionalFieldOf("modifiers", List.of()).forGetter(a -> a.modifiers),
-            BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
+            BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ModifyFrictionAbility::new));
 
     public final List<KryptoniteModifiers.ValueModifier> modifiers;
-    public final BlockFilter blockFilter;
+    public final List<BlockCondition> blockCondition;
 
-    public ModifyFrictionAbility(List<KryptoniteModifiers.ValueModifier> modifiers, BlockFilter blockFilter, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
+    public ModifyFrictionAbility(List<KryptoniteModifiers.ValueModifier> modifiers, List<BlockCondition> blockCondition, AbilityProperties properties, AbilityStateManager state, List<EnergyBarUsage> energyBarUsages) {
         super(properties, state, energyBarUsages);
         this.modifiers = modifiers;
-        this.blockFilter = blockFilter;
+        this.blockCondition = blockCondition;
     }
 
     public boolean doesApply(LivingEntity entity, BlockPos pos) {
-        return blockFilter.test(entity.level(), pos);
+        return blockCondition.isEmpty() || BlockCondition.checkConditions(blockCondition, entity.level(), pos);
     }
 
     public float applyModifiers(float friction, AbilityInstance<?> instance, LivingEntity entity) {
@@ -73,8 +73,8 @@ public class ModifyFrictionAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ModifyFrictionAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Modifies the friction of blocks for the entity that has this ability.")
                     .addOptional("modifiers", KryptoniteDocumented.TYPE_VALUE_MODIFIER, "Modifier(s) applied to the friction.")
-                    .addOptional("block_filters", BlockFilter.documentation(provider), "Block filters(s) the blocks must pass for the modifiers to apply.")
-                    .addExampleObject(new ModifyFrictionAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.75), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), BlockFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet for the modifiers to apply.")
+                    .addExampleObject(new ModifyFrictionAbility(List.of(new KryptoniteModifiers.ValueModifier(new StaticValue(0.75), KryptoniteModifiers.Operation.MULTIPLY_BASE_ADDITIVE)), List.of(), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
