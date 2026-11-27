@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
+import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.StringRepresentable;
@@ -43,19 +43,19 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
             TargetUsed.CODEC.optionalFieldOf("target_used", TargetUsed.SOURCE).forGetter(a -> a.targetUsed),
             Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
-            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemOperation, a.resultItemOperation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
+            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemMutation, a.resultItemMutation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, (targetUsed, entityActions, entityConditions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new PreventEntityUseAbility(targetUsed, entityActions, entityConditions, interaction.heldItemFilter(), interaction.heldItemOperation(), interaction.resultItemOperation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new PreventEntityUseAbility(targetUsed, entityActions, entityConditions, interaction.heldItemFilter(), interaction.heldItemMutation(), interaction.resultItemMutation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
     public final TargetUsed targetUsed;
     public final List<Action> entityActions;
     public final Condition entityConditions;
 
-    public PreventEntityUseAbility(TargetUsed targetUsed, List<Action> entityActions, Condition entityConditions, ItemFilter heldItemFilter, ItemOperation heldItemOperation, ItemOperation resultItemOperation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemFilter, heldItemOperation, resultItemOperation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+    public PreventEntityUseAbility(TargetUsed targetUsed, List<Action> entityActions, Condition entityConditions, ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemFilter, heldItemMutation, resultItemMutation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
         this.targetUsed = targetUsed;
         this.entityActions = entityActions;
         this.entityConditions = entityConditions;
@@ -100,15 +100,15 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the source when entity use is prevented.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for entity use to be prevented.")
                     .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filter(s) the item used by the source must pass for entity use to be prevented.")
-                    .addOptional("held_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item used by the source to interact with the target.")
-                    .addOptional("result_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item given to the source.")
+                    .addOptional("held_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item used by the source to interact with the target.")
+                    .addOptional("result_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item given to the source.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the source.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Determines if this ability should activate if the source used the specified hands.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.SOURCE, List.of(), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"))), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.SOURCE, List.of(), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"))), TrueCondition.INSTANCE, ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

@@ -14,7 +14,7 @@ public class KryptoniteActionSerializers {
     public static final DeferredHolder<ActionSerializer<?>, AbilityCooldownAction.Serializer> ABILITY_COOLDOWN = ACTION_SERIALIZERS.register("ability_cooldown", AbilityCooldownAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AddVelocityAction.Serializer> ADD_VELOCITY = ACTION_SERIALIZERS.register("add_velocity", AddVelocityAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, AddVelocityRelativeAction.Serializer> ADD_VELOCITY_RELATIVE = ACTION_SERIALIZERS.register("add_velocity_relative", AddVelocityRelativeAction.Serializer::new);
-    public static final DeferredHolder<ActionSerializer<?>, BlockOperationAtAction.Serializer> BLOCK_OPERATION_AT = ACTION_SERIALIZERS.register("block_operation_at", BlockOperationAtAction.Serializer::new);
+    public static final DeferredHolder<ActionSerializer<?>, BlockMutationAtAction.Serializer> BLOCK_MUTATION_AT = ACTION_SERIALIZERS.register("block_mutation_at", BlockMutationAtAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, DismountAction.Serializer> DISMOUNT = ACTION_SERIALIZERS.register("dismount", DismountAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, EquipmentAction.Serializer> EQUIPMENT = ACTION_SERIALIZERS.register("equipment", EquipmentAction.Serializer::new);
     public static final DeferredHolder<ActionSerializer<?>, ExplodeAction.Serializer> EXPLODE = ACTION_SERIALIZERS.register("explode", ExplodeAction.Serializer::new);

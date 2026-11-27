@@ -165,9 +165,9 @@ public class InventoryUtil {
     }
 
     /**
-     * Creates a stack reference that is not linked to any entity for use with item operations.
+     * Creates a stack reference that is not linked to any entity for use with item mutations.
      * <p>
-     * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's StackReference.
+     * Recommended for usage when either you don't have an entity for this mutation, or you don't want to set the entity's StackReference.
      *
      * @param startingStack The ItemStack that this reference will start with.
      * @return A {@linkplain SlotAccess} that contains an ItemStack.

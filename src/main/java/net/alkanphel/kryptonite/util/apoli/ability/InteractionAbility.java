@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
+import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
 import net.alkanphel.kryptonite.util.KryptoniteCodecs;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.minecraft.world.InteractionHand;
@@ -27,11 +27,11 @@ import java.util.Optional;
 
 public class InteractionAbility extends Ability {
 
-    public record InteractionFields(ItemFilter heldItemFilter, ItemOperation heldItemOperation, ItemOperation resultItemOperation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult) {
+    public record InteractionFields(ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult) {
         public static final MapCodec<InteractionFields> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemFilter.CODEC.optionalFieldOf("held_item_filters", ItemFilter.EMPTY).forGetter(InteractionFields::heldItemFilter),
-                ItemOperation.CODEC.optionalFieldOf("held_item_operations", ItemOperation.EMPTY).forGetter(InteractionFields::heldItemOperation),
-                ItemOperation.CODEC.optionalFieldOf("result_item_operations", ItemOperation.EMPTY).forGetter(InteractionFields::resultItemOperation),
+                ItemMutation.CODEC.optionalFieldOf("held_item_mutations", ItemMutation.EMPTY).forGetter(InteractionFields::heldItemMutation),
+                ItemMutation.CODEC.optionalFieldOf("result_item_mutations", ItemMutation.EMPTY).forGetter(InteractionFields::resultItemMutation),
                 ItemStack.CODEC.optionalFieldOf("result_stack").forGetter(InteractionFields::resultStack),
                 Codec.list(KryptoniteCodecs.HAND_CODEC).xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("hands", EnumSet.allOf(InteractionHand.class)).forGetter(InteractionFields::hands),
                 InteractionResultUtil.INTERACTION_RESULT_CODEC.optionalFieldOf("action_result", InteractionResult.SUCCESS).forGetter(InteractionFields::actionResult)
@@ -39,16 +39,16 @@ public class InteractionAbility extends Ability {
     }
 
     public final ItemFilter heldItemFilter;
-    public final ItemOperation heldItemOperation, resultItemOperation;
+    public final ItemMutation heldItemMutation, resultItemMutation;
     public final Optional<ItemStack> resultStack;
     public final EnumSet<InteractionHand> hands;
     public final InteractionResult actionResult;
 
-    public InteractionAbility(ItemFilter heldItemFilter, ItemOperation heldItemOperation, ItemOperation resultItemOperation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public InteractionAbility(ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.heldItemFilter = heldItemFilter;
-        this.heldItemOperation = heldItemOperation;
-        this.resultItemOperation = resultItemOperation;
+        this.heldItemMutation = heldItemMutation;
+        this.resultItemMutation = resultItemMutation;
         this.resultStack = resultStack;
         this.hands = hands;
         this.actionResult = actionResult;
@@ -75,17 +75,17 @@ public class InteractionAbility extends Ability {
         SlotAccess heldStackReference = getHeldStackReference(actor, hand);
         Level level = actor.level();
 
-        if (!heldItemOperation.operations().isEmpty()) {
-            heldItemOperation.run(level, heldStackReference);
+        if (!heldItemMutation.mutations().isEmpty()) {
+            heldItemMutation.run(level, heldStackReference);
         }
 
         ItemStack resultStack = this.resultStack.map(ItemStack::copy).orElseGet(() -> heldStackReference.get().copy());
         SlotAccess resultStackReference = InventoryUtil.createStackReference(resultStack);
 
-        boolean modified = this.resultStack.isPresent() || !resultItemOperation.operations().isEmpty();
+        boolean modified = this.resultStack.isPresent() || !resultItemMutation.mutations().isEmpty();
 
-        if (!resultItemOperation.operations().isEmpty()) {
-            resultItemOperation.run(level, resultStackReference);
+        if (!resultItemMutation.mutations().isEmpty()) {
+            resultItemMutation.run(level, resultStackReference);
         }
 
         if (modified) {

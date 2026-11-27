@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteActionSerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
+import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -20,15 +20,15 @@ public class EquipmentAction extends Action {
 
     public static final MapCodec<EquipmentAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             EquipmentSlotGroup.CODEC.fieldOf("equipment_slot").forGetter(ab -> ab.equipmentSlot),
-            ItemOperation.CODEC.fieldOf("item_operations").forGetter(ab -> ab.itemOperation)
+            ItemMutation.CODEC.fieldOf("item_mutations").forGetter(ab -> ab.itemMutation)
     ).apply(instance, EquipmentAction::new));
 
     public final EquipmentSlotGroup equipmentSlot;
-    public final ItemOperation itemOperation;
+    public final ItemMutation itemMutation;
 
-    public EquipmentAction(EquipmentSlotGroup equipmentSlot, ItemOperation itemOperation) {
+    public EquipmentAction(EquipmentSlotGroup equipmentSlot, ItemMutation itemMutation) {
         this.equipmentSlot = equipmentSlot;
-        this.itemOperation = itemOperation;
+        this.itemMutation = itemMutation;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class EquipmentAction extends Action {
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (equipmentSlot.test(slot)) {
-                result |= itemOperation.run(context.getLevel(), SlotAccess.forEquipmentSlot(livingEntity, slot));
+                result |= itemMutation.run(context.getLevel(), SlotAccess.forEquipmentSlot(livingEntity, slot));
             }
         }
 
@@ -61,10 +61,10 @@ public class EquipmentAction extends Action {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Action, EquipmentAction> builder, HolderLookup.Provider provider) {
             builder.setName("Equipment")
-                    .setDescription("Performs item operations on an item stack in the specified equipment slot.")
-                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to perform the item operations on.")
-                    .add("item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item stack in the specified equipment slot.")
-                    .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, ItemOperation.ofConsume(new StaticValue(1))));
+                    .setDescription("Performs item mutations on an item stack in the specified equipment slot.")
+                    .add("equipment_slot", KryptoniteDocumented.TYPE_EQUIPMENT_SLOT_GROUP, "The equipment slot to perform the item mutations on.")
+                    .add("item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item stack in the specified equipment slot.")
+                    .addExampleObject(new EquipmentAction(EquipmentSlotGroup.MAINHAND, ItemMutation.ofConsume(new StaticValue(1))));
         }
     }
 

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
+import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -31,19 +31,19 @@ public class ActionOnItemDropAbility extends Ability {
 
     public static final MapCodec<ActionOnItemDropAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            ItemOperation.CODEC.optionalFieldOf("item_operation", ItemOperation.EMPTY).forGetter(a -> a.itemOperation),
+            ItemMutation.CODEC.optionalFieldOf("item_mutations", ItemMutation.EMPTY).forGetter(a -> a.itemMutation),
             ItemFilter.CODEC.optionalFieldOf("item_filters", ItemFilter.EMPTY).forGetter(a -> a.itemFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
     ).apply(instance, ActionOnItemDropAbility::new));
 
     private final List<Action> entityActions;
-    private final ItemOperation itemOperation;
+    private final ItemMutation itemMutation;
     private final ItemFilter itemFilter;
 
-    public ActionOnItemDropAbility(List<Action> entityActions, ItemOperation itemOperation, ItemFilter itemFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionOnItemDropAbility(List<Action> entityActions, ItemMutation itemMutation, ItemFilter itemFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.itemOperation = itemOperation;
+        this.itemMutation = itemMutation;
         this.itemFilter = itemFilter;
     }
 
@@ -53,7 +53,7 @@ public class ActionOnItemDropAbility extends Ability {
 
     public void runActions(LivingEntity holder, SlotAccess slotAccess) {
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
-        if (!itemOperation.operations().isEmpty()) itemOperation.run(holder.level(), slotAccess);
+        if (!itemMutation.mutations().isEmpty()) itemMutation.run(holder.level(), slotAccess);
     }
 
     @Override
@@ -72,10 +72,10 @@ public class ActionOnItemDropAbility extends Ability {
         public void addDocumentation(CodecDocumentationBuilder<Ability, ActionOnItemDropAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the player drops an item.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player when they drop an item.")
-                    .addOptional("item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the dropped item.")
+                    .addOptional("item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the dropped item.")
                     .addOptional("item_filters", ItemFilter.documentation(provider), "Item filters(s) the dropped item must pass for the actions to perform.")
-                    .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped an item!")))), ItemOperation.EMPTY, ItemFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped a diamond!")))), ItemOperation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped an item!")))), ItemMutation.EMPTY, ItemFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionOnItemDropAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Dropped a diamond!")))), ItemMutation.EMPTY, ItemFilter.ofItem((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("diamond"))))))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

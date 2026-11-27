@@ -1,4 +1,4 @@
-package net.alkanphel.kryptonite.power.logic.operation;
+package net.alkanphel.kryptonite.power.logic.mutation;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.Kryptonite;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.KryptoniteSettingType;
-import net.alkanphel.kryptonite.power.logic.context.BlockOperationContext;
+import net.alkanphel.kryptonite.power.logic.context.BlockMutationContext;
 import net.alkanphel.kryptonite.power.logic.context.BlockFilterContext;
 import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
@@ -56,21 +56,21 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public record BlockOperation(List<OperationType> operations) {
+public record BlockMutation(List<MutationType> mutations) {
 
-    public static final BlockOperation EMPTY = new BlockOperation(List.of());
-    public static final Codec<BlockOperation> CODEC = ExtraCodecs.compactListCodec(OperationType.CODEC).xmap(BlockOperation::new, BlockOperation::operations);
+    public static final BlockMutation EMPTY = new BlockMutation(List.of());
+    public static final Codec<BlockMutation> CODEC = ExtraCodecs.compactListCodec(MutationType.CODEC).xmap(BlockMutation::new, BlockMutation::mutations);
 
     public static SettingType documentation(HolderLookup.Provider provider) {
-        SettingType operationType = OperationType.documentation(provider);
-        return SettingType.combined(operationType, SettingType.array(operationType));
+        SettingType mutationType = MutationType.documentation(provider);
+        return SettingType.combined(mutationType, SettingType.array(mutationType));
     }
 
-    public boolean run(BlockOperationContext context) {
+    public boolean run(BlockMutationContext context) {
         boolean result = false;
 
-        for (OperationType operation : operations) {
-            result |= operation.run(context);
+        for (MutationType mutation : mutations) {
+            result |= mutation.run(context);
         }
 
         return result;
@@ -86,7 +86,7 @@ public record BlockOperation(List<OperationType> operations) {
 
     public boolean run(Level level, BlockPos pos, Optional<Direction> direction) {
         if (level instanceof ServerLevel serverLevel) {
-            return run(new BlockOperationContext(serverLevel, pos, direction));
+            return run(new BlockMutationContext(serverLevel, pos, direction));
         }
 
         return false;
@@ -94,47 +94,47 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record OperationType(
-            Optional<AreaOfEffectOperation> areaOfEffect,
+    public record MutationType(
+            Optional<AreaOfEffectMutation> areaOfEffect,
             Optional<BlockState> blockAdd,
             Optional<BlockState> blockSet,
-            Optional<BoneMealOperation> boneMeal,
-            Optional<ExplodeOperation> explode,
+            Optional<BoneMealMutation> boneMeal,
+            Optional<ExplodeMutation> explode,
             Optional<Boolean> fallingBlock,
-            Optional<ModifyBlockStateOperation> modifyBlockState,
-            Optional<OffsetOperation> offset,
+            Optional<ModifyBlockStateMutation> modifyBlockState,
+            Optional<OffsetMutation> offset,
             Optional<ParsedCommands> runCommand,
-            Optional<SpawnEntityOperation> spawnEntity
+            Optional<SpawnEntityMutation> spawnEntity
     ) {
 
-        private static final MapCodec<OperationType> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                AreaOfEffectOperation.CODEC.optionalFieldOf("area_of_effect").forGetter(OperationType::areaOfEffect),
-                BlockState.CODEC.optionalFieldOf("block_add").forGetter(OperationType::blockAdd),
-                BlockState.CODEC.optionalFieldOf("block_set").forGetter(OperationType::blockSet),
-                BoneMealOperation.CODEC.optionalFieldOf("bone_meal").forGetter(OperationType::boneMeal),
-                ExplodeOperation.CODEC.optionalFieldOf("explode").forGetter(OperationType::explode),
-                Codec.BOOL.optionalFieldOf("falling_block").forGetter(OperationType::fallingBlock),
-                ModifyBlockStateOperation.CODEC.optionalFieldOf("modify_block_state").forGetter(OperationType::modifyBlockState),
-                OffsetOperation.CODEC.optionalFieldOf("offset").forGetter(OperationType::offset),
-                ParsedCommands.CODEC.optionalFieldOf("run_command").forGetter(OperationType::runCommand),
-                SpawnEntityOperation.CODEC.optionalFieldOf("spawn_entity").forGetter(OperationType::spawnEntity)
-        ).apply(instance, OperationType::new));
+        private static final MapCodec<MutationType> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                AreaOfEffectMutation.CODEC.optionalFieldOf("area_of_effect").forGetter(MutationType::areaOfEffect),
+                BlockState.CODEC.optionalFieldOf("block_add").forGetter(MutationType::blockAdd),
+                BlockState.CODEC.optionalFieldOf("block_set").forGetter(MutationType::blockSet),
+                BoneMealMutation.CODEC.optionalFieldOf("bone_meal").forGetter(MutationType::boneMeal),
+                ExplodeMutation.CODEC.optionalFieldOf("explode").forGetter(MutationType::explode),
+                Codec.BOOL.optionalFieldOf("falling_block").forGetter(MutationType::fallingBlock),
+                ModifyBlockStateMutation.CODEC.optionalFieldOf("modify_block_state").forGetter(MutationType::modifyBlockState),
+                OffsetMutation.CODEC.optionalFieldOf("offset").forGetter(MutationType::offset),
+                ParsedCommands.CODEC.optionalFieldOf("run_command").forGetter(MutationType::runCommand),
+                SpawnEntityMutation.CODEC.optionalFieldOf("spawn_entity").forGetter(MutationType::spawnEntity)
+        ).apply(instance, MutationType::new));
 
-        public static final Codec<OperationType> CODEC = MAP_CODEC.codec();
+        public static final Codec<MutationType> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
-                    .addOptional("area_of_effect", AreaOfEffectOperation.documentation(provider), "Performs block operations on blocks within a radius.")
-                    .addOptional("block_add", Documented.TYPE_BLOCK_STATE, "Adds/places a block at the operation position (offset by the direction of the operation).")
-                    .addOptional("block_set", Documented.TYPE_BLOCK_STATE, "Sets/replaces a block at the operation position (offset by the direction of the operation).")
-                    .addOptional("bone_meal", BoneMealOperation.documentation(provider), "Applies bone meal to the target block.")
-                    .addOptional("explode", ExplodeOperation.documentation(provider), "Creates an explosion at the block's position.")
-                    .addOptional("falling_block", Documented.TYPE_BOOLEAN, "Converts the block at the operation position into a falling block entity.")
-                    .addOptional("modify_block_state", ModifyBlockStateOperation.documentation(provider), "Modifies a block state property at the operation position.")
-                    .addOptional("offset", OffsetOperation.documentation(provider), "Performs block operations at an offset position relative to the original block.")
+                    .addOptional("area_of_effect", AreaOfEffectMutation.documentation(provider), "Performs block mutations on blocks within a radius.")
+                    .addOptional("block_add", Documented.TYPE_BLOCK_STATE, "Adds/places a block at the mutation position (offset by the direction of the mutation).")
+                    .addOptional("block_set", Documented.TYPE_BLOCK_STATE, "Sets/replaces a block at the mutation position (offset by the direction of the mutation).")
+                    .addOptional("bone_meal", BoneMealMutation.documentation(provider), "Applies bone meal to the target block.")
+                    .addOptional("explode", ExplodeMutation.documentation(provider), "Creates an explosion at the block's position.")
+                    .addOptional("falling_block", Documented.TYPE_BOOLEAN, "Converts the block at the mutation position into a falling block entity.")
+                    .addOptional("modify_block_state", ModifyBlockStateMutation.documentation(provider), "Modifies a block state property at the mutation position.")
+                    .addOptional("offset", OffsetMutation.documentation(provider), "Performs block mutations at an offset position relative to the original block.")
                     .addOptional("run_command", Documented.TYPE_STRING_ARRAY, "Runs commands at the block's position.")
-                    .addOptional("spawn_entity", SpawnEntityOperation.documentation(provider), "Spawns entities at the block's position.")
-                    .buildObject("Block Operation Types");
+                    .addOptional("spawn_entity", SpawnEntityMutation.documentation(provider), "Spawns entities at the block's position.")
+                    .buildObject("Block Mutation Types");
         }
 
         public boolean isEmpty() {
@@ -150,7 +150,7 @@ public record BlockOperation(List<OperationType> operations) {
                     && spawnEntity.isEmpty();
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             return runAreaOfEffect(context)
                     | runBlockAdd(context)
                     | runBlockSet(context)
@@ -163,33 +163,33 @@ public record BlockOperation(List<OperationType> operations) {
                     | runSpawnEntity(context);
         }
 
-        private boolean runAreaOfEffect(BlockOperationContext context) {
-            return areaOfEffect.map(areaOfEffectOperation -> areaOfEffectOperation.run(context)).orElse(false);
+        private boolean runAreaOfEffect(BlockMutationContext context) {
+            return areaOfEffect.map(areaOfEffectMutation -> areaOfEffectMutation.run(context)).orElse(false);
         }
 
-        private boolean runBlockAdd(BlockOperationContext context) {
+        private boolean runBlockAdd(BlockMutationContext context) {
             return blockAdd.map(blockState -> context.direction().map(direction -> {
                 context.level().setBlockAndUpdate(context.pos().relative(direction), blockState);
                 return true;
             }).orElse(false)).orElse(false);
         }
 
-        private boolean runBlockSet(BlockOperationContext context) {
+        private boolean runBlockSet(BlockMutationContext context) {
             return blockSet.map(blockState -> {
                 context.level().setBlockAndUpdate(context.pos(), blockState);
                 return true;
             }).orElse(false);
         }
 
-        private boolean runBoneMeal(BlockOperationContext context) {
-            return boneMeal.map(boneMealOperation -> boneMealOperation.run(context)).orElse(false);
+        private boolean runBoneMeal(BlockMutationContext context) {
+            return boneMeal.map(boneMealMutation -> boneMealMutation.run(context)).orElse(false);
         }
 
-        private boolean runExplode(BlockOperationContext context) {
-            return explode.map(explodeOperation -> explodeOperation.run(context)).orElse(false);
+        private boolean runExplode(BlockMutationContext context) {
+            return explode.map(explodeMutation -> explodeMutation.run(context)).orElse(false);
         }
 
-        private boolean runFallingBlock(BlockOperationContext context) {
+        private boolean runFallingBlock(BlockMutationContext context) {
             return fallingBlock.filter(Boolean::booleanValue).map(enabled -> {
                 ServerLevel level = context.level();
                 BlockPos pos = context.pos();
@@ -203,15 +203,15 @@ public record BlockOperation(List<OperationType> operations) {
             }).orElse(false);
         }
 
-        private boolean runModifyBlockState(BlockOperationContext context) {
-            return modifyBlockState.map(operation -> operation.run(context)).orElse(false);
+        private boolean runModifyBlockState(BlockMutationContext context) {
+            return modifyBlockState.map(mutation -> mutation.run(context)).orElse(false);
         }
 
-        private boolean runOffset(BlockOperationContext context) {
-            return offset.map(operation -> operation.run(context)).orElse(false);
+        private boolean runOffset(BlockMutationContext context) {
+            return offset.map(mutation -> mutation.run(context)).orElse(false);
         }
 
-        private boolean runRunCommand(BlockOperationContext context) {
+        private boolean runRunCommand(BlockMutationContext context) {
             return runCommand.map(command -> {
                 ServerLevel serverLevel = context.level();
                 BlockPos pos = context.pos();
@@ -237,46 +237,46 @@ public record BlockOperation(List<OperationType> operations) {
             }).orElse(false);
         }
 
-        private boolean runSpawnEntity(BlockOperationContext context) {
-            return spawnEntity.map(operation -> operation.run(context)).orElse(false);
+        private boolean runSpawnEntity(BlockMutationContext context) {
+            return spawnEntity.map(mutation -> mutation.run(context)).orElse(false);
         }
 
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record AreaOfEffectOperation(
-            BlockOperation blockOperation,
+    public record AreaOfEffectMutation(
+            BlockMutation blockMutation,
             BlockFilter blockFilter,
             Shape shape,
             Value radius
     ) {
 
-        private static final MapCodec<AreaOfEffectOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.lazyInitialized(() -> BlockOperation.CODEC).fieldOf("block_operations").forGetter(AreaOfEffectOperation::blockOperation),
-                Codec.lazyInitialized(() -> BlockFilter.CODEC).optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(AreaOfEffectOperation::blockFilter),
-                Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(AreaOfEffectOperation::shape),
-                Value.NUMBER_CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(AreaOfEffectOperation::radius)
-        ).apply(instance, AreaOfEffectOperation::new));
+        private static final MapCodec<AreaOfEffectMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.lazyInitialized(() -> BlockMutation.CODEC).fieldOf("block_mutations").forGetter(AreaOfEffectMutation::blockMutation),
+                Codec.lazyInitialized(() -> BlockFilter.CODEC).optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(AreaOfEffectMutation::blockFilter),
+                Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(AreaOfEffectMutation::shape),
+                Value.NUMBER_CODEC.optionalFieldOf("radius", new StaticValue(16)).forGetter(AreaOfEffectMutation::radius)
+        ).apply(instance, AreaOfEffectMutation::new));
 
-        public static final Codec<AreaOfEffectOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<AreaOfEffectMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
-                    .add("block_operations", SettingType.simple("Block Operations"), "Block operation(s) performed on the blocks in range.")
-                    .addOptional("block_filters", SettingType.simple("Block Filters"), "Block filter(s) the blocks in range must pass for the operations to perform.")
+                    .add("block_mutations", SettingType.simple("Block Mutations"), "Block mutation(s) conducted on the blocks in range.")
+                    .addOptional("block_filters", SettingType.simple("Block Filters"), "Block filter(s) the blocks in range must pass for the mutations to perform.")
                     .addOptional("shape", KryptoniteDocumented.TYPE_SHAPE, "The shape of the area.", Shape.CUBE)
                     .addOptional("radius", KryptoniteSettingType.intValueRange(0, Integer.MAX_VALUE), "The radius of the area.", 16)
                     .buildObject("Area Of Effect");
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             var level = context.level();
 
             shape.getBlockPositions(context.pos(), radius.getAsInt(null))
                     .stream()
                     .filter(pos -> blockFilter.test(level, pos))
-                    .forEach(pos -> blockOperation.run(level, pos, context.direction()));
+                    .forEach(pos -> blockMutation.run(level, pos, context.direction()));
 
             return true;
         }
@@ -284,13 +284,13 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record BoneMealOperation(boolean showEffects) {
+    public record BoneMealMutation(boolean showEffects) {
 
-        private static final MapCodec<BoneMealOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.BOOL.optionalFieldOf("show_effects", true).forGetter(BoneMealOperation::showEffects)
-        ).apply(instance, BoneMealOperation::new));
+        private static final MapCodec<BoneMealMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.BOOL.optionalFieldOf("show_effects", true).forGetter(BoneMealMutation::showEffects)
+        ).apply(instance, BoneMealMutation::new));
 
-        public static final Codec<BoneMealOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<BoneMealMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
@@ -298,7 +298,7 @@ public record BlockOperation(List<OperationType> operations) {
                     .buildObject("Bone Meal");
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             ServerLevel level = context.level();
             BlockPos pos = context.pos();
 
@@ -333,7 +333,7 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record ExplodeOperation(
+    public record ExplodeMutation(
             BlockFilter destructible,
             BlockFilter indestructible,
             Level.ExplosionInteraction destructionType,
@@ -342,16 +342,16 @@ public record BlockOperation(List<OperationType> operations) {
             Value power
     ) {
 
-        private static final MapCodec<ExplodeOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                BlockFilter.CODEC.optionalFieldOf("destructible", BlockFilter.EMPTY).forGetter(ExplodeOperation::destructible),
-                BlockFilter.CODEC.optionalFieldOf("indestructible", BlockFilter.EMPTY).forGetter(ExplodeOperation::indestructible),
-                Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(ExplodeOperation::destructionType),
-                BooleanValueHolder.CODEC.optionalFieldOf("create_fire", BooleanValueHolder.FALSE).forGetter(ExplodeOperation::createFire),
-                Value.NUMBER_CODEC.optionalFieldOf("indestructible_resistance", new StaticValue(10)).forGetter(ExplodeOperation::indestructibleResistance),
-                Value.NUMBER_CODEC.fieldOf("power").forGetter(ExplodeOperation::power)
-        ).apply(instance, ExplodeOperation::new));
+        private static final MapCodec<ExplodeMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                BlockFilter.CODEC.optionalFieldOf("destructible", BlockFilter.EMPTY).forGetter(ExplodeMutation::destructible),
+                BlockFilter.CODEC.optionalFieldOf("indestructible", BlockFilter.EMPTY).forGetter(ExplodeMutation::indestructible),
+                Level.ExplosionInteraction.CODEC.optionalFieldOf("destruction_type", Level.ExplosionInteraction.BLOCK).forGetter(ExplodeMutation::destructionType),
+                BooleanValueHolder.CODEC.optionalFieldOf("create_fire", BooleanValueHolder.FALSE).forGetter(ExplodeMutation::createFire),
+                Value.NUMBER_CODEC.optionalFieldOf("indestructible_resistance", new StaticValue(10)).forGetter(ExplodeMutation::indestructibleResistance),
+                Value.NUMBER_CODEC.fieldOf("power").forGetter(ExplodeMutation::power)
+        ).apply(instance, ExplodeMutation::new));
 
-        public static final Codec<ExplodeOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<ExplodeMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
@@ -364,7 +364,7 @@ public record BlockOperation(List<OperationType> operations) {
                     .buildObject("Explode");
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             ServerLevel level = context.level();
             if (level.isClientSide()) return false;
 
@@ -396,7 +396,7 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record ModifyBlockStateOperation(
+    public record ModifyBlockStateMutation(
             String property,
             ResourceOperation operation,
             Optional<Integer> change,
@@ -405,29 +405,29 @@ public record BlockOperation(List<OperationType> operations) {
             boolean cycle
     ) {
 
-        private static final MapCodec<ModifyBlockStateOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.fieldOf("property").forGetter(ModifyBlockStateOperation::property),
-                ResourceOperation.CODEC.optionalFieldOf("operation", ResourceOperation.ADD).forGetter(ModifyBlockStateOperation::operation),
-                Codec.INT.optionalFieldOf("change").forGetter(ModifyBlockStateOperation::change),
-                Codec.BOOL.optionalFieldOf("value").forGetter(ModifyBlockStateOperation::boolValue),
-                Codec.STRING.optionalFieldOf("enum").forGetter(ModifyBlockStateOperation::enumValue),
-                Codec.BOOL.optionalFieldOf("cycle", false).forGetter(ModifyBlockStateOperation::cycle)
-        ).apply(instance, ModifyBlockStateOperation::new));
+        private static final MapCodec<ModifyBlockStateMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.STRING.fieldOf("property").forGetter(ModifyBlockStateMutation::property),
+                ResourceOperation.CODEC.optionalFieldOf("mutation", ResourceOperation.ADD).forGetter(ModifyBlockStateMutation::operation),
+                Codec.INT.optionalFieldOf("change").forGetter(ModifyBlockStateMutation::change),
+                Codec.BOOL.optionalFieldOf("value").forGetter(ModifyBlockStateMutation::boolValue),
+                Codec.STRING.optionalFieldOf("enum").forGetter(ModifyBlockStateMutation::enumValue),
+                Codec.BOOL.optionalFieldOf("cycle", false).forGetter(ModifyBlockStateMutation::cycle)
+        ).apply(instance, ModifyBlockStateMutation::new));
 
-        public static final Codec<ModifyBlockStateOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<ModifyBlockStateMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
                     .add("property", Documented.TYPE_STRING, "The name of the block state property to modify. See: https://minecraft.wiki/w/Block_states#List_of_block_states")
-                    .addOptional("operation", SettingType.enumList(ResourceOperation.values()), "Determines how the value specified in the \"change\" field is operated on the specified property.", ResourceOperation.ADD)
+                    .addOptional("mutation", SettingType.enumList(ResourceOperation.values()), "Determines how the value specified in the \"change\" field is operated on the specified property.", ResourceOperation.ADD)
                     .addOptional("change", Documented.TYPE_INT, "If specified, the value to add, remove or set to/from the specified property if the specified property is an integer.")
                     .addOptional("value", Documented.TYPE_BOOLEAN, "If specified, the boolean to use as the new value for the specified property if the specified property is a boolean.")
                     .addOptional("enum", Documented.TYPE_STRING, "If specified, the string to use as the new value for the specified property if the specified property is a string.")
-                    .addOptional("cycle", Documented.TYPE_BOOLEAN, "If true, changes the property to the next state in the cycle, ignoring all other optional fields. All property types can use this operation.", false)
+                    .addOptional("cycle", Documented.TYPE_BOOLEAN, "If true, changes the property to the next state in the cycle, ignoring all other optional fields. All property types can use this.", false)
                     .buildObject("Modify Block State");
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             Level level = context.level();
             BlockPos pos = context.pos();
 
@@ -489,31 +489,31 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record OffsetOperation(List<BlockOperation> blockOperations, Value x, Value y, Value z) {
+    public record OffsetMutation(List<BlockMutation> blockMutations, Value x, Value y, Value z) {
 
-        private static final MapCodec<OffsetOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.lazyInitialized(() -> BlockOperation.CODEC).listOf().fieldOf("block_operations").forGetter(OffsetOperation::blockOperations),
-                Value.NUMBER_CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetOperation::x),
-                Value.NUMBER_CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetOperation::y),
-                Value.NUMBER_CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetOperation::z)
-        ).apply(instance, OffsetOperation::new));
+        private static final MapCodec<OffsetMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.lazyInitialized(() -> BlockMutation.CODEC).listOf().fieldOf("block_mutations").forGetter(OffsetMutation::blockMutations),
+                Value.NUMBER_CODEC.optionalFieldOf("x", new StaticValue(0)).forGetter(OffsetMutation::x),
+                Value.NUMBER_CODEC.optionalFieldOf("y", new StaticValue(0)).forGetter(OffsetMutation::y),
+                Value.NUMBER_CODEC.optionalFieldOf("z", new StaticValue(0)).forGetter(OffsetMutation::z)
+        ).apply(instance, OffsetMutation::new));
 
-        public static final Codec<OffsetOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<OffsetMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
-                    .add("block_operations", SettingType.array(SettingType.simple("Block Operations")), "Block operation(s) performed at the offset position.")
+                    .add("block_mutations", SettingType.array(SettingType.simple("Block Mutations")), "Block mutation(s) conducted at the offset position.")
                     .addOptional("x", KryptoniteSettingType.intValueRange(Integer.MIN_VALUE, Integer.MAX_VALUE), "How much to offset the position on the X axis.", 0)
                     .addOptional("y", KryptoniteSettingType.intValueRange(Integer.MIN_VALUE, Integer.MAX_VALUE), "How much to offset the position on the Y axis.", 0)
                     .addOptional("z", KryptoniteSettingType.intValueRange(Integer.MIN_VALUE, Integer.MAX_VALUE), "How much to offset the position on the Z axis.", 0)
                     .buildObject("Offset");
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             BlockPos offsetPos = context.pos().offset(x.getAsInt(null), y.getAsInt(null), z.getAsInt(null));
 
-            for (BlockOperation blockOperation : blockOperations) {
-                blockOperation.run(context.level(), offsetPos, context.direction());
+            for (BlockMutation blockMutation : blockMutations) {
+                blockMutation.run(context.level(), offsetPos, context.direction());
             }
 
             return true;
@@ -522,19 +522,19 @@ public record BlockOperation(List<OperationType> operations) {
 
     // -------------------------------------------------------------------------------------------------------------------------------
 
-    public record SpawnEntityOperation(
+    public record SpawnEntityMutation(
             HolderSet<EntityType<?>> entityTypes,
             List<Action> entityActions,
             CompoundTag entityNbt
     ) {
 
-        private static final MapCodec<SpawnEntityOperation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(SpawnEntityOperation::entityTypes),
-                Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(SpawnEntityOperation::entityActions),
-                CompoundTag.CODEC.optionalFieldOf("entity_nbt", new CompoundTag()).forGetter(SpawnEntityOperation::entityNbt)
-        ).apply(instance, SpawnEntityOperation::new));
+        private static final MapCodec<SpawnEntityMutation> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).fieldOf("entity_types").forGetter(SpawnEntityMutation::entityTypes),
+                Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(SpawnEntityMutation::entityActions),
+                CompoundTag.CODEC.optionalFieldOf("entity_nbt", new CompoundTag()).forGetter(SpawnEntityMutation::entityNbt)
+        ).apply(instance, SpawnEntityMutation::new));
 
-        public static final Codec<SpawnEntityOperation> CODEC = MAP_CODEC.codec();
+        public static final Codec<SpawnEntityMutation> CODEC = MAP_CODEC.codec();
 
         private static SettingType documentation(HolderLookup.Provider provider) {
             return new CodecDocumentationBuilder<>(MAP_CODEC, provider)
@@ -551,7 +551,7 @@ public record BlockOperation(List<OperationType> operations) {
             return tag;
         }
 
-        public boolean run(BlockOperationContext context) {
+        public boolean run(BlockMutationContext context) {
             var level = context.level();
             for (var holder : entityTypes) {
                 MiscUtil.getEntityWithPassengers(level, holder.value(), entityNbt, context.pos().getBottomCenter(), Optional.empty(), Optional.empty()).ifPresent(entity -> {
@@ -570,52 +570,48 @@ public record BlockOperation(List<OperationType> operations) {
         return Optional.empty();
     }
 
-    private static BlockOperation single(OperationType type) {
-        return new BlockOperation(List.of(type));
+    private static BlockMutation single(MutationType type) {
+        return new BlockMutation(List.of(type));
     }
 
-    public static BlockOperation of(OperationType... operations) {
-        return new BlockOperation(List.of(operations));
+    public static BlockMutation ofAreaOfEffect(AreaOfEffectMutation areaOfEffect) {
+        return single(new MutationType(Optional.of(areaOfEffect), none(), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofAreaOfEffect(AreaOfEffectOperation areaOfEffect) {
-        return single(new OperationType(Optional.of(areaOfEffect), none(), none(), none(), none(), none(), none(), none(), none(), none()));
+    public static BlockMutation ofBlockAdd(BlockState block) {
+        return single(new MutationType(none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofBlockAdd(BlockState block) {
-        return single(new OperationType(none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none(), none()));
+    public static BlockMutation ofBlockSet(BlockState block) {
+        return single(new MutationType(none(), none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofBlockSet(BlockState block) {
-        return single(new OperationType(none(), none(), Optional.of(block), none(), none(), none(), none(), none(), none(), none()));
+    public static BlockMutation ofBoneMeal(boolean showEffects) {
+        return single(new MutationType(none(), none(), none(), Optional.of(new BoneMealMutation(showEffects)), none(), none(), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofBoneMeal(boolean showEffects) {
-        return single(new OperationType(none(), none(), none(), Optional.of(new BoneMealOperation(showEffects)), none(), none(), none(), none(), none(), none()));
+    public static BlockMutation ofExplode(ExplodeMutation explode) {
+        return single(new MutationType(none(), none(), none(), none(), Optional.of(explode), none(), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofExplode(ExplodeOperation explode) {
-        return single(new OperationType(none(), none(), none(), none(), Optional.of(explode), none(), none(), none(), none(), none()));
+    public static BlockMutation ofFallingBlock(boolean fallingBlock) {
+        return single(new MutationType(none(), none(), none(), none(), none(), Optional.of(fallingBlock), none(), none(), none(), none()));
     }
 
-    public static BlockOperation ofFallingBlock(boolean fallingBlock) {
-        return single(new OperationType(none(), none(), none(), none(), none(), Optional.of(fallingBlock), none(), none(), none(), none()));
+    public static BlockMutation ofModifyBlockState(ModifyBlockStateMutation modifyBlockState) {
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), Optional.of(modifyBlockState), none(), none(), none()));
     }
 
-    public static BlockOperation ofModifyBlockState(ModifyBlockStateOperation modifyBlockState) {
-        return single(new OperationType(none(), none(), none(), none(), none(), none(), Optional.of(modifyBlockState), none(), none(), none()));
+    public static BlockMutation ofOffset(OffsetMutation offset) {
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), Optional.of(offset), none(), none()));
     }
 
-    public static BlockOperation ofOffset(OffsetOperation offset) {
-        return single(new OperationType(none(), none(), none(), none(), none(), none(), none(), Optional.of(offset), none(), none()));
+    public static BlockMutation ofRunCommand(ParsedCommands runCommand) {
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(runCommand), none()));
     }
 
-    public static BlockOperation ofRunCommand(ParsedCommands runCommand) {
-        return single(new OperationType(none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(runCommand), none()));
-    }
-
-    public static BlockOperation ofSpawnEntity(SpawnEntityOperation spawnEntity) {
-        return single(new OperationType(none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(spawnEntity)));
+    public static BlockMutation ofSpawnEntity(SpawnEntityMutation spawnEntity) {
+        return single(new MutationType(none(), none(), none(), none(), none(), none(), none(), none(), none(), Optional.of(spawnEntity)));
     }
 
 }

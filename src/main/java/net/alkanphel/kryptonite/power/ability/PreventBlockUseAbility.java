@@ -6,8 +6,8 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
 import net.alkanphel.kryptonite.power.logic.filter.BlockFilter;
 import net.alkanphel.kryptonite.power.logic.filter.ItemFilter;
-import net.alkanphel.kryptonite.power.logic.operation.BlockOperation;
-import net.alkanphel.kryptonite.power.logic.operation.ItemOperation;
+import net.alkanphel.kryptonite.power.logic.mutation.BlockMutation;
+import net.alkanphel.kryptonite.power.logic.mutation.ItemMutation;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
 import net.minecraft.core.Direction;
@@ -42,34 +42,34 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
 
     public static final MapCodec<PreventBlockUseAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("actions", List.of()).forGetter(a -> a.entityActions),
-            BlockOperation.CODEC.optionalFieldOf("block_operations", BlockOperation.EMPTY).forGetter(a -> a.blockOperation),
+            BlockMutation.CODEC.optionalFieldOf("block_mutations", BlockMutation.EMPTY).forGetter(a -> a.blockMutation),
             BlockFilter.CODEC.optionalFieldOf("block_filters", BlockFilter.EMPTY).forGetter(a -> a.blockFilter),
             BlockUsagePhase.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("use_phases", EnumSet.allOf(BlockUsagePhase.class)).forGetter(a -> a.usePhases),
             Direction.CODEC.listOf().xmap(EnumSet::copyOf, List::copyOf).optionalFieldOf("directions", EnumSet.allOf(Direction.class)).forGetter(a -> a.directions),
-            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemOperation, a.resultItemOperation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
+            InteractionPrioritizedFields.CODEC.forGetter(a -> new InteractionPrioritizedFields(new InteractionFields(a.heldItemFilter, a.heldItemMutation, a.resultItemMutation, a.resultStack, a.hands, a.actionResult), a.getPriority())),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, (entityActions, blockOperation, blockFilter, usePhases, directions, activeFields, properties, state, energyBarUsages) -> {
+    ).apply(instance, (entityActions, blockMutation, blockFilter, usePhases, directions, activeFields, properties, state, energyBarUsages) -> {
         InteractionFields interaction = activeFields.interaction();
-        return new PreventBlockUseAbility(entityActions, blockOperation, blockFilter, usePhases, directions, interaction.heldItemFilter(), interaction.heldItemOperation(), interaction.resultItemOperation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
+        return new PreventBlockUseAbility(entityActions, blockMutation, blockFilter, usePhases, directions, interaction.heldItemFilter(), interaction.heldItemMutation(), interaction.resultItemMutation(), interaction.resultStack(), interaction.hands(), interaction.actionResult(), activeFields.priority(), properties, state, energyBarUsages);
     }));
 
     public final List<Action> entityActions;
-    public final BlockOperation blockOperation;
+    public final BlockMutation blockMutation;
     public final BlockFilter blockFilter;
     public final EnumSet<BlockUsagePhase> usePhases;
     public final EnumSet<Direction> directions;
 
-    public PreventBlockUseAbility(List<Action> entityActions, BlockOperation blockOperation, BlockFilter blockFilter, EnumSet<BlockUsagePhase> usePhases, EnumSet<Direction> directions, ItemFilter heldItemFilter, ItemOperation heldItemOperation, ItemOperation resultItemOperation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
-        super(heldItemFilter, resultItemOperation, heldItemOperation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
+    public PreventBlockUseAbility(List<Action> entityActions, BlockMutation blockMutation, BlockFilter blockFilter, EnumSet<BlockUsagePhase> usePhases, EnumSet<Direction> directions, ItemFilter heldItemFilter, ItemMutation heldItemMutation, ItemMutation resultItemMutation, Optional<ItemStack> resultStack, EnumSet<InteractionHand> hands, InteractionResult actionResult, int priority, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+        super(heldItemFilter, resultItemMutation, heldItemMutation, resultStack, hands, actionResult, priority, properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
-        this.blockOperation = blockOperation;
+        this.blockMutation = blockMutation;
         this.blockFilter = blockFilter;
         this.usePhases = usePhases;
         this.directions = directions;
     }
 
     public void runActions(LivingEntity holder, BlockHitResult hitResult, InteractionHand hand) {
-        if (!blockOperation.operations().isEmpty()) blockOperation.run(holder.level(), hitResult.getBlockPos(), Optional.of(hitResult.getDirection()));
+        if (!blockMutation.mutations().isEmpty()) blockMutation.run(holder.level(), hitResult.getBlockPos(), Optional.of(hitResult.getDirection()));
         if (!entityActions.isEmpty()) Action.runList(entityActions, DataContext.forEntity(holder));
 
         if (holder instanceof Player player) {
@@ -99,20 +99,20 @@ public class PreventBlockUseAbility extends InteractionPrioritizedAbility {
         public void addDocumentation(CodecDocumentationBuilder<Ability, PreventBlockUseAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Prevents the player from using blocks. Preventing the 'usage' of a block means that the player won't be able to interact (right-click) with said block.")
                     .addOptional("actions", TYPE_ACTION_LIST, "Action(s) performed on the player upon being prevented from using a block.")
-                    .addOptional("block_operations", BlockOperation.documentation(provider), "Block operation(s) performed on the block the player tried to use.")
+                    .addOptional("block_mutations", BlockMutation.documentation(provider), "Block mutation(s) conducted on the block the player tried to use.")
                     .addOptional("block_filters", BlockFilter.documentation(provider), "Block filter(s) the block at the position of the block the player tried to use must pass for the actions to perform.")
                     .addOptional("use_phases", KryptoniteDocumented.TYPE_BLOCK_USAGE_PHASE, "At which point the actions should be performed/prevented by just simply interacting with a block or using an item to interact with a block.")
                     .addOptional("directions", KryptoniteDocumented.TYPE_DIRECTION, "If the actions should be performed if the player tried to use a block at the specified sides of a block.")
-                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item the player has used to try and use a block must pass for the item operations to perform.")
-                    .addOptional("held_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item the player has used to try and use a block.")
-                    .addOptional("result_item_operations", ItemOperation.documentation(provider), "Item operation(s) performed on the item given to the player upon trying to use a block.")
+                    .addOptional("held_item_filters", ItemFilter.documentation(provider), "Item filters(s) the item the player has used to try and use a block must pass for the item mutations to perform.")
+                    .addOptional("held_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item the player has used to try and use a block.")
+                    .addOptional("result_item_mutations", ItemMutation.documentation(provider), "Item mutation(s) conducted on the item given to the player upon trying to use a block.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon trying to use a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands while trying to use a block.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
                     .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
-                    .addExampleObject(new PreventBlockUseAbility(List.of(), BlockOperation.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use Crafting Table!\", \"color\": \"red\"}"))), BlockOperation.EMPTY, BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("crafting_table"))))))), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use block with this custom NBT!\", \"color\": \"red\"}"))), BlockOperation.EMPTY, BlockFilter.ofNbt((BlockFilter.addExampleNbt())), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemOperation.EMPTY, ItemOperation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new PreventBlockUseAbility(List.of(), BlockMutation.EMPTY, BlockFilter.EMPTY, EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use Crafting Table!\", \"color\": \"red\"}"))), BlockMutation.EMPTY, BlockFilter.ofBlock((PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("crafting_table"))))))), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new PreventBlockUseAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot use block with this custom NBT!\", \"color\": \"red\"}"))), BlockMutation.EMPTY, BlockFilter.ofNbt((BlockFilter.addExampleNbt())), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), ItemFilter.EMPTY, ItemMutation.EMPTY, ItemMutation.EMPTY, Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
