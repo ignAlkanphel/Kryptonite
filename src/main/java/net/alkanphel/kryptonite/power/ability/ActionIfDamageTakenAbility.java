@@ -20,18 +20,18 @@ import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
 
-public class ActionWhenDamageTakenAbility extends Ability {
+public class ActionIfDamageTakenAbility extends Ability {
 
-    public static final MapCodec<ActionWhenDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ActionIfDamageTakenAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.fieldOf("actions").forGetter(a -> a.entityActions),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, ActionWhenDamageTakenAbility::new));
+    ).apply(instance, ActionIfDamageTakenAbility::new));
 
     public final List<Action> entityActions;
     public final DamageFilter damageFilter;
 
-    public ActionWhenDamageTakenAbility(List<Action> entityActions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionIfDamageTakenAbility(List<Action> entityActions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.damageFilter = damageFilter;
@@ -47,22 +47,22 @@ public class ActionWhenDamageTakenAbility extends Ability {
 
     @Override
     public AbilitySerializer<?> getSerializer() {
-        return KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN.get();
+        return KryptoniteAbilitySerializers.ACTION_IF_DAMAGE_TAKEN.get();
     }
 
-    public static class Serializer extends AbilitySerializer<ActionWhenDamageTakenAbility> {
+    public static class Serializer extends AbilitySerializer<ActionIfDamageTakenAbility> {
 
         @Override
-        public MapCodec<ActionWhenDamageTakenAbility> codec() {
+        public MapCodec<ActionIfDamageTakenAbility> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionWhenDamageTakenAbility> builder, HolderLookup.Provider provider) {
+        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionIfDamageTakenAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions upon taking damage.")
                     .add("actions", TYPE_ACTION_LIST, "Action(s) performed upon taking damage.")
                     .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the damage source must pass for the actions to perform.")
-                    .addExampleObject(new ActionWhenDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionIfDamageTakenAbility(List.of(new RunCommandAction(new ParsedCommands("say I'm feeling spicy!"))), DamageFilter.ofDamageTypes(PalladiumHolderSet.direct(provider.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypeTags.IS_FIRE))), AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

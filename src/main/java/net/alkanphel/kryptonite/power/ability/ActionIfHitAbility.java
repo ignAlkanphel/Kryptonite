@@ -25,20 +25,20 @@ import net.threetag.palladium.util.ParsedCommands;
 
 import java.util.List;
 
-public class ActionWhenHitAbility extends Ability {
+public class ActionIfHitAbility extends Ability {
 
-    public static final MapCodec<ActionWhenHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final MapCodec<ActionIfHitAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.entityActions),
             Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.entityConditions),
             DamageFilter.CODEC.optionalFieldOf("damage_filters", DamageFilter.EMPTY).forGetter(a -> a.damageFilter),
             propertiesCodec(), stateCodec(), energyBarUsagesCodec()
-    ).apply(instance, ActionWhenHitAbility::new));
+    ).apply(instance, ActionIfHitAbility::new));
 
     public final List<Action> entityActions;
     public final Condition entityConditions;
     public final DamageFilter damageFilter;
 
-    public ActionWhenHitAbility(List<Action> entityActions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
+    public ActionIfHitAbility(List<Action> entityActions, Condition entityConditions, DamageFilter damageFilter, AbilityProperties properties, AbilityStateManager conditions, List<EnergyBarUsage> energyBarUsages) {
         super(properties, conditions, energyBarUsages);
         this.entityActions = entityActions;
         this.entityConditions = entityConditions;
@@ -59,24 +59,24 @@ public class ActionWhenHitAbility extends Ability {
 
     @Override
     public AbilitySerializer<?> getSerializer() {
-        return KryptoniteAbilitySerializers.ACTION_WHEN_HIT.get();
+        return KryptoniteAbilitySerializers.ACTION_IF_HIT.get();
     }
 
-    public static class Serializer extends AbilitySerializer<ActionWhenHitAbility> {
+    public static class Serializer extends AbilitySerializer<ActionIfHitAbility> {
 
         @Override
-        public MapCodec<ActionWhenHitAbility> codec() {
+        public MapCodec<ActionIfHitAbility> codec() {
             return CODEC;
         }
 
         @Override
-        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionWhenHitAbility> builder, HolderLookup.Provider provider) {
+        public void addDocumentation(CodecDocumentationBuilder<Ability, ActionIfHitAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when the entity that has this ability is hit by another entity. For this ability, the \"source\" is the entity that dealt the damage & the \"target\" is the entity that has this ability.")
                     .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the target.")
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("damage_filters", DamageFilter.documentation(provider), "Damage filter(s) the hit must pass for the actions to perform.")
-                    .addExampleObject(new ActionWhenHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
-                    .addExampleObject(new ActionWhenHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionIfHitAbility(List.of(new RunCommandAction(new ParsedCommands("say I was hit!"))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
+                    .addExampleObject(new ActionIfHitAbility(List.of(new AsSourceAction(List.of(new RunCommandAction(new ParsedCommands("say I hit someone!"))))), TrueCondition.INSTANCE, DamageFilter.EMPTY, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 

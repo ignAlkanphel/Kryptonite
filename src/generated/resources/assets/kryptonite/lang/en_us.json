@@ -1,4 +1,6 @@
 {
+  "palladium.ability.kryptonite.action_if_damage_taken": "Action If Damage Taken",
+  "palladium.ability.kryptonite.action_if_hit": "Action If Hit",
   "palladium.ability.kryptonite.action_on_block_break": "Action On Block Break",
   "palladium.ability.kryptonite.action_on_block_place": "Action On Block Place",
   "palladium.ability.kryptonite.action_on_block_use": "Action On Block Use",
@@ -24,8 +26,6 @@
   "palladium.ability.kryptonite.action_on_tame": "Action On Tame",
   "palladium.ability.kryptonite.action_on_totem_use": "Action On Totem Use",
   "palladium.ability.kryptonite.action_on_wake_up": "Action On Wake Up",
-  "palladium.ability.kryptonite.action_when_damage_taken": "Action When Damage Taken",
-  "palladium.ability.kryptonite.action_when_hit": "Action When Hit",
   "palladium.ability.kryptonite.allow_enderman_stare": "Allow Enderman Stare",
   "palladium.ability.kryptonite.dynamic_lights": "Dynamic Lights",
   "palladium.ability.kryptonite.freeze": "Freeze",

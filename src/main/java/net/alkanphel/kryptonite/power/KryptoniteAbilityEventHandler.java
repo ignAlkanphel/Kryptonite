@@ -227,17 +227,17 @@ public class KryptoniteAbilityEventHandler {
             }
         }
 
-        // Action When Hit ability (target has the ability)
+        // Action If Hit ability (target has the ability)
         if (attacker != null) {
-            for (AbilityInstance<ActionWhenHitAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_HIT.get())) {
+            for (AbilityInstance<ActionIfHitAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_IF_HIT.get())) {
                 if (!instance.getAbility().doesApply(attacker, target, e.getSource(), amount, instance)) continue;
 
                 instance.getAbility().runActions(attacker, target, instance);
             }
         }
 
-        // Action When Damage Taken ability (target has the ability, no specified attacker)
-        for (AbilityInstance<ActionWhenDamageTakenAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN.get())) {
+        // Action If Damage Taken ability (target has the ability, no specified attacker)
+        for (AbilityInstance<ActionIfDamageTakenAbility> instance : AbilityUtil.getEnabledInstances(target, KryptoniteAbilitySerializers.ACTION_IF_DAMAGE_TAKEN.get())) {
             if (!instance.getAbility().doesApply(e.getSource(), amount)) continue;
 
             instance.getAbility().runActions(target);

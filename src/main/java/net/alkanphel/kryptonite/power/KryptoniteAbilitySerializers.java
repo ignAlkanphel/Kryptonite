@@ -11,6 +11,8 @@ public class KryptoniteAbilitySerializers {
 
     public static final DeferredRegister<AbilitySerializer<?>> ABILITIES_SERIALIZERS = DeferredRegister.create(PalladiumRegistryKeys.ABILITY_SERIALIZER, Kryptonite.MOD_ID);
 
+    public static final DeferredHolder<AbilitySerializer<?>, ActionIfDamageTakenAbility.Serializer> ACTION_IF_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_if_damage_taken", ActionIfDamageTakenAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionIfHitAbility.Serializer> ACTION_IF_HIT = ABILITIES_SERIALIZERS.register("action_if_hit", ActionIfHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockBreakAbility.Serializer> ACTION_ON_BLOCK_BREAK = ABILITIES_SERIALIZERS.register("action_on_block_break", ActionOnBlockBreakAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockPlaceAbility.Serializer> ACTION_ON_BLOCK_PLACE = ABILITIES_SERIALIZERS.register("action_on_block_place", ActionOnBlockPlaceAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnBlockUseAbility.Serializer> ACTION_ON_BLOCK_USE = ABILITIES_SERIALIZERS.register("action_on_block_use", ActionOnBlockUseAbility.Serializer::new);
@@ -36,8 +38,6 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLogoutAbility.Serializer> ACTION_ON_LOGOUT = ABILITIES_SERIALIZERS.register("action_on_logout", ActionOnLogoutAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnMountAbility.Serializer> ACTION_ON_MOUNT = ABILITIES_SERIALIZERS.register("action_on_mount", ActionOnMountAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnRespawnAbility.Serializer> ACTION_ON_RESPAWN = ABILITIES_SERIALIZERS.register("action_on_respawn", ActionOnRespawnAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, ActionWhenDamageTakenAbility.Serializer> ACTION_WHEN_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_when_damage_taken", ActionWhenDamageTakenAbility.Serializer::new);
-    public static final DeferredHolder<AbilitySerializer<?>, ActionWhenHitAbility.Serializer> ACTION_WHEN_HIT = ABILITIES_SERIALIZERS.register("action_when_hit", ActionWhenHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, DynamicLightsAbility.Serializer> DYNAMIC_LIGHTS = ABILITIES_SERIALIZERS.register("dynamic_lights", DynamicLightsAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, FreezeAbility.Serializer> FREEZE = ABILITIES_SERIALIZERS.register("freeze", FreezeAbility.Serializer::new);

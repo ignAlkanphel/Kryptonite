@@ -37,6 +37,8 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
         @Override
         protected void addTranslations() {
             // Abilities
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_IF_DAMAGE_TAKEN, "Action If Damage Taken");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_IF_HIT, "Action If Hit");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_BREAK, "Action On Block Break");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_PLACE, "Action On Block Place");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_BLOCK_USE, "Action On Block Use");
@@ -62,8 +64,6 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TAME, "Action On Tame");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP, "Action On Wake Up");
-            this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_DAMAGE_TAKEN, "Action When Damage Taken");
-            this.addAbility(KryptoniteAbilitySerializers.ACTION_WHEN_HIT, "Action When Hit");
             this.addAbility(KryptoniteAbilitySerializers.ALLOW_ENDERMAN_STARE, "Allow Enderman Stare");
             this.addAbility(KryptoniteAbilitySerializers.DYNAMIC_LIGHTS, "Dynamic Lights");
             this.addAbility(KryptoniteAbilitySerializers.FREEZE, "Freeze");
