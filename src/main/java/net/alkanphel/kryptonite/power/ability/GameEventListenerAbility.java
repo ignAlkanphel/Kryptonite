@@ -41,8 +41,8 @@ import java.util.Optional;
 public class GameEventListenerAbility extends Ability {
 
     public static final MapCodec<GameEventListenerAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Action.LIST_CODEC.optionalFieldOf("entity_actions", List.of()).forGetter(a -> a.targetAction),
-            Condition.CODEC.optionalFieldOf("entity_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
+            Action.LIST_CODEC.optionalFieldOf("target_actions", List.of()).forGetter(a -> a.targetAction),
+            Condition.CODEC.optionalFieldOf("target_conditions", TrueCondition.INSTANCE).forGetter(a -> a.targetCondition),
             BlockAction.LIST_CODEC.optionalFieldOf("block_actions", List.of()).forGetter(a -> a.blockAction),
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
             PalladiumHolderSet.codec(Registries.GAME_EVENT).optionalFieldOf("game_events", PalladiumHolderSet.direct(HolderSet.empty())).forGetter(ab -> ab.gameEvents),
@@ -120,8 +120,8 @@ public class GameEventListenerAbility extends Ability {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<Ability, GameEventListenerAbility> builder, HolderLookup.Provider provider) {
             builder.setDescription("Performs actions when entities emit game events. For this ability, the \"source\" is the entity that emitted the game event & the \"target\" is the entity listening for it.")
-                    .addOptional("entity_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
-                    .addOptional("entity_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
+                    .addOptional("target_actions", TYPE_ACTION_LIST, "Action(s) performed on the entity listening for the game event.")
+                    .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet for the actions to perform.")
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed on the block being stood on by the entity detecting the game events.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block being stood on must meet for the block actions to perform.")
                     .addOptional("game_events", KryptoniteDocumented.TYPE_GAME_EVENT_HOLDER_SET, "The game events that must emit for the actions to perform.")
