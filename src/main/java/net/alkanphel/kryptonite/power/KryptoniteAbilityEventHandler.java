@@ -732,6 +732,13 @@ public class KryptoniteAbilityEventHandler {
         }
     }
 
+    @SubscribeEvent // Action On Respawn ability
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent e) {
+        if (e.getEntity() instanceof ServerPlayer player) {
+            ActionOnRespawnAbility.flag(player);
+        }
+    }
+
     @SubscribeEvent // Action On Mount ability
     public static void onEntityMount(EntityMountEvent e) {
         if (!(e.getEntityMounting() instanceof LivingEntity rider)) return;

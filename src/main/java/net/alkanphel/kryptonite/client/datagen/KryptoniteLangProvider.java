@@ -56,6 +56,7 @@ public abstract class KryptoniteLangProvider extends LanguageProvider {
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_JUMP, "Action On Jump");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_LAND, "Action On Land");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_MOUNT, "Action On Mount");
+            this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_RESPAWN, "Action On Respawn");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TAME, "Action On Tame");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_TOTEM_USE, "Action On Totem Use");
             this.addAbility(KryptoniteAbilitySerializers.ACTION_ON_WAKE_UP, "Action On Wake Up");

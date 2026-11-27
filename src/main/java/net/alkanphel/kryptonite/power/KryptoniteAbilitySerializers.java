@@ -33,6 +33,7 @@ public class KryptoniteAbilitySerializers {
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnJumpAbility.Serializer> ACTION_ON_JUMP = ABILITIES_SERIALIZERS.register("action_on_jump", ActionOnJumpAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnLandAbility.Serializer> ACTION_ON_LAND = ABILITIES_SERIALIZERS.register("action_on_land", ActionOnLandAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionOnMountAbility.Serializer> ACTION_ON_MOUNT = ABILITIES_SERIALIZERS.register("action_on_mount", ActionOnMountAbility.Serializer::new);
+    public static final DeferredHolder<AbilitySerializer<?>, ActionOnRespawnAbility.Serializer> ACTION_ON_RESPAWN = ABILITIES_SERIALIZERS.register("action_on_respawn", ActionOnRespawnAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionWhenDamageTakenAbility.Serializer> ACTION_WHEN_DAMAGE_TAKEN = ABILITIES_SERIALIZERS.register("action_when_damage_taken", ActionWhenDamageTakenAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, ActionWhenHitAbility.Serializer> ACTION_WHEN_HIT = ABILITIES_SERIALIZERS.register("action_when_hit", ActionWhenHitAbility.Serializer::new);
     public static final DeferredHolder<AbilitySerializer<?>, AllowEndermanStareAbility.Serializer> ALLOW_ENDERMAN_STARE = ABILITIES_SERIALIZERS.register("allow_enderman_stare", AllowEndermanStareAbility.Serializer::new);
