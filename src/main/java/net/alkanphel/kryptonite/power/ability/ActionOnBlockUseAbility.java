@@ -126,7 +126,7 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("directions", KryptoniteDocumented.TYPE_DIRECTION, "If the actions should be performed if the player tried to use a block at the specified sides of a block.")
                     .addOptional("held_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item the player has used to use a block.")
                     .addOptional("held_item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item the player has used to use a block meets.")
-                    .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item that given to the player upon using a block.")
+                    .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the player upon using a block.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon using a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands when using a block.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")

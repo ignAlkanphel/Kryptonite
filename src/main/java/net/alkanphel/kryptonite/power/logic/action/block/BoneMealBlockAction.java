@@ -76,7 +76,7 @@ public class BoneMealBlockAction extends BlockAction {
         @Override
         public void addDocumentation(CodecDocumentationBuilder<BlockAction, BoneMealBlockAction> builder, HolderLookup.Provider provider) {
             builder.setName("Bone Meal")
-                    .setDescription("Applies the \"minecraft:bone_meal\" item to the target block as if a dispenser or player used it on a block.")
+                    .setDescription("Applies item \"minecraft:bone_meal\" to the block.")
                     .addOptional("show_effects", TYPE_BOOLEAN, "If true, its visual effects will show.", true)
                     .addExampleObject(new BoneMealBlockAction(true));
         }

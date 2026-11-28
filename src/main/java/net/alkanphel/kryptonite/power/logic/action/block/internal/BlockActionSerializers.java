@@ -15,9 +15,15 @@ public class BlockActionSerializers {
     public static final DeferredHolder<BlockActionSerializer<?>, BoneMealBlockAction.Serializer> BONE_MEAL = BLOCK_ACTION_SERIALIZERS.register("bone_meal", BoneMealBlockAction.Serializer::new);
     public static final DeferredHolder<BlockActionSerializer<?>, CommandBlockAction.Serializer> COMMAND = BLOCK_ACTION_SERIALIZERS.register("command", CommandBlockAction.Serializer::new);
     public static final DeferredHolder<BlockActionSerializer<?>, ExplodeBlockAction.Serializer> EXPLODE = BLOCK_ACTION_SERIALIZERS.register("explode", ExplodeBlockAction.Serializer::new);
+    public static final DeferredHolder<BlockActionSerializer<?>, FallBlockAction.Serializer> FALL = BLOCK_ACTION_SERIALIZERS.register("fall", FallBlockAction.Serializer::new);
     public static final DeferredHolder<BlockActionSerializer<?>, ModifyStateBlockAction.Serializer> MODIFY_STATE = BLOCK_ACTION_SERIALIZERS.register("modify_state", ModifyStateBlockAction.Serializer::new);
     public static final DeferredHolder<BlockActionSerializer<?>, OffsetBlockAction.Serializer> OFFSET = BLOCK_ACTION_SERIALIZERS.register("offset", OffsetBlockAction.Serializer::new);
-    public static final DeferredHolder<BlockActionSerializer<?>, PlacementBlockAction.Serializer> PLACEMENT = BLOCK_ACTION_SERIALIZERS.register("placement", PlacementBlockAction.Serializer::new);
+    public static final DeferredHolder<BlockActionSerializer<?>, PlaceBlockAction.Serializer> PLACE = BLOCK_ACTION_SERIALIZERS.register("place", PlaceBlockAction.Serializer::new);
+    public static final DeferredHolder<BlockActionSerializer<?>, ReplaceBlockAction.Serializer> REPLACE = BLOCK_ACTION_SERIALIZERS.register("replace", ReplaceBlockAction.Serializer::new);
     public static final DeferredHolder<BlockActionSerializer<?>, SummonBlockAction.Serializer> SUMMON = BLOCK_ACTION_SERIALIZERS.register("summon", SummonBlockAction.Serializer::new);
+
+    static {
+        BLOCK_ACTION_SERIALIZERS.addAlias(Kryptonite.id("run_command"), COMMAND.getId());
+    }
 
 }

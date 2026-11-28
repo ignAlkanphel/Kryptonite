@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteDocumented;
-import net.alkanphel.kryptonite.power.logic.action.block.PlacementBlockAction;
+import net.alkanphel.kryptonite.power.logic.action.block.ReplaceBlockAction;
 import net.alkanphel.kryptonite.power.logic.action.block.internal.BlockAction;
 import net.alkanphel.kryptonite.power.logic.condition.block.BlockBlockCondition;
 import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondition;
@@ -91,7 +91,7 @@ public class ActionOnBlockBreakAbility extends Ability {
                     .addOptional("block_actions", KryptoniteDocumented.TYPE_BLOCK_ACTION_LIST, "Block action(s) performed at the broken block position.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the broken block must meet for the actions to perform.")
                     .addOptional("only_when_harvested", TYPE_BOOLEAN, "If true, only performs the actions when the block was successfully harvested (using correct tool for drops).", false)
-                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new PlacementBlockAction(PlacementBlockAction.Mode.SET, Blocks.LAVA.defaultBlockState())), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block"))))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
+                    .addExampleObject(new ActionOnBlockBreakAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Magma Block broken and converted to lava!")))), List.of(new ReplaceBlockAction(Blocks.LAVA.defaultBlockState())), List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("magma_block"))))))), true, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }
 
