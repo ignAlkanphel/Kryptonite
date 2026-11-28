@@ -67,8 +67,6 @@ public abstract class EntityMixin {
         }
     }
 
-    // ------------------------------------------------------------------------------------------------------------------------
-
     // Prevent Particles (Sprinting) ability
     @ModifyReturnValue(method = "canSpawnSprintParticle", at = @At("TAIL"))
     private boolean kryptonite$preventParticlesSprinting(boolean original) {

@@ -92,7 +92,7 @@ public class PreventSleepingAbility extends Ability {
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the block must meet for sleep to be prevented.")
                     .addOptional("set_spawn", TYPE_BOOLEAN, "If the spawn point of the player is set upon using a bed while being prevented.", false)
                     .addOptional("message", TYPE_STRING, "The message shown upon sleep being prevented.", "Sleep is being prevented via ability!")
-                    .addOptional("priority", TYPE_INT, "The priority of which this ability will prevent the player to sleep, set their spawn and display a message. Abilities of higher priority & \"set_spawn\" true, are prioritized.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first, and the first match decides the message & spawn. If tied, \"set_spawn\" true wins.", 0)
                     .addExampleObject(new PreventSleepingAbility(List.of(new BlockBlockCondition(new PalladiumHolderSet.Direct<>(provider.lookupOrThrow(Registries.BLOCK).getOrThrow(BlockTags.BEDS)))), false, "You cannot sleep as an insomniac!", 5, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

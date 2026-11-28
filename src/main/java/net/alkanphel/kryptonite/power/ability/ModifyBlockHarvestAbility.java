@@ -83,7 +83,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized {
             builder.setDescription("Modifies if a player is able to harvest a block regardless of the tool.")
                     .addOptional("block_conditions", KryptoniteDocumented.TYPE_BLOCK_CONDITION_LIST, "Block condition(s) the blocks must meet to be affected.")
                     .addOptional("allow", TYPE_BOOLEAN, "If true, allows harvesting. If false, denies it.", true)
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first, and the first match decides the result.", 0)
                     .addExampleObject(new ModifyBlockHarvestAbility(List.of(new BlockBlockCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("stone"))))))), true, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

@@ -32,15 +32,15 @@ public abstract class MobMixin extends LivingEntity {
     // Action On Item Pickup ability
     @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;pickUpItem(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/item/ItemEntity;)V"))
     private void kryptonite$actionOnItemPickup(Mob mobEntity, ServerLevel level, ItemEntity itemEntity, Operation<Void> original) {
-        SlotAccess stackReference = InventoryUtil.createStackReference(itemEntity.getItem());
+        SlotAccess slotAccess = InventoryUtil.createSlotAccess(itemEntity.getItem());
 
         EntityReference<Entity> throwerReference = ((ItemEntityAccessor) itemEntity).kryptonite$getThrowerUuid();
 
         Entity thrower = null;
         if (throwerReference != null) thrower = MiscUtil.getEntityByUuid(throwerReference.getUUID(), this.level().getServer());
 
-        List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, this);
-        itemEntity.setItem(stackReference.get());
+        List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, slotAccess, this);
+        itemEntity.setItem(slotAccess.get());
 
         original.call(mobEntity, level, itemEntity);
         ActionOnItemPickupAbility.runActions(abilities, thrower, this);

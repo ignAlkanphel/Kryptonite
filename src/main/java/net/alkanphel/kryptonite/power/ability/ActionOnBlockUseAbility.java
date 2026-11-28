@@ -130,7 +130,7 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon using a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands when using a block.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first, and the first result other than pass stops the rest.", 0)
                     .addExampleObject(new ActionOnBlockUseAbility(List.of(), List.of(), List.of(), EnumSet.allOf(BlockUsagePhase.class), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }
     }

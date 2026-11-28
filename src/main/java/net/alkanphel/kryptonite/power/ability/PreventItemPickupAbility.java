@@ -98,13 +98,13 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
     }
 
     public void runActions(ItemEntity itemEntity, Entity thrower, Entity holder) {
-        SlotAccess stackReference = InventoryUtil.createStackReference(itemEntity.getItem());
+        SlotAccess slotAccess = InventoryUtil.createSlotAccess(itemEntity.getItem());
 
-        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
+        if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), slotAccess);
         if (!targetActionsThrower.isEmpty()) Action.runList(targetActionsThrower, DataContext.forAffected(holder, thrower, null));
         if (!targetActionsItem.isEmpty()) Action.runList(targetActionsItem, DataContext.forAffected(itemEntity, holder, null));
 
-        itemEntity.setItem(stackReference.get());
+        itemEntity.setItem(slotAccess.get());
     }
 
     @Override
@@ -127,7 +127,7 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
                     .addOptional("target_conditions", TYPE_CONDITION_LIST, "Condition(s) the target must meet to prevent item pickup.")
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item stack being picked up.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the item being picked up must meet to prevent item pickup.")
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first.", 0)
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), TrueCondition.INSTANCE, List.of(), List.of(), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventItemPickupAbility(List.of(), List.of(), new AsSourceCondition(Collections.singletonList(new HasEffectCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.MOB_EFFECT, Identifier.withDefaultNamespace("speed")))))))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), 1, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

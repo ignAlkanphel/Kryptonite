@@ -61,7 +61,7 @@ public class InventoryUtil {
                 continue;
             }
 
-            SlotAccess slotAccess = getStackReference(entity, preppedSlot);
+            SlotAccess slotAccess = getSlotAccess(entity, preppedSlot);
 
             ItemStack stack = slotAccess.get();
             if (stack.isEmpty()) continue;
@@ -113,11 +113,11 @@ public class InventoryUtil {
         }
     }
 
-    public static @Nullable SlotAccess getStackReferenceFromStack(Entity entity, ItemStack stack) {
-        return getStackReferenceFromStack(entity, stack, (provStack, refStack) -> provStack == refStack);
+    public static @Nullable SlotAccess getSlotAccessFromStack(Entity entity, ItemStack stack) {
+        return getSlotAccessFromStack(entity, stack, (provStack, refStack) -> provStack == refStack);
     }
 
-    public static @Nullable SlotAccess getStackReferenceFromStack(Entity entity, ItemStack stack, BiPredicate<ItemStack, ItemStack> equalityPredicate) {
+    public static @Nullable SlotAccess getSlotAccessFromStack(Entity entity, ItemStack stack, BiPredicate<ItemStack, ItemStack> equalityPredicate) {
         OptionalInt slotToSkip = getSelectedHotBarSlot(entity);
         for (int slot : getAllSlots()) {
             if (slotToSkip.isPresent() && slotToSkip.getAsInt() == slot) {
@@ -160,19 +160,17 @@ public class InventoryUtil {
         return entity.getSlot(slot) != null;
     }
 
-    public static SlotAccess getStackReference(@NotNull Entity entity, int slot) {
+    public static SlotAccess getSlotAccess(@NotNull Entity entity, int slot) {
         return entity.getSlot(slot);
     }
 
     /**
-     * Creates a stack reference that is not linked to any entity for use with item actions.
-     * <p>
-     * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's StackReference.
-     *
+     * Creates a SlotAccess that is not linked to any entity for use with item actions. <br><br>
+     * Recommended for usage when either you don't have an entity for this operation, or you don't want to set the entity's SlotAccess.
      * @param startingStack The ItemStack that this reference will start with.
      * @return A {@linkplain SlotAccess} that contains an ItemStack.
      */
-    public static SlotAccess createStackReference(ItemStack startingStack) {
+    public static SlotAccess createSlotAccess(ItemStack startingStack) {
         return new SlotAccess() {
             ItemStack stack = startingStack;
 
@@ -211,7 +209,7 @@ public class InventoryUtil {
                 .collect(IntOpenHashSet::new, IntOpenHashSet::add, IntOpenHashSet::addAll);
     }
 
-    public static OptionalInt getSlotFromStackReference(Entity entity, SlotAccess slotAccess) {
+    public static OptionalInt getSlotFromSlotAccess(Entity entity, SlotAccess slotAccess) {
         for (int slot : getAllSlots()) {
             SlotAccess queriedSlotAccess = entity.getSlot(slot);
             if (queriedSlotAccess != null && queriedSlotAccess.equals(slotAccess)) {
@@ -222,9 +220,7 @@ public class InventoryUtil {
         return OptionalInt.empty();
     }
 
-
     // ------------------------------------------------------------------------------------------------------------------------
-
 
     public static OptionalInt getSpaceInInventory(Player player, ItemStack stack) {
         return getSpaceInInventory(player.getInventory(), stack);

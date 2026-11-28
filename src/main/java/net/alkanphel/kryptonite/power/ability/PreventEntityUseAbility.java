@@ -23,19 +23,12 @@ import net.threetag.palladium.logic.action.RunCommandAction;
 import net.threetag.palladium.logic.condition.Condition;
 import net.threetag.palladium.logic.condition.TrueCondition;
 import net.threetag.palladium.logic.context.DataContext;
-import net.threetag.palladium.power.ability.Ability;
-import net.threetag.palladium.power.ability.AbilityInstance;
-import net.threetag.palladium.power.ability.AbilityProperties;
-import net.threetag.palladium.power.ability.AbilitySerializer;
-import net.threetag.palladium.power.ability.AbilityStateManager;
+import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.ParsedCommands;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
 
@@ -61,24 +54,22 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
         this.condition = condition;
     }
 
-    public boolean doesApply(TargetUsed role, Entity source, Entity target, InteractionHand hand, ItemStack heldStack, AbilityInstance<?> instance) {
+    public boolean doesApply(TargetUsed role, Entity source, Entity target, InteractionHand hand, ItemStack heldStack) {
         if (this.targetUsed != role || !shouldRun(hand, heldStack)) {
             return false;
         }
 
-        return condition.test(DataContext.forAffected(target, source, instance));
+        return condition.test(DataContext.forAffected(target, source, null));
     }
 
-    public InteractionResult runActions(Entity source, Entity target, InteractionHand hand, AbilityInstance<?> instance) {
+    public void runActions(Entity source, Entity target, InteractionHand hand) {
         if (source instanceof LivingEntity && !action.isEmpty()) {
-            Action.runList(action, DataContext.forAffected(source, target, instance));
+            Action.runList(action, DataContext.forAffected(source, target, null));
         }
 
         if (source instanceof Player player) {
             this.performSourceItemStuff(player, hand);
         }
-
-        return this.getActionResult();
     }
 
     @Override
@@ -105,7 +96,7 @@ public class PreventEntityUseAbility extends InteractionPrioritizedAbility {
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the source.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "Determines if this ability should activate if the source used the specified hands.")
                     .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first, and the first match decides the result.", 0)
                     .addExampleObject(new PreventEntityUseAbility(TargetUsed.SOURCE, List.of(), TrueCondition.INSTANCE, List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(), TrueCondition.INSTANCE, List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventEntityUseAbility(TargetUsed.TARGET, List.of(new RunCommandAction(new ParsedCommands("title @s actionbar {\"text\": \"Entity cannot be interacted with!\", \"color\": \"red\"}"))), TrueCondition.INSTANCE, List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));

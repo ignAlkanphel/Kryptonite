@@ -115,8 +115,8 @@ public class PreventBlockPlaceAbility extends InteractionPrioritizedAbility {
                     .addOptional("result_item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the item given to the player upon trying to place a block.")
                     .addOptional("result_stack", TYPE_ITEM_STACK, "The item stack given to the player upon trying to place a block.")
                     .addOptional("hands", KryptoniteDocumented.TYPE_INTERACTION_HAND, "If the actions should be performed if the player used the specified hands when trying to place a block.")
-                    .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Used to indicate the result of a certain action.")
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability performed first.", 0)
+                    .addOptional("action_result", KryptoniteDocumented.TYPE_INTERACTION_RESULT, "Unused by this ability.")
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first.", 0)
                     .addExampleObject(new PreventBlockPlaceAbility(List.of(), List.of(), List.of(), List.of(), List.of(), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new PreventBlockPlaceAbility(List.of(new RunCommandAction(new ParsedCommands("tellraw @s {\"text\": \"Cannot place a block here!\", \"color\": \"red\"}"))), List.of(), List.of(), List.of(), List.of(), EnumSet.allOf(Direction.class), List.of(), List.of(), List.of(), Optional.empty(), EnumSet.allOf(InteractionHand.class), InteractionResult.SUCCESS, 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
         }

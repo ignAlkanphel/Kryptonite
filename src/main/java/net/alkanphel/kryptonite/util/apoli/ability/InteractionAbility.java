@@ -72,33 +72,33 @@ public class InteractionAbility extends Ability {
     }
 
     protected void performSourceItemStuff(Player actor, InteractionHand hand) {
-        SlotAccess heldStackReference = getHeldStackReference(actor, hand);
+        SlotAccess heldStackAccess = getHeldSlotAccess(actor, hand);
         Level level = actor.level();
 
         if (!heldItemAction.isEmpty()) {
-            ItemAction.runList(heldItemAction, level, heldStackReference);
+            ItemAction.runList(heldItemAction, level, heldStackAccess);
         }
 
-        ItemStack resultStack = this.resultStack.map(ItemStack::copy).orElseGet(() -> heldStackReference.get().copy());
-        SlotAccess resultStackReference = InventoryUtil.createStackReference(resultStack);
+        ItemStack resultStack = this.resultStack.map(ItemStack::copy).orElseGet(() -> heldStackAccess.get().copy());
+        SlotAccess resultStackAccess = InventoryUtil.createSlotAccess(resultStack);
 
         boolean modified = this.resultStack.isPresent() || !resultItemAction.isEmpty();
 
         if (!resultItemAction.isEmpty()) {
-            ItemAction.runList(resultItemAction, level, resultStackReference);
+            ItemAction.runList(resultItemAction, level, resultStackAccess);
         }
 
         if (modified) {
-            if (heldStackReference.get().isEmpty()) {
-                actor.setItemInHand(hand, resultStackReference.get());
+            if (heldStackAccess.get().isEmpty()) {
+                actor.setItemInHand(hand, resultStackAccess.get());
             }
             else {
-                actor.getInventory().placeItemBackInInventory(resultStackReference.get());
+                actor.getInventory().placeItemBackInInventory(resultStackAccess.get());
             }
         }
     }
 
-    protected static SlotAccess getHeldStackReference(Player player, InteractionHand hand) {
+    protected static SlotAccess getHeldSlotAccess(Player player, InteractionHand hand) {
         Inventory inventory = player.getInventory();
         int selectedSlot = inventory.getSelectedSlot();
 

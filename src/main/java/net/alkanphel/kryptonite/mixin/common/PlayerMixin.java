@@ -76,22 +76,17 @@ public abstract class PlayerMixin extends LivingEntity {
     private InteractionResult kryptonite$beforeEntityUse(Entity entity, Player player, InteractionHand hand, Vec3 location, Operation<InteractionResult> original, @Share("zeroPriority$onEntity") LocalRef<InteractionResult> sharedZeroPriority$onEntity) {
         ItemStack stackInHand = player.getItemInHand(hand);
 
-        // Prevent Entity Use ability (source)
-        for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(this, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
-            PreventEntityUseAbility preventUse = instance.getAbility();
-            if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, instance)) {
-                return preventUse.runActions(player, entity, hand, instance);
-            }
+        // Prevent Entity Use ability
+        List<PreventEntityUseAbility> preventEntityUseAbilities = new ArrayList<>(Prioritized.collect(player, PreventEntityUseAbility.class, a -> a.doesApply(PreventEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand)));
+
+        if (entity instanceof LivingEntity living) {
+            preventEntityUseAbilities.addAll(Prioritized.collect(living, PreventEntityUseAbility.class, a -> a.doesApply(PreventEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand)));
+            preventEntityUseAbilities.sort(Comparator.comparingInt(PreventEntityUseAbility::getPriority).reversed());
         }
 
-        // Prevent Entity Use ability (target)
-        if (entity instanceof LivingEntity living) {
-            for (AbilityInstance<PreventEntityUseAbility> instance : AbilityUtil.getEnabledInstances(living, KryptoniteAbilitySerializers.PREVENT_ENTITY_USE.get())) {
-                PreventEntityUseAbility preventUse = instance.getAbility();
-                if (preventUse.doesApply(PreventEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, instance)) {
-                    return preventUse.runActions(player, entity, hand, instance);
-                }
-            }
+        if (!preventEntityUseAbilities.isEmpty()) {
+            preventEntityUseAbilities.forEach(ability -> ability.runActions(player, entity, hand));
+            return preventEntityUseAbilities.getFirst().getActionResult();
         }
 
         // Action On Entity Use ability

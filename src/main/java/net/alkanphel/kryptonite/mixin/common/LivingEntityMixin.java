@@ -121,8 +121,6 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
-    // ------------------------------------------------------------------------------------------------------------------------
-
     // Prevent Particles (Landing) ability
     @Redirect(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     private <T extends ParticleOptions> int kryptonite$preventParticlesLanding(ServerLevel level, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed) {

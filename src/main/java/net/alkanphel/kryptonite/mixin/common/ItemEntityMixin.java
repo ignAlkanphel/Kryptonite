@@ -42,11 +42,11 @@ public abstract class ItemEntityMixin extends Entity {
         }
 
         else if (InventoryUtil.hasSpaceInInventory(playerInventory, itemStack)) {
-            SlotAccess stackReference = InventoryUtil.createStackReference(itemStack);
+            SlotAccess slotAccess = InventoryUtil.createSlotAccess(itemStack);
             Entity thrower = EntityReference.getEntity(this.thrower, this.level());
 
-            List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, player);
-            this.setItem(stackReference.get());
+            List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, slotAccess, player);
+            this.setItem(slotAccess.get());
 
             boolean result = original.call(playerInventory, this.getItem());
             if (result) ActionOnItemPickupAbility.runActions(abilities, thrower, player);

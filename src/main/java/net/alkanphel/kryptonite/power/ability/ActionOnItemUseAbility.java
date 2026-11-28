@@ -77,11 +77,11 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
         return itemCondition.isEmpty() || ItemCondition.checkConditions(itemCondition, holder.level(), stack);
     }
 
-    public void runActions(DataContext context, SlotAccess stackReference) {
+    public void runActions(DataContext context, SlotAccess slotAccess) {
         var holder = context.getLivingEntity();
         if (holder == null) return;
 
-        if (!itemAction.isEmpty()) ItemAction.runList(itemAction, holder.level(), stackReference);
+        if (!itemAction.isEmpty()) ItemAction.runList(itemAction, holder.level(), slotAccess);
         if (!action.isEmpty()) Action.runList(action, DataContext.forEntity(holder));
     }
 
@@ -92,8 +92,8 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
                 ability -> ability.doesApply(user, stack, trigger, phase));
 
         DataContext context = DataContext.forEntity(user);
-        SlotAccess stackReference = SlotAccess.of(() -> stack, _ -> {});
-        abilities.forEach(ability -> ability.runActions(context, stackReference));
+        SlotAccess slotAccess = SlotAccess.of(() -> stack, _ -> {});
+        abilities.forEach(ability -> ability.runActions(context, slotAccess));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
                     .addOptional("item_actions", KryptoniteDocumented.TYPE_ITEM_ACTION_LIST, "Item action(s) performed on the remaining item.")
                     .addOptional("item_conditions", KryptoniteDocumented.TYPE_ITEM_CONDITION_LIST, "Item condition(s) the remaining item must meet for the actions to perform.")
                     .addOptional("trigger", SettingType.enumList(TriggerType.values()), "At which point the actions perform.", TriggerType.FINISH)
-                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities of this ability run first.", 0)
+                    .addOptional("priority", TYPE_INT, "The run priority of this ability. Higher priorities run first.", 0)
                     .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Stopped drawing bow!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("bow"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Ender Pearl thrown!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("ender_pearl"))))))), EnumSet.of(TriggerType.INSTANT), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()))
                     .addExampleObject(new ActionOnItemUseAbility(List.of(new RunCommandAction(new ParsedCommands(List.of("say Finished eating apple!")))), List.of(), List.of(new ItemItemCondition(PalladiumHolderSet.direct(HolderSet.direct(provider.holderOrThrow(ResourceKey.create(Registries.ITEM, Identifier.withDefaultNamespace("apple"))))))), EnumSet.of(TriggerType.FINISH), 0, AbilityProperties.BASIC, AbilityStateManager.EMPTY, List.of()));
