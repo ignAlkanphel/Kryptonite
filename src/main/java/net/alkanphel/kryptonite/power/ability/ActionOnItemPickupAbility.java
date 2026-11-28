@@ -81,21 +81,18 @@ public class ActionOnItemPickupAbility extends Ability implements Prioritized {
         if (!itemActions.isEmpty()) ItemAction.runList(itemActions, holder.level(), stackReference);
     }
 
-    public static void runActions(CallInstance<ActionOnItemPickupAbility> callInstance, Entity throwerEntity, Entity holderEntity) {
-        callInstance.forEachByPriority(ability -> ability.runActions(throwerEntity, holderEntity));
+    public static void runActions(List<ActionOnItemPickupAbility> abilities, Entity throwerEntity, Entity holderEntity) {
+        abilities.forEach(ability -> ability.runActions(throwerEntity, holderEntity));
     }
 
-    public static CallInstance<ActionOnItemPickupAbility> runItemActions(Entity throwerEntity, SlotAccess stackReference, Entity holderEntity) {
-        if (!(holderEntity instanceof LivingEntity livingEntity)) {
-            return new CallInstance<>();
-        }
+    public static List<ActionOnItemPickupAbility> runItemActions(Entity throwerEntity, SlotAccess stackReference, Entity holderEntity) {
+        if (!(holderEntity instanceof LivingEntity livingEntity)) return List.of();
 
-        CallInstance<ActionOnItemPickupAbility> callInstance = new CallInstance<>();
-        callInstance.add(livingEntity, ActionOnItemPickupAbility.class, ability -> ability.doesApply(stackReference.get(), throwerEntity, holderEntity));
+        List<ActionOnItemPickupAbility> abilities = Prioritized.collect(livingEntity, ActionOnItemPickupAbility.class,
+                ability -> ability.doesApply(stackReference.get(), throwerEntity, holderEntity));
 
-        callInstance.forEachByPriority(ability -> ability.runItemActions(holderEntity, stackReference));
-
-        return callInstance;
+        abilities.forEach(ability -> ability.runItemActions(holderEntity, stackReference));
+        return abilities;
     }
 
     @Override

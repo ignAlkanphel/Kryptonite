@@ -460,14 +460,10 @@ public class KryptoniteAbilityEventHandler {
         BlockHitResult hitResult = e.getHitVec();
 
         BlockUsagePhase phase = (e.getUseBlock() == TriState.FALSE) ? BlockUsagePhase.ITEM : BlockUsagePhase.BLOCK;
+        List<PreventBlockUseAbility> abilities = Prioritized.collect(player, PreventBlockUseAbility.class, a -> a.doesPrevent(player, phase, hitResult, stack, hand));
+        if (abilities.isEmpty()) return;
 
-        Prioritized.CallInstance<PreventBlockUseAbility> instance = new Prioritized.CallInstance<>();
-        instance.add(player, PreventBlockUseAbility.class, a -> a.doesPrevent(player, phase, hitResult, stack, hand));
-
-        if (instance.isEmpty()) return;
-
-        PreventBlockUseAbility ability = instance.getAllAbilities().getFirst();
-        ability.runActions(player, hitResult, hand);
+        abilities.getFirst().runActions(player, hitResult, hand);
 
         e.setUseBlock(TriState.FALSE);
         e.setUseItem(TriState.FALSE);
@@ -483,14 +479,12 @@ public class KryptoniteAbilityEventHandler {
         ItemStack heldStack = player.getItemInHand(hand);
         BlockHitResult hitResult = e.getHitVec();
         DataContext context = DataContext.forEntity(player);
-
         BlockUsagePhase usePhase = (e.getUseBlock() != TriState.FALSE) ? BlockUsagePhase.BLOCK : BlockUsagePhase.ITEM;
 
         // before phase
-        Prioritized.CallInstance<ActionOnBlockUseAbility> beforeInstances = new Prioritized.CallInstance<>();
-        beforeInstances.add(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.BEFORE, hand, heldStack, hitResult));
+        List<ActionOnBlockUseAbility> beforeAbilities = Prioritized.collect(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.BEFORE, hand, heldStack, hitResult));
 
-        InteractionResult beforeResult = ActionOnBlockUseAbility.interactionResultHelper(beforeInstances, context, hitResult, hand, player);
+        InteractionResult beforeResult = ActionOnBlockUseAbility.interactionResultHelper(beforeAbilities, context, hitResult, hand, player);
         if (beforeResult != InteractionResult.PASS) {
             e.setCancellationResult(beforeResult);
             e.setCanceled(true);
@@ -499,10 +493,9 @@ public class KryptoniteAbilityEventHandler {
 
         // after phase
         if (e.getUseBlock() == TriState.DEFAULT && e.getUseItem() == TriState.DEFAULT) {
-            Prioritized.CallInstance<ActionOnBlockUseAbility> afterInstances = new Prioritized.CallInstance<>();
-            afterInstances.add(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.AFTER, hand, heldStack, hitResult));
+            List<ActionOnBlockUseAbility> afterAbilities = Prioritized.collect(player, ActionOnBlockUseAbility.class, a -> a.shouldRun(context, usePhase, PriorityPhase.AFTER, hand, heldStack, hitResult));
 
-            InteractionResult afterResult = ActionOnBlockUseAbility.interactionResultHelper(afterInstances, context, hitResult, hand, player);
+            InteractionResult afterResult = ActionOnBlockUseAbility.interactionResultHelper(afterAbilities, context, hitResult, hand, player);
             if (afterResult != InteractionResult.PASS) {
                 e.setCancellationResult(afterResult);
                 e.setCanceled(true);

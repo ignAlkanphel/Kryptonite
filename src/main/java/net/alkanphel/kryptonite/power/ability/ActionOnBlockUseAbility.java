@@ -10,7 +10,6 @@ import net.alkanphel.kryptonite.power.logic.condition.block.internal.BlockCondit
 import net.alkanphel.kryptonite.power.logic.condition.item.internal.ItemCondition;
 import net.alkanphel.kryptonite.util.apoli.BlockUsagePhase;
 import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
-import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -92,27 +91,17 @@ public class ActionOnBlockUseAbility extends InteractionPrioritizedAbility {
         return getActionResult();
     }
 
-    public static InteractionResult interactionResultHelper(Prioritized.CallInstance<ActionOnBlockUseAbility> instances, DataContext context, BlockHitResult hitResult, InteractionHand hand, Player player) {
-        InteractionResult[] trackingResult = { InteractionResult.PASS };
+    public static InteractionResult interactionResultHelper(List<ActionOnBlockUseAbility> abilities, DataContext context, BlockHitResult hitResult, InteractionHand hand, Player player) {
+        for (ActionOnBlockUseAbility ability : abilities) {
+            InteractionResult result = ability.runActions(context, hitResult, hand);
 
-        instances.forEachBucketUntil(abilities -> {
-            InteractionResult bucketResult = InteractionResult.PASS;
-
-            for (ActionOnBlockUseAbility ability : abilities) {
-                InteractionResult currentResult = ability.runActions(context, hitResult, hand);
-                if (currentResult != InteractionResult.PASS) {
-                    bucketResult = currentResult;
-                }
+            if (result != InteractionResult.PASS) {
+                if (result.consumesAction()) player.swing(hand);
+                return result;
             }
+        }
 
-            if (bucketResult == InteractionResult.PASS) return false;
-
-            trackingResult[0] = bucketResult;
-            if (bucketResult.consumesAction()) player.swing(hand);
-            return true;
-        });
-
-        return trackingResult[0];
+        return InteractionResult.PASS;
     }
 
     @Override

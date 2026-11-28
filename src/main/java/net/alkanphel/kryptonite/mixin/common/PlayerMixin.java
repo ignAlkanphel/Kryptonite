@@ -10,10 +10,7 @@ import net.alkanphel.kryptonite.power.KryptoniteAbilitySerializers;
 import net.alkanphel.kryptonite.power.KryptoniteAttachments;
 import net.alkanphel.kryptonite.power.ability.*;
 import net.alkanphel.kryptonite.util.AttachmentUtil;
-import net.alkanphel.kryptonite.util.apoli.ability.InteractionPrioritizedAbility;
-import net.alkanphel.kryptonite.util.apoli.ability.InteractionResultUtil;
-import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
-import net.alkanphel.kryptonite.util.apoli.ability.PriorityPhase;
+import net.alkanphel.kryptonite.util.apoli.ability.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +30,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @SuppressWarnings("ConstantValue")
 @Mixin(value = Player.class, priority = 999)
@@ -94,49 +95,35 @@ public abstract class PlayerMixin extends LivingEntity {
         }
 
         // Action On Entity Use ability
-        Prioritized.CallInstance<InteractionPrioritizedAbility> callInstance = new Prioritized.CallInstance<>();
-        callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.BEFORE));
+        List<ActionOnEntityUseAbility> abilities = new ArrayList<>(Prioritized.collect(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.BEFORE)));
 
         if (entity instanceof LivingEntity livingEntity) {
-            callInstance.add(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.BEFORE));
+            abilities.addAll(Prioritized.collect(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.BEFORE)));
+            abilities.sort(Comparator.comparingInt(ActionOnEntityUseAbility::getPriority).reversed());
         }
 
-        InteractionResult[] earlyResult = { null };
+        InteractionResult zeroResult = InteractionResult.PASS;
+        InteractionResult earlyResult = null;
 
-        callInstance.forEachBucketEntryUntil((priority, interactPriorityAbilities) -> {
-            InteractionResult previousResult = InteractionResult.PASS;
+        for (ActionOnEntityUseAbility ability : abilities) {
+            InteractionResult result = ability.runActions(player, entity, hand);
 
-            for (InteractionPrioritizedAbility interactPriorityAbility : interactPriorityAbilities) {
-                InteractionResult currentResult = InteractionResult.PASS;
-
-                if (interactPriorityAbility instanceof ActionOnEntityUseAbility actionOnUse) {
-                    currentResult = actionOnUse.runActions(player, entity, hand);
-                }
-
-                if (InteractionResultUtil.shouldOverride(previousResult, currentResult)) {
-                    previousResult = currentResult;
-                }
+            if (ability.getPriority() == 0) {
+                if (InteractionResultUtil.shouldOverride(zeroResult, result)) zeroResult = result;
+            } else if (result != InteractionResult.PASS) {
+                earlyResult = result;
+                break;
             }
+        }
 
-            if (priority == 0) {
-                sharedZeroPriority$onEntity.set(previousResult);
-                return false;
-            }
+        sharedZeroPriority$onEntity.set(zeroResult);
 
-            if (previousResult == InteractionResult.PASS) {
-                return false;
-            }
-
-            earlyResult[0] = previousResult;
-            return true;
-        });
-
-        if (earlyResult[0] != null) {
-            if (InteractionResultUtil.shouldSwingHand(earlyResult[0])) {
+        if (earlyResult != null) {
+            if (InteractionResultUtil.shouldSwingHand(earlyResult)) {
                 this.swing(hand);
             }
 
-            return earlyResult[0];
+            return earlyResult;
         }
 
         return original.call(entity, player, hand, location);
@@ -156,39 +143,21 @@ public abstract class PlayerMixin extends LivingEntity {
             ItemStack stackInHand = this.getItemInHand(hand);
             Player player = (Player) (Object) this;
 
-            Prioritized.CallInstance<InteractionPrioritizedAbility> callInstance = new Prioritized.CallInstance<>();
-            callInstance.add(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.AFTER));
+            List<ActionOnEntityUseAbility> abilities = new ArrayList<>(Prioritized.collect(player, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.SOURCE, player, entity, hand, stackInHand, PriorityPhase.AFTER)));
 
             if (entity instanceof LivingEntity livingEntity) {
-                callInstance.add(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.AFTER));
+                abilities.addAll(Prioritized.collect(livingEntity, ActionOnEntityUseAbility.class, a -> a.shouldRun(ActionOnEntityUseAbility.TargetUsed.TARGET, player, entity, hand, stackInHand, PriorityPhase.AFTER)));
+                abilities.sort(Comparator.comparingInt(ActionOnEntityUseAbility::getPriority).reversed());
             }
 
-            InteractionResult[] trackingResult = { InteractionResult.PASS };
+            for (ActionOnEntityUseAbility ability : abilities) {
+                InteractionResult result = ability.runActions(player, entity, hand);
 
-            callInstance.forEachBucketUntil(interactPriorityAbilities -> {
-                InteractionResult previousResult = InteractionResult.PASS;
-
-                for (InteractionPrioritizedAbility interactPriorityAbility : interactPriorityAbilities) {
-                    InteractionResult currentResult = InteractionResult.PASS;
-
-                    if (interactPriorityAbility instanceof ActionOnEntityUseAbility actionOnUse) {
-                        currentResult = actionOnUse.runActions(player, entity, hand);
-                    }
-
-                    if (InteractionResultUtil.shouldOverride(previousResult, currentResult)) {
-                        previousResult = currentResult;
-                    }
+                if (result != InteractionResult.PASS) {
+                    newResult = result;
+                    break;
                 }
-
-                if (previousResult != InteractionResult.PASS) {
-                    trackingResult[0] = previousResult;
-                    return true;
-                }
-
-                return false;
-            });
-
-            newResult = trackingResult[0];
+            }
         }
 
         if (InteractionResultUtil.shouldSwingHand(newResult)) {

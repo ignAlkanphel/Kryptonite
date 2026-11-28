@@ -88,11 +88,12 @@ public class ActionOnItemUseAbility extends Ability implements Prioritized {
     public static void apply(LivingEntity user, ItemStack stack, EnumSet<TriggerType> trigger, PriorityPhase phase) {
         if (user.level().isClientSide()) return;
 
-        Prioritized.CallInstance<ActionOnItemUseAbility> call = new Prioritized.CallInstance<>();
-        call.add(user, ActionOnItemUseAbility.class, a -> a.doesApply(user, stack, trigger, phase));
+        List<ActionOnItemUseAbility> abilities = Prioritized.collect(user, ActionOnItemUseAbility.class,
+                ability -> ability.doesApply(user, stack, trigger, phase));
 
         DataContext context = DataContext.forEntity(user);
-        call.forEachByPriority(ability -> ability.runActions(context, SlotAccess.of(() -> stack, _ -> {})));
+        SlotAccess stackReference = SlotAccess.of(() -> stack, _ -> {});
+        abilities.forEach(ability -> ability.runActions(context, stackReference));
     }
 
     @Override

@@ -87,19 +87,14 @@ public class PreventItemPickupAbility extends Ability implements Prioritized {
 
         ItemStack stack = itemEntity.getItem();
         EntityReference<Entity> throwerReference = ((ItemEntityAccessor) itemEntity).kryptonite$getThrowerUuid();
-
-        UUID throwerUuid = null;
-        if (throwerReference != null) throwerUuid = throwerReference.getUUID();
-
+        UUID throwerUuid = throwerReference != null ? throwerReference.getUUID() : null;
         Entity throwerEntity = MiscUtil.getEntityByUuid(throwerUuid, holderEntity.level().getServer());
 
-        Prioritized.CallInstance<PreventItemPickupAbility> callInstance = new Prioritized.CallInstance<>();
-        callInstance.add(livingEntity, PreventItemPickupAbility.class, ability -> ability.doesPrevent(stack, throwerEntity, holderEntity));
+        List<PreventItemPickupAbility> abilities = Prioritized.collect(livingEntity, PreventItemPickupAbility.class,
+                ability -> ability.doesPrevent(stack, throwerEntity, holderEntity));
 
-        if (callInstance.isEmpty()) return false;
-
-        callInstance.forEachByPriority(p -> p.runActions(itemEntity, throwerEntity, holderEntity));
-        return true;
+        abilities.forEach(ability -> ability.runActions(itemEntity, throwerEntity, holderEntity));
+        return !abilities.isEmpty();
     }
 
     public void runActions(ItemEntity itemEntity, Entity thrower, Entity holder) {

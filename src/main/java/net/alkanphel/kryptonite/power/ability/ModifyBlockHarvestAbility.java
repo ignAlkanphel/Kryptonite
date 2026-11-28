@@ -19,12 +19,12 @@ import net.threetag.palladium.documentation.CodecDocumentationBuilder;
 import net.threetag.palladium.power.ability.*;
 import net.threetag.palladium.power.energybar.EnergyBarUsage;
 import net.threetag.palladium.util.PalladiumHolderSet;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class ModifyBlockHarvestAbility extends Ability implements Prioritized, Comparable<ModifyBlockHarvestAbility> {
+public class ModifyBlockHarvestAbility extends Ability implements Prioritized {
 
     public static final MapCodec<ModifyBlockHarvestAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockCondition.LIST_CODEC.optionalFieldOf("block_conditions", List.of()).forGetter(a -> a.blockCondition),
@@ -45,14 +45,6 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
     }
 
     @Override
-    public int compareTo(@NotNull ModifyBlockHarvestAbility other) {
-        int priorityResult = Integer.compare(this.getPriority(), other.getPriority());
-        return priorityResult != 0
-                ? priorityResult
-                : Boolean.compare(this.isAllowed(), other.isAllowed());
-    }
-
-    @Override
     public int getPriority() {
         return priority;
     }
@@ -70,7 +62,7 @@ public class ModifyBlockHarvestAbility extends Ability implements Prioritized, C
                 .stream()
                 .map(AbilityInstance::getAbility)
                 .filter(ability -> ability.doesApply(savedBlock))
-                .max(ModifyBlockHarvestAbility::compareTo)
+                .max(Comparator.comparingInt(ModifyBlockHarvestAbility::getPriority).thenComparing(ModifyBlockHarvestAbility::isAllowed))
                 .map(ModifyBlockHarvestAbility::isAllowed);
     }
 

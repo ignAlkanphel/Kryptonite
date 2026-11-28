@@ -31,6 +31,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
 
@@ -61,40 +63,36 @@ public class BlockItemMixin {
         BlockPos toPos = placeContext.getClickedPos();
         BlockPos onPos = ((UseOnContextAccessor) placeContext).kryptonite$callGetHitResult().getBlockPos();
 
-        Prioritized.CallInstance<PreventBlockPlaceAbility> callInstance = new Prioritized.CallInstance<>();
-        callInstance.add(player, PreventBlockPlaceAbility.class, ability -> ability.doesPrevent(player, stack, hand, toPos, onPos, direction));
+        List<PreventBlockPlaceAbility> abilities = Prioritized.collect(player, PreventBlockPlaceAbility.class, ability -> ability.doesPrevent(player, stack, hand, toPos, onPos, direction));
+        if (abilities.isEmpty()) return original;
 
-        if (callInstance.isEmpty()) return original;
-
-        callInstance.forEachByPriority(ability -> ability.runActions(player, hand, toPos, onPos, direction));
+        abilities.forEach(ability -> ability.runActions(player, hand, toPos, onPos, direction));
         return false;
     }
 
     // Action On Block Place ability
     @Inject(method = "place(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/InteractionResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
-    private void kryptonite$actionOnBlockPlace(BlockPlaceContext placeContext, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "player") Player player, @Local(name = "pos") BlockPos pos, @Local(name = "itemStack") ItemStack itemStack, @Share("callInstance") LocalRef<Prioritized.CallInstance<ActionOnBlockPlaceAbility>> callInstanceRef) {
+    private void kryptonite$actionOnBlockPlace(BlockPlaceContext placeContext, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "player") Player player, @Local(name = "pos") BlockPos pos, @Local(name = "itemStack") ItemStack itemStack, @Share("abilities") LocalRef<List<ActionOnBlockPlaceAbility>> abilitiesRef) {
         if (player == null) return;
 
         Direction direction = placeContext.getClickedFace();
         BlockPos onPos = ((UseOnContextAccessor) placeContext).kryptonite$callGetHitResult().getBlockPos();
         InteractionHand hand = placeContext.getHand();
 
-        DataContext dataContext = DataContext.forEntity(player);
-        Prioritized.CallInstance<ActionOnBlockPlaceAbility> callInstance = new Prioritized.CallInstance<>();
-        callInstance.add(player, ActionOnBlockPlaceAbility.class, ability -> ability.shouldRun(dataContext, itemStack, hand, pos, onPos, direction) && PriorityPhase.BEFORE.test(ability.getPriority()));
+        var dataContext = DataContext.forEntity(player);
+        List<ActionOnBlockPlaceAbility> abilities = Prioritized.collect(player, ActionOnBlockPlaceAbility.class, ability -> ability.shouldRun(dataContext, itemStack, hand, pos, onPos, direction) && PriorityPhase.BEFORE.test(ability.getPriority()));
+        abilities.forEach(ability -> ability.runOtherActions(dataContext, pos, onPos, direction));
 
-        callInstance.forEachByPriority(ability -> ability.runOtherActions(dataContext, pos, onPos, direction));
-
-        callInstanceRef.set(callInstance);
+        abilitiesRef.set(abilities);
     }
 
     @Inject(method = "place(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/InteractionResult;", at = @At("TAIL"))
-    private void kryptonite$actionOnBlockPlacePost(BlockPlaceContext placeContext, CallbackInfoReturnable<InteractionResult> cir, @Share("callInstance") LocalRef<Prioritized.CallInstance<ActionOnBlockPlaceAbility>> callInstanceRef) {
-        Prioritized.CallInstance<ActionOnBlockPlaceAbility> callInstance = callInstanceRef.get();
+    private void kryptonite$actionOnBlockPlacePost(BlockPlaceContext placeContext, CallbackInfoReturnable<InteractionResult> cir, @Share("abilities") LocalRef<List<ActionOnBlockPlaceAbility>> abilitiesRef) {
+        List<ActionOnBlockPlaceAbility> abilities = abilitiesRef.get();
 
-        if (callInstance != null && placeContext.getPlayer() != null) {
+        if (abilities != null && placeContext.getPlayer() != null) {
             var dataContext = DataContext.forEntity(placeContext.getPlayer());
-            callInstance.forEachByPriority(ability -> ability.runItemActions(dataContext, placeContext.getHand()));
+            abilities.forEach(ability -> ability.runItemActions(dataContext, placeContext.getHand()));
         }
     }
 

@@ -7,13 +7,14 @@ import net.alkanphel.kryptonite.power.ability.ActionOnItemPickupAbility;
 import net.alkanphel.kryptonite.power.ability.PreventItemPickupAbility;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
 import net.alkanphel.kryptonite.util.apoli.MiscUtil;
-import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.List;
 
 @Mixin(Mob.class)
 public abstract class MobMixin extends LivingEntity {
@@ -38,11 +39,11 @@ public abstract class MobMixin extends LivingEntity {
         Entity thrower = null;
         if (throwerReference != null) thrower = MiscUtil.getEntityByUuid(throwerReference.getUUID(), this.level().getServer());
 
-        Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, this);
+        List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, this);
         itemEntity.setItem(stackReference.get());
 
         original.call(mobEntity, level, itemEntity);
-        ActionOnItemPickupAbility.runActions(callInstance, thrower, this);
+        ActionOnItemPickupAbility.runActions(abilities, thrower, this);
     }
 
 }

@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.alkanphel.kryptonite.power.ability.ActionOnItemPickupAbility;
 import net.alkanphel.kryptonite.power.ability.PreventItemPickupAbility;
 import net.alkanphel.kryptonite.util.apoli.InventoryUtil;
-import net.alkanphel.kryptonite.util.apoli.ability.Prioritized;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
@@ -20,6 +19,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.List;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity {
@@ -44,13 +45,11 @@ public abstract class ItemEntityMixin extends Entity {
             SlotAccess stackReference = InventoryUtil.createStackReference(itemStack);
             Entity thrower = EntityReference.getEntity(this.thrower, this.level());
 
-            Prioritized.CallInstance<ActionOnItemPickupAbility> callInstance = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, player);
+            List<ActionOnItemPickupAbility> abilities = ActionOnItemPickupAbility.runItemActions(thrower, stackReference, player);
             this.setItem(stackReference.get());
 
             boolean result = original.call(playerInventory, this.getItem());
-            if (result) {
-                ActionOnItemPickupAbility.runActions(callInstance, thrower, player);
-            }
+            if (result) ActionOnItemPickupAbility.runActions(abilities, thrower, player);
 
             return result;
         }
@@ -58,7 +57,6 @@ public abstract class ItemEntityMixin extends Entity {
         else {
             return original.call(playerInventory, itemStack);
         }
-
     }
 
     @Unique
